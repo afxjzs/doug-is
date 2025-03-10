@@ -3,11 +3,11 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "~/.nvm/versions/node/v20.18.3/bin/node node_modules/.bin/next dev",
-		"build": "~/.nvm/versions/node/v20.18.3/bin/node node_modules/.bin/next build",
-		"start": "~/.nvm/versions/node/v20.18.3/bin/node node_modules/.bin/next start",
-		"lint": "~/.nvm/versions/node/v20.18.3/bin/node node_modules/.bin/next lint",
-		"setup": "~/.nvm/versions/node/v20.18.3/bin/node scripts/setup-supabase.js",
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"setup": "node scripts/setup-supabase.js",
 		"bun-dev": "bun --bun next dev"
 	},
 	"dependencies": {
