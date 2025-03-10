@@ -1,38 +1,56 @@
+"use client"
+
 import Link from "next/link"
-import { Metadata } from "next"
 import { formatDate } from "@/lib/utils"
 import SafeImage from "@/components/SafeImage"
 import { Post } from "@/lib/supabase/client"
-
-export const metadata: Metadata = {
-	title: "Thinking | Doug.is",
-	description: "Thoughts, ideas, and insights on various topics",
-}
+import { useState, useEffect } from "react"
 
 async function fetchPosts(): Promise<{ posts: Post[]; error: string | null }> {
 	try {
-		// Use relative URL in production, absolute URL in development for better error messages
-		const baseUrl = process.env.VERCEL_URL
-			? `https://${process.env.VERCEL_URL}`
-			: process.env.NODE_ENV === "development"
-			? "http://localhost:3000"
-			: ""
+		// We need to use a complete URL for server components
+		const protocol = process.env.NODE_ENV === "development" ? "http:" : "https:"
+		const host =
+			process.env.NODE_ENV === "development"
+				? "localhost:3000"
+				: process.env.VERCEL_URL || "doug-is.vercel.app"
+		const apiUrl = `${protocol}//${host}/api/posts`
 
-		console.log(`Fetching posts from API route: ${baseUrl}/api/posts`)
-		const response = await fetch(`${baseUrl}/api/posts`, {
-			cache: "no-store",
-			next: { revalidate: 60 }, // Revalidate every minute
-		})
+		console.log(`Fetching posts from API route: ${apiUrl}`)
 
-		if (!response.ok) {
-			const errorText = await response.text()
-			console.error(`Error fetching posts: ${response.status} ${errorText}`)
-			return { posts: [], error: `API error: ${response.status}` }
+		// Create a fetch request with timeout
+		const controller = new AbortController()
+		const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 second timeout
+
+		try {
+			const response = await fetch(apiUrl, {
+				cache: "no-store",
+				signal: controller.signal,
+				next: { revalidate: 0 },
+			})
+
+			clearTimeout(timeoutId)
+
+			if (!response.ok) {
+				const errorText = await response.text()
+				console.error(`Error fetching posts: ${response.status} ${errorText}`)
+				return { posts: [], error: `API error: ${response.status}` }
+			}
+
+			const data = await response.json()
+			console.log(`API returned ${data.posts?.length || 0} posts`)
+			return { posts: data.posts || [], error: null }
+		} catch (err: unknown) {
+			clearTimeout(timeoutId)
+			if (err instanceof Error && err.name === "AbortError") {
+				console.error("Fetch request timed out")
+				return {
+					posts: [],
+					error: "Request timed out. Please try again later.",
+				}
+			}
+			throw err // Re-throw other errors to be caught by the outer try/catch
 		}
-
-		const data = await response.json()
-		console.log(`API returned ${data.posts?.length || 0} posts`)
-		return { posts: data.posts || [], error: null }
 	} catch (err) {
 		console.error("Exception fetching posts:", err)
 		return {
@@ -43,9 +61,21 @@ async function fetchPosts(): Promise<{ posts: Post[]; error: string | null }> {
 	}
 }
 
-export default async function ThinkingPage() {
-	// Get posts from API route
-	const { posts, error } = await fetchPosts()
+export default function ThinkingPage() {
+	const [posts, setPosts] = useState<Post[]>([])
+	const [error, setError] = useState<string | null>(null)
+	const [loading, setLoading] = useState(true)
+
+	useEffect(() => {
+		async function loadPosts() {
+			const result = await fetchPosts()
+			setPosts(result.posts)
+			setError(result.error)
+			setLoading(false)
+		}
+
+		loadPosts()
+	}, [])
 
 	// Sort all posts by date
 	const sortedPosts = [...posts].sort(
@@ -65,7 +95,13 @@ export default async function ThinkingPage() {
 				</p>
 			</div>
 
-			{error && (
+			{loading && (
+				<div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8">
+					<p className="text-blue-700">Loading posts...</p>
+				</div>
+			)}
+
+			{error && !loading && (
 				<div className="bg-red-50 border-l-4 border-red-500 p-4 mb-8">
 					<p className="text-red-700">
 						There was an error loading posts. Please try again later.
@@ -76,7 +112,7 @@ export default async function ThinkingPage() {
 				</div>
 			)}
 
-			{sortedPosts.length === 0 && !error ? (
+			{sortedPosts.length === 0 && !error && !loading ? (
 				<div className="bg-yellow-50 border-l-4 border-yellow-500 p-4">
 					<p>No posts found. Check back later for new content.</p>
 				</div>
@@ -102,12 +138,9 @@ export default async function ThinkingPage() {
 									<div>
 										<p className="text-sm text-[rgba(var(--color-foreground),0.6)] mb-2">
 											{post.published_at ? formatDate(post.published_at) : ""} •{" "}
-											<Link
-												href={`/thinking/${post.category}`}
-												className="hover:text-[rgba(var(--color-foreground),0.9)] transition-colors"
-											>
+											<span className="hover:text-[rgba(var(--color-foreground),0.9)] transition-colors">
 												{post.category}
-											</Link>
+											</span>
 										</p>
 										<h2 className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-3 group-hover:text-[rgb(var(--color-violet))] transition-colors">
 											{post.title}

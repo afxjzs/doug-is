@@ -12,53 +12,63 @@ async function fetchPosts(): Promise<{
 	raw: any
 }> {
 	try {
-		// Use relative URL in production, absolute URL in development for better error messages
-		const baseUrl = process.env.VERCEL_URL
-			? `https://${process.env.VERCEL_URL}`
-			: process.env.NODE_ENV === "development"
-			? "http://localhost:3000"
-			: ""
+		// We need to use a complete URL for server components
+		const protocol = process.env.NODE_ENV === "development" ? "http:" : "https:"
+		const host =
+			process.env.NODE_ENV === "development"
+				? "localhost:3000"
+				: process.env.VERCEL_URL || "doug-is.vercel.app"
+		const apiUrl = `${protocol}//${host}/api/posts`
 
-		console.log(
-			`Debug page: Fetching posts from API route: ${baseUrl}/api/posts`
-		)
-		const response = await fetch(`${baseUrl}/api/posts`, {
-			cache: "no-store",
-			next: { revalidate: 0 }, // Don't cache for debug page
-		})
+		console.log(`Debug: Fetching posts from API route: ${apiUrl}`)
 
-		const responseText = await response.text()
-		let data
+		// Create a fetch request with timeout
+		const controller = new AbortController()
+		const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 second timeout
+
 		try {
-			data = JSON.parse(responseText)
-		} catch (e) {
-			return {
-				posts: [],
-				error: `Failed to parse JSON: ${responseText}`,
-				raw: { status: response.status, text: responseText },
-			}
-		}
+			const response = await fetch(apiUrl, {
+				cache: "no-store",
+				signal: controller.signal,
+				next: { revalidate: 0 },
+			})
 
-		if (!response.ok) {
-			console.error(
-				`Debug page: Error fetching posts: ${response.status} ${responseText}`
-			)
-			return {
-				posts: [],
-				error: `API error: ${response.status}`,
-				raw: { status: response.status, data },
-			}
-		}
+			clearTimeout(timeoutId)
 
-		console.log(`Debug page: API returned ${data.posts?.length || 0} posts`)
-		return { posts: data.posts || [], error: null, raw: data }
+			if (!response.ok) {
+				const errorText = await response.text()
+				console.error(
+					`Debug: Error fetching posts: ${response.status} ${errorText}`
+				)
+				return {
+					posts: [],
+					error: `API error: ${response.status}`,
+					raw: { status: response.status, text: errorText },
+				}
+			}
+
+			const data = await response.json()
+			console.log(`Debug: API returned ${data.posts?.length || 0} posts`)
+			return { posts: data.posts || [], error: null, raw: data }
+		} catch (err: unknown) {
+			clearTimeout(timeoutId)
+			if (err instanceof Error && err.name === "AbortError") {
+				console.error("Debug: Fetch request timed out")
+				return {
+					posts: [],
+					error: "Request timed out. Please try again later.",
+					raw: { error: "timeout" },
+				}
+			}
+			throw err // Re-throw other errors to be caught by the outer try/catch
+		}
 	} catch (err) {
-		console.error("Debug page: Exception fetching posts:", err)
+		console.error("Debug: Exception fetching posts:", err)
 		return {
 			posts: [],
 			error:
 				err instanceof Error ? err.message : "Unknown error fetching posts",
-			raw: { error: String(err) },
+			raw: { error: err },
 		}
 	}
 }
