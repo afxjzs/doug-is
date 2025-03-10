@@ -1,23 +1,82 @@
 import { Metadata } from "next"
-import { getPosts, Post } from "@/lib/supabase/client"
+import { Post } from "@/lib/supabase/client"
 
 export const metadata: Metadata = {
 	title: "Debug | Doug.is",
 	description: "Debug page for troubleshooting",
 }
 
-export default async function DebugPage() {
-	// Get posts from Supabase with error handling
-	let posts: Post[] = []
-	let error: Error | null = null
-
+async function fetchPosts(): Promise<{
+	posts: Post[]
+	error: string | null
+	raw: any
+}> {
 	try {
-		console.log("Debug page: Fetching posts...")
-		posts = await getPosts()
-		console.log(`Debug page: Fetched ${posts.length} posts`)
+		// Use relative URL in production, absolute URL in development for better error messages
+		const baseUrl = process.env.VERCEL_URL
+			? `https://${process.env.VERCEL_URL}`
+			: process.env.NODE_ENV === "development"
+			? "http://localhost:3000"
+			: ""
+
+		console.log(
+			`Debug page: Fetching posts from API route: ${baseUrl}/api/posts`
+		)
+		const response = await fetch(`${baseUrl}/api/posts`, {
+			cache: "no-store",
+			next: { revalidate: 0 }, // Don't cache for debug page
+		})
+
+		const responseText = await response.text()
+		let data
+		try {
+			data = JSON.parse(responseText)
+		} catch (e) {
+			return {
+				posts: [],
+				error: `Failed to parse JSON: ${responseText}`,
+				raw: { status: response.status, text: responseText },
+			}
+		}
+
+		if (!response.ok) {
+			console.error(
+				`Debug page: Error fetching posts: ${response.status} ${responseText}`
+			)
+			return {
+				posts: [],
+				error: `API error: ${response.status}`,
+				raw: { status: response.status, data },
+			}
+		}
+
+		console.log(`Debug page: API returned ${data.posts?.length || 0} posts`)
+		return { posts: data.posts || [], error: null, raw: data }
 	} catch (err) {
-		console.error("Debug page: Error fetching posts:", err)
-		error = err instanceof Error ? err : new Error(String(err))
+		console.error("Debug page: Exception fetching posts:", err)
+		return {
+			posts: [],
+			error:
+				err instanceof Error ? err.message : "Unknown error fetching posts",
+			raw: { error: String(err) },
+		}
+	}
+}
+
+export default async function DebugPage() {
+	// Get posts from API route
+	const { posts, error, raw } = await fetchPosts()
+
+	// Get environment variables for debugging
+	const envVars = {
+		NODE_ENV: process.env.NODE_ENV || "not set",
+		VERCEL_URL: process.env.VERCEL_URL || "not set",
+		VERCEL_ENV: process.env.VERCEL_ENV || "not set",
+		// Don't include the actual values of sensitive env vars
+		HAS_SUPABASE_URL: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+		HAS_SUPABASE_KEY: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+		SUPABASE_URL_LENGTH: process.env.NEXT_PUBLIC_SUPABASE_URL?.length || 0,
+		SUPABASE_KEY_LENGTH: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.length || 0,
 	}
 
 	return (
@@ -30,13 +89,31 @@ export default async function DebugPage() {
 			</div>
 
 			<div className="mb-8">
+				<h2 className="text-2xl font-bold mb-4">Environment</h2>
+				<div className="bg-gray-100 p-4 rounded-lg mb-4">
+					<pre className="whitespace-pre-wrap">
+						{JSON.stringify(envVars, null, 2)}
+					</pre>
+				</div>
+			</div>
+
+			<div className="mb-8">
+				<h2 className="text-2xl font-bold mb-4">API Response</h2>
+				<div className="bg-gray-100 p-4 rounded-lg mb-4">
+					<pre className="whitespace-pre-wrap">
+						{JSON.stringify(raw, null, 2)}
+					</pre>
+				</div>
+			</div>
+
+			<div className="mb-8">
 				<h2 className="text-2xl font-bold mb-4">Posts Data</h2>
 				<div className="bg-gray-100 p-4 rounded-lg">
 					<p className="mb-2">Post Count: {posts.length}</p>
 					{error && (
 						<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
 							<p className="font-bold">Error:</p>
-							<p>{error.message}</p>
+							<p>{error}</p>
 						</div>
 					)}
 				</div>

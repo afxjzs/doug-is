@@ -1,27 +1,51 @@
 import Link from "next/link"
 import { Metadata } from "next"
-import { getPosts, Post } from "@/lib/supabase/client"
 import { formatDate } from "@/lib/utils"
 import SafeImage from "@/components/SafeImage"
+import { Post } from "@/lib/supabase/client"
 
 export const metadata: Metadata = {
 	title: "Thinking | Doug.is",
 	description: "Thoughts, ideas, and insights on various topics",
 }
 
-export default async function ThinkingPage() {
-	// Get posts from Supabase with error handling
-	let posts: Post[] = []
-	let error: Error | null = null
-
+async function fetchPosts(): Promise<{ posts: Post[]; error: string | null }> {
 	try {
-		console.log("Thinking page: Fetching posts...")
-		posts = await getPosts()
-		console.log(`Thinking page: Fetched ${posts.length} posts`)
+		// Use relative URL in production, absolute URL in development for better error messages
+		const baseUrl = process.env.VERCEL_URL
+			? `https://${process.env.VERCEL_URL}`
+			: process.env.NODE_ENV === "development"
+			? "http://localhost:3000"
+			: ""
+
+		console.log(`Fetching posts from API route: ${baseUrl}/api/posts`)
+		const response = await fetch(`${baseUrl}/api/posts`, {
+			cache: "no-store",
+			next: { revalidate: 60 }, // Revalidate every minute
+		})
+
+		if (!response.ok) {
+			const errorText = await response.text()
+			console.error(`Error fetching posts: ${response.status} ${errorText}`)
+			return { posts: [], error: `API error: ${response.status}` }
+		}
+
+		const data = await response.json()
+		console.log(`API returned ${data.posts?.length || 0} posts`)
+		return { posts: data.posts || [], error: null }
 	} catch (err) {
-		console.error("Thinking page: Error fetching posts:", err)
-		error = err instanceof Error ? err : new Error(String(err))
+		console.error("Exception fetching posts:", err)
+		return {
+			posts: [],
+			error:
+				err instanceof Error ? err.message : "Unknown error fetching posts",
+		}
 	}
+}
+
+export default async function ThinkingPage() {
+	// Get posts from API route
+	const { posts, error } = await fetchPosts()
 
 	// Sort all posts by date
 	const sortedPosts = [...posts].sort(
@@ -47,7 +71,7 @@ export default async function ThinkingPage() {
 						There was an error loading posts. Please try again later.
 					</p>
 					{process.env.NODE_ENV === "development" && (
-						<p className="text-red-500 text-sm mt-2">{error.message}</p>
+						<p className="text-red-500 text-sm mt-2">{error}</p>
 					)}
 				</div>
 			)}
