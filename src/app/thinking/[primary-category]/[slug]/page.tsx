@@ -8,7 +8,7 @@ import type { Metadata } from "next"
 export async function generateMetadata({
 	params,
 }: {
-	params: { slug: string }
+	params: { primary_category: string; slug: string }
 }): Promise<Metadata> {
 	const post = await getPostBySlug(params.slug)
 
@@ -30,14 +30,15 @@ export async function generateStaticParams() {
 	const posts = await getPosts()
 
 	return posts.map((post) => ({
+		primary_category: post.category,
 		slug: post.slug,
 	}))
 }
 
-export default async function BlogPostPage({
+export default async function ThinkingPostPage({
 	params,
 }: {
-	params: { slug: string }
+	params: { primary_category: string; slug: string }
 }) {
 	const post = await getPostBySlug(params.slug)
 
@@ -60,8 +61,8 @@ export default async function BlogPostPage({
 			{/* Header */}
 			<div className="mb-8 text-center">
 				<Link
-					href="/blog"
-					className="inline-flex items-center text-white/60 hover:text-white mb-6 transition-colors"
+					href="/thinking"
+					className="inline-flex items-center text-[rgba(var(--color-foreground),0.6)] hover:text-[rgba(var(--color-foreground),1)] mb-6 transition-colors"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -77,17 +78,14 @@ export default async function BlogPostPage({
 							d="M15 19l-7-7 7-7"
 						/>
 					</svg>
-					Back to Blog
+					Back to Thinking
 				</Link>
 
-				<h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 relative inline-block">
-					<span className="bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent">
-						{post.title}
-					</span>
-					<span className="absolute -inset-1 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 opacity-30 blur-lg"></span>
+				<h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 gradient-heading">
+					{post.title}
 				</h1>
 
-				<div className="flex items-center justify-center space-x-4 text-white/60 text-sm">
+				<div className="flex items-center justify-center space-x-4 text-[rgba(var(--color-foreground),0.6)] text-sm">
 					<span>
 						{new Date(post.published_at || "").toLocaleDateString("en-US", {
 							year: "numeric",
@@ -97,8 +95,8 @@ export default async function BlogPostPage({
 					</span>
 					<span>•</span>
 					<Link
-						href={`/${post.category}`}
-						className="uppercase tracking-wider hover:text-white transition-colors"
+						href={`/thinking/${post.category}`}
+						className="uppercase tracking-wider hover:text-[rgba(var(--color-foreground),1)] transition-colors"
 					>
 						{post.category}
 					</Link>
@@ -119,15 +117,15 @@ export default async function BlogPostPage({
 			)}
 
 			{/* Content */}
-			<div className="prose prose-invert prose-lg max-w-none prose-headings:text-gradient prose-a:text-cyan-400 prose-a:no-underline hover:prose-a:text-cyan-300 prose-a:transition-colors prose-img:rounded-xl">
+			<div className="prose prose-invert prose-lg max-w-none prose-headings:gradient-text-violet prose-a:text-[rgba(var(--color-cyan),0.9)] prose-a:no-underline hover:prose-a:text-[rgba(var(--color-cyan),1)] prose-a:transition-colors prose-img:rounded-xl">
 				<div dangerouslySetInnerHTML={{ __html: content }} />
 			</div>
 
 			{/* Footer */}
-			<div className="mt-12 pt-8 border-t border-white/10">
+			<div className="mt-12 pt-8 border-t border-[rgba(var(--color-foreground),0.1)]">
 				<Link
-					href="/blog"
-					className="inline-flex items-center text-white/60 hover:text-white transition-colors"
+					href="/thinking"
+					className="inline-flex items-center text-[rgba(var(--color-foreground),0.6)] hover:text-[rgba(var(--color-foreground),1)] transition-colors"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -143,7 +141,7 @@ export default async function BlogPostPage({
 							d="M15 19l-7-7 7-7"
 						/>
 					</svg>
-					Back to Blog
+					Back to Thinking
 				</Link>
 			</div>
 		</article>

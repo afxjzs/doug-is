@@ -1,8 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Metadata } from "next"
-import { getPosts } from "@/lib/supabase/client"
-import { getAllPosts } from "@/lib/utils/markdown"
+import { getPostsByCategory } from "@/lib/supabase/client"
 import { formatDate } from "@/lib/utils"
 
 export const metadata: Metadata = {
@@ -11,229 +10,293 @@ export const metadata: Metadata = {
 }
 
 export default async function AdvisingPage() {
-	// Get posts from both Supabase and markdown files with category "advisory"
-	const supabasePosts = await getPosts("advisory")
-	const markdownPosts = getAllPosts("advisory")
+	// Get posts from Supabase with category "advisory"
+	const posts = await getPostsByCategory("advisory")
 
-	// Convert markdown posts to the same format as Supabase posts
-	const convertedMarkdownPosts = markdownPosts.map((post) => ({
-		id: post.slug,
-		title: post.title,
-		slug: post.slug,
-		content: post.content,
-		excerpt: post.excerpt,
-		published_at: post.date,
-		category: post.category,
-		featured_image: post.featured_image,
-	}))
-
-	// Combine and sort all posts by date
-	const advisoryPosts = [...supabasePosts, ...convertedMarkdownPosts].sort(
+	// Sort posts by date
+	const sortedPosts = [...posts].sort(
 		(a, b) =>
-			new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+			new Date(b.published_at || "").getTime() -
+			new Date(a.published_at || "").getTime()
 	)
 
 	return (
 		<div className="max-w-4xl mx-auto">
-			<div className="mb-12">
-				<h1 className="text-4xl font-bold text-gray-900 mb-4">
-					Advisory Services
-				</h1>
-				<p className="text-xl text-gray-600">
-					Professional guidance and strategic advice for businesses and
-					startups.
-				</p>
-			</div>
-
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
-				<div>
-					<h2 className="text-2xl font-semibold text-gray-900 mb-4">
-						How I Can Help
-					</h2>
-					<p className="text-gray-600 mb-6">
-						With years of experience in the industry, I provide strategic
-						advisory services to help businesses navigate challenges and
-						capitalize on opportunities.
+			{/* Hero Section */}
+			<div className="mb-16 relative">
+				<div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 to-cyan-900/20 rounded-lg -z-10 blur-xl"></div>
+				<div className="relative z-10 py-16 px-8 border border-[rgba(var(--color-foreground),0.05)] rounded-lg bg-[rgba(var(--color-background),0.8)] backdrop-blur-sm">
+					<h1 className="text-4xl md:text-5xl font-bold gradient-heading mb-6 text-center">
+						Advisory Services
+					</h1>
+					<p className="text-xl text-[rgba(var(--color-foreground),0.8)] mb-8 text-center max-w-2xl mx-auto">
+						Strategic guidance for businesses and startups navigating the
+						digital landscape.
 					</p>
-					<ul className="space-y-3">
-						<li className="flex items-start">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								className="h-6 w-6 text-blue-500 mr-2 flex-shrink-0"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-								/>
-							</svg>
-							<span>Strategic planning and business development</span>
-						</li>
-						<li className="flex items-start">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								className="h-6 w-6 text-blue-500 mr-2 flex-shrink-0"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-								/>
-							</svg>
-							<span>Market analysis and competitive positioning</span>
-						</li>
-						<li className="flex items-start">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								className="h-6 w-6 text-blue-500 mr-2 flex-shrink-0"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-								/>
-							</svg>
-							<span>Product strategy and roadmap development</span>
-						</li>
-						<li className="flex items-start">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								className="h-6 w-6 text-blue-500 mr-2 flex-shrink-0"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-								/>
-							</svg>
-							<span>Fundraising and investor relations</span>
-						</li>
-					</ul>
-				</div>
-				<div className="relative h-80 rounded-lg overflow-hidden">
-					<Image
-						src="/images/advisory-services.jpg"
-						alt="Advisory Services"
-						fill
-						className="object-cover"
-					/>
 				</div>
 			</div>
 
-			<div className="bg-gray-50 p-8 rounded-lg mb-16">
-				<h2 className="text-2xl font-semibold text-gray-900 mb-6">
-					Work With Me
+			{/* Services Section */}
+			<div className="mb-16">
+				<h2 className="text-3xl font-bold gradient-heading mb-8">
+					How I Can Help
 				</h2>
-				<p className="text-gray-600 mb-6">
-					I offer flexible advisory arrangements tailored to your specific
-					needs:
-				</p>
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-					<div className="bg-white p-6 rounded-lg shadow-sm">
-						<h3 className="text-xl font-semibold text-gray-900 mb-3">
-							One-time Consultation
+
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+					<div className="dark-card">
+						<h3 className="text-xl font-semibold mb-4 gradient-text-cyan">
+							Technology Strategy
 						</h3>
-						<p className="text-gray-600 mb-4">
-							A focused session to address specific challenges or questions.
+						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
+							Navigate complex technology decisions with confidence. I provide
+							guidance on tech stack selection, architecture planning, and
+							digital transformation initiatives.
 						</p>
+						<ul className="space-y-2 mb-4">
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Tech stack evaluation and selection</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Architecture planning and review</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Digital transformation roadmapping</span>
+							</li>
+						</ul>
 					</div>
-					<div className="bg-white p-6 rounded-lg shadow-sm">
-						<h3 className="text-xl font-semibold text-gray-900 mb-3">
-							Monthly Retainer
+
+					<div className="dark-card">
+						<h3 className="text-xl font-semibold mb-4 gradient-text-magenta">
+							Product Development
 						</h3>
-						<p className="text-gray-600 mb-4">
-							Ongoing support with regular check-ins and strategic guidance.
+						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
+							Turn your vision into reality with strategic product development
+							guidance. From concept to launch, I help navigate the complexities
+							of building successful digital products.
 						</p>
+						<ul className="space-y-2 mb-4">
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Product strategy and roadmapping</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>MVP definition and development planning</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Feature prioritization frameworks</span>
+							</li>
+						</ul>
 					</div>
-					<div className="bg-white p-6 rounded-lg shadow-sm">
-						<h3 className="text-xl font-semibold text-gray-900 mb-3">
-							Project-based
+
+					<div className="dark-card">
+						<h3 className="text-xl font-semibold mb-4 gradient-text-violet">
+							Startup Guidance
 						</h3>
-						<p className="text-gray-600 mb-4">
-							Dedicated support for specific initiatives or projects.
+						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
+							Navigate the challenges of early-stage growth with experienced
+							guidance. I help founders make informed decisions about
+							technology, product, and go-to-market strategies.
 						</p>
+						<ul className="space-y-2 mb-4">
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Technical co-founder consultation</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>MVP strategy and execution</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Technology investment planning</span>
+							</li>
+						</ul>
+					</div>
+
+					<div className="dark-card">
+						<h3 className="text-xl font-semibold mb-4 gradient-text-cyan">
+							Team Building
+						</h3>
+						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
+							Build high-performing technical teams that deliver results. I
+							provide guidance on hiring, team structure, and creating a culture
+							of innovation and excellence.
+						</p>
+						<ul className="space-y-2 mb-4">
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Technical hiring strategy</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Team structure optimization</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Engineering culture development</span>
+							</li>
+						</ul>
 					</div>
 				</div>
-				<div className="mt-8 text-center">
-					<Link
-						href="/around-here-somehwere"
-						className="inline-block px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
-					>
+			</div>
+
+			{/* Process Section */}
+			<div className="mb-16">
+				<h2 className="text-3xl font-bold gradient-heading mb-8">
+					My Approach
+				</h2>
+
+				<div className="space-y-8">
+					<div className="flex flex-col md:flex-row gap-6 items-start">
+						<div className="flex-shrink-0 w-16 h-16 rounded-full bg-[rgba(var(--color-violet),0.1)] flex items-center justify-center border border-[rgba(var(--color-violet),0.2)]">
+							<span className="text-2xl font-bold gradient-text-violet">1</span>
+						</div>
+						<div>
+							<h3 className="text-xl font-semibold mb-2 gradient-text-violet">
+								Discovery
+							</h3>
+							<p className="text-[rgba(var(--color-foreground),0.7)]">
+								I begin by deeply understanding your business, goals, and
+								challenges. This involves stakeholder interviews, reviewing
+								existing systems, and identifying key opportunities and
+								constraints.
+							</p>
+						</div>
+					</div>
+
+					<div className="flex flex-col md:flex-row gap-6 items-start">
+						<div className="flex-shrink-0 w-16 h-16 rounded-full bg-[rgba(var(--color-cyan),0.1)] flex items-center justify-center border border-[rgba(var(--color-cyan),0.2)]">
+							<span className="text-2xl font-bold gradient-text-cyan">2</span>
+						</div>
+						<div>
+							<h3 className="text-xl font-semibold mb-2 gradient-text-cyan">
+								Strategy Development
+							</h3>
+							<p className="text-[rgba(var(--color-foreground),0.7)]">
+								Based on discovery insights, I develop a tailored strategy that
+								aligns technology decisions with your business objectives. This
+								includes specific recommendations, roadmaps, and implementation
+								plans.
+							</p>
+						</div>
+					</div>
+
+					<div className="flex flex-col md:flex-row gap-6 items-start">
+						<div className="flex-shrink-0 w-16 h-16 rounded-full bg-[rgba(var(--color-magenta),0.1)] flex items-center justify-center border border-[rgba(var(--color-magenta),0.2)]">
+							<span className="text-2xl font-bold gradient-text-magenta">
+								3
+							</span>
+						</div>
+						<div>
+							<h3 className="text-xl font-semibold mb-2 gradient-text-magenta">
+								Implementation Support
+							</h3>
+							<p className="text-[rgba(var(--color-foreground),0.7)]">
+								I provide ongoing guidance during the implementation phase,
+								helping navigate challenges, make adjustments, and ensure the
+								strategy delivers the intended outcomes.
+							</p>
+						</div>
+					</div>
+
+					<div className="flex flex-col md:flex-row gap-6 items-start">
+						<div className="flex-shrink-0 w-16 h-16 rounded-full bg-[rgba(var(--color-violet),0.1)] flex items-center justify-center border border-[rgba(var(--color-violet),0.2)]">
+							<span className="text-2xl font-bold gradient-text-violet">4</span>
+						</div>
+						<div>
+							<h3 className="text-xl font-semibold mb-2 gradient-text-violet">
+								Continuous Improvement
+							</h3>
+							<p className="text-[rgba(var(--color-foreground),0.7)]">
+								Technology and markets evolve rapidly. I help establish
+								frameworks for continuous evaluation and improvement, ensuring
+								your technology strategy remains effective and aligned with
+								changing business needs.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{/* Insights Section */}
+			{sortedPosts.length > 0 && (
+				<div className="mb-16">
+					<h2 className="text-3xl font-bold gradient-heading mb-8">
+						Advisory Insights
+					</h2>
+
+					<div className="space-y-8">
+						{sortedPosts.slice(0, 3).map((post) => (
+							<article
+								key={post.id}
+								className="border border-[rgba(var(--color-foreground),0.05)] rounded-lg overflow-hidden bg-[rgba(var(--color-foreground),0.02)] hover:bg-[rgba(var(--color-foreground),0.04)] transition-all duration-300"
+							>
+								<Link href={`/thinking/advisory/${post.slug}`}>
+									<div className="p-6">
+										<p className="text-sm text-[rgba(var(--color-foreground),0.6)] mb-2">
+											{post.published_at ? formatDate(post.published_at) : ""}
+										</p>
+										<h3 className="text-xl font-bold mb-2 text-[rgba(var(--color-foreground),0.9)]">
+											{post.title}
+										</h3>
+										<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
+											{post.excerpt}
+										</p>
+										<span className="neon-link">
+											Read more
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform"
+												viewBox="0 0 20 20"
+												fill="currentColor"
+											>
+												<path
+													fillRule="evenodd"
+													d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+													clipRule="evenodd"
+												/>
+											</svg>
+										</span>
+									</div>
+								</Link>
+							</article>
+						))}
+					</div>
+
+					{sortedPosts.length > 3 && (
+						<div className="mt-8 text-center">
+							<Link
+								href="/thinking/advisory"
+								className="neon-button-violet inline-block"
+							>
+								View All Advisory Insights
+							</Link>
+						</div>
+					)}
+				</div>
+			)}
+
+			{/* CTA Section */}
+			<div className="relative">
+				<div className="absolute inset-0 bg-gradient-to-r from-violet-900/20 to-cyan-900/20 rounded-lg -z-10 blur-xl"></div>
+				<div className="relative z-10 p-8 border border-[rgba(var(--color-foreground),0.05)] rounded-lg bg-[rgba(var(--color-background),0.8)] backdrop-blur-sm text-center">
+					<h2 className="text-2xl font-semibold gradient-heading mb-4">
+						Let&apos;s Work Together
+					</h2>
+					<p className="text-[rgba(var(--color-foreground),0.8)] mb-6 max-w-2xl mx-auto">
+						Interested in advisory services? I&apos;m available for consulting
+						engagements, workshops, and ongoing advisory roles.
+					</p>
+					<Link href="mailto:hello@doug.is" className="neon-button-cyan">
 						Get in Touch
 					</Link>
 				</div>
 			</div>
-
-			{advisoryPosts.length > 0 && (
-				<div>
-					<h2 className="text-2xl font-semibold text-gray-900 mb-6">
-						Advisory Insights
-					</h2>
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-						{advisoryPosts.map((post) => (
-							<Link key={post.id} href={`/writing/${post.slug}`}>
-								<div className="group border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-									{post.featured_image && (
-										<div className="relative h-48 w-full">
-											<Image
-												src={post.featured_image}
-												alt={post.title}
-												fill
-												className="object-cover group-hover:scale-105 transition-transform duration-300"
-											/>
-										</div>
-									)}
-									<div className="p-6">
-										<p className="text-sm text-gray-500 mb-2">
-											{formatDate(post.published_at)}
-										</p>
-										<h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-											{post.title}
-										</h3>
-										<p className="text-gray-600">{post.excerpt}</p>
-									</div>
-								</div>
-							</Link>
-						))}
-					</div>
-					<div className="mt-8 text-center">
-						<Link
-							href="/writing"
-							className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
-						>
-							View all posts
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								className="h-5 w-5 ml-1"
-								viewBox="0 0 20 20"
-								fill="currentColor"
-							>
-								<path
-									fillRule="evenodd"
-									d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-									clipRule="evenodd"
-								/>
-							</svg>
-						</Link>
-					</div>
-				</div>
-			)}
 		</div>
 	)
 }

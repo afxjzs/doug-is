@@ -1,7 +1,6 @@
 import Link from "next/link"
 import { Metadata } from "next"
 import { getPosts } from "@/lib/supabase/client"
-import { getAllPosts } from "@/lib/utils/markdown"
 import { formatDate } from "@/lib/utils"
 import SafeImage from "@/components/SafeImage"
 
@@ -11,24 +10,11 @@ export const metadata: Metadata = {
 }
 
 export default async function ThinkingPage() {
-	// Get posts from both Supabase and markdown files
-	const supabasePosts = await getPosts()
-	const markdownPosts = getAllPosts()
+	// Get posts from Supabase
+	const posts = await getPosts()
 
-	// Convert markdown posts to the same format as Supabase posts
-	const convertedMarkdownPosts = markdownPosts.map((post) => ({
-		id: post.slug,
-		title: post.title,
-		slug: post.slug,
-		content: post.content,
-		excerpt: post.excerpt,
-		published_at: post.date || new Date().toISOString(),
-		category: post.category,
-		featured_image: post.featured_image,
-	}))
-
-	// Combine and sort all posts by date
-	const allPosts = [...supabasePosts, ...convertedMarkdownPosts].sort(
+	// Sort all posts by date
+	const sortedPosts = [...posts].sort(
 		(a, b) =>
 			new Date(b.published_at || "").getTime() -
 			new Date(a.published_at || "").getTime()
@@ -46,12 +32,12 @@ export default async function ThinkingPage() {
 			</div>
 
 			<div className="space-y-12">
-				{allPosts.map((post) => (
+				{sortedPosts.map((post) => (
 					<article
 						key={post.id}
 						className="border-b border-[rgba(var(--color-foreground),0.1)] pb-12 last:border-0"
 					>
-						<Link href={`/thinking/${post.slug}`}>
+						<Link href={`/thinking/${post.category}/${post.slug}`}>
 							<div className="group">
 								{post.featured_image && (
 									<div className="relative h-64 w-full mb-6 overflow-hidden rounded-lg">
@@ -66,7 +52,12 @@ export default async function ThinkingPage() {
 								<div>
 									<p className="text-sm text-[rgba(var(--color-foreground),0.6)] mb-2">
 										{post.published_at ? formatDate(post.published_at) : ""} •{" "}
-										{post.category}
+										<Link
+											href={`/thinking/${post.category}`}
+											className="hover:text-[rgba(var(--color-foreground),0.9)] transition-colors"
+										>
+											{post.category}
+										</Link>
 									</p>
 									<h2 className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-3 group-hover:text-[rgb(var(--color-violet))] transition-colors">
 										{post.title}

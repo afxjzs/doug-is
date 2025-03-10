@@ -1,55 +1,84 @@
 import Link from "next/link"
 import { Metadata } from "next"
-import { getPosts } from "@/lib/supabase/client"
-import { getAllPosts } from "@/lib/utils/markdown"
+import { getPostsByCategory } from "@/lib/supabase/client"
 import { formatDate } from "@/lib/utils"
 import SafeImage from "@/components/SafeImage"
+import { notFound } from "next/navigation"
 
-export const metadata: Metadata = {
-	title: "Writing | Doug.is",
-	description: "Blog posts and articles by Doug",
+export async function generateMetadata({
+	params,
+}: {
+	params: { primary_category: string }
+}): Promise<Metadata> {
+	// Capitalize the first letter of each word in the category
+	const formattedCategory = params.primary_category
+		.split("-")
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(" ")
+
+	return {
+		title: `${formattedCategory} | Doug.is Thinking`,
+		description: `Thoughts, ideas, and insights on ${formattedCategory.toLowerCase()}.`,
+	}
 }
 
-export default async function WritingPage() {
-	// Get posts from both Supabase and markdown files
-	const supabasePosts = await getPosts()
-	const markdownPosts = getAllPosts()
+export default async function ThinkingCategoryPage({
+	params,
+}: {
+	params: { primary_category: string }
+}) {
+	const category = params.primary_category
+	const posts = await getPostsByCategory(category)
 
-	// Convert markdown posts to the same format as Supabase posts
-	const convertedMarkdownPosts = markdownPosts.map((post) => ({
-		id: post.slug,
-		title: post.title,
-		slug: post.slug,
-		content: post.content,
-		excerpt: post.excerpt,
-		published_at: post.date || new Date().toISOString(),
-		category: post.category,
-		featured_image: post.featured_image,
-	}))
+	if (!posts || posts.length === 0) {
+		notFound()
+	}
 
-	// Combine and sort all posts by date
-	const allPosts = [...supabasePosts, ...convertedMarkdownPosts].sort(
-		(a, b) =>
-			new Date(b.published_at || "").getTime() -
-			new Date(a.published_at || "").getTime()
-	)
+	// Capitalize the first letter of each word in the category
+	const formattedCategory = category
+		.split("-")
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(" ")
 
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-12">
-				<h1 className="text-4xl font-bold gradient-heading mb-4">Writing</h1>
+				<Link
+					href="/thinking"
+					className="inline-flex items-center text-[rgba(var(--color-foreground),0.6)] hover:text-[rgba(var(--color-foreground),1)] mb-6 transition-colors"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						className="h-4 w-4 mr-2"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor"
+					>
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeWidth={2}
+							d="M15 19l-7-7 7-7"
+						/>
+					</svg>
+					Back to All Thinking
+				</Link>
+
+				<h1 className="text-4xl font-bold gradient-heading mb-4">
+					{formattedCategory}
+				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
-					Thoughts, ideas, and insights on various topics.
+					Thoughts, ideas, and insights on {formattedCategory.toLowerCase()}.
 				</p>
 			</div>
 
 			<div className="space-y-12">
-				{allPosts.map((post) => (
+				{posts.map((post) => (
 					<article
 						key={post.id}
 						className="border-b border-[rgba(var(--color-foreground),0.1)] pb-12 last:border-0"
 					>
-						<Link href={`/writing/${post.slug}`}>
+						<Link href={`/thinking/${category}/${post.slug}`}>
 							<div className="group">
 								{post.featured_image && (
 									<div className="relative h-64 w-full mb-6 overflow-hidden rounded-lg">
@@ -63,8 +92,7 @@ export default async function WritingPage() {
 								)}
 								<div>
 									<p className="text-sm text-[rgba(var(--color-foreground),0.6)] mb-2">
-										{post.published_at ? formatDate(post.published_at) : ""} •{" "}
-										{post.category}
+										{post.published_at ? formatDate(post.published_at) : ""}
 									</p>
 									<h2 className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-3 group-hover:text-[rgb(var(--color-violet))] transition-colors">
 										{post.title}

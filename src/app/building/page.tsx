@@ -31,7 +31,7 @@ const projects = [
 	},
 	{
 		id: "bolt-form",
-		title: "Bolt Form",
+		title: "BoltForm",
 		description:
 			"A JavaScript form builder with validation, conditional logic, and API integration.",
 		image: "/images/projects/bolt-form.jpg",
@@ -45,11 +45,14 @@ export default function BuildingPage() {
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-12">
-				<h1 className="text-4xl font-bold gradient-heading mb-4">
+				<p className="text-lg text-[rgba(var(--color-foreground),0.7)] mb-2">
 					doug.is/building
+				</p>
+				<h1 className="text-4xl font-bold gradient-heading mb-4">
+					Current Projects
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
-					Projects and things I&apos;ve built. A showcase of my work.
+					Some things I&apos;m currently working on.
 				</p>
 			</div>
 
