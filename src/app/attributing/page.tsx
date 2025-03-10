@@ -1,5 +1,12 @@
 import Link from "next/link"
+import Image from "next/image"
+import { Metadata } from "next"
 import IconWithGradient from "./IconWithGradient"
+
+export const metadata: Metadata = {
+	title: "Attributions | Doug.is",
+	description: "Attribution for resources used on this site",
+}
 
 export default function AttributingPage() {
 	const attributions = [

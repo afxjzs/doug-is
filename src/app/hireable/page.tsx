@@ -13,7 +13,8 @@ export default function HireablePage() {
 			<div className="mb-12">
 				<h1 className="text-4xl font-bold text-gray-900 mb-4">Hire Me</h1>
 				<p className="text-xl text-gray-600">
-					I'm available for consulting, advisory roles, and select projects.
+					I&apos;m available for consulting, advisory roles, and select
+					projects.
 				</p>
 			</div>
 
@@ -33,10 +34,10 @@ export default function HireablePage() {
 						About Me
 					</h2>
 					<p className="text-gray-600 mb-6">
-						I'm a seasoned professional with expertise in technology, investing,
-						and business advisory. With a track record of helping businesses
-						grow and succeed, I bring a unique perspective and valuable insights
-						to every project.
+						I&apos;m a seasoned professional with expertise in technology,
+						investing, and business advisory. With a track record of helping
+						businesses grow and succeed, I bring a unique perspective and
+						valuable insights to every project.
 					</p>
 					<div className="flex space-x-4">
 						<Link

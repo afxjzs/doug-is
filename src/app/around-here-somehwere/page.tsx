@@ -13,7 +13,7 @@ export default function ContactPage() {
 				<h1 className="text-4xl font-bold text-gray-900 mb-4">Get in Touch</h1>
 				<p className="text-xl text-gray-600">
 					Have a question, inquiry, or just want to say hello? Fill out the form
-					below and I'll get back to you as soon as possible.
+					below and I&apos;ll get back to you as soon as possible.
 				</p>
 			</div>
 

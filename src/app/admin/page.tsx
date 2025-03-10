@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@supabase/supabase-js"
 import {
@@ -35,16 +35,26 @@ export default function AdminPage() {
 	const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
 	const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-	useEffect(() => {
-		checkAuth()
-		loadPosts()
-	}, [])
-
-	async function checkAuth() {
+	const checkAuth = useCallback(async () => {
 		const { data } = await supabase.auth.getSession()
 		setIsAuthenticated(!!data.session)
 		setIsLoading(false)
-	}
+	}, [supabase.auth])
+
+	const loadPosts = useCallback(async () => {
+		try {
+			const { data, error } = await supabase.from("posts").select("*")
+			if (error) throw error
+			setPosts(data || [])
+		} catch (error) {
+			console.error("Error loading posts:", error)
+		}
+	}, [supabase])
+
+	useEffect(() => {
+		checkAuth()
+		loadPosts()
+	}, [checkAuth, loadPosts])
 
 	async function handleLogin(e: React.FormEvent) {
 		e.preventDefault()
@@ -70,15 +80,6 @@ export default function AdminPage() {
 	async function handleLogout() {
 		await supabase.auth.signOut()
 		setIsAuthenticated(false)
-	}
-
-	async function loadPosts() {
-		try {
-			const allPosts = await getPosts()
-			setPosts(allPosts)
-		} catch (err: any) {
-			console.error("Error loading posts:", err)
-		}
 	}
 
 	async function handleSubmit(e: React.FormEvent) {

@@ -136,7 +136,7 @@ export default function ShoppingPage() {
 					Coming Soon
 				</h3>
 				<p className="text-gray-600 mb-6">
-					We're working on exciting new features for the Shopping List app,
+					We&apos;re working on exciting new features for the Shopping List app,
 					including:
 				</p>
 				<ul className="space-y-3">
