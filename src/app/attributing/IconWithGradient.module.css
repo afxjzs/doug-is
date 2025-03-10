@@ -1,0 +1,62 @@
+.iconContainer {
+	width: 3rem;
+	height: 3rem;
+	position: relative;
+	flex-shrink: 0;
+}
+
+.iconWrapper {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.icon {
+	object-fit: contain;
+	position: relative;
+	z-index: 0;
+}
+
+.gradientOverlay {
+	position: absolute;
+	inset: 0;
+	z-index: 10;
+	transition: all 0.3s ease;
+	background: linear-gradient(
+		45deg,
+		rgb(var(--color-cyan)),
+		rgb(var(--color-violet)),
+		rgb(var(--color-magenta))
+	);
+	mix-blend-mode: screen;
+	opacity: 0.75;
+	filter: brightness(1.2) contrast(1.2);
+}
+
+.gradientGlow {
+	position: absolute;
+	inset: 0;
+	z-index: 5;
+	transition: all 0.3s ease;
+	background: linear-gradient(
+		45deg,
+		rgb(var(--color-cyan)),
+		rgb(var(--color-violet)),
+		rgb(var(--color-magenta))
+	);
+	opacity: 0.6;
+	filter: blur(4px);
+}
+
+.iconWrapper:hover .gradientOverlay {
+	opacity: 0.9;
+	filter: brightness(1.4) contrast(1.3);
+}
+
+.iconWrapper:hover .gradientGlow {
+	opacity: 0.8;
+	filter: blur(6px);
+}
