@@ -36,7 +36,7 @@ const nextConfig = {
 				pathname: "**",
 			},
 		],
-		// Disable image optimization in development for faster builds
+		// Disable image optimization only in development
 		unoptimized: process.env.NODE_ENV === "development",
 	},
 
@@ -46,20 +46,19 @@ const nextConfig = {
 	// Disable source maps in production to improve performance
 	productionBrowserSourceMaps: false,
 
-	// Reduce the impact of type checking during development
+	// Disable these only in development
 	typescript: {
-		// !! WARN !!
-		// Dangerously allow production builds to successfully complete even if
-		// your project has type errors.
-		// !! WARN !!
+		// Only ignore TypeScript errors in development
 		ignoreBuildErrors: process.env.NODE_ENV === "development",
 	},
 
-	// Disable ESLint during development for faster builds
 	eslint: {
-		// Only run ESLint on build in production
+		// Only ignore ESLint errors in development
 		ignoreDuringBuilds: process.env.NODE_ENV === "development",
 	},
+
+	// Enable output file tracing for serverless functions
+	output: "standalone",
 }
 
 module.exports = nextConfig

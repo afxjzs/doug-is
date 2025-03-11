@@ -1,13 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Metadata } from "next"
 import { Post } from "@/lib/supabase/client"
-
-export const metadata: Metadata = {
-	title: "Debug | Doug.is",
-	description: "Debug page for troubleshooting",
-}
 
 async function fetchPosts(): Promise<{
 	posts: Post[]
