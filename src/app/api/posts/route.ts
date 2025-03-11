@@ -16,6 +16,10 @@ export async function GET() {
 		HAS_SUPABASE_KEY: !!supabaseAnonKey,
 		SUPABASE_URL_LENGTH: supabaseUrl?.length || 0,
 		SUPABASE_KEY_LENGTH: supabaseAnonKey?.length || 0,
+		SUPABASE_URL_FIRST_10: supabaseUrl?.substring(0, 10) || "",
+		SUPABASE_KEY_FIRST_10: supabaseAnonKey?.substring(0, 10) || "",
+		SUPABASE_KEY_LAST_10:
+			supabaseAnonKey?.substring(supabaseAnonKey.length - 10) || "",
 	})
 
 	if (!supabaseUrl || !supabaseAnonKey) {

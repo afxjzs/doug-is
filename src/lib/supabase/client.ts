@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js"
 
+// Ensure we have the full URL and key without any truncation or formatting issues
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
 
@@ -68,6 +69,7 @@ export const supabase = isMissingCredentials
 	: createClient(supabaseUrl, supabaseAnonKey, {
 			auth: {
 				persistSession: false, // Don't persist session in SSR context
+				autoRefreshToken: false,
 			},
 	  })
 
@@ -82,6 +84,13 @@ export async function verifySupabaseConnection(): Promise<boolean> {
 		console.log("Attempting to verify Supabase connection...")
 		console.log(`URL: ${supabaseUrl}`)
 		console.log(`Anon key present: ${!!supabaseAnonKey}`)
+		console.log(`Anon key length: ${supabaseAnonKey.length}`)
+		console.log(`Anon key first 10 chars: ${supabaseAnonKey.substring(0, 10)}`)
+		console.log(
+			`Anon key last 10 chars: ${supabaseAnonKey.substring(
+				supabaseAnonKey.length - 10
+			)}`
+		)
 
 		const { data, error } = await supabase.from("posts").select("id").limit(1)
 
