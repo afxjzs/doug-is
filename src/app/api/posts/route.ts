@@ -1,86 +1,60 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@supabase/supabase-js"
+import { getPosts } from "@/lib/supabase/client"
 
-// Disable dynamic rendering for this route
+// Use force-dynamic to ensure fresh data on each request
+// Consider using ISR (revalidate) for production if data doesn't change frequently
 export const dynamic = "force-dynamic"
 
-export async function GET() {
-	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-	const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-	// Log environment information for debugging
-	console.log("API route environment:", {
-		NODE_ENV: process.env.NODE_ENV,
-		VERCEL_ENV: process.env.VERCEL_ENV,
-		HAS_SUPABASE_URL: !!supabaseUrl,
-		HAS_SUPABASE_KEY: !!supabaseAnonKey,
-		SUPABASE_URL_LENGTH: supabaseUrl?.length || 0,
-		SUPABASE_KEY_LENGTH: supabaseAnonKey?.length || 0,
-		SUPABASE_URL_FIRST_10: supabaseUrl?.substring(0, 10) || "",
-		SUPABASE_KEY_FIRST_10: supabaseAnonKey?.substring(0, 10) || "",
-		SUPABASE_KEY_LAST_10:
-			supabaseAnonKey?.substring(supabaseAnonKey.length - 10) || "",
-	})
-
-	if (!supabaseUrl || !supabaseAnonKey) {
-		console.error("Missing Supabase credentials in API route")
-		return NextResponse.json(
-			{
-				error: "Database configuration error",
-				details: {
-					hasUrl: !!supabaseUrl,
-					hasKey: !!supabaseAnonKey,
-				},
-			},
-			{ status: 500 }
-		)
-	}
+/**
+ * GET handler for fetching posts
+ * Supports query parameters:
+ * - limit: number of posts to return
+ * - category: filter by category
+ */
+export async function GET(request: Request) {
+	// Get URL to parse query parameters
+	const url = new URL(request.url)
+	const limit = url.searchParams.get("limit")
+		? parseInt(url.searchParams.get("limit") as string, 10)
+		: undefined
+	const category = url.searchParams.get("category") || undefined
 
 	try {
-		console.log(
-			`API route: Connecting to Supabase at ${supabaseUrl.substring(0, 20)}...`
-		)
-
-		// Create Supabase client with minimal configuration
-		const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-		console.log("API route: Fetching posts...")
-
-		// Simple direct query
-		const { data, error } = await supabase
-			.from("posts")
-			.select("*")
-			.order("published_at", { ascending: false })
-
-		if (error) {
-			console.error("API route: Error fetching posts:", error)
-			return NextResponse.json(
-				{
-					error: error.message,
-					details: {
-						code: error.code,
-						hint: error.hint,
-						details: error.details,
-					},
-				},
-				{ status: 500 }
-			)
+		// Log request information in development
+		if (process.env.NODE_ENV === "development") {
+			console.log("API route: Fetching posts...", { limit, category })
 		}
 
-		console.log(`API route: Successfully fetched ${data?.length || 0} posts`)
-		if (data && data.length > 0) {
-			console.log("API route: First post:", JSON.stringify(data[0], null, 2))
-		} else {
-			console.log("API route: No posts found")
+		// Fetch posts with the updated client function
+		const posts = await getPosts(limit, category)
+
+		// Log success in development
+		if (process.env.NODE_ENV === "development") {
+			console.log(`API route: Successfully fetched ${posts?.length || 0} posts`)
+			if (posts && posts.length > 0) {
+				console.log("API route: First post:", JSON.stringify(posts[0], null, 2))
+			}
 		}
 
-		return NextResponse.json({ posts: data || [] })
+		// Return successful response with posts
+		return NextResponse.json({
+			posts,
+			meta: {
+				count: posts.length,
+				limit,
+				category,
+			},
+		})
 	} catch (err) {
+		// Log detailed error information
 		console.error("API route: Exception fetching posts:", err)
+
+		// Return appropriate error response
 		return NextResponse.json(
 			{
 				error: err instanceof Error ? err.message : "Unknown error",
-				stack: err instanceof Error ? err.stack : undefined,
+				code:
+					err instanceof Error && "code" in err ? (err as any).code : undefined,
 			},
 			{ status: 500 }
 		)

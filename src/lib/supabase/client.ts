@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js"
+import type { Database } from "../types/supabase"
 
 // Ensure we have the full URL and key without any truncation or formatting issues
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
@@ -63,133 +64,135 @@ const mockPosts: Post[] = [
 	},
 ]
 
-// Create a Supabase client with error handling
-export const supabase = isMissingCredentials
-	? null
-	: createClient(supabaseUrl, supabaseAnonKey, {
-			auth: {
-				persistSession: false, // Don't persist session in SSR context
-				autoRefreshToken: false,
-			},
-	  })
-
-// Function to verify Supabase connection
-export async function verifySupabaseConnection(): Promise<boolean> {
-	if (isMissingCredentials || !supabase) {
-		console.warn("⚠️ Supabase client not initialized - missing credentials")
-		return false
-	}
-
-	try {
-		console.log("Attempting to verify Supabase connection...")
-		console.log(`URL: ${supabaseUrl}`)
-		console.log(`Anon key present: ${!!supabaseAnonKey}`)
-		console.log(`Anon key length: ${supabaseAnonKey.length}`)
-		console.log(`Anon key first 10 chars: ${supabaseAnonKey.substring(0, 10)}`)
-		console.log(
-			`Anon key last 10 chars: ${supabaseAnonKey.substring(
-				supabaseAnonKey.length - 10
-			)}`
-		)
-
-		const { data, error } = await supabase.from("posts").select("id").limit(1)
-
-		if (error) {
-			console.error("Supabase connection error:", error)
-			return false
-		}
-
-		console.log("Supabase connection successful, data:", data)
-		return true
-	} catch (err) {
-		console.error("Failed to verify Supabase connection:", err)
-		return false
-	}
-}
-
+// Type definitions
 export interface Post {
 	id: string
 	title: string
 	slug: string
 	content: string
 	excerpt: string
-	published_at?: string
+	published_at: string
 	category: string
 	featured_image?: string
+	created_at?: string
+	updated_at?: string
 }
 
-export async function getPosts(): Promise<Post[]> {
-	// If in development with missing credentials, return mock data
-	if (isMissingCredentials || !supabase) {
+/**
+ * Creates a Supabase client with proper error handling and type safety
+ * @returns A typed Supabase client instance or null if credentials are missing
+ */
+export const createSupabaseClient = () => {
+	// Validate environment variables
+	if (!supabaseUrl || !supabaseAnonKey) {
 		if (isDev) {
-			console.warn(
-				"Using mock data for posts - Supabase client not initialized"
-			)
-			return mockPosts
+			console.warn("⚠️ Using mock Supabase client in development")
+			return null
 		}
-		console.warn(
-			"Missing Supabase credentials in production - returning empty array"
-		)
-		return []
+
+		console.error("Missing Supabase credentials")
+		throw new Error("Missing Supabase credentials")
 	}
 
 	try {
-		console.log("Fetching posts from Supabase...")
-		console.log(`Using Supabase URL: ${supabaseUrl.substring(0, 20)}...`)
+		// Create and return a typed Supabase client
+		return createClient<Database>(supabaseUrl, supabaseAnonKey, {
+			auth: {
+				persistSession: true,
+				autoRefreshToken: true,
+			},
+		})
+	} catch (error) {
+		console.error("Failed to create Supabase client:", error)
+		throw new Error("Failed to initialize database client")
+	}
+}
 
-		// Simple direct query without timeout
-		const { data, error } = await supabase
+// Create a singleton instance for client-side usage
+let supabaseInstance: ReturnType<typeof createSupabaseClient> | null = null
+
+/**
+ * Gets a singleton Supabase client instance
+ * @returns A typed Supabase client instance or null if in development with missing credentials
+ */
+export const getSupabaseClient = () => {
+	if (!supabaseInstance) {
+		supabaseInstance = createSupabaseClient()
+	}
+	return supabaseInstance
+}
+
+/**
+ * Fetches posts from Supabase or returns mock data in development
+ * @param limit Optional number of posts to fetch
+ * @param category Optional category to filter by
+ * @returns Array of posts
+ */
+export const getPosts = async (
+	limit?: number,
+	category?: string
+): Promise<Post[]> => {
+	const supabase = getSupabaseClient()
+
+	// Return mock data if no Supabase client
+	if (!supabase) {
+		console.log("Using mock posts data")
+		return mockPosts
+	}
+
+	try {
+		// Build query with proper type safety
+		let query = supabase
 			.from("posts")
 			.select("*")
 			.order("published_at", { ascending: false })
 
+		// Apply optional filters
+		if (category) {
+			query = query.eq("category", category)
+		}
+
+		if (limit) {
+			query = query.limit(limit)
+		}
+
+		// Execute query with proper error handling
+		const { data, error } = await query
+
 		if (error) {
 			console.error("Error fetching posts:", error)
-			// Log more details about the error
-			console.error("Error details:", JSON.stringify(error, null, 2))
-
-			// Fallback to mock data in development
-			if (isDev) {
-				console.warn("Falling back to mock data in development")
-				return mockPosts
-			}
-			return []
+			throw new Error(`Database query failed: ${error.message}`)
 		}
 
-		if (!data) {
-			console.warn("No data returned from Supabase")
-			return isDev ? mockPosts : []
-		}
-
-		console.log(`Successfully fetched ${data.length} posts`)
-		// Log the first post for debugging
-		if (data.length > 0) {
-			console.log("First post:", JSON.stringify(data[0], null, 2))
-		}
-
-		return data
+		return data as Post[]
 	} catch (error) {
 		console.error("Exception fetching posts:", error)
-		return isDev ? mockPosts : []
+
+		// Fallback to mock data in development
+		if (isDev) {
+			console.warn("⚠️ Using mock data due to error")
+			return mockPosts
+		}
+
+		throw error
 	}
 }
 
-export async function getPostBySlug(slug: string): Promise<Post | null> {
-	// If in development with missing credentials, return mock data
-	if (isMissingCredentials || !supabase) {
-		if (isDev) {
-			console.warn(
-				"Using mock data for post by slug - Supabase client not initialized"
-			)
-			const post = mockPosts.find((p) => p.slug === slug)
-			return post || null
-		}
-		return null
+/**
+ * Fetches a single post by slug
+ * @param slug The post slug to fetch
+ * @returns The post or null if not found
+ */
+export const getPostBySlug = async (slug: string): Promise<Post | null> => {
+	const supabase = getSupabaseClient()
+
+	// Return mock data if no Supabase client
+	if (!supabase) {
+		const mockPost = mockPosts.find((post) => post.slug === slug)
+		return mockPost || null
 	}
 
 	try {
-		console.log(`Fetching post with slug: ${slug}`)
-
 		const { data, error } = await supabase
 			.from("posts")
 			.select("*")
@@ -197,23 +200,26 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 			.single()
 
 		if (error) {
-			console.error(`Error fetching post with slug ${slug}:`, error)
-			if (isDev) {
-				const mockPost = mockPosts.find((p) => p.slug === slug)
-				if (mockPost) return mockPost
+			if (error.code === "PGRST116") {
+				// Not found error
+				return null
 			}
-			return null
+
+			console.error("Error fetching post by slug:", error)
+			throw new Error(`Database query failed: ${error.message}`)
 		}
 
-		console.log(`Successfully fetched post: ${data?.title}`)
-		return data
+		return data as Post
 	} catch (error) {
-		console.error(`Error fetching post with slug ${slug}:`, error)
+		console.error("Exception fetching post by slug:", error)
+
+		// Fallback to mock data in development
 		if (isDev) {
-			const mockPost = mockPosts.find((p) => p.slug === slug)
-			if (mockPost) return mockPost
+			const mockPost = mockPosts.find((post) => post.slug === slug)
+			return mockPost || null
 		}
-		return null
+
+		throw error
 	}
 }
 
@@ -417,3 +423,5 @@ export async function deletePost(id: string): Promise<boolean> {
 		throw err
 	}
 }
+
+export default getSupabaseClient

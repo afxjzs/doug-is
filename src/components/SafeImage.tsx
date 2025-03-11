@@ -1,52 +1,92 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
+import { cn } from "@/lib/utils"
 
 interface SafeImageProps {
 	src: string
 	alt: string
-	fill?: boolean
-	className?: string
 	width?: number
 	height?: number
+	className?: string
+	priority?: boolean
+	fallbackSrc?: string
+	fill?: boolean
+	sizes?: string
+	quality?: number
+	onLoad?: () => void
+	onError?: () => void
 }
 
+/**
+ * SafeImage component that handles loading states and errors gracefully
+ * Uses next/image for optimization with fallback handling
+ */
 export default function SafeImage({
 	src,
 	alt,
-	fill,
-	className,
-	width = 800,
-	height = 600,
+	width,
+	height,
+	className = "",
+	priority = false,
+	fallbackSrc = "https://placehold.co/600x400?text=Image+Not+Available",
+	fill = false,
+	sizes = "100vw",
+	quality = 85,
+	onLoad,
+	onError,
 }: SafeImageProps) {
-	const [error, setError] = useState(false)
+	const [imgSrc, setImgSrc] = useState<string>(src)
+	const [isLoading, setIsLoading] = useState<boolean>(true)
+	const [hasError, setHasError] = useState<boolean>(false)
 
-	// Use a simple placeholder instead of complex logic
-	if (error || !src) {
-		return (
-			<div
-				className={`${
-					className || ""
-				} bg-gradient-to-r from-purple-500/30 to-pink-500/30 flex items-center justify-center`}
-				style={fill ? undefined : { width, height }}
-			>
-				<span className="text-white/50 text-sm">{alt}</span>
-			</div>
-		)
+	// Reset state when src changes
+	useEffect(() => {
+		setImgSrc(src)
+		setIsLoading(true)
+		setHasError(false)
+	}, [src])
+
+	// Handle image load error
+	const handleError = () => {
+		setHasError(true)
+		setImgSrc(fallbackSrc)
+		setIsLoading(false)
+		onError?.()
+	}
+
+	// Handle image load success
+	const handleLoad = () => {
+		setIsLoading(false)
+		onLoad?.()
 	}
 
 	return (
-		<Image
-			src={src}
-			alt={alt}
-			fill={fill}
-			width={!fill ? width : undefined}
-			height={!fill ? height : undefined}
-			className={className}
-			onError={() => setError(true)}
-			unoptimized={true} // Skip image optimization to reduce build issues
-			loading="lazy" // Use lazy loading for better performance
-		/>
+		<div className={cn("relative overflow-hidden", className)}>
+			{/* Loading indicator */}
+			{isLoading && (
+				<div className="absolute inset-0 bg-gray-100 animate-pulse" />
+			)}
+
+			{/* Image component with error handling */}
+			<Image
+				src={imgSrc}
+				alt={alt}
+				width={!fill ? width : undefined}
+				height={!fill ? height : undefined}
+				className={cn(
+					"transition-opacity duration-300",
+					isLoading ? "opacity-0" : "opacity-100",
+					hasError ? "bg-gray-100" : ""
+				)}
+				onError={handleError}
+				onLoad={handleLoad}
+				priority={priority}
+				fill={fill}
+				sizes={sizes}
+				quality={quality}
+			/>
+		</div>
 	)
 }

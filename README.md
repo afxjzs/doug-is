@@ -1,100 +1,79 @@
-# Doug.is
+# Doug.is - Personal Website
 
-Personal website built with Next.js, Supabase, and Tailwind CSS.
+A modern personal website built with Next.js, React, TypeScript, and Tailwind CSS.
 
 ## Features
 
-- Vaporwave/chillwave themed design
-- Blog with categories
-- Admin interface for content management
-- Responsive design
+- Modern, responsive design with Tailwind CSS
+- Server-side rendering with Next.js App Router
+- Dynamic content from Supabase database
+- Optimized for performance with Next.js image optimization
+- Mobile-friendly navigation with animated menu
+
+## Tech Stack
+
+- **Framework**: Next.js 14 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Database**: Supabase
+- **Deployment**: Vercel
+- **UI Components**: Radix UI
+- **Analytics**: Vercel Analytics
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 20.18.3 or later
-- Supabase account
+- Node.js 18.17.0 or later
+- npm or yarn
+- Supabase account (for database functionality)
 
 ### Installation
 
 1. Clone the repository:
-
-```bash
-git clone https://github.com/yourusername/doug-is.git
-cd doug-is
-```
+   ```bash
+   git clone https://github.com/yourusername/doug-is.git
+   cd doug-is
+   ```
 
 2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-```bash
-npm install
-```
+3. Create a `.env.local` file in the root directory with the following variables:
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
 
-3. Set up environment variables:
+4. Start the development server:
+   ```bash
+   npm run dev
+   # or use the provided script
+   ./dev.sh
+   ```
 
-Create a `.env.local` file in the root directory with the following variables:
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
-```
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-```
+## Project Structure
 
-### Setting Up Supabase Tables
+- `/src/app`: Next.js App Router pages and API routes
+- `/src/components`: Reusable UI components
+- `/src/lib`: Utility functions and services
+- `/src/content`: Static content for the website
 
-1. Go to your Supabase project dashboard
-2. Navigate to the SQL Editor
-3. Copy the contents of `scripts/create-posts-table.sql`
-4. Paste and run the SQL in the Supabase SQL Editor
+## Deployment
 
-This will:
-- Create the `posts` table with the required schema
-- Set up Row Level Security policies
-- Insert sample blog posts
+The project is deployed on Vercel. Any push to the main branch will trigger a new deployment.
 
-### Setting Up Supabase Authentication
+### Environment Variables
 
-1. In your Supabase dashboard, go to Authentication > Settings
-2. Enable Email/Password sign-in method
-3. Go to Users and create a new user with your email and password
+Make sure to set the following environment variables in your Vercel project:
 
-### Running the Development Server
-
-```bash
-./dev.sh
-```
-
-This script ensures the correct Node.js version is used and cleans up build files before starting the server.
-
-## Admin Interface
-
-The admin interface is available at `/admin`. You'll need to sign in with the Supabase credentials you created.
-
-## Folder Structure
-
-- `/src/app` - Next.js app router pages
-- `/src/components` - Reusable React components
-- `/src/lib` - Utility functions and Supabase client
-- `/public` - Static assets
-- `/scripts` - Database setup scripts
-
-## Troubleshooting
-
-### Database Connection Issues
-
-If you encounter database connection issues:
-
-1. Verify your Supabase credentials in `.env.local`
-2. Check if the `posts` table exists in your Supabase project
-3. Run the SQL script in `scripts/create-posts-table.sql` if needed
-
-### Next.js Build Issues
-
-If you encounter build issues:
-
-1. Delete the `.next` directory
-2. Run `./dev.sh` to start with a clean build
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
 ## License
 
-MIT
+This project is licensed under the MIT License - see the LICENSE file for details.
