@@ -1,16 +1,17 @@
 import { NextResponse } from "next/server"
-import { supabase, verifySupabaseConnection } from "@/lib/supabase/client"
+import { getSupabaseClient } from "@/lib/supabase/client"
 import { createClient } from "@supabase/supabase-js"
 
 export async function GET() {
 	try {
-		// Verify connection
-		const isConnected = await verifySupabaseConnection()
-
 		// Get Supabase URL and check if anon key is present
 		const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
 		const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
 		const hasAnonKey = !!supabaseAnonKey
+
+		// Get the Supabase client
+		const supabase = getSupabaseClient()
+		const isConnected = !!supabase
 
 		// Create a local Supabase client to ensure it's not null
 		const localSupabase = createClient(supabaseUrl, supabaseAnonKey)

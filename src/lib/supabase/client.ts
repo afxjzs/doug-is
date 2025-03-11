@@ -223,16 +223,23 @@ export const getPostBySlug = async (slug: string): Promise<Post | null> => {
 	}
 }
 
+/**
+ * Fetches posts by category from Supabase or returns mock data in development
+ * @param category The category to filter by
+ * @returns Array of posts in the specified category
+ */
 export async function getPostsByCategory(category: string): Promise<Post[]> {
-	// If in development with missing credentials, return mock data
-	if (isMissingCredentials || !supabase) {
+	const supabase = getSupabaseClient()
+
+	// Return mock data if no Supabase client
+	if (!supabase) {
 		if (isDev) {
 			console.warn(
 				"Using mock data for posts - Supabase client not initialized"
 			)
-			return mockPosts.filter((post) => post.category === category)
 		}
-		return []
+		// Filter mock posts by category
+		return mockPosts.filter((post) => post.category === category)
 	}
 
 	try {
@@ -245,53 +252,69 @@ export async function getPostsByCategory(category: string): Promise<Post[]> {
 			.order("published_at", { ascending: false })
 
 		if (error) {
-			console.error(`Error fetching posts in category ${category}:`, error)
+			console.error("Error fetching posts by category:", error)
+
 			// Fallback to mock data in development
 			if (isDev) {
+				console.warn("Falling back to mock data due to error")
 				return mockPosts.filter((post) => post.category === category)
 			}
-			return []
+
+			throw new Error(`Database query failed: ${error.message}`)
 		}
 
-		console.log(
-			`Successfully fetched ${data?.length || 0} posts in category ${category}`
-		)
-		return data || []
+		return data as Post[]
 	} catch (error) {
-		console.error(`Error fetching posts in category ${category}:`, error)
+		console.error(`Exception fetching posts in category ${category}:`, error)
+
+		// Fallback to mock data in development
 		if (isDev) {
 			return mockPosts.filter((post) => post.category === category)
 		}
-		return []
+
+		throw error
 	}
 }
 
+/**
+ * Creates a new post in Supabase
+ * @param post Post data without ID
+ * @returns Created post or null if failed
+ */
 export async function createPost(post: Omit<Post, "id">): Promise<Post | null> {
-	// If in development with missing credentials, return mock data
-	if (isMissingCredentials || !supabase) {
+	const supabase = getSupabaseClient()
+
+	// Return mock data if no Supabase client
+	if (!supabase) {
 		if (isDev) {
 			console.warn(
 				"Using mock data for creating post - Supabase client not initialized"
 			)
-			const newPost = {
-				id: Math.random().toString(36).substring(2, 15),
-				...post,
-				published_at: post.published_at || new Date().toISOString(),
-			}
-			mockPosts.push(newPost as Post)
-			return newPost as Post
 		}
-		return null
+
+		// Create a mock post with ID
+		const mockPost: Post = {
+			id: Math.random().toString(36).substring(2, 15),
+			...post,
+			created_at: new Date().toISOString(),
+			updated_at: new Date().toISOString(),
+		}
+
+		// Add to mock posts
+		mockPosts.push(mockPost)
+		return mockPost
 	}
 
 	try {
-		// Set published_at to current date if not provided
+		// Add timestamps if not provided
 		const postWithDate = {
 			...post,
-			published_at: post.published_at || new Date().toISOString(),
+			created_at: post.created_at || new Date().toISOString(),
+			updated_at: post.updated_at || new Date().toISOString(),
 		}
 
 		console.log("Creating new post:", postWithDate.title)
+
 		const { data, error } = await supabase
 			.from("posts")
 			.insert([postWithDate])
@@ -299,53 +322,68 @@ export async function createPost(post: Omit<Post, "id">): Promise<Post | null> {
 			.single()
 
 		if (error) {
-			// If the error is about the relation not existing, use mock data
-			if (error.code === "42P01") {
-				console.warn(
-					"Table 'posts' does not exist in Supabase. Using mock data instead."
-				)
-				const newPost = {
-					id: Math.random().toString(36).substring(2, 15),
-					...post,
-					published_at: post.published_at || new Date().toISOString(),
-				}
-				mockPosts.push(newPost as Post)
-				return newPost as Post
-			}
-
-			throw error
+			console.error("Error creating post:", error)
+			throw new Error(`Database query failed: ${error.message}`)
 		}
 
-		console.log(`Successfully created post: ${data.title}`)
-		return data
-	} catch (err) {
-		console.error("Error creating post:", err)
-		throw err
+		return data as Post
+	} catch (error) {
+		console.error("Exception creating post:", error)
+
+		if (isDev) {
+			// Create a mock post with ID in development
+			const mockPost: Post = {
+				id: Math.random().toString(36).substring(2, 15),
+				...post,
+				created_at: new Date().toISOString(),
+				updated_at: new Date().toISOString(),
+			}
+
+			mockPosts.push(mockPost)
+			return mockPost
+		}
+
+		throw error
 	}
 }
 
+/**
+ * Updates an existing post in Supabase
+ * @param id Post ID
+ * @param post Post data to update
+ * @returns Updated post or null if failed
+ */
 export async function updatePost(
 	id: string,
 	post: Partial<Post>
 ): Promise<Post | null> {
-	// If in development with missing credentials, return mock data
-	if (isMissingCredentials || !supabase) {
+	const supabase = getSupabaseClient()
+
+	// Return mock data if no Supabase client
+	if (!supabase) {
 		if (isDev) {
 			console.warn(
 				"Using mock data for updating post - Supabase client not initialized"
 			)
-			const index = mockPosts.findIndex((p) => p.id === id)
-			if (index !== -1) {
-				mockPosts[index] = { ...mockPosts[index], ...post }
-				return mockPosts[index] as Post
-			}
-			return null
 		}
+
+		// Update mock post
+		const index = mockPosts.findIndex((p) => p.id === id)
+		if (index !== -1) {
+			mockPosts[index] = {
+				...mockPosts[index],
+				...post,
+				updated_at: new Date().toISOString(),
+			}
+			return mockPosts[index]
+		}
+
 		return null
 	}
 
 	try {
 		console.log(`Updating post with ID: ${id}`)
+
 		const { data, error } = await supabase
 			.from("posts")
 			.update(post)
@@ -354,73 +392,81 @@ export async function updatePost(
 			.single()
 
 		if (error) {
-			// If the error is about the relation not existing, use mock data
-			if (error.code === "42P01") {
-				console.warn(
-					"Table 'posts' does not exist in Supabase. Using mock data instead."
-				)
-				const index = mockPosts.findIndex((p) => p.id === id)
-				if (index !== -1) {
-					mockPosts[index] = { ...mockPosts[index], ...post }
-					return mockPosts[index] as Post
-				}
-				return null
-			}
-
-			throw error
+			console.error("Error updating post:", error)
+			throw new Error(`Database query failed: ${error.message}`)
 		}
 
-		console.log(`Successfully updated post: ${data.title}`)
-		return data
-	} catch (err) {
-		console.error(`Error updating post ${id}:`, err)
-		throw err
+		return data as Post
+	} catch (error) {
+		console.error(`Exception updating post with ID ${id}:`, error)
+
+		if (isDev) {
+			// Update mock post in development
+			const index = mockPosts.findIndex((p) => p.id === id)
+			if (index !== -1) {
+				mockPosts[index] = {
+					...mockPosts[index],
+					...post,
+					updated_at: new Date().toISOString(),
+				}
+				return mockPosts[index]
+			}
+		}
+
+		throw error
 	}
 }
 
+/**
+ * Deletes a post from Supabase
+ * @param id Post ID
+ * @returns Success status
+ */
 export async function deletePost(id: string): Promise<boolean> {
-	// If in development with missing credentials, return mock data
-	if (isMissingCredentials || !supabase) {
+	const supabase = getSupabaseClient()
+
+	// Return mock data if no Supabase client
+	if (!supabase) {
 		if (isDev) {
 			console.warn(
 				"Using mock data for deleting post - Supabase client not initialized"
 			)
-			const index = mockPosts.findIndex((p) => p.id === id)
-			if (index !== -1) {
-				mockPosts.splice(index, 1)
-				return true
-			}
-			return false
 		}
+
+		// Remove from mock posts
+		const index = mockPosts.findIndex((p) => p.id === id)
+		if (index !== -1) {
+			mockPosts.splice(index, 1)
+			return true
+		}
+
 		return false
 	}
 
 	try {
 		console.log(`Deleting post with ID: ${id}`)
+
 		const { error } = await supabase.from("posts").delete().eq("id", id)
 
 		if (error) {
-			// If the error is about the relation not existing, use mock data
-			if (error.code === "42P01") {
-				console.warn(
-					"Table 'posts' does not exist in Supabase. Using mock data instead."
-				)
-				const index = mockPosts.findIndex((p) => p.id === id)
-				if (index !== -1) {
-					mockPosts.splice(index, 1)
-					return true
-				}
-				return false
-			}
-
-			throw error
+			console.error("Error deleting post:", error)
+			throw new Error(`Database query failed: ${error.message}`)
 		}
 
-		console.log(`Successfully deleted post with ID: ${id}`)
 		return true
-	} catch (err) {
-		console.error(`Error deleting post ${id}:`, err)
-		throw err
+	} catch (error) {
+		console.error(`Exception deleting post with ID ${id}:`, error)
+
+		if (isDev) {
+			// Remove from mock posts in development
+			const index = mockPosts.findIndex((p) => p.id === id)
+			if (index !== -1) {
+				mockPosts.splice(index, 1)
+				return true
+			}
+		}
+
+		throw error
 	}
 }
 
