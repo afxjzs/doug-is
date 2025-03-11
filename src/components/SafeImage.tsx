@@ -17,11 +17,12 @@ export default function SafeImage({
 	alt,
 	fill,
 	className,
-	width,
-	height,
+	width = 800,
+	height = 600,
 }: SafeImageProps) {
 	const [error, setError] = useState(false)
 
+	// Use a simple placeholder instead of complex logic
 	if (error || !src) {
 		return (
 			<div
@@ -44,6 +45,8 @@ export default function SafeImage({
 			height={!fill ? height : undefined}
 			className={className}
 			onError={() => setError(true)}
+			unoptimized={true} // Skip image optimization to reduce build issues
+			loading="lazy" // Use lazy loading for better performance
 		/>
 	)
 }

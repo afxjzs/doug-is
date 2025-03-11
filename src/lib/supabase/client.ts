@@ -128,31 +128,16 @@ export async function getPosts(): Promise<Post[]> {
 		console.log("Fetching posts from Supabase...")
 		console.log(`Using Supabase URL: ${supabaseUrl.substring(0, 20)}...`)
 
-		// Add a timeout to the query
-		const timeoutPromise = new Promise<{ data: null; error: Error }>(
-			(resolve) => {
-				setTimeout(() => {
-					resolve({
-						data: null,
-						error: new Error("Supabase query timed out after 10 seconds"),
-					})
-				}, 10000) // 10 second timeout
-			}
-		)
+		// Simple direct query without timeout
+		const { data, error } = await supabase
+			.from("posts")
+			.select("*")
+			.order("published_at", { ascending: false })
 
-		// Race the query against the timeout
-		const result = await Promise.race([
-			supabase
-				.from("posts")
-				.select("*")
-				.order("published_at", { ascending: false }),
-			timeoutPromise,
-		])
-
-		if (result.error) {
-			console.error("Error fetching posts:", result.error)
+		if (error) {
+			console.error("Error fetching posts:", error)
 			// Log more details about the error
-			console.error("Error details:", JSON.stringify(result.error, null, 2))
+			console.error("Error details:", JSON.stringify(error, null, 2))
 
 			// Fallback to mock data in development
 			if (isDev) {
@@ -162,18 +147,18 @@ export async function getPosts(): Promise<Post[]> {
 			return []
 		}
 
-		if (!result.data) {
+		if (!data) {
 			console.warn("No data returned from Supabase")
 			return isDev ? mockPosts : []
 		}
 
-		console.log(`Successfully fetched ${result.data.length} posts`)
+		console.log(`Successfully fetched ${data.length} posts`)
 		// Log the first post for debugging
-		if (result.data.length > 0) {
-			console.log("First post:", JSON.stringify(result.data[0], null, 2))
+		if (data.length > 0) {
+			console.log("First post:", JSON.stringify(data[0], null, 2))
 		}
 
-		return result.data
+		return data
 	} catch (error) {
 		console.error("Exception fetching posts:", error)
 		return isDev ? mockPosts : []

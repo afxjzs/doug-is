@@ -5,10 +5,13 @@ import { Analytics } from "@vercel/analytics/react"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 
+// Optimize font loading with display swap and preload
 const inter = Inter({
 	subsets: ["latin"],
 	display: "swap",
 	variable: "--font-inter",
+	preload: true,
+	fallback: ["system-ui", "Arial", "sans-serif"],
 })
 
 export const metadata: Metadata = {
@@ -49,8 +52,8 @@ export default function RootLayout({
 	children: React.ReactNode
 }) {
 	return (
-		<html lang="en" className="scroll-smooth">
-			<body className={`${inter.className} min-h-screen flex flex-col`}>
+		<html lang="en" className={`scroll-smooth ${inter.variable}`}>
+			<body className="min-h-screen flex flex-col">
 				{/* Subtle grid background */}
 				<div className="fixed inset-0 bg-[url('/grid-bg.svg')] opacity-5 z-0 pointer-events-none"></div>
 

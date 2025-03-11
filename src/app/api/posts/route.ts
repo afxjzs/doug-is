@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 
-// Set a timeout for the API route
-export const maxDuration = 60 // 60 seconds timeout
-
 // Disable dynamic rendering for this route
 export const dynamic = "force-dynamic"
 
@@ -40,44 +37,16 @@ export async function GET() {
 			`API route: Connecting to Supabase at ${supabaseUrl.substring(0, 20)}...`
 		)
 
-		// Create Supabase client with timeout options
-		const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-			auth: {
-				persistSession: false,
-				autoRefreshToken: false,
-			},
-			global: {
-				fetch: (url, options) => {
-					return fetch(url, {
-						...options,
-						signal: AbortSignal.timeout(10000), // 10 second timeout
-					})
-				},
-			},
-		})
+		// Create Supabase client with minimal configuration
+		const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 		console.log("API route: Fetching posts...")
 
-		// Use a Promise with timeout for the query
-		const fetchWithTimeout = async () => {
-			const controller = new AbortController()
-			const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 second timeout
-
-			try {
-				const { data, error } = await supabase
-					.from("posts")
-					.select("*")
-					.order("published_at", { ascending: false })
-
-				clearTimeout(timeoutId)
-				return { data, error }
-			} catch (err) {
-				clearTimeout(timeoutId)
-				throw err
-			}
-		}
-
-		const { data, error } = await fetchWithTimeout()
+		// Simple direct query
+		const { data, error } = await supabase
+			.from("posts")
+			.select("*")
+			.order("published_at", { ascending: false })
 
 		if (error) {
 			console.error("API route: Error fetching posts:", error)

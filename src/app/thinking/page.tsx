@@ -8,49 +8,18 @@ import { useState, useEffect } from "react"
 
 async function fetchPosts(): Promise<{ posts: Post[]; error: string | null }> {
 	try {
-		// We need to use a complete URL for server components
-		const protocol = process.env.NODE_ENV === "development" ? "http:" : "https:"
-		const host =
-			process.env.NODE_ENV === "development"
-				? "localhost:3000"
-				: process.env.VERCEL_URL || "doug-is.vercel.app"
-		const apiUrl = `${protocol}//${host}/api/posts`
+		// Simple direct API call
+		const response = await fetch("/api/posts", {
+			cache: "no-store",
+		})
 
-		console.log(`Fetching posts from API route: ${apiUrl}`)
-
-		// Create a fetch request with timeout
-		const controller = new AbortController()
-		const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 second timeout
-
-		try {
-			const response = await fetch(apiUrl, {
-				cache: "no-store",
-				signal: controller.signal,
-				next: { revalidate: 0 },
-			})
-
-			clearTimeout(timeoutId)
-
-			if (!response.ok) {
-				const errorText = await response.text()
-				console.error(`Error fetching posts: ${response.status} ${errorText}`)
-				return { posts: [], error: `API error: ${response.status}` }
-			}
-
-			const data = await response.json()
-			console.log(`API returned ${data.posts?.length || 0} posts`)
-			return { posts: data.posts || [], error: null }
-		} catch (err: unknown) {
-			clearTimeout(timeoutId)
-			if (err instanceof Error && err.name === "AbortError") {
-				console.error("Fetch request timed out")
-				return {
-					posts: [],
-					error: "Request timed out. Please try again later.",
-				}
-			}
-			throw err // Re-throw other errors to be caught by the outer try/catch
+		if (!response.ok) {
+			console.error(`Error fetching posts: ${response.status}`)
+			return { posts: [], error: `API error: ${response.status}` }
 		}
+
+		const data = await response.json()
+		return { posts: data.posts || [], error: null }
 	} catch (err) {
 		console.error("Exception fetching posts:", err)
 		return {

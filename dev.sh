@@ -31,20 +31,10 @@ fi
 node_version=$(node -v)
 echo "✅ Using Node.js ${node_version}"
 
-# Check if Bun is installed
-if ! command -v bun &> /dev/null; then
-  echo "❌ Error: Bun is not installed"
-  echo "Please install Bun: https://bun.sh/docs/installation"
-  exit 1
-fi
-
-bun_version=$(bun --version)
-echo "✅ Using Bun ${bun_version}"
-
 # Clean build files and cache
 echo "🧹 Cleaning build files and cache..."
 rm -rf .next
 
-# Start Next.js development server with Bun
-echo "🌐 Starting Next.js development server with Bun..."
-bun run bun-dev
+# Start Next.js development server with Node.js
+echo "🌐 Starting Next.js development server with Node.js..."
+npm run dev
