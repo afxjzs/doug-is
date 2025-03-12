@@ -130,6 +130,115 @@ export default async function AdvisingPage() {
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 					<div className="dark-card">
 						<h3 className="text-xl font-semibold mb-4 gradient-text-cyan">
+							Technology Strategy
+						</h3>
+						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
+							Navigate complex technology decisions with confidence. I provide
+							guidance on tech stack selection, architecture planning, and
+							digital transformation initiatives.
+						</p>
+						<ul className="space-y-2 mb-4">
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Tech stack evaluation and selection</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Architecture planning and review</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Digital transformation roadmapping</span>
+							</li>
+						</ul>
+					</div>
+
+					<div className="dark-card">
+						<h3 className="text-xl font-semibold mb-4 gradient-text-magenta">
+							Product Development
+						</h3>
+						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
+							Turn your vision into reality with strategic product development
+							guidance. From concept to launch, I help navigate the complexities
+							of building successful digital products.
+						</p>
+						<ul className="space-y-2 mb-4">
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Product strategy and roadmapping</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>MVP definition and development planning</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Feature prioritization frameworks</span>
+							</li>
+						</ul>
+					</div>
+
+					<div className="dark-card">
+						<h3 className="text-xl font-semibold mb-4 gradient-text-violet">
+							Startup Guidance
+						</h3>
+						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
+							Navigate the challenges of early-stage growth with experienced
+							guidance. I help founders make informed decisions about
+							technology, product, and go-to-market strategies.
+						</p>
+						<ul className="space-y-2 mb-4">
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Technical co-founder consultation</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>MVP strategy and execution</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Technology investment planning</span>
+							</li>
+						</ul>
+					</div>
+
+					<div className="dark-card">
+						<h3 className="text-xl font-semibold mb-4 gradient-text-cyan">
+							Team Building
+						</h3>
+						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
+							Build high-performing technical teams that deliver results. I
+							provide guidance on hiring, team structure, and creating a culture
+							of innovation and excellence.
+						</p>
+						<ul className="space-y-2 mb-4">
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Technical hiring strategy</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Team structure optimization</span>
+							</li>
+							<li className="flex items-start">
+								<span className="check-mark mr-2">✓</span>
+								<span>Engineering culture development</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			{/* B2B Services Section */}
+			<div className="mb-16">
+				<h2 className="text-3xl font-bold gradient-heading mb-8">
+					B2B Startup Services
+				</h2>
+
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+					<div className="dark-card">
+						<h3 className="text-xl font-semibold mb-4 gradient-text-cyan">
 							B2B Go-to-Market Strategy
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">

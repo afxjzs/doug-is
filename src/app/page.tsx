@@ -60,20 +60,20 @@ export default function HomePage() {
 				</h2>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 					<Link
-						href="/thinking"
+						href="/advising"
 						className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-foreground),0.05)] transition-all duration-300 hover:border-cyan-500/30 hover:shadow-[0_0_15px_rgba(0,255,255,0.15)]"
 					>
 						<div className="absolute inset-0 bg-gradient-to-br from-cyan-900/20 to-purple-900/10 opacity-50 group-hover:opacity-70 transition-opacity duration-300"></div>
 						<div className="relative p-8">
 							<h3 className="text-3xl md:text-4xl font-semibold mb-3 text-cyan-300 leading-[1.2]">
-								thinking
+								advising
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)] mb-4 leading-[1.2]">
-								Explore my thoughts on technology, investing, and business
-								strategy.
+								Strategic guidance for B2B startups from a YC and Techstars
+								alum.
 							</p>
 							<div className="flex items-center text-cyan-400">
-								<span className="leading-[1.2]">Read articles</span>
+								<span className="leading-[1.2]">Learn more</span>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									className="h-5 w-5 ml-2"
@@ -151,19 +151,52 @@ export default function HomePage() {
 					</Link>
 
 					<Link
-						href="/hustling"
+						href="/thinking"
 						className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-foreground),0.05)] transition-all duration-300 hover:border-pink-500/30 hover:shadow-[0_0_15px_rgba(236,72,153,0.15)]"
 					>
 						<div className="absolute inset-0 bg-gradient-to-br from-pink-900/10 to-pink-800/5 opacity-50 group-hover:opacity-70 transition-opacity duration-300"></div>
 						<div className="relative p-8">
 							<h3 className="text-3xl md:text-4xl font-semibold mb-3 text-pink-300 leading-[1.2]">
-								hustling
+								writing
+							</h3>
+							<p className="text-[rgba(var(--color-foreground),0.7)] mb-4 leading-[1.2]">
+								Explore my thoughts on technology, investing, and business
+								strategy.
+							</p>
+							<div className="flex items-center text-pink-400">
+								<span className="leading-[1.2]">Read articles</span>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="h-5 w-5 ml-2"
+									viewBox="0 0 20 20"
+									fill="currentColor"
+								>
+									<path
+										fillRule="evenodd"
+										d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+										clipRule="evenodd"
+									/>
+								</svg>
+							</div>
+						</div>
+					</Link>
+				</div>
+
+				<div className="mt-8 grid grid-cols-1 gap-8">
+					<Link
+						href="/hustling"
+						className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-foreground),0.05)] transition-all duration-300 hover:border-purple-500/30 hover:shadow-[0_0_15px_rgba(168,85,247,0.15)]"
+					>
+						<div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 to-purple-800/5 opacity-50 group-hover:opacity-70 transition-opacity duration-300"></div>
+						<div className="relative p-8">
+							<h3 className="text-3xl md:text-4xl font-semibold mb-3 text-purple-300 leading-[1.2]">
+								about me
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)] mb-4 leading-[1.2]">
 								Get to know me, my background, and how to get in touch.
 							</p>
-							<div className="flex items-center text-pink-400">
-								<span className="leading-[1.2]">Connect with me</span>
+							<div className="flex items-center text-purple-400">
+								<span className="leading-[1.2]">Learn More</span>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									className="h-5 w-5 ml-2"

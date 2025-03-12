@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils"
 // Updated navigation items to match the requested structure
 const navItems = [
 	{ name: "/building", path: "/building" },
-	{ name: "/thinking", path: "/thinking" },
+	{ name: "/advising", path: "/advising" },
 	{ name: "/investing", path: "/investing" },
-	{ name: "/hustling", path: "/hustling" },
+	{ name: "/writing", path: "/thinking" },
 ]
 
 export default function Header() {
