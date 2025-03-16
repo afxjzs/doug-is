@@ -50,44 +50,70 @@ export default function Header() {
 			}`}
 		>
 			<div className="container mx-auto px-4 py-4">
-				{/* Desktop and Mobile Header Layout */}
-				<div className="flex items-center justify-center relative">
-					{/* Logo */}
-					<div className="flex items-center space-x-1 absolute left-0">
-						<Link href="/" className="group relative">
+				{/* Desktop Header Layout */}
+				<div className="hidden md:flex items-center justify-between">
+					{/* Left - Empty space */}
+					<div className="flex-1"></div>
+
+					{/* Center - Logo and Navigation */}
+					<div className="flex items-center justify-center space-x-8">
+						{/* Logo */}
+						<Link href="/" className="group relative flex items-center">
 							<h1 className="text-lg font-bold gradient-heading">doug.is</h1>
 							<span className="absolute -inset-1 bg-gradient-to-r from-[rgba(var(--color-violet),0.2)] to-[rgba(var(--color-cyan),0.2)] opacity-30 blur-lg group-hover:opacity-50 transition-opacity"></span>
+							<span className="text-[rgba(var(--color-foreground),0.5)] text-lg">
+								...
+							</span>
 						</Link>
-						<span className="text-[rgba(var(--color-foreground),0.5)] text-lg">
-							...
-						</span>
-					</div>
 
-					{/* Desktop navigation - centered */}
-					<nav className="hidden md:flex items-center space-x-1">
+						{/* Navigation links */}
 						{navItems.map((item) => (
-							<NavLink
+							<Link
 								key={item.path}
 								href={item.path}
-								isActive={
+								className={`text-lg relative group transition-all duration-300 px-3 py-2 ${
 									pathname === item.path || pathname.startsWith(`${item.path}/`)
-								}
+										? "text-[rgba(var(--color-cyan),1)] drop-shadow-[0_0_3px_rgba(var(--color-cyan),0.7)]"
+										: "text-[rgba(var(--color-foreground),0.8)] hover:text-[rgba(var(--color-foreground),1)]"
+								}`}
 							>
 								{item.name}
-							</NavLink>
+								<span
+									className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-[rgba(var(--color-violet),0.7)] to-[rgba(var(--color-cyan),0.7)] transition-all duration-300 ${
+										pathname === item.path ||
+										pathname.startsWith(`${item.path}/`)
+											? "w-full"
+											: "w-0 group-hover:w-full"
+									}`}
+								></span>
+							</Link>
 						))}
-					</nav>
+					</div>
 
-					{/* Let's Connect button - right justified on desktop */}
-					<div className="hidden md:block absolute right-0">
-						<Link href="/contact" className="neon-button-magenta text-sm py-2">
+					{/* Right - Let's Connect button */}
+					<div className="flex-1 flex justify-end">
+						<Link
+							href="/contact"
+							className="neon-button-magenta text-sm py-2 whitespace-nowrap"
+						>
 							Let&apos;s Connect
 						</Link>
 					</div>
+				</div>
 
-					{/* Mobile menu button - right justified */}
+				{/* Mobile Header Layout */}
+				<div className="flex md:hidden items-center justify-between">
+					<Link href="/" className="group relative flex items-center">
+						<h1 className="text-lg font-bold gradient-heading">doug.is</h1>
+						<span className="absolute -inset-1 bg-gradient-to-r from-[rgba(var(--color-violet),0.2)] to-[rgba(var(--color-cyan),0.2)] opacity-30 blur-lg group-hover:opacity-50 transition-opacity"></span>
+						<span className="text-[rgba(var(--color-foreground),0.5)] text-lg">
+							...
+						</span>
+					</Link>
+
+					{/* Mobile menu button */}
 					<button
-						className="md:hidden text-[rgba(var(--color-foreground),0.9)] z-50 absolute right-0"
+						className="text-[rgba(var(--color-foreground),0.9)] z-50"
 						onClick={() => setIsMenuOpen(!isMenuOpen)}
 						aria-label={isMenuOpen ? "Close menu" : "Open menu"}
 					>
@@ -141,17 +167,19 @@ export default function Header() {
 						<nav className="p-6 bg-[rgba(var(--color-background),0.95)] rounded-lg border border-[rgba(var(--color-foreground),0.1)] shadow-lg">
 							<div className="flex flex-col space-y-4">
 								{navItems.map((item) => (
-									<MobileNavLink
+									<Link
 										key={item.path}
 										href={item.path}
 										onClick={() => setIsMenuOpen(false)}
-										isActive={
+										className={`text-lg py-3 px-4 rounded-md transition-all duration-300 ${
 											pathname === item.path ||
 											pathname.startsWith(`${item.path}/`)
-										}
+												? "bg-[rgba(var(--color-violet),0.15)] text-[rgba(var(--color-cyan),1)] drop-shadow-[0_0_3px_rgba(var(--color-cyan),0.7)]"
+												: "text-[rgba(var(--color-foreground),0.8)] hover:text-[rgba(var(--color-foreground),1)] hover:bg-[rgba(var(--color-foreground),0.05)]"
+										}`}
 									>
 										{item.name}
-									</MobileNavLink>
+									</Link>
 								))}
 
 								{/* Let's Connect button in mobile menu */}
@@ -168,59 +196,5 @@ export default function Header() {
 				</div>
 			</div>
 		</header>
-	)
-}
-
-function NavLink({
-	href,
-	children,
-	isActive,
-}: {
-	href: string
-	children: React.ReactNode
-	isActive: boolean
-}) {
-	return (
-		<Link
-			href={href}
-			className={`text-lg relative group transition-all duration-300 px-3 py-2 ${
-				isActive
-					? "text-[rgba(var(--color-cyan),1)] drop-shadow-[0_0_3px_rgba(var(--color-cyan),0.7)]"
-					: "text-[rgba(var(--color-foreground),0.8)] hover:text-[rgba(var(--color-foreground),1)]"
-			}`}
-		>
-			{children}
-			<span
-				className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-[rgba(var(--color-violet),0.7)] to-[rgba(var(--color-cyan),0.7)] transition-all duration-300 ${
-					isActive ? "w-full" : "w-0 group-hover:w-full"
-				}`}
-			></span>
-		</Link>
-	)
-}
-
-function MobileNavLink({
-	href,
-	onClick,
-	children,
-	isActive,
-}: {
-	href: string
-	onClick: () => void
-	children: React.ReactNode
-	isActive: boolean
-}) {
-	return (
-		<Link
-			href={href}
-			onClick={onClick}
-			className={`text-lg py-3 px-4 rounded-md transition-all duration-300 ${
-				isActive
-					? "bg-[rgba(var(--color-violet),0.15)] text-[rgba(var(--color-cyan),1)] drop-shadow-[0_0_3px_rgba(var(--color-cyan),0.7)]"
-					: "text-[rgba(var(--color-foreground),0.8)] hover:text-[rgba(var(--color-foreground),1)] hover:bg-[rgba(var(--color-foreground),0.05)]"
-			}`}
-		>
-			{children}
-		</Link>
 	)
 }
