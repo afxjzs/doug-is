@@ -355,8 +355,11 @@ export default async function AdvisingPage() {
 							opportunity your startup is facing.
 						</p>
 						<div className="mt-auto">
-							<Link href="/contact" className="neon-button block text-center">
-								Book a Session
+							<Link
+								href="/connecting"
+								className="neon-button block text-center"
+							>
+								Book a free 15-minute consultation
 							</Link>
 						</div>
 					</div>
@@ -370,8 +373,11 @@ export default async function AdvisingPage() {
 							to help navigate your startup journey.
 						</p>
 						<div className="mt-auto">
-							<Link href="/contact" className="neon-button block text-center">
-								Discuss Options
+							<Link
+								href="/connecting"
+								className="neon-button block text-center"
+							>
+								Book a free 15-minute consultation
 							</Link>
 						</div>
 					</div>
@@ -385,7 +391,10 @@ export default async function AdvisingPage() {
 							preparation, fundraising, or pilot program design.
 						</p>
 						<div className="mt-auto">
-							<Link href="/contact" className="neon-button block text-center">
+							<Link
+								href="/connecting"
+								className="neon-button block text-center"
+							>
 								Get in Touch
 							</Link>
 						</div>
@@ -437,7 +446,7 @@ export default async function AdvisingPage() {
 						pilot programs can help your B2B startup reach its goals.
 					</p>
 					<div className="flex justify-center">
-						<Link href="/contact" className="neon-button-lg">
+						<Link href="/connecting" className="neon-button-lg">
 							Get in Touch
 						</Link>
 					</div>

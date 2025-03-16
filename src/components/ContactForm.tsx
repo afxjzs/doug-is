@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 
 type FormState = {
@@ -22,6 +22,15 @@ export default function ContactForm() {
 	})
 	const [status, setStatus] = useState<FormStatus>("idle")
 	const [errorMessage, setErrorMessage] = useState<string>("")
+	const [isVisible, setIsVisible] = useState(false)
+
+	useEffect(() => {
+		if (status === "success") {
+			setIsVisible(true)
+		} else {
+			setIsVisible(false)
+		}
+	}, [status])
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -36,7 +45,7 @@ export default function ContactForm() {
 		setErrorMessage("")
 
 		try {
-			const response = await fetch("/api/contact", {
+			const response = await fetch("/api/connecting", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -69,10 +78,7 @@ export default function ContactForm() {
 				message: "",
 			})
 
-			// Redirect after a short delay to show success message
-			setTimeout(() => {
-				router.push("/contact/thank-you")
-			}, 2000)
+			// No longer redirecting to thank-you page
 		} catch (error) {
 			setStatus("error")
 			if (error instanceof SyntaxError && error.message.includes("JSON")) {
@@ -92,17 +98,44 @@ export default function ContactForm() {
 		}
 	}
 
+	// Display thank you message when form is successfully submitted
+	if (status === "success") {
+		return (
+			<div className="space-y-6">
+				<div
+					className={`
+						dark-card
+						bg-[rgba(var(--color-background),0.4)]
+						border border-[rgba(var(--color-cyan),0.4)]
+						shadow-[0_0_15px_rgba(var(--color-cyan),0.3)]
+						rounded-md text-center p-8
+						transition-all duration-500 ease-in-out
+						${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}
+					`}
+				>
+					<h3 className="text-2xl font-semibold gradient-text-cyan mb-3">
+						Thank You!
+					</h3>
+					<p className="text-[rgba(var(--color-foreground),0.8)] mb-6">
+						Your message has been received. I'll get back to you as soon as
+						possible.
+					</p>
+					<button
+						onClick={() => setStatus("idle")}
+						className="neon-button-magenta px-6 py-2"
+					>
+						Send Another Message
+					</button>
+				</div>
+			</div>
+		)
+	}
+
 	return (
 		<form onSubmit={handleSubmit} className="space-y-6">
 			{status === "error" && (
 				<div className="p-4 bg-[rgba(var(--color-red),0.1)] border border-[rgba(var(--color-red),0.3)] rounded-md text-[rgba(var(--color-red),0.9)]">
 					{errorMessage}
-				</div>
-			)}
-
-			{status === "success" && (
-				<div className="p-4 bg-[rgba(var(--color-green),0.1)] border border-[rgba(var(--color-green),0.3)] rounded-md text-[rgba(var(--color-green),0.9)]">
-					Your message has been sent successfully! Redirecting...
 				</div>
 			)}
 
@@ -186,7 +219,7 @@ export default function ContactForm() {
 				<button
 					type="submit"
 					disabled={status === "submitting"}
-					className="neon-button-violet w-full py-3 text-center"
+					className="neon-button-magenta w-full py-3 text-center"
 				>
 					{status === "submitting" ? "Sending..." : "Send Message"}
 				</button>

@@ -11,8 +11,8 @@ export default function Footer() {
 							doug.is
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
-							A personal website exploring technology, investing, and
-							entrepreneurship through a digital lens.
+							This is my personal website. All views expressed here are my own
+							and do not represent the opinions of any affiliated organizations.
 						</p>
 						<div className="flex space-x-4">
 							<SocialLink
@@ -61,17 +61,17 @@ export default function Footer() {
 					<div className="grid grid-cols-2 gap-6">
 						<div>
 							<h3 className="text-lg font-semibold gradient-text-cyan mb-4">
-								Navigation
+								doug.is ...
 							</h3>
 							<ul className="space-y-2">
-								<li>
+								{/* <li>
 									<Link
 										href="/"
 										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),1)] transition-colors"
 									>
 										doug.is ...
 									</Link>
-								</li>
+								</li> */}
 								<li>
 									<Link
 										href="/thinking"
@@ -135,13 +135,16 @@ export default function Footer() {
 						<h3 className="text-lg font-semibold gradient-text-magenta mb-4">
 							Contact
 						</h3>
-						<p className="text-[rgba(var(--color-foreground),0.7)] mb-2">
+						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
 							Get in touch for collaborations, opportunities, or just to say
 							hello.
 						</p>
-						<a href="mailto:hello@doug.is" className="neon-link">
-							hello@doug.is
-						</a>
+						<Link
+							href="/connecting"
+							className="neon-button-magenta inline-block"
+						>
+							Let&apos;s Connect
+						</Link>
 					</div>
 				</div>
 

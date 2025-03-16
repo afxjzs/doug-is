@@ -93,7 +93,7 @@ export default function Header() {
 					{/* Right - Let's Connect button */}
 					<div className="flex-1 flex justify-end">
 						<Link
-							href="/contact"
+							href="/connecting"
 							className="neon-button-magenta text-sm py-2 whitespace-nowrap"
 						>
 							Let&apos;s Connect
@@ -184,7 +184,7 @@ export default function Header() {
 
 								{/* Let's Connect button in mobile menu */}
 								<Link
-									href="/contact"
+									href="/connecting"
 									onClick={() => setIsMenuOpen(false)}
 									className="neon-button-magenta text-center mt-4"
 								>

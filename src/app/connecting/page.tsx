@@ -3,20 +3,20 @@ import ContactForm from "@/components/ContactForm"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-	title: "Contact | Doug.is",
+	title: "Connect with Doug | Doug.is",
 	description:
 		"Get in touch with Doug Rogers for consulting, advising, or collaboration opportunities.",
 }
 
-export default function ContactPage() {
+export default function ConnectingPage() {
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-12">
 				<p className="text-lg text-[rgba(var(--color-foreground),0.7)] mb-2">
-					doug.is/contact
+					doug.is/connecting
 				</p>
 				<h1 className="text-4xl font-bold gradient-heading mb-4">
-					Get in Touch
+					Let's Connect
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
 					Have a question or want to work together? Fill out the form below and
@@ -33,7 +33,7 @@ export default function ContactPage() {
 				<div>
 					<div className="dark-card mb-6">
 						<h2 className="text-xl font-semibold gradient-text-cyan mb-4">
-							About Me
+							General Location
 						</h2>
 						<div className="space-y-4 text-[rgba(var(--color-foreground),0.8)]">
 							<div className="flex items-start">
@@ -50,7 +50,6 @@ export default function ContactPage() {
 									/>
 								</svg>
 								<div>
-									<p className="font-medium">Location</p>
 									<p>
 										Originally from Boston, MA. Currently residing in the East
 										Bay Area of California near Oakland and Berkeley.
