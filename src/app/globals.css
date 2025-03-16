@@ -1,74 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/**
+ * Global CSS for Next.js 15 with Tailwind CSS v4
+ */
 
-/* Global text styles */
-body {
-	font-family: var(--font-family-base);
-	color: rgb(var(--color-foreground));
-	background-color: rgb(var(--color-background));
-}
+@import "tailwindcss";
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	line-height: 1.2 !important;
-}
-
+/* Custom variables */
 :root {
-	/* Font fallback strategy */
-	--font-family-base: var(
-		--font-inter,
-		var(--font-inter-local, system-ui, Arial, sans-serif)
-	);
-
-	/* Base colors */
 	--color-background: 10, 10, 15;
 	--color-foreground: 240, 240, 245;
-
-	/* Accent colors */
 	--color-violet: 138, 43, 226;
 	--color-cyan: 43, 209, 226;
 	--color-magenta: 226, 43, 138;
 	--color-gold: 255, 215, 0;
 	--color-emerald: 80, 200, 120;
-
-	/* Gradients */
-	--gradient-violet-cyan: linear-gradient(
-		135deg,
-		rgba(var(--color-violet), 1),
-		rgba(var(--color-cyan), 1)
-	);
-	--gradient-magenta-violet: linear-gradient(
-		135deg,
-		rgba(var(--color-magenta), 1),
-		rgba(var(--color-violet), 1)
-	);
-	--gradient-cyan-magenta: linear-gradient(
-		135deg,
-		rgba(var(--color-cyan), 1),
-		rgba(var(--color-magenta), 1)
-	);
-	--gradient-gold-emerald: linear-gradient(
-		135deg,
-		rgba(var(--color-gold), 1),
-		rgba(var(--color-emerald), 1)
-	);
-
-	/* Subtle effects */
-	--glow-violet: 0 0 10px rgba(var(--color-violet), 0.5);
-	--glow-cyan: 0 0 10px rgba(var(--color-cyan), 0.5);
-	--glow-magenta: 0 0 10px rgba(var(--color-magenta), 0.5);
-	--glow-gold: 0 0 10px rgba(var(--color-gold), 0.5);
-	--glow-emerald: 0 0 10px rgba(var(--color-emerald), 0.5);
 }
 
 @layer base {
 	body {
-		@apply bg-[rgb(var(--color-background))] text-[rgb(var(--color-foreground))];
+		font-family: var(--font-inter, system-ui, sans-serif);
+		background-color: rgb(var(--color-background));
+		color: rgb(var(--color-foreground));
+		min-height: 100vh;
 	}
 
 	h1,
@@ -77,236 +29,20 @@ h6 {
 	h4,
 	h5,
 	h6 {
-		@apply font-bold;
+		font-weight: 700;
+		line-height: 1.2;
 	}
+}
 
-	/* Gradient text for headings */
+@layer components {
 	.gradient-heading {
-		@apply bg-gradient-to-br from-white to-gray-300 bg-clip-text text-transparent;
+		background-image: linear-gradient(to bottom right, #ffffff, #d1d5db);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
 		text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-		position: relative;
-		z-index: 1;
 	}
 
-	/* Add a smaller variant for the doug.is heading */
-	.gradient-heading-small {
-		@apply bg-gradient-to-br from-white to-gray-300 bg-clip-text text-transparent text-3xl md:text-4xl font-semibold;
-		text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-		position: relative;
-		z-index: 1;
-	}
-
-	/* Neon accents */
-	.neon-violet {
-		@apply text-[rgb(var(--color-violet))] drop-shadow-[0_0_3px_rgba(var(--color-violet),0.7)];
-	}
-
-	.neon-cyan {
-		@apply text-[rgb(var(--color-cyan))] drop-shadow-[0_0_3px_rgba(var(--color-cyan),0.7)];
-	}
-
-	.neon-magenta {
-		@apply text-[rgb(var(--color-magenta))] drop-shadow-[0_0_3px_rgba(var(--color-magenta),0.7)];
-	}
-
-	.neon-gold {
-		@apply text-[rgb(var(--color-gold))] drop-shadow-[0_0_3px_rgba(var(--color-gold),0.7)];
-	}
-
-	.neon-emerald {
-		@apply text-[rgb(var(--color-emerald))] drop-shadow-[0_0_3px_rgba(var(--color-emerald),0.7)];
-	}
-
-	/* Gradient borders */
-	.gradient-border {
-		position: relative;
-	}
-
-	.gradient-border::before {
-		content: "";
-		position: absolute;
-		inset: 0;
-		padding: 1px;
-		border-radius: inherit;
-		background: var(--gradient-violet-cyan);
-		-webkit-mask: linear-gradient(#fff 0 0) content-box,
-			linear-gradient(#fff 0 0);
-		mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-		-webkit-mask-composite: xor;
-		mask-composite: exclude;
-		pointer-events: none;
-	}
-
-	/* Subtle hover effects */
-	.hover-glow-violet {
-		@apply transition-all duration-300;
-	}
-
-	.hover-glow-violet:hover {
-		@apply text-[rgb(var(--color-violet))] drop-shadow-[0_0_5px_rgba(var(--color-violet),0.7)];
-	}
-
-	.hover-glow-cyan {
-		@apply transition-all duration-300;
-	}
-
-	.hover-glow-cyan:hover {
-		@apply text-[rgb(var(--color-cyan))] drop-shadow-[0_0_5px_rgba(var(--color-cyan),0.7)];
-	}
-
-	.hover-glow-magenta {
-		@apply transition-all duration-300;
-	}
-
-	.hover-glow-magenta:hover {
-		@apply text-[rgb(var(--color-magenta))] drop-shadow-[0_0_5px_rgba(var(--color-magenta),0.7)];
-	}
-
-	.hover-glow-gold {
-		@apply transition-all duration-300;
-	}
-
-	.hover-glow-gold:hover {
-		@apply text-[rgb(var(--color-gold))] drop-shadow-[0_0_5px_rgba(var(--color-gold),0.7)];
-	}
-
-	.hover-glow-emerald {
-		@apply transition-all duration-300;
-	}
-
-	.hover-glow-emerald:hover {
-		@apply text-[rgb(var(--color-emerald))] drop-shadow-[0_0_5px_rgba(var(--color-emerald),0.7)];
-	}
-
-	/* Card styles for consistent dark theme */
-	.dark-card {
-		@apply bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] rounded-lg p-6 transition-all duration-300;
-	}
-
-	.dark-card:hover {
-		@apply border-[rgba(var(--color-violet),0.2)] bg-[rgba(var(--color-foreground),0.05)];
-	}
-
-	/* Check mark styles */
-	.check-mark {
-		@apply text-[rgb(var(--color-cyan))] drop-shadow-[0_0_3px_rgba(var(--color-cyan),0.5)];
-	}
-
-	/* Link styles */
-	.neon-link {
-		@apply text-[rgba(var(--color-violet),0.9)] hover:text-[rgb(var(--color-violet))] transition-colors hover:drop-shadow-[0_0_3px_rgba(var(--color-violet),0.7)] inline-flex items-center;
-	}
-
-	/* Neon buttons */
-	.neon-button-cyan {
-		@apply px-6 py-3 bg-[rgba(var(--color-cyan),0.1)] border border-[rgba(var(--color-cyan),0.3)] rounded-lg text-white font-medium transition-all duration-300 relative overflow-hidden;
-	}
-
-	.neon-button-cyan:hover {
-		@apply bg-[rgba(var(--color-cyan),0.15)] border-[rgba(var(--color-cyan),0.5)] shadow-[0_0_15px_rgba(var(--color-cyan),0.3)];
-	}
-
-	.neon-button-magenta {
-		@apply px-6 py-3 bg-[rgba(var(--color-magenta),0.1)] border border-[rgba(var(--color-magenta),0.3)] rounded-lg text-white font-medium transition-all duration-300 relative overflow-hidden;
-	}
-
-	.neon-button-magenta:hover {
-		@apply bg-[rgba(var(--color-magenta),0.15)] border-[rgba(var(--color-magenta),0.5)] shadow-[0_0_15px_rgba(var(--color-magenta),0.3)];
-	}
-
-	.neon-button-violet {
-		@apply px-6 py-3 bg-[rgba(var(--color-violet),0.1)] border border-[rgba(var(--color-violet),0.3)] rounded-lg text-white font-medium transition-all duration-300 relative overflow-hidden;
-	}
-
-	.neon-button-violet:hover {
-		@apply bg-[rgba(var(--color-violet),0.15)] border-[rgba(var(--color-violet),0.5)] shadow-[0_0_15px_rgba(var(--color-violet),0.3)];
-	}
-
-	.neon-button-gold {
-		@apply px-6 py-3 bg-[rgba(var(--color-gold),0.1)] border border-[rgba(var(--color-gold),0.3)] rounded-lg text-white font-medium transition-all duration-300 relative overflow-hidden;
-	}
-
-	.neon-button-gold:hover {
-		@apply bg-[rgba(var(--color-gold),0.15)] border-[rgba(var(--color-gold),0.5)] shadow-[0_0_15px_rgba(var(--color-gold),0.3)];
-	}
-
-	.neon-button-emerald {
-		@apply px-6 py-3 bg-[rgba(var(--color-emerald),0.1)] border border-[rgba(var(--color-emerald),0.3)] rounded-lg text-white font-medium transition-all duration-300 relative overflow-hidden;
-	}
-
-	.neon-button-emerald:hover {
-		@apply bg-[rgba(var(--color-emerald),0.15)] border-[rgba(var(--color-emerald),0.5)] shadow-[0_0_15px_rgba(var(--color-emerald),0.3)];
-	}
-
-	/* Retro grid background */
-	.retro-grid {
-		background-image: linear-gradient(
-				rgba(var(--color-violet), 0.1) 1px,
-				transparent 1px
-			),
-			linear-gradient(
-				90deg,
-				rgba(var(--color-violet), 0.1) 1px,
-				transparent 1px
-			);
-		background-size: 20px 20px;
-		background-position: center center;
-	}
-
-	/* Gradient text variations */
-	.gradient-text-cyan {
-		@apply bg-gradient-to-r from-[rgb(var(--color-cyan))] to-white bg-clip-text text-transparent drop-shadow-[0_0_2px_rgba(var(--color-cyan),0.5)];
-	}
-
-	.gradient-text-magenta {
-		@apply bg-gradient-to-r from-[rgb(var(--color-magenta))] to-white bg-clip-text text-transparent drop-shadow-[0_0_2px_rgba(var(--color-magenta),0.5)];
-	}
-
-	.gradient-text-violet {
-		@apply bg-gradient-to-r from-[rgb(var(--color-violet))] to-white bg-clip-text text-transparent drop-shadow-[0_0_2px_rgba(var(--color-violet),0.5)];
-	}
-
-	.gradient-text-gold {
-		@apply bg-gradient-to-r from-[rgb(var(--color-gold))] to-white bg-clip-text text-transparent drop-shadow-[0_0_2px_rgba(var(--color-gold),0.5)];
-	}
-
-	.gradient-text-emerald {
-		@apply bg-gradient-to-r from-[rgb(var(--color-emerald))] to-white bg-clip-text text-transparent drop-shadow-[0_0_2px_rgba(var(--color-emerald),0.5)];
-	}
-
-	/* Animated gradient border */
-	.animated-border {
-		position: relative;
-		border-radius: 0.5rem;
-		overflow: hidden;
-	}
-
-	.animated-border::before {
-		content: "";
-		position: absolute;
-		inset: -2px;
-		background: linear-gradient(
-			90deg,
-			rgba(var(--color-cyan), 1),
-			rgba(var(--color-magenta), 1),
-			rgba(var(--color-violet), 1),
-			rgba(var(--color-cyan), 1)
-		);
-		background-size: 300% 100%;
-		animation: borderAnimation 8s linear infinite;
-		z-index: -1;
-	}
-
-	@keyframes borderAnimation {
-		0% {
-			background-position: 0% 50%;
-		}
-		100% {
-			background-position: 300% 50%;
-		}
-	}
-
-	/* Scanline effect */
 	.scanlines {
 		position: relative;
 		overflow: hidden;
@@ -316,7 +52,7 @@ h6 {
 		content: "";
 		position: absolute;
 		inset: 0;
-		background: repeating-linear-gradient(
+		background-image: repeating-linear-gradient(
 			to bottom,
 			transparent 0px,
 			transparent 1px,
@@ -327,45 +63,39 @@ h6 {
 		z-index: 10;
 	}
 
-	/* Glitch effect for text */
-	.glitch-text {
+	.neon-button-cyan {
+		padding: 0.75rem 1.5rem;
+		background-color: rgba(var(--color-cyan), 0.1);
+		border: 1px solid rgba(var(--color-cyan), 0.3);
+		border-radius: 0.5rem;
+		color: white;
+		font-weight: 500;
+		transition: all 300ms;
 		position: relative;
-		animation: glitch 3s infinite;
+		overflow: hidden;
 	}
 
-	@keyframes glitch {
-		0% {
-			text-shadow: 0.05em 0 0 rgba(var(--color-cyan), 0.75),
-				-0.05em -0.025em 0 rgba(var(--color-magenta), 0.75);
-		}
-		14% {
-			text-shadow: 0.05em 0 0 rgba(var(--color-cyan), 0.75),
-				-0.05em -0.025em 0 rgba(var(--color-magenta), 0.75);
-		}
-		15% {
-			text-shadow: -0.05em -0.025em 0 rgba(var(--color-cyan), 0.75),
-				0.025em 0.025em 0 rgba(var(--color-magenta), 0.75);
-		}
-		49% {
-			text-shadow: -0.05em -0.025em 0 rgba(var(--color-cyan), 0.75),
-				0.025em 0.025em 0 rgba(var(--color-magenta), 0.75);
-		}
-		50% {
-			text-shadow: 0.025em 0.05em 0 rgba(var(--color-cyan), 0.75),
-				0.05em 0 0 rgba(var(--color-magenta), 0.75);
-		}
-		99% {
-			text-shadow: 0.025em 0.05em 0 rgba(var(--color-cyan), 0.75),
-				0.05em 0 0 rgba(var(--color-magenta), 0.75);
-		}
-		100% {
-			text-shadow: -0.025em 0 0 rgba(var(--color-cyan), 0.75),
-				-0.025em -0.025em 0 rgba(var(--color-magenta), 0.75);
-		}
+	.neon-button-cyan:hover {
+		background-color: rgba(var(--color-cyan), 0.15);
+		border-color: rgba(var(--color-cyan), 0.5);
+		box-shadow: 0 0 15px rgba(var(--color-cyan), 0.3);
 	}
 
-	/* Make section links bigger */
-	.section-link-title {
-		@apply text-2xl md:text-3xl font-semibold mb-3;
+	.neon-button-magenta {
+		padding: 0.75rem 1.5rem;
+		background-color: rgba(var(--color-magenta), 0.1);
+		border: 1px solid rgba(var(--color-magenta), 0.3);
+		border-radius: 0.5rem;
+		color: white;
+		font-weight: 500;
+		transition: all 300ms;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.neon-button-magenta:hover {
+		background-color: rgba(var(--color-magenta), 0.15);
+		border-color: rgba(var(--color-magenta), 0.5);
+		box-shadow: 0 0 15px rgba(var(--color-magenta), 0.3);
 	}
 }

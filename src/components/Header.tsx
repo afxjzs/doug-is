@@ -51,9 +51,9 @@ export default function Header() {
 		>
 			<div className="container mx-auto px-4 py-4">
 				{/* Desktop and Mobile Header Layout */}
-				<div className="flex items-center justify-between">
+				<div className="flex items-center justify-center relative">
 					{/* Logo */}
-					<div className="flex items-center space-x-1">
+					<div className="flex items-center space-x-1 absolute left-0">
 						<Link href="/" className="group relative">
 							<h1 className="text-lg font-bold gradient-heading">doug.is</h1>
 							<span className="absolute -inset-1 bg-gradient-to-r from-[rgba(var(--color-violet),0.2)] to-[rgba(var(--color-cyan),0.2)] opacity-30 blur-lg group-hover:opacity-50 transition-opacity"></span>
@@ -64,7 +64,7 @@ export default function Header() {
 					</div>
 
 					{/* Desktop navigation - centered */}
-					<nav className="hidden md:flex items-center space-x-1 absolute left-1/2 transform -translate-x-1/2">
+					<nav className="hidden md:flex items-center space-x-1">
 						{navItems.map((item) => (
 							<NavLink
 								key={item.path}
@@ -79,7 +79,7 @@ export default function Header() {
 					</nav>
 
 					{/* Let's Connect button - right justified on desktop */}
-					<div className="hidden md:block">
+					<div className="hidden md:block absolute right-0">
 						<Link href="/contact" className="neon-button-magenta text-sm py-2">
 							Let&apos;s Connect
 						</Link>
@@ -87,7 +87,7 @@ export default function Header() {
 
 					{/* Mobile menu button - right justified */}
 					<button
-						className="md:hidden text-[rgba(var(--color-foreground),0.9)] z-50"
+						className="md:hidden text-[rgba(var(--color-foreground),0.9)] z-50 absolute right-0"
 						onClick={() => setIsMenuOpen(!isMenuOpen)}
 						aria-label={isMenuOpen ? "Close menu" : "Open menu"}
 					>

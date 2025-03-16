@@ -1,14 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	// Configure external packages for server components
+	serverExternalPackages: ["gray-matter", "remark-gfm"],
+
 	experimental: {
-		serverComponentsExternalPackages: ["gray-matter", "remark-gfm"],
 		// Add optimizations to improve build performance
 		optimizePackageImports: ["react", "react-dom", "lucide-react"],
+		// Performance optimization for page caching
+		staleTimes: {
+			dynamic: 30, // Cache dynamic pages for 30 seconds
+			static: 180, // Cache static pages for 3 minutes
+		},
 		// Improve development performance
 		webpackBuildWorker: process.env.NODE_ENV === "development",
-		// Turbopack is faster but may have compatibility issues
-		// turbo: process.env.NODE_ENV === "development",
 	},
 
 	// Image configuration
@@ -81,12 +85,9 @@ const nextConfig = {
 	logging: {
 		level: process.env.NODE_ENV === "development" ? "warn" : "info",
 	},
-
-	// Optimize font loading
-	optimizeFonts: true,
 }
 
-// Disable telemetry - this is the correct way to do it
+// Disable telemetry
 process.env.NEXT_TELEMETRY_DISABLED = "1"
 
 module.exports = nextConfig

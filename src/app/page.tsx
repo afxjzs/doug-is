@@ -219,16 +219,18 @@ export default function HomePage() {
 			<div className="relative mb-16">
 				<div className="absolute inset-0 bg-gradient-to-r from-violet-900/20 to-pink-900/20 rounded-lg -z-10 blur-xl"></div>
 				<div className="relative z-10 p-8 border border-[rgba(var(--color-foreground),0.05)] rounded-lg bg-[rgba(var(--color-background),0.8)] backdrop-blur-sm">
-					<h2 className="text-2xl font-semibold gradient-heading mb-4">
+					<h2 className="text-2xl font-semibold gradient-heading mb-4 text-center">
 						Let&apos;s Connect
 					</h2>
-					<p className="text-[rgba(var(--color-foreground),0.8)] mb-6">
+					<p className="text-[rgba(var(--color-foreground),0.8)] mb-6 text-center">
 						Interested in working together or just want to say hello? I&apos;m
 						always open to new opportunities and connections.
 					</p>
-					<Link href="/hustling" className="neon-button-magenta">
-						Get in Touch
-					</Link>
+					<div className="flex justify-center">
+						<Link href="/hustling" className="neon-button-magenta">
+							Get in Touch
+						</Link>
+					</div>
 				</div>
 			</div>
 		</div>
