@@ -4,7 +4,9 @@
 
 /* Global text styles */
 body {
-	@apply bg-[rgb(var(--color-background))] text-[rgb(var(--color-foreground))];
+	font-family: var(--font-family-base);
+	color: rgb(var(--color-foreground));
+	background-color: rgb(var(--color-background));
 }
 
 h1,
@@ -17,6 +19,12 @@ h6 {
 }
 
 :root {
+	/* Font fallback strategy */
+	--font-family-base: var(
+		--font-inter,
+		var(--font-inter-local, system-ui, Arial, sans-serif)
+	);
+
 	/* Base colors */
 	--color-background: 10, 10, 15;
 	--color-foreground: 240, 240, 245;

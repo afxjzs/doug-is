@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 
-// Updated navigation items to match the requested structure
+// Updated navigation items to remove the contact link
 const navItems = [
 	{ name: "/building", path: "/building" },
 	{ name: "/advising", path: "/advising" },
@@ -51,7 +51,7 @@ export default function Header() {
 		>
 			<div className="container mx-auto px-4 py-4">
 				{/* Desktop and Mobile Header Layout */}
-				<div className="flex items-center justify-between md:justify-center">
+				<div className="flex items-center justify-between">
 					{/* Logo */}
 					<div className="flex items-center space-x-1">
 						<Link href="/" className="group relative">
@@ -63,8 +63,8 @@ export default function Header() {
 						</span>
 					</div>
 
-					{/* Desktop navigation */}
-					<nav className="hidden md:flex items-center space-x-1">
+					{/* Desktop navigation - centered */}
+					<nav className="hidden md:flex items-center space-x-1 absolute left-1/2 transform -translate-x-1/2">
 						{navItems.map((item) => (
 							<NavLink
 								key={item.path}
@@ -77,6 +77,13 @@ export default function Header() {
 							</NavLink>
 						))}
 					</nav>
+
+					{/* Let's Connect button - right justified on desktop */}
+					<div className="hidden md:block">
+						<Link href="/contact" className="neon-button-magenta text-sm py-2">
+							Let&apos;s Connect
+						</Link>
+					</div>
 
 					{/* Mobile menu button - right justified */}
 					<button
@@ -119,29 +126,46 @@ export default function Header() {
 				</div>
 
 				{/* Mobile navigation with animation and backdrop blur */}
-				{isMenuOpen && (
-					<div className="fixed inset-0 bg-[rgba(var(--color-background),0.7)] backdrop-blur-md z-40 md:hidden">
-						<div className="container mx-auto px-4 pt-20">
-							<nav className="p-6 bg-[rgba(var(--color-background),0.95)] rounded-lg border border-[rgba(var(--color-foreground),0.1)] shadow-lg">
-								<div className="flex flex-col space-y-4">
-									{navItems.map((item) => (
-										<MobileNavLink
-											key={item.path}
-											href={item.path}
-											onClick={() => setIsMenuOpen(false)}
-											isActive={
-												pathname === item.path ||
-												pathname.startsWith(`${item.path}/`)
-											}
-										>
-											{item.name}
-										</MobileNavLink>
-									))}
-								</div>
-							</nav>
-						</div>
+				<div
+					className={`fixed inset-0 bg-[rgba(var(--color-background),0.7)] backdrop-blur-md z-40 md:hidden transition-all duration-300 ease-in-out ${
+						isMenuOpen
+							? "opacity-100 pointer-events-auto"
+							: "opacity-0 pointer-events-none"
+					}`}
+				>
+					<div
+						className={`container mx-auto px-4 pt-20 transition-all duration-300 transform ${
+							isMenuOpen ? "translate-y-0" : "-translate-y-10"
+						}`}
+					>
+						<nav className="p-6 bg-[rgba(var(--color-background),0.95)] rounded-lg border border-[rgba(var(--color-foreground),0.1)] shadow-lg">
+							<div className="flex flex-col space-y-4">
+								{navItems.map((item) => (
+									<MobileNavLink
+										key={item.path}
+										href={item.path}
+										onClick={() => setIsMenuOpen(false)}
+										isActive={
+											pathname === item.path ||
+											pathname.startsWith(`${item.path}/`)
+										}
+									>
+										{item.name}
+									</MobileNavLink>
+								))}
+
+								{/* Let's Connect button in mobile menu */}
+								<Link
+									href="/contact"
+									onClick={() => setIsMenuOpen(false)}
+									className="neon-button-magenta text-center mt-4"
+								>
+									Let&apos;s Connect
+								</Link>
+							</div>
+						</nav>
 					</div>
-				)}
+				</div>
 			</div>
 		</header>
 	)

@@ -62,6 +62,33 @@ A modern personal website built with Next.js, React, TypeScript, and Tailwind CS
 - `/src/components`: Reusable UI components
 - `/src/lib`: Utility functions and services
 - `/src/content`: Static content for the website
+- `/supabase`: Supabase configuration and migrations
+- `/scripts`: Utility scripts for development and database management
+
+## Database Migrations
+
+The project uses Supabase migrations to manage database schema changes. Migration files are stored in the `/supabase/migrations` directory.
+
+### Running Migrations
+
+We provide helper scripts to simplify working with migrations:
+
+1. Create a new migration:
+   ```bash
+   ./scripts/create-migration.sh add_new_table
+   ```
+
+2. Run migrations:
+   ```bash
+   ./scripts/run-migrations.sh up
+   ```
+
+3. Roll back migrations:
+   ```bash
+   ./scripts/run-migrations.sh down
+   ```
+
+For more details, see the [Supabase Migrations README](./supabase/README.md).
 
 ## Deployment
 

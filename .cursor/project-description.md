@@ -24,6 +24,7 @@ src/
 │   ├── api/              # API routes
 │   ├── attributing/      # Attribution page
 │   ├── building/         # Building/projects page
+│   ├── contact/          # Contact page with form
 │   ├── hustling/         # Hustling/entrepreneurship page
 │   ├── investing/        # Investing page
 │   ├── respecting-privacy/ # Privacy policy page
@@ -34,6 +35,7 @@ src/
 │   ├── layout.tsx        # Root layout component
 │   └── page.tsx          # Homepage
 ├── components/           # Reusable UI components
+│   ├── ContactForm.tsx   # Contact form component
 │   ├── Footer.tsx        # Site footer
 │   ├── Header.tsx        # Site header with navigation
 │   ├── Navigation.tsx    # Navigation component
@@ -44,6 +46,11 @@ src/
 │   ├── supabase/         # Supabase client and database functions
 │   ├── types/            # TypeScript type definitions
 │   └── utils/            # Utility functions
+├── supabase/             # Supabase configuration and migrations
+│   └── migrations/       # SQL migration files for database schema
+└── scripts/              # Utility scripts
+    ├── create-migration.sh # Script to create new migrations
+    └── run-migrations.sh # Script to run migrations up/down
 ```
 
 ## Key Components
@@ -113,7 +120,10 @@ Key CSS classes:
 
 ## Development Workflow
 
-1. Local development server: `./dev.sh`
+1. Local development server: `bun --bun run dev` (preferred method)
+   - Fastest performance using Bun runtime
+   - Alternatively, use `./dev.sh` which provides optimized Node.js setup
+   - Or use `npm run dev` directly (slowest option)
 2. Supabase integration with fallback to mock data when credentials are missing
 3. Content management through Supabase or direct code edits
 
@@ -146,4 +156,19 @@ Key CSS classes:
 The site is deployed on Vercel with:
 - Automatic deployments from the main branch
 - Environment variables configured in Vercel dashboard
-- Vercel Analytics for performance monitoring 
+- Vercel Analytics for performance monitoring
+
+## Database Management
+
+The project uses Supabase for database storage with a structured migration system:
+
+- **Migration Files**: Located in `supabase/migrations/` directory
+- **Helper Scripts**: 
+  - `scripts/create-migration.sh`: Creates new migration files with proper timestamps
+  - `scripts/run-migrations.sh`: Simplifies running migrations up and down
+
+Database tables include:
+- `posts`: Stores blog posts with categories and content
+- `contact_messages`: Stores contact form submissions
+
+All tables use Row Level Security (RLS) policies to control access 

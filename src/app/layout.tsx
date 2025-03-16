@@ -1,9 +1,39 @@
 import "./globals.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
+import localFont from "next/font/local"
 import { Analytics } from "@vercel/analytics/react"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+
+// Local font fallback
+const interLocal = localFont({
+	src: [
+		{
+			path: "../../public/fonts/Inter-Regular.woff2",
+			weight: "400",
+			style: "normal",
+		},
+		{
+			path: "../../public/fonts/Inter-Medium.woff2",
+			weight: "500",
+			style: "normal",
+		},
+		{
+			path: "../../public/fonts/Inter-SemiBold.woff2",
+			weight: "600",
+			style: "normal",
+		},
+		{
+			path: "../../public/fonts/Inter-Bold.woff2",
+			weight: "700",
+			style: "normal",
+		},
+	],
+	display: "swap",
+	variable: "--font-inter-local",
+	fallback: ["system-ui", "Arial", "sans-serif"],
+})
 
 // Optimize font loading with display swap and preload
 const inter = Inter({
@@ -12,6 +42,8 @@ const inter = Inter({
 	variable: "--font-inter",
 	preload: true,
 	fallback: ["system-ui", "Arial", "sans-serif"],
+	adjustFontFallback: true,
+	weight: ["400", "500", "600", "700"],
 })
 
 export const metadata: Metadata = {
@@ -52,7 +84,10 @@ export default function RootLayout({
 	children: React.ReactNode
 }) {
 	return (
-		<html lang="en" className={`scroll-smooth ${inter.variable}`}>
+		<html
+			lang="en"
+			className={`scroll-smooth ${inter.variable} ${interLocal.variable}`}
+		>
 			<body className="min-h-screen flex flex-col">
 				{/* Subtle grid background */}
 				<div className="fixed inset-0 bg-[url('/grid-bg.svg')] opacity-5 z-0 pointer-events-none"></div>

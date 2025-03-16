@@ -39,6 +39,10 @@ if [ ! -d "node_modules" ] || [ ! -f "node_modules/.package-lock.json" ]; then
   npm install
 fi
 
-# Start development server
-echo "🌐 Starting Next.js development server with Node.js..."
-npm run dev
+# Set performance optimization environment variables
+export NODE_OPTIONS="--max-old-space-size=4096"
+export NEXT_TELEMETRY_DISABLED=1
+
+# Start development server with optimizations
+echo "🌐 Starting Next.js development server with optimizations..."
+npm run dev -- --turbo
