@@ -9,7 +9,7 @@
 	--color-background: 10, 10, 15;
 	--color-foreground: 240, 240, 245;
 	--color-violet: 138, 43, 226;
-	--color-cyan: 43, 209, 226;
+	--color-cyan: 97, 97, 255;
 	--color-magenta: 226, 43, 138;
 	--color-gold: 255, 215, 0;
 	--color-emerald: 80, 200, 120;
@@ -97,5 +97,23 @@
 		background-color: rgba(var(--color-magenta), 0.15);
 		border-color: rgba(var(--color-magenta), 0.5);
 		box-shadow: 0 0 15px rgba(var(--color-magenta), 0.3);
+	}
+
+	.neon-button-emerald {
+		padding: 0.75rem 1.5rem;
+		background-color: rgba(var(--color-emerald), 0.1);
+		border: 1px solid rgba(var(--color-emerald), 0.3);
+		border-radius: 0.5rem;
+		color: white;
+		font-weight: 500;
+		transition: all 300ms;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.neon-button-emerald:hover {
+		background-color: rgba(var(--color-emerald), 0.15);
+		border-color: rgba(var(--color-emerald), 0.5);
+		box-shadow: 0 0 15px rgba(var(--color-emerald), 0.3);
 	}
 }

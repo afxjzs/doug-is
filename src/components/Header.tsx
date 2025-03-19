@@ -10,7 +10,6 @@ const navItems = [
 	{ name: "/building", path: "/building" },
 	{ name: "/advising", path: "/advising" },
 	{ name: "/investing", path: "/investing" },
-	{ name: "/writing", path: "/thinking" },
 ]
 
 export default function Header() {
@@ -153,44 +152,43 @@ export default function Header() {
 
 				{/* Mobile navigation with animation and backdrop blur */}
 				<div
-					className={`fixed inset-0 bg-[rgba(var(--color-background),0.7)] backdrop-blur-md z-40 md:hidden transition-all duration-300 ease-in-out ${
-						isMenuOpen
-							? "opacity-100 pointer-events-auto"
-							: "opacity-0 pointer-events-none"
+					className={`fixed inset-0 bg-[rgba(var(--color-background),0.95)] backdrop-blur-lg transform transition-transform duration-300 ease-in-out z-40 ${
+						isMenuOpen ? "translate-x-0" : "translate-x-full"
 					}`}
 				>
-					<div
-						className={`container mx-auto px-4 pt-20 transition-all duration-300 transform ${
-							isMenuOpen ? "translate-y-0" : "-translate-y-10"
-						}`}
-					>
-						<nav className="p-6 bg-[rgba(var(--color-background),0.95)] rounded-lg border border-[rgba(var(--color-foreground),0.1)] shadow-lg">
-							<div className="flex flex-col space-y-4">
-								{navItems.map((item) => (
-									<Link
-										key={item.path}
-										href={item.path}
-										onClick={() => setIsMenuOpen(false)}
-										className={`text-lg py-3 px-4 rounded-md transition-all duration-300 ${
+					<div className="container mx-auto px-4 py-24">
+						<nav className="flex flex-col space-y-8 items-center">
+							{navItems.map((item) => (
+								<Link
+									key={item.path}
+									href={item.path}
+									className={`text-2xl relative group transition-all duration-300 ${
+										pathname === item.path ||
+										pathname.startsWith(`${item.path}/`)
+											? "text-[rgba(var(--color-cyan),1)] drop-shadow-[0_0_3px_rgba(var(--color-cyan),0.7)]"
+											: "text-[rgba(var(--color-foreground),0.8)] hover:text-[rgba(var(--color-foreground),1)]"
+									}`}
+									onClick={() => setIsMenuOpen(false)}
+								>
+									{item.name}
+									<span
+										className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-[rgba(var(--color-violet),0.7)] to-[rgba(var(--color-cyan),0.7)] transition-all duration-300 ${
 											pathname === item.path ||
 											pathname.startsWith(`${item.path}/`)
-												? "bg-[rgba(var(--color-violet),0.15)] text-[rgba(var(--color-cyan),1)] drop-shadow-[0_0_3px_rgba(var(--color-cyan),0.7)]"
-												: "text-[rgba(var(--color-foreground),0.8)] hover:text-[rgba(var(--color-foreground),1)] hover:bg-[rgba(var(--color-foreground),0.05)]"
+												? "w-full"
+												: "w-0 group-hover:w-full"
 										}`}
-									>
-										{item.name}
-									</Link>
-								))}
-
-								{/* Let's Connect button in mobile menu */}
-								<Link
-									href="/connecting"
-									onClick={() => setIsMenuOpen(false)}
-									className="neon-button-magenta text-center mt-4"
-								>
-									Let&apos;s Connect
+									></span>
 								</Link>
-							</div>
+							))}
+
+							<Link
+								href="/connecting"
+								className="neon-button-magenta mt-6"
+								onClick={() => setIsMenuOpen(false)}
+							>
+								Let&apos;s Connect
+							</Link>
 						</nav>
 					</div>
 				</div>

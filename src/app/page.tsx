@@ -151,7 +151,8 @@ export default function HomePage() {
 						</div>
 					</Link>
 
-					<Link
+					{/* Writing/Thinking link - commented out for now */}
+					{/* <Link
 						href="/thinking"
 						className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-foreground),0.05)] transition-all duration-300 hover:border-pink-500/30 hover:shadow-[0_0_15px_rgba(236,72,153,0.15)]"
 					>
@@ -180,7 +181,7 @@ export default function HomePage() {
 								</svg>
 							</div>
 						</div>
-					</Link>
+					</Link> */}
 				</div>
 
 				<div className="mt-8 grid grid-cols-1 gap-8">
