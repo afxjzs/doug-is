@@ -53,6 +53,10 @@ const nextConfig = {
 				hostname: "fonts.gstatic.com",
 				pathname: "**",
 			},
+			{
+				protocol: "https",
+				hostname: "placehold.co",
+			},
 		],
 		// Disable image optimization only in development
 		unoptimized: process.env.NODE_ENV === "development",

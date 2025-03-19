@@ -9,55 +9,57 @@ export const metadata: Metadata = {
 
 // Sample projects data - replace with actual data from a CMS or database
 const projects = [
-	{
-		id: "just-ate",
-		title: "JustAte",
-		description:
-			"A timer app that reminds you to exercise at the optimal time after eating to kickstart your metabolism.",
-		image: "/images/projects/just-ate.jpg",
-		tags: ["iOS", "Swift", "SwiftUI", "HealthKit"],
-		link: "/building/just-ate",
-		appStore: "https://apps.apple.com/us/app/justateapp",
-	},
+	// {
+	// 	id: "just-ate",
+	// 	title: "JustAte",
+	// 	description:
+	// 		"A timer app that reminds you to exercise at the optimal time after eating to kickstart your metabolism.",
+	// 	image: "/images/projects/just-ate.jpg",
+	// 	tags: ["iOS", "Swift", "SwiftUI", "HealthKit"],
+	// 	link: "/building/just-ate",
+	// 	appStore: "https://apps.apple.com/us/app/justateapp",
+	// },
 	{
 		id: "hopping-list",
 		title: "Hopping List",
 		description:
 			"A shopping list app that helps you organize your grocery shopping by store sections.",
-		image: "/images/projects/hopping-list.jpg",
-		tags: ["Next.js", "React", "Tailwind CSS", "Supabase"],
+		image: "/images/hopping-list-logo.png",
+		tags: ["Flutter", "FlutterFlow", "Firebase", "Firestore"],
 		link: "/building/hopping-list",
 		github: "https://github.com/afxjzs/hopping-list",
+		testflight: "https://testflight.apple.com/join/CscPEAD4",
 	},
-	{
-		id: "occupado",
-		title: "Occupado",
-		description:
-			"A calendar combining app that helps you manage multiple calendars in one place.",
-		image: "/images/projects/occupado.jpg",
-		tags: ["React", "Google Calendar API", "Firebase"],
-		link: "/building/occupado",
-		github: "https://github.com/afxjzs/occupado",
-	},
-	{
-		id: "bolt-form",
-		title: "BoltForm",
-		description:
-			"A JavaScript form builder with validation, conditional logic, and API integration.",
-		image: "/images/projects/bolt-form.jpg",
-		tags: ["JavaScript", "TypeScript", "React"],
-		link: "/building/bolt-form",
-		github: "https://github.com/afxjzs/bolt-form",
-	},
+	// {
+	// 	id: "occupado",
+	// 	title: "Occupado",
+	// 	description:
+	// 		"A calendar combining app that helps you manage multiple calendars in one place.",
+	// 	image: "/images/projects/occupado.jpg",
+	// 	tags: ["React", "Google Calendar API", "Firebase"],
+	// 	link: "/building/occupado",
+	// 	github: "https://github.com/afxjzs/occupado",
+	// },
+	// {
+	// 	id: "bolt-form",
+	// 	title: "BoltForm",
+	// 	description:
+	// 		"A JavaScript form builder with validation, conditional logic, and API integration.",
+	// 	image: "/images/projects/bolt-form.jpg",
+	// 	tags: ["JavaScript", "TypeScript", "React"],
+	// 	link: "/building/bolt-form",
+	// 	github: "https://github.com/afxjzs/bolt-form",
+	// },
 	{
 		id: "inn",
 		title: "Inn Ruby Gem",
 		description:
 			"A simple Ruby gem that adds the .in? method as an inverse of Ruby's .include? method.",
-		image: "/images/projects/rubygems-logo.png",
+		image: "/images/ruby-gems-logo.png",
 		tags: ["Ruby", "RubyGems", "Open Source"],
 		link: "/building/inn",
 		github: "https://github.com/afxjzs/inn",
+		rubyGems: "https://rubygems.org/gems/inn",
 	},
 ]
 
@@ -68,11 +70,9 @@ export default function BuildingPage() {
 				<p className="text-lg text-[rgba(var(--color-foreground),0.7)] mb-2">
 					doug.is/building
 				</p>
-				<h1 className="text-4xl font-bold gradient-heading mb-4">
-					Current Projects
-				</h1>
+				<h1 className="text-4xl font-bold gradient-heading mb-4">Projects</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
-					Some things I&apos;m currently working on.
+					A partial list of projects I've worked on or am working on.
 				</p>
 			</div>
 
@@ -83,13 +83,14 @@ export default function BuildingPage() {
 						className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] hover:border-[rgba(var(--color-violet),0.2)] rounded-xl overflow-hidden transition-all duration-300 group"
 					>
 						<div className="flex flex-col md:flex-row">
-							<div className="relative h-64 md:w-2/5">
-								<SafeImage
-									src={project.image}
-									alt={project.title}
-									fill
-									className="object-cover transition-transform duration-500 group-hover:scale-105"
-								/>
+							<div className="flex items-center justify-center p-8 md:w-2/5">
+								<div className="w-full h-full flex items-center justify-center">
+									<img
+										src={project.image}
+										alt={project.title}
+										className="w-auto h-auto max-w-full max-h-[200px] rounded-lg transition-transform duration-500 group-hover:scale-105"
+									/>
+								</div>
 							</div>
 							<div className="p-6 md:w-3/5">
 								<h2 className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 group-hover:text-[rgba(var(--color-violet),1)] transition-colors">
@@ -108,8 +109,8 @@ export default function BuildingPage() {
 										</span>
 									))}
 								</div>
-								<div className="flex space-x-4">
-									{project.link && (
+								<div className="flex flex-wrap gap-4">
+									{/* {project.link && (
 										<Link href={project.link} className="neon-link">
 											View Project
 											<svg
@@ -125,7 +126,7 @@ export default function BuildingPage() {
 												/>
 											</svg>
 										</Link>
-									)}
+									)} */}
 									{project.github && (
 										<Link
 											href={project.github}
@@ -144,9 +145,9 @@ export default function BuildingPage() {
 											GitHub
 										</Link>
 									)}
-									{project.appStore && (
+									{project.testflight && (
 										<Link
-											href={project.appStore}
+											href={project.testflight}
 											target="_blank"
 											rel="noopener noreferrer"
 											className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),0.9)] transition-colors"
@@ -157,9 +158,27 @@ export default function BuildingPage() {
 												viewBox="0 0 24 24"
 												fill="currentColor"
 											>
-												<path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.75 14.35c-.566.647-1.283.961-2.001.961-.448 0-.895-.128-1.284-.379-.391-.25-.7-.605-.91-1.051-.428.222-.912.333-1.399.333-.448 0-.895-.128-1.284-.379-.391-.25-.7-.605-.91-1.051-.428.222-.912.333-1.399.333-.448 0-.895-.128-1.284-.379-.391-.25-.7-.605-.91-1.051-.428.222-.912.333-1.399.333v-1.333c.487 0 .971-.111 1.399-.333.21.446.519.801.91 1.051.389.251.836.379 1.284.379.487 0 .971-.111 1.399-.333.21.446.519.801.91 1.051.389.251.836.379 1.284.379.718 0 1.435-.314 2.001-.961l1.053.875c-.8.964-1.999 1.42-3.054 1.42-.718 0-1.435-.314-2.001-.961-.566.647-1.283.961-2.001.961-.718 0-1.435-.314-2.001-.961-.566.647-1.283.961-2.001.961v-1.333c.487 0 .971-.111 1.399-.333.21.446.519.801.91 1.051.389.251.836.379 1.284.379.487 0 .971-.111 1.399-.333.21.446.519.801.91 1.051.389.251.836.379 1.284.379.718 0 1.435-.314 2.001-.961l1.053.875z" />
+												<path d="M12 1.5c-5.79 0-10.5 4.71-10.5 10.5s4.71 10.5 10.5 10.5 10.5-4.71 10.5-10.5-4.71-10.5-10.5-10.5zm-1.97 6.28l5.81 2.178c.266.106.266.372 0 .478l-5.81 2.178c-.262.107-.564-.043-.564-.345V8.126c0-.302.302-.452.564-.345z" />
 											</svg>
-											App Store
+											TestFlight
+										</Link>
+									)}
+									{project.rubyGems && (
+										<Link
+											href={project.rubyGems}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),0.9)] transition-colors"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="h-5 w-5 inline-block mr-1"
+												viewBox="0 0 24 24"
+												fill="currentColor"
+											>
+												<path d="M20.936 12.72l-6.365 7.287a1.417 1.417 0 01-2.142 0L6.064 12.72a1.378 1.378 0 010-1.953l6.365-7.287a1.417 1.417 0 012.142 0l6.365 7.287a1.378 1.378 0 010 1.953z" />
+											</svg>
+											RubyGems
 										</Link>
 									)}
 								</div>

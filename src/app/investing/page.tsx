@@ -1,26 +1,40 @@
 import { Metadata } from "next"
-import Link from "next/link"
-import SafeImage from "@/components/SafeImage"
-import { getPosts } from "@/lib/supabase/client"
+import Image from "next/image"
+import { quotes } from "./quotes"
 
 export const metadata: Metadata = {
 	title: "Investing | Doug.is",
-	description: "Investment philosophy, strategies, and insights",
+	description: "Founder-focused investment philosophy and startup advising",
 }
 
-export default async function InvestingPage() {
-	// Get posts with the "investing" category
-	const allPosts = await getPosts()
-	const posts = allPosts.filter((post) => post.category === "investing")
+// Function to get a random quote from the quotes array
+function getRandomQuote() {
+	return quotes[Math.floor(Math.random() * quotes.length)]
+}
+
+// Function to get a random color theme
+function getRandomColorTheme() {
+	const colors = ["violet", "cyan", "amber", "magenta"]
+	return colors[Math.floor(Math.random() * colors.length)]
+}
+
+export default function InvestingPage() {
+	// Get a random quote and color theme
+	const randomQuote = getRandomQuote()
+	const colorTheme = getRandomColorTheme()
 
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-12">
-				<h1 className="text-4xl font-bold gradient-heading mb-4">
+				<p className="text-lg text-[rgba(var(--color-foreground),0.7)] mb-2">
 					doug.is/investing
+				</p>
+				<h1 className="text-4xl font-bold gradient-heading mb-4">
+					Founder-Focused Investments
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
-					My investment philosophy, strategies, and insights.
+					Former founder who understands what it takes to build something from
+					nothing.
 				</p>
 			</div>
 
@@ -32,216 +46,124 @@ export default async function InvestingPage() {
 							Investment Philosophy
 						</h2>
 						<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
-							My investment approach is centered around long-term value
-							creation, focusing on companies and assets with strong
-							fundamentals, sustainable competitive advantages, and alignment
-							with major technological and societal trends.
-						</p>
-						<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
-							I believe in a balanced portfolio that combines established
-							blue-chip investments with carefully selected growth opportunities
-							and alternative assets. This approach aims to provide both
-							stability and potential for significant returns.
+							Most VCs today aren't former founders. They're MBAs who don't
+							truly understand what it takes to start a company and make it
+							successful. Building a startup requires more than just capital—it
+							requires experience, grit, and real-world understanding.
 						</p>
 						<p className="text-[rgba(var(--color-foreground),0.8)]">
-							Risk management is a core component of my strategy, with careful
-							consideration given to position sizing, diversification across
-							sectors and asset classes, and regular portfolio rebalancing.
+							I believe entrepreneurialism is the best thing about this country.
+							It's better to make a job than get a job. Whether it's finding
+							alternative pathways to funding, making key introductions at the
+							right time, or backing a founder's vision with capital, my goal is
+							to help startups succeed on their terms.
 						</p>
-					</div>
-				</div>
-
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-					<div className="dark-card">
-						<h3 className="text-xl font-semibold gradient-text-cyan mb-4">
-							Public Markets
-						</h3>
-						<ul className="space-y-2 text-[rgba(var(--color-foreground),0.7)]">
-							<li className="flex items-center">
-								<span className="check-mark mr-2">✓</span>
-								Value Investing
-							</li>
-							<li className="flex items-center">
-								<span className="check-mark mr-2">✓</span>
-								Growth at Reasonable Price
-							</li>
-							<li className="flex items-center">
-								<span className="check-mark mr-2">✓</span>
-								Dividend Growth
-							</li>
-							<li className="flex items-center">
-								<span className="check-mark mr-2">✓</span>
-								Index Funds
-							</li>
-							<li className="flex items-center">
-								<span className="check-mark mr-2">✓</span>
-								Thematic ETFs
-							</li>
-						</ul>
-					</div>
-
-					<div className="dark-card">
-						<h3 className="text-xl font-semibold gradient-text-magenta mb-4">
-							Private Investments
-						</h3>
-						<ul className="space-y-2 text-[rgba(var(--color-foreground),0.7)]">
-							<li className="flex items-center">
-								<span className="check-mark mr-2">✓</span>
-								Early-Stage Startups
-							</li>
-							<li className="flex items-center">
-								<span className="check-mark mr-2">✓</span>
-								Angel Investing
-							</li>
-							<li className="flex items-center">
-								<span className="check-mark mr-2">✓</span>
-								Venture Capital
-							</li>
-							<li className="flex items-center">
-								<span className="check-mark mr-2">✓</span>
-								Private Equity
-							</li>
-							<li className="flex items-center">
-								<span className="check-mark mr-2">✓</span>
-								Real Estate
-							</li>
-						</ul>
-					</div>
-
-					<div className="dark-card">
-						<h3 className="text-xl font-semibold gradient-text-violet mb-4">
-							Alternative Assets
-						</h3>
-						<ul className="space-y-2 text-[rgba(var(--color-foreground),0.7)]">
-							<li className="flex items-center">
-								<span className="check-mark mr-2">✓</span>
-								Digital Assets
-							</li>
-							<li className="flex items-center">
-								<span className="check-mark mr-2">✓</span>
-								Commodities
-							</li>
-							<li className="flex items-center">
-								<span className="check-mark mr-2">✓</span>
-								Collectibles
-							</li>
-							<li className="flex items-center">
-								<span className="check-mark mr-2">✓</span>
-								Art & Culture
-							</li>
-							<li className="flex items-center">
-								<span className="check-mark mr-2">✓</span>
-								Intellectual Property
-							</li>
-						</ul>
 					</div>
 				</div>
 			</div>
 
 			<div className="mb-16">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">
-					Investment Insights
-				</h2>
-
-				{posts.length > 0 ? (
-					<div className="grid grid-cols-1 gap-8">
-						{posts.map((post) => (
-							<Link
-								key={post.id}
-								href={`/thinking/${post.slug}`}
-								className="dark-card group hover:border-[rgba(var(--color-violet),0.2)]"
-							>
-								<div className="flex flex-col md:flex-row gap-6">
-									{post.featured_image && (
-										<div className="relative h-48 md:w-1/3 rounded-lg overflow-hidden">
-											<SafeImage
-												src={post.featured_image}
-												alt={post.title}
-												fill
-												className="object-cover transition-transform duration-500 group-hover:scale-105"
-											/>
-										</div>
-									)}
-									<div className={post.featured_image ? "md:w-2/3" : ""}>
-										<div className="text-xs text-[rgba(var(--color-foreground),0.6)] uppercase tracking-wider mb-2">
-											{post.category}
-										</div>
-										<h3 className="text-xl font-bold mb-2 text-[rgba(var(--color-foreground),0.9)] group-hover:text-[rgba(var(--color-violet),1)] transition-colors">
-											{post.title}
-										</h3>
-										<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
-											{post.excerpt}
-										</p>
-										<div className="text-sm text-[rgba(var(--color-foreground),0.6)]">
-											{post.published_at
-												? new Date(post.published_at).toLocaleDateString(
-														"en-US",
-														{
-															year: "numeric",
-															month: "long",
-															day: "numeric",
-														}
-												  )
-												: ""}
-										</div>
-									</div>
+				<div className="relative rounded-lg overflow-hidden">
+					<div className="absolute inset-0 bg-gradient-to-r from-[rgba(var(--color-emerald),0.1)] to-[rgba(var(--color-emerald),0.05)] -z-10"></div>
+					<div className="relative z-10 p-8 border border-[rgba(var(--color-foreground),0.05)] rounded-lg bg-[rgba(var(--color-background),0.8)] backdrop-blur-sm">
+						<div className="flex flex-col md:flex-row items-center">
+							<div className="md:w-1/3 p-2 flex justify-center">
+								<div className="w-48 h-auto relative dark:hidden">
+									<Image
+										src="/images/venture-builder-logo.png"
+										alt="VentureBuilder Logo"
+										width={300}
+										height={150}
+										className="object-contain"
+									/>
 								</div>
-							</Link>
-						))}
-					</div>
-				) : (
-					<div className="dark-card">
-						<p className="text-[rgba(var(--color-foreground),0.8)] text-center py-8">
-							No investment articles available at the moment. Check back soon!
-						</p>
-					</div>
-				)}
-			</div>
-
-			<div className="mb-16">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">
-					Investment Resources
-				</h2>
-				<div className="dark-card">
-					<p className="text-[rgba(var(--color-foreground),0.8)] mb-6">
-						Here are some resources I recommend for those interested in learning
-						more about investing:
-					</p>
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-						<div>
-							<h3 className="text-lg font-semibold text-[rgba(var(--color-foreground),0.9)] mb-3">
-								Books
-							</h3>
-							<ul className="list-disc pl-6 space-y-2 text-[rgba(var(--color-foreground),0.8)]">
-								<li>The Intelligent Investor by Benjamin Graham</li>
-								<li>Common Stocks and Uncommon Profits by Philip Fisher</li>
-								<li>The Psychology of Money by Morgan Housel</li>
-								<li>A Random Walk Down Wall Street by Burton Malkiel</li>
-								<li>
-									The Little Book of Common Sense Investing by John C. Bogle
-								</li>
-							</ul>
-						</div>
-						<div>
-							<h3 className="text-lg font-semibold text-[rgba(var(--color-foreground),0.9)] mb-3">
-								Websites & Newsletters
-							</h3>
-							<ul className="list-disc pl-6 space-y-2 text-[rgba(var(--color-foreground),0.8)]">
-								<li>The Motley Fool</li>
-								<li>Morningstar</li>
-								<li>Seeking Alpha</li>
-								<li>The Wall Street Journal</li>
-								<li>Bloomberg</li>
-							</ul>
+								<div className="w-48 h-auto relative hidden dark:block">
+									<Image
+										src="/images/venture-builder-logo-white.png"
+										alt="VentureBuilder Logo"
+										width={300}
+										height={150}
+										className="object-contain"
+									/>
+								</div>
+							</div>
+							<div className="md:w-2/3 p-6">
+								<h2 className="text-2xl font-semibold gradient-heading mb-4">
+									Current Investment Focus
+								</h2>
+								<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
+									I'm currently working with{" "}
+									<a
+										href="https://venturebuilder.vc"
+										target="_blank"
+										rel="noopener noreferrer"
+										className="neon-link"
+									>
+										VentureBuilder.vc
+									</a>
+									, investing in companies that are working closely with NOV
+									through paid pilots to grow and scale their businesses.
+								</p>
+								<p className="text-[rgba(var(--color-foreground),0.8)]">
+									The most successful companies develop sustainable business
+									models with real customers and revenue. My focus is on helping
+									startups form meaningful commercial relationships that drive
+									growth while providing immediate value.
+								</p>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<div className="flex justify-center">
-				<Link href="/thinking" className="neon-button-magenta">
-					Explore All Articles
-				</Link>
+			<div className="mb-16">
+				<div className="relative rounded-lg overflow-hidden">
+					<div className="absolute inset-0 bg-gradient-to-r from-[rgba(var(--color-violet),0.1)] to-[rgba(var(--color-cyan),0.1)] -z-10"></div>
+					<div className="relative z-10 p-8 border border-[rgba(var(--color-foreground),0.05)] rounded-lg bg-[rgba(var(--color-background),0.8)] backdrop-blur-sm text-center">
+						<h2 className="text-2xl font-semibold gradient-heading mb-4">
+							Discuss Your Startup
+						</h2>
+						<p className="text-[rgba(var(--color-foreground),0.8)] mb-8 max-w-lg mx-auto">
+							If you're building something interesting and looking for an
+							investor who understands the founder journey, let's talk.
+						</p>
+						<a
+							href="https://cal.com/afxjzs/startups"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="neon-button-magenta inline-block"
+						>
+							Schedule a Meeting
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div className="mb-16">
+				<div className="max-w-3xl mx-auto">
+					<div className="relative rounded-lg py-6 px-8 bg-[rgba(var(--color-background),0.6)] backdrop-blur-sm">
+						<div
+							className={`absolute inset-0 bg-gradient-to-b from-[rgba(var(--color-${colorTheme}),0.03)] to-transparent rounded-lg opacity-80`}
+						></div>
+						<div
+							className={`absolute -inset-px bg-gradient-to-b from-[rgba(var(--color-${colorTheme}),0.06)] to-transparent rounded-lg blur-sm`}
+						></div>
+						<blockquote className="relative z-10 pl-4">
+							<div
+								className={`absolute top-0 left-0 w-[2px] h-full bg-gradient-to-b from-[rgba(var(--color-${colorTheme}),0.5)] to-[rgba(var(--color-${colorTheme}),0.2)]`}
+							></div>
+							<p className="italic text-lg md:text-xl text-[rgba(var(--color-foreground),0.85)] leading-relaxed pl-4">
+								&ldquo;{randomQuote.text}&rdquo;
+							</p>
+							<p className="text-right text-[rgba(var(--color-foreground),0.6)] mt-3 text-base">
+								— {randomQuote.author}
+							</p>
+						</blockquote>
+					</div>
+					<p className="text-center text-[rgba(var(--color-foreground),0.5)] mt-4 text-sm">
+						Not Entirely Dumb Quotes From Actual Investors
+					</p>
+				</div>
 			</div>
 		</div>
 	)
