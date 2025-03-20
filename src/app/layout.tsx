@@ -80,9 +80,9 @@ export const metadata: Metadata = {
 			"Personal website of Doug Rogers - Developer, Investor, and Entrepreneur",
 		images: [
 			{
-				url: "https://doug.is/og-image.jpg",
-				width: 1200,
-				height: 630,
+				url: "/android-chrome-512x512.png",
+				width: 512,
+				height: 512,
 				alt: "Doug.is",
 			},
 		],
@@ -92,7 +92,7 @@ export const metadata: Metadata = {
 		title: "Doug.is - Developer, Investor, Entrepreneur",
 		description:
 			"Personal website of Doug Rogers - Developer, Investor, and Entrepreneur",
-		images: ["https://doug.is/og-image.jpg"],
+		images: ["/android-chrome-512x512.png"],
 		creator: "@username",
 	},
 }

@@ -4,13 +4,14 @@
 	"private": true,
 	"license": "MIT",
 	"engines": {
-		"node": ">=22.14.0"
+		"node": ">=20.11.1"
 	},
 	"scripts": {
 		"dev": "next dev",
 		"dev:turbo": "next dev --turbopack",
 		"build": "next build",
 		"debug-build": "next build --debug",
+		"verbose-build": "NODE_OPTIONS='--trace-warnings --max-old-space-size=3072' NEXT_TELEMETRY_DISABLED=1 DEBUG=* next build",
 		"start": "next start",
 		"lint": "next lint"
 	},

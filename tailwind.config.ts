@@ -26,5 +26,8 @@ const config: Config = {
 		},
 	},
 	plugins: [tailwindcssAnimate],
+	future: {
+		hoverOnlyWhenSupported: true,
+	},
 }
 export default config

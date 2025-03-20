@@ -3,5 +3,9 @@
 	"devCommand": "next dev",
 	"installCommand": "npm install",
 	"framework": "nextjs",
-	"outputDirectory": ".next"
+	"outputDirectory": ".next",
+	"env": {
+		"NODE_OPTIONS": "--trace-warnings --max-old-space-size=3072",
+		"NEXT_TELEMETRY_DISABLED": "1"
+	}
 }

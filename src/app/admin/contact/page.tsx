@@ -7,10 +7,19 @@ export const metadata: Metadata = {
 	description: "Admin page to view contact form submissions",
 }
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-const supabase = createClient(supabaseUrl, supabaseKey)
+// Initialize Supabase client - with fallback to prevent build errors
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+// Only create the client if we have the required environment variables
+// This allows the build to complete even when env vars aren't available
+const getSupabaseClient = () => {
+	if (!supabaseUrl || !supabaseKey) {
+		console.warn("Supabase credentials not available")
+		return null
+	}
+	return createClient(supabaseUrl, supabaseKey)
+}
 
 interface ContactMessage {
 	id: string
@@ -23,11 +32,26 @@ interface ContactMessage {
 }
 
 export default async function ContactMessagesPage() {
-	// Fetch contact messages from Supabase
-	const { data: messages, error } = await supabase
-		.from("contact_messages")
-		.select("*")
-		.order("created_at", { ascending: false })
+	let messages = null
+	let error = null
+
+	const supabase = getSupabaseClient()
+
+	if (supabase) {
+		// Fetch contact messages from Supabase
+		const result = await supabase
+			.from("contact_messages")
+			.select("*")
+			.order("created_at", { ascending: false })
+
+		messages = result.data
+		error = result.error
+	} else {
+		error = {
+			message:
+				"Supabase client could not be initialized - environment variables may be missing",
+		}
+	}
 
 	if (error) {
 		console.error("Error fetching contact messages:", error)
