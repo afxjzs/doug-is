@@ -1,8 +1,8 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Metadata } from "next"
-import { getPostsByCategory } from "@/lib/supabase/client"
-import { formatDate } from "@/lib/utils"
+// import { getPostsByCategory } from "@/lib/supabase/client"
+// import { formatDate } from "@/lib/utils"
 import ConnectCta from "@/components/ConnectCta"
 
 export const metadata: Metadata = {
@@ -13,14 +13,14 @@ export const metadata: Metadata = {
 
 export default async function AdvisingPage() {
 	// Get posts from Supabase with category "advisory"
-	const posts = await getPostsByCategory("advisory")
+	// const posts = await getPostsByCategory("advisory")
 
-	// Sort posts by date
-	const sortedPosts = [...posts].sort(
-		(a, b) =>
-			new Date(b.published_at || "").getTime() -
-			new Date(a.published_at || "").getTime()
-	)
+	// // Sort posts by date
+	// const sortedPosts = [...posts].sort(
+	// 	(a, b) =>
+	// 		new Date(b.published_at || "").getTime() -
+	// 		new Date(a.published_at || "").getTime()
+	// )
 
 	return (
 		<div className="max-w-5xl mx-auto">
@@ -86,6 +86,9 @@ export default async function AdvisingPage() {
 								</Link>{" "}
 								in 2021). As Co-Founder and CTO, I helped navigate the
 								challenges of rapid growth, fundraising, and product-market fit.
+								The YC network and mentorship were instrumental in shaping our
+								go-to-market strategy and developing key enterprise
+								partnerships.
 							</p>
 						</div>
 					</div>
@@ -120,7 +123,7 @@ export default async function AdvisingPage() {
 								</Link>
 								. I currently serve as Co-Founder, CTO, and CPO, building
 								innovative solutions and leveraging mentorship to create
-								sustainable growth strategies.
+								sustainable growth strategies for enterprise fintech.
 							</p>
 						</div>
 					</div>
@@ -467,7 +470,7 @@ export default async function AdvisingPage() {
 			</div>
 
 			{/* Insights Section */}
-			{sortedPosts.length > 0 && (
+			{/* {sortedPosts.length > 0 && (
 				<div className="mb-16">
 					<h2 className="text-3xl font-bold gradient-heading mb-8">
 						Advisory Insights
@@ -497,7 +500,7 @@ export default async function AdvisingPage() {
 						))}
 					</div>
 				</div>
-			)}
+			)} */}
 
 			{/* CTA Section */}
 			<div className="mb-16">

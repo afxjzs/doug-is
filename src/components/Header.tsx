@@ -72,7 +72,7 @@ export default function Header() {
 								href={item.path}
 								className={`text-lg relative group transition-all duration-300 px-3 py-2 ${
 									pathname === item.path || pathname.startsWith(`${item.path}/`)
-										? "text-[rgba(var(--color-cyan),1)] drop-shadow-[0_0_3px_rgba(var(--color-cyan),0.7)]"
+										? "text-[rgba(var(--color-foreground),1)] drop-shadow-[0_0_3px_rgba(var(--color-cyan),0.7)]"
 										: "text-[rgba(var(--color-foreground),0.8)] hover:text-[rgba(var(--color-foreground),1)]"
 								}`}
 							>
