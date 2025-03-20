@@ -8,10 +8,11 @@ import { notFound } from "next/navigation"
 export async function generateMetadata({
 	params,
 }: {
-	params: { primary_category: string }
+	params: Promise<{ primary_category: string }>
 }): Promise<Metadata> {
+	const resolvedParams = await params
 	// Capitalize the first letter of each word in the category
-	const formattedCategory = params.primary_category
+	const formattedCategory = resolvedParams.primary_category
 		.split("-")
 		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
 		.join(" ")
@@ -25,9 +26,10 @@ export async function generateMetadata({
 export default async function ThinkingCategoryPage({
 	params,
 }: {
-	params: { primary_category: string }
+	params: Promise<{ primary_category: string }>
 }) {
-	const category = params.primary_category
+	const resolvedParams = await params
+	const category = resolvedParams.primary_category
 	const posts = await getPostsByCategory(category)
 
 	if (!posts || posts.length === 0) {

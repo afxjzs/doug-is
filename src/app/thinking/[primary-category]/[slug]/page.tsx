@@ -8,9 +8,10 @@ import type { Metadata } from "next"
 export async function generateMetadata({
 	params,
 }: {
-	params: { primary_category: string; slug: string }
+	params: Promise<{ primary_category: string; slug: string }>
 }): Promise<Metadata> {
-	const post = await getPostBySlug(params.slug)
+	const resolvedParams = await params
+	const post = await getPostBySlug(resolvedParams.slug)
 
 	if (!post) {
 		return {
@@ -38,9 +39,10 @@ export async function generateStaticParams() {
 export default async function ThinkingPostPage({
 	params,
 }: {
-	params: { primary_category: string; slug: string }
+	params: Promise<{ primary_category: string; slug: string }>
 }) {
-	const post = await getPostBySlug(params.slug)
+	const resolvedParams = await params
+	const post = await getPostBySlug(resolvedParams.slug)
 
 	if (!post) {
 		notFound()

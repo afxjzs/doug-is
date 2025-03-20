@@ -204,11 +204,15 @@ export default function BuildingPage() {
 							<div className="flex flex-col md:flex-row">
 								<div className="flex items-center justify-center p-8 md:w-2/5">
 									<div className="w-full h-full flex items-center justify-center">
-										<img
-											src={project.image}
-											alt={project.title}
-											className="w-auto h-auto max-w-full max-h-[200px] rounded-lg transition-transform duration-500 group-hover:scale-105"
-										/>
+										<div className="relative w-full h-[200px]">
+											<Image
+												src={project.image}
+												alt={project.title}
+												fill
+												style={{ objectFit: "contain" }}
+												className="transition-transform duration-500 group-hover:scale-105"
+											/>
+										</div>
 									</div>
 								</div>
 								<div className="p-6 md:w-3/5">
