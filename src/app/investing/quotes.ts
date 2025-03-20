@@ -20,6 +20,10 @@ export const quotes = [
 		author: "Y Combinator",
 	},
 	{
+		text: "Make something people want.",
+		author: "Y Combinator",
+	},
+	{
 		text: "Raise money when you don't need it. That's when you'll get the best terms.",
 		author: "Reid Hoffman",
 	},
