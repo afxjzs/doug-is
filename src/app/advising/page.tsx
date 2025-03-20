@@ -33,7 +33,8 @@ export default async function AdvisingPage() {
 					</h1>
 					<p className="text-xl text-[rgba(var(--color-foreground),0.8)] mb-8 text-center max-w-2xl mx-auto">
 						Strategic guidance for B2B startups from a YC and Techstars alum
-						with extensive accelerator experience.
+						with extensive accelerator experience, as a founder and as an
+						operator.
 					</p>
 					<div className="flex flex-wrap justify-center gap-4 mb-6">
 						<div className="px-4 py-2 bg-[rgba(var(--color-foreground),0.05)] rounded-full border border-[rgba(var(--color-foreground),0.1)]">
@@ -43,7 +44,9 @@ export default async function AdvisingPage() {
 							<span className="text-sm font-medium">Techstars Alum</span>
 						</div>
 						<div className="px-4 py-2 bg-[rgba(var(--color-foreground),0.05)] rounded-full border border-[rgba(var(--color-foreground),0.1)]">
-							<span className="text-sm font-medium">Director of Pilots</span>
+							<span className="text-sm font-medium">
+								Pilot Program Director
+							</span>
 						</div>
 					</div>
 				</div>

@@ -47,7 +47,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-	title: "Doug.is",
+	title: "Doug.is...",
 	description:
 		"Personal website of Doug Rogers - Developer, Investor, and Entrepreneur",
 	metadataBase: new URL("https://doug.is"),
@@ -93,7 +93,7 @@ export const metadata: Metadata = {
 		description:
 			"Personal website of Doug Rogers - Developer, Investor, and Entrepreneur",
 		images: ["/android-chrome-512x512.png"],
-		creator: "@username",
+		creator: "@glowingrec",
 	},
 }
 
