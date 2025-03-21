@@ -34,6 +34,7 @@ export function useAuth() {
 	const [user, setUser] = useState<User | null>(null)
 	const [session, setSession] = useState<Session | null>(null)
 	const [loading, setLoading] = useState(false)
+	const [initialized, setInitialized] = useState(false)
 	const router = useRouter()
 	const supabase = createSupabaseClient()
 
@@ -43,26 +44,40 @@ export function useAuth() {
 
 		async function loadUserData() {
 			try {
-				// Get authenticated user data directly from the auth server
-				const { data: userData, error: userError } =
-					await supabase.auth.getUser()
-
-				if (userError) {
-					console.error("Error getting user:", userError)
-					if (isMounted) setUser(null)
-				} else {
-					if (isMounted) setUser(userData.user)
-				}
-
-				// Also get session for other auth operations that require it
+				// First, try to get the session to see if we're already logged in
 				const { data: sessionData, error: sessionError } =
 					await supabase.auth.getSession()
 
 				if (sessionError) {
 					console.error("Error getting session:", sessionError)
-					if (isMounted) setSession(null)
-				} else {
+					if (isMounted) {
+						setSession(null)
+						setUser(null)
+					}
+				} else if (sessionData.session) {
 					if (isMounted) setSession(sessionData.session)
+
+					// Only try to get user if we have a session to avoid AuthSessionMissingError
+					try {
+						const { data: userData, error: userError } =
+							await supabase.auth.getUser()
+
+						if (userError) {
+							console.error("Error getting user:", userError)
+							if (isMounted) setUser(null)
+						} else if (userData.user) {
+							if (isMounted) setUser(userData.user)
+						}
+					} catch (userFetchError) {
+						console.error("Failed to fetch user details:", userFetchError)
+						if (isMounted) setUser(null)
+					}
+				} else {
+					// No session, so no user
+					if (isMounted) {
+						setSession(null)
+						setUser(null)
+					}
 				}
 			} catch (error) {
 				console.error("Error in auth loading:", error)
@@ -70,6 +85,8 @@ export function useAuth() {
 					setUser(null)
 					setSession(null)
 				}
+			} finally {
+				if (isMounted) setInitialized(true)
 			}
 		}
 
@@ -79,13 +96,25 @@ export function useAuth() {
 		// Listen for auth changes
 		const {
 			data: { subscription },
-		} = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+		} = supabase.auth.onAuthStateChange(async (event, newSession) => {
+			console.log("Auth state changed:", event, !!newSession)
+
 			if (isMounted) setSession(newSession)
 
-			// Get the authenticated user directly instead of from session
+			// Only try to get user if we have a session to avoid AuthSessionMissingError
 			if (newSession) {
-				const { data } = await supabase.auth.getUser()
-				if (isMounted) setUser(data.user)
+				try {
+					const { data, error } = await supabase.auth.getUser()
+					if (error) {
+						console.error("Error getting user after auth change:", error)
+						if (isMounted) setUser(null)
+					} else if (data.user) {
+						if (isMounted) setUser(data.user)
+					}
+				} catch (e) {
+					console.error("Failed to fetch user after auth change:", e)
+					if (isMounted) setUser(null)
+				}
 			} else {
 				if (isMounted) setUser(null)
 			}
@@ -208,6 +237,7 @@ export function useAuth() {
 		user,
 		session,
 		loading,
+		initialized,
 		isAdmin,
 		loginWithEmail,
 		sendMagicLink,

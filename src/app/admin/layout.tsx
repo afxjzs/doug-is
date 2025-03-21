@@ -13,6 +13,7 @@ import "./admin.css"
 /**
  * Admin layout component that provides the structure for admin pages
  * Authentication is handled by middleware
+ * This layout does not include the site header or footer, which are only for the public site
  */
 export default function AdminLayout({
 	children,

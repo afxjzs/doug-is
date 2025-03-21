@@ -10,6 +10,10 @@ type FormState = ContactFormData
 
 type FormStatus = "idle" | "submitting" | "success" | "error"
 
+type FieldErrors = {
+	[key in keyof FormState]?: string
+}
+
 export default function ContactForm() {
 	const [formState, setFormState] = useState<FormState>({
 		name: "",
@@ -19,6 +23,7 @@ export default function ContactForm() {
 	})
 	const [status, setStatus] = useState<FormStatus>("idle")
 	const [errorMessage, setErrorMessage] = useState<string>("")
+	const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
 	const [isVisible, setIsVisible] = useState(false)
 
 	useEffect(() => {
@@ -34,21 +39,53 @@ export default function ContactForm() {
 	) => {
 		const { name, value } = e.target
 		setFormState((prev) => ({ ...prev, [name]: value }))
+
+		// Clear field error when user starts typing
+		if (fieldErrors[name as keyof FormState]) {
+			setFieldErrors((prev) => ({ ...prev, [name]: undefined }))
+		}
 	}
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
+		console.log("Form submission started", formState)
 		setStatus("submitting")
 		setErrorMessage("")
+		setFieldErrors({})
 
 		try {
 			// Using server action instead of fetch API
-			const result = await submitContactForm(formState)
+			console.log("Calling submitContactForm with:", formState)
+			const result = (await submitContactForm(formState)) || {
+				success: false,
+				message: "No response from server",
+			}
+			console.log("Server action response:", result)
 
-			if (!result.success) {
-				throw new Error(result.message || "Something went wrong")
+			if (!result || !result.success) {
+				console.error(
+					"Form submission failed:",
+					result?.message || "Unknown error"
+				)
+
+				// Process field-specific errors if available
+				if (result?.errors && Array.isArray(result.errors)) {
+					const newFieldErrors: FieldErrors = {}
+					result.errors.forEach((error) => {
+						if (error.path && error.path.length > 0) {
+							const fieldName = error.path[0] as keyof FormState
+							newFieldErrors[fieldName] = error.message
+						}
+					})
+					setFieldErrors(newFieldErrors)
+				}
+
+				throw new Error(
+					result?.message || "Something went wrong with form submission"
+				)
 			}
 
+			console.log("Form submission successful")
 			setStatus("success")
 			setFormState({
 				name: "",
@@ -57,11 +94,11 @@ export default function ContactForm() {
 				message: "",
 			})
 		} catch (error) {
+			console.error("Form submission error details:", error)
 			setStatus("error")
 			setErrorMessage(
 				error instanceof Error ? error.message : "An unexpected error occurred"
 			)
-			console.error("Form submission error:", error)
 		}
 	}
 
@@ -121,8 +158,17 @@ export default function ContactForm() {
 					onChange={handleChange}
 					required
 					disabled={status === "submitting"}
-					className="w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.1)] rounded-md focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.5)] focus:border-transparent text-[rgba(var(--color-foreground),0.9)]"
+					className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
+						fieldErrors.name
+							? "border-[rgba(var(--color-red),0.5)]"
+							: "border-[rgba(var(--color-foreground),0.1)]"
+					} rounded-md focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.5)] focus:border-transparent text-[rgba(var(--color-foreground),0.9)]`}
 				/>
+				{fieldErrors.name && (
+					<p className="mt-1 text-sm text-[rgba(var(--color-red),0.9)]">
+						{fieldErrors.name}
+					</p>
+				)}
 			</div>
 
 			<div>
@@ -140,8 +186,17 @@ export default function ContactForm() {
 					onChange={handleChange}
 					required
 					disabled={status === "submitting"}
-					className="w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.1)] rounded-md focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.5)] focus:border-transparent text-[rgba(var(--color-foreground),0.9)]"
+					className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
+						fieldErrors.email
+							? "border-[rgba(var(--color-red),0.5)]"
+							: "border-[rgba(var(--color-foreground),0.1)]"
+					} rounded-md focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.5)] focus:border-transparent text-[rgba(var(--color-foreground),0.9)]`}
 				/>
+				{fieldErrors.email && (
+					<p className="mt-1 text-sm text-[rgba(var(--color-red),0.9)]">
+						{fieldErrors.email}
+					</p>
+				)}
 			</div>
 
 			<div>
@@ -159,8 +214,17 @@ export default function ContactForm() {
 					onChange={handleChange}
 					required
 					disabled={status === "submitting"}
-					className="w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.1)] rounded-md focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.5)] focus:border-transparent text-[rgba(var(--color-foreground),0.9)]"
+					className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
+						fieldErrors.subject
+							? "border-[rgba(var(--color-red),0.5)]"
+							: "border-[rgba(var(--color-foreground),0.1)]"
+					} rounded-md focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.5)] focus:border-transparent text-[rgba(var(--color-foreground),0.9)]`}
 				/>
+				{fieldErrors.subject && (
+					<p className="mt-1 text-sm text-[rgba(var(--color-red),0.9)]">
+						{fieldErrors.subject}
+					</p>
+				)}
 			</div>
 
 			<div>
@@ -178,8 +242,17 @@ export default function ContactForm() {
 					required
 					disabled={status === "submitting"}
 					rows={6}
-					className="w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.1)] rounded-md focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.5)] focus:border-transparent text-[rgba(var(--color-foreground),0.9)]"
+					className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
+						fieldErrors.message
+							? "border-[rgba(var(--color-red),0.5)]"
+							: "border-[rgba(var(--color-foreground),0.1)]"
+					} rounded-md focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.5)] focus:border-transparent text-[rgba(var(--color-foreground),0.9)]`}
 				></textarea>
+				{fieldErrors.message && (
+					<p className="mt-1 text-sm text-[rgba(var(--color-red),0.9)]">
+						{fieldErrors.message}
+					</p>
+				)}
 			</div>
 
 			<div>

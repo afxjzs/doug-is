@@ -3,8 +3,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import localFont from "next/font/local"
 import { Analytics } from "@vercel/analytics/react"
-import Header from "@/components/Header"
-import Footer from "@/components/Footer"
+import LayoutWrapper from "@/components/LayoutWrapper"
 
 // Local font fallback
 const interLocal = localFont({
@@ -120,11 +119,7 @@ export default function RootLayout({
 				{/* Scanlines effect */}
 				<div className="fixed inset-0 scanlines opacity-10 z-0 pointer-events-none"></div>
 
-				<Header />
-				<main className="flex-grow container mx-auto px-4 pt-28 pb-12 relative z-10">
-					{children}
-				</main>
-				<Footer />
+				<LayoutWrapper>{children}</LayoutWrapper>
 				<Analytics />
 			</body>
 		</html>

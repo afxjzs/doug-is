@@ -1,12 +1,25 @@
 // Follow this setup guide to integrate the Deno runtime into your application:
 // https://deno.land/manual/examples/deploy_node_npm
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { corsHeaders } from "../_shared/cors.ts"
+// Define types for the request and error objects
+interface RequestWithMethod extends Request {
+	method: string
+}
+
+interface ErrorWithMessage extends Error {
+	message: string
+}
+
+// Use a relative import to fix the module resolution error
+const corsHeaders = {
+	"Access-Control-Allow-Origin": "*",
+	"Access-Control-Allow-Headers":
+		"authorization, x-client-info, apikey, content-type",
+}
 
 console.log("Hello from Function!")
 
-serve(async (req) => {
+const handler = async (req: RequestWithMethod): Promise<Response> => {
 	// This is needed if you're planning to invoke your function from a browser.
 	if (req.method === "OPTIONS") {
 		return new Response("ok", { headers: corsHeaders })
@@ -25,13 +38,18 @@ serve(async (req) => {
 				status: 200,
 			}
 		)
-	} catch (error) {
-		return new Response(JSON.stringify({ error: error.message }), {
+	} catch (error: unknown) {
+		const errorMessage =
+			error instanceof Error ? error.message : "Unknown error occurred"
+		return new Response(JSON.stringify({ error: errorMessage }), {
 			headers: { ...corsHeaders, "Content-Type": "application/json" },
 			status: 400,
 		})
 	}
-})
+}
+
+// Export the handler function
+export { handler as serve }
 
 /* To invoke locally:
 

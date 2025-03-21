@@ -1,3 +1,5 @@
+"use server"
+
 /**
  * This file contains server-side utilities for Supabase authentication.
  * It handles creating authenticated clients and managing sessions
@@ -18,22 +20,42 @@ const ALLOWED_ADMIN_EMAILS = ["douglas.rogers@gmail.com"]
 /**
  * Creates a Supabase client for server-side authentication
  * using the built-in cookies() function from Next.js
+ *
+ * In Next.js 15, cookies() is an async function, and we properly
+ * handle that here by using it with await.
  */
 export async function createSupabaseServerClient() {
+	// Get cookie store with await for Next.js 15 compatibility
 	const cookieStore = await cookies()
 
-	return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
-		cookies: {
-			get(name) {
+	// Create a cookie handler that works with the createServerClient API
+	const cookieHandler = {
+		get(name: string) {
+			try {
 				return cookieStore.get(name)?.value
-			},
-			set(name, value, options) {
-				cookieStore.set({ name, value, ...options })
-			},
-			remove(name, options) {
-				cookieStore.set({ name, value: "", ...options, maxAge: 0 })
-			},
+			} catch (e) {
+				console.error("Error getting cookie:", e)
+				return undefined
+			}
 		},
+		set(name: string, value: string, options: any) {
+			try {
+				cookieStore.set({ name, value, ...options })
+			} catch (e) {
+				console.error("Error setting cookie:", e)
+			}
+		},
+		remove(name: string, options: any) {
+			try {
+				cookieStore.set({ name, value: "", ...options, maxAge: 0 })
+			} catch (e) {
+				console.error("Error removing cookie:", e)
+			}
+		},
+	}
+
+	return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
+		cookies: cookieHandler,
 	})
 }
 
@@ -66,10 +88,17 @@ export async function getServerUser() {
 	try {
 		const {
 			data: { user },
+			error,
 		} = await supabase.auth.getUser()
+
+		if (error) {
+			console.error("Auth error getting user:", error.message)
+			return null
+		}
+
 		return user
 	} catch (error) {
-		console.error("Error getting user:", error)
+		console.error("Unexpected error getting user:", error)
 		return null
 	}
 }

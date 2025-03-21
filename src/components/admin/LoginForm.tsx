@@ -5,7 +5,7 @@
  * It includes both password and magic link authentication options.
  */
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth/supabaseClientAuth"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -15,7 +15,7 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ redirectTo }: LoginFormProps) {
-	const { loginWithEmail, sendMagicLink, loading } = useAuth()
+	const { loginWithEmail, sendMagicLink, loading, initialized } = useAuth()
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [authMethod, setAuthMethod] = useState<"password" | "magic">("password")
@@ -23,6 +23,15 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 	const [successMessage, setSuccessMessage] = useState<string | null>(null)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const router = useRouter()
+
+	// Wait for auth initialization to complete
+	const [authReady, setAuthReady] = useState(false)
+
+	useEffect(() => {
+		if (initialized) {
+			setAuthReady(true)
+		}
+	}, [initialized])
 
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault()
@@ -33,10 +42,20 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 		// Set local submitting state to show feedback
 		setIsSubmitting(true)
 
+		// Ensure auth is ready before proceeding
+		if (!authReady) {
+			setErrorMessage(
+				"Authentication system is initializing. Please try again."
+			)
+			setIsSubmitting(false)
+			return
+		}
+
 		try {
 			if (authMethod === "password") {
 				if (!email || !password) {
 					setErrorMessage("Please enter both email and password")
+					setIsSubmitting(false)
 					return
 				}
 
@@ -59,6 +78,7 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 				// Magic link login
 				if (!email) {
 					setErrorMessage("Please enter your email")
+					setIsSubmitting(false)
 					return
 				}
 
@@ -76,7 +96,11 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 			}
 		} catch (error) {
 			console.error("Unexpected error during login:", error)
-			setErrorMessage("An unexpected error occurred. Please try again.")
+			setErrorMessage(
+				error instanceof Error
+					? `Login error: ${error.message}`
+					: "An unexpected error occurred. Please try again."
+			)
 		} finally {
 			setIsSubmitting(false)
 		}
@@ -98,11 +122,17 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 		)
 	}
 
-	// Determine if the form should be disabled - either from the auth hook loading state or local submission state
-	const isFormDisabled = loading || isSubmitting
+	// Don't allow form submission until auth is ready
+	const isFormDisabled = loading || isSubmitting || !authReady
 
 	return (
 		<form onSubmit={handleLogin} className="space-y-4">
+			{!authReady && (
+				<div className="text-amber-600 text-sm bg-amber-50 p-2 rounded border border-amber-200">
+					Initializing authentication system...
+				</div>
+			)}
+
 			{/* Email Field */}
 			<div>
 				<label
@@ -148,7 +178,7 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 
 			{/* Error message */}
 			{errorMessage && (
-				<div className="text-[rgba(var(--color-red),0.9)] text-sm">
+				<div className="text-[rgba(var(--color-red),0.9)] text-sm bg-[rgba(var(--color-red),0.05)] p-2 rounded border border-[rgba(var(--color-red),0.2)]">
 					{errorMessage}
 				</div>
 			)}
@@ -159,8 +189,10 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 				className="w-full py-2 px-4 bg-[rgba(var(--color-violet),0.9)] hover:bg-[rgba(var(--color-violet),1)] text-white font-semibold rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgba(var(--color-violet),0.6)]"
 				disabled={isFormDisabled}
 			>
-				{isFormDisabled
+				{isSubmitting
 					? "Processing..."
+					: !authReady
+					? "Initializing..."
 					: authMethod === "password"
 					? "Sign In"
 					: "Send Magic Link"}
