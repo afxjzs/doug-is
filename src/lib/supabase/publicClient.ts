@@ -1,5 +1,10 @@
+// src/lib/supabase/publicClient.ts
 import { createClient } from "@supabase/supabase-js"
 import type { Database } from "../types/supabase"
+
+// This client should ONLY be used for public read-only operations
+// It uses the anon key which is safe to expose to the client
+// Any data mutations should use server actions instead
 
 // Ensure we have the full URL and key without any truncation or formatting issues
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
@@ -79,10 +84,10 @@ export interface Post {
 }
 
 /**
- * Creates a Supabase client with proper error handling and type safety
+ * Creates a Supabase client with the anon key for public read-only operations
  * @returns A typed Supabase client instance or null if credentials are missing
  */
-export const createSupabaseClient = () => {
+export const createPublicSupabaseClient = () => {
 	// Validate environment variables
 	if (!supabaseUrl || !supabaseAnonKey) {
 		if (isDev) {
@@ -95,7 +100,7 @@ export const createSupabaseClient = () => {
 	}
 
 	try {
-		// Create and return a typed Supabase client
+		// Create and return a typed Supabase client with the anon key
 		return createClient<Database>(supabaseUrl, supabaseAnonKey, {
 			auth: {
 				persistSession: true,
@@ -109,18 +114,25 @@ export const createSupabaseClient = () => {
 }
 
 // Create a singleton instance for client-side usage
-let supabaseInstance: ReturnType<typeof createSupabaseClient> | null = null
+let publicSupabaseInstance: ReturnType<
+	typeof createPublicSupabaseClient
+> | null = null
 
 /**
- * Gets a singleton Supabase client instance
+ * Gets a singleton public Supabase client instance
+ * Use this for read-only public data access
  * @returns A typed Supabase client instance or null if in development with missing credentials
  */
-export const getSupabaseClient = () => {
-	if (!supabaseInstance) {
-		supabaseInstance = createSupabaseClient()
+export const getPublicSupabaseClient = () => {
+	if (!publicSupabaseInstance) {
+		publicSupabaseInstance = createPublicSupabaseClient()
 	}
-	return supabaseInstance
+	return publicSupabaseInstance
 }
+
+/**
+ * PUBLIC READ-ONLY OPERATIONS ONLY
+ */
 
 /**
  * Fetches posts from Supabase or returns mock data in development
@@ -132,7 +144,7 @@ export const getPosts = async (
 	limit?: number,
 	category?: string
 ): Promise<Post[]> => {
-	const supabase = getSupabaseClient()
+	const supabase = getPublicSupabaseClient()
 
 	// Return mock data if no Supabase client
 	if (!supabase) {
@@ -184,7 +196,7 @@ export const getPosts = async (
  * @returns The post or null if not found
  */
 export const getPostBySlug = async (slug: string): Promise<Post | null> => {
-	const supabase = getSupabaseClient()
+	const supabase = getPublicSupabaseClient()
 
 	// Return mock data if no Supabase client
 	if (!supabase) {
@@ -229,7 +241,7 @@ export const getPostBySlug = async (slug: string): Promise<Post | null> => {
  * @returns Array of posts in the specified category
  */
 export async function getPostsByCategory(category: string): Promise<Post[]> {
-	const supabase = getSupabaseClient()
+	const supabase = getPublicSupabaseClient()
 
 	// Return mock data if no Supabase client
 	if (!supabase) {
@@ -253,221 +265,19 @@ export async function getPostsByCategory(category: string): Promise<Post[]> {
 
 		if (error) {
 			console.error("Error fetching posts by category:", error)
-
-			// Fallback to mock data in development
-			if (isDev) {
-				console.warn("Falling back to mock data due to error")
-				return mockPosts.filter((post) => post.category === category)
-			}
-
 			throw new Error(`Database query failed: ${error.message}`)
 		}
 
 		return data as Post[]
 	} catch (error) {
-		console.error(`Exception fetching posts in category ${category}:`, error)
+		console.error("Exception fetching posts by category:", error)
 
 		// Fallback to mock data in development
 		if (isDev) {
+			console.warn("⚠️ Using mock data due to error")
 			return mockPosts.filter((post) => post.category === category)
 		}
 
 		throw error
 	}
 }
-
-/**
- * Creates a new post in Supabase
- * @param post Post data without ID
- * @returns Created post or null if failed
- */
-export async function createPost(post: Omit<Post, "id">): Promise<Post | null> {
-	const supabase = getSupabaseClient()
-
-	// Return mock data if no Supabase client
-	if (!supabase) {
-		if (isDev) {
-			console.warn(
-				"Using mock data for creating post - Supabase client not initialized"
-			)
-		}
-
-		// Create a mock post with ID
-		const mockPost: Post = {
-			id: Math.random().toString(36).substring(2, 15),
-			...post,
-			created_at: new Date().toISOString(),
-			updated_at: new Date().toISOString(),
-		}
-
-		// Add to mock posts
-		mockPosts.push(mockPost)
-		return mockPost
-	}
-
-	try {
-		// Add timestamps if not provided
-		const postWithDate = {
-			...post,
-			created_at: post.created_at || new Date().toISOString(),
-			updated_at: post.updated_at || new Date().toISOString(),
-		}
-
-		console.log("Creating new post:", postWithDate.title)
-
-		const { data, error } = await supabase
-			.from("posts")
-			.insert([postWithDate])
-			.select()
-			.single()
-
-		if (error) {
-			console.error("Error creating post:", error)
-			throw new Error(`Database query failed: ${error.message}`)
-		}
-
-		return data as Post
-	} catch (error) {
-		console.error("Exception creating post:", error)
-
-		if (isDev) {
-			// Create a mock post with ID in development
-			const mockPost: Post = {
-				id: Math.random().toString(36).substring(2, 15),
-				...post,
-				created_at: new Date().toISOString(),
-				updated_at: new Date().toISOString(),
-			}
-
-			mockPosts.push(mockPost)
-			return mockPost
-		}
-
-		throw error
-	}
-}
-
-/**
- * Updates an existing post in Supabase
- * @param id Post ID
- * @param post Post data to update
- * @returns Updated post or null if failed
- */
-export async function updatePost(
-	id: string,
-	post: Partial<Post>
-): Promise<Post | null> {
-	const supabase = getSupabaseClient()
-
-	// Return mock data if no Supabase client
-	if (!supabase) {
-		if (isDev) {
-			console.warn(
-				"Using mock data for updating post - Supabase client not initialized"
-			)
-		}
-
-		// Update mock post
-		const index = mockPosts.findIndex((p) => p.id === id)
-		if (index !== -1) {
-			mockPosts[index] = {
-				...mockPosts[index],
-				...post,
-				updated_at: new Date().toISOString(),
-			}
-			return mockPosts[index]
-		}
-
-		return null
-	}
-
-	try {
-		console.log(`Updating post with ID: ${id}`)
-
-		const { data, error } = await supabase
-			.from("posts")
-			.update(post)
-			.eq("id", id)
-			.select()
-			.single()
-
-		if (error) {
-			console.error("Error updating post:", error)
-			throw new Error(`Database query failed: ${error.message}`)
-		}
-
-		return data as Post
-	} catch (error) {
-		console.error(`Exception updating post with ID ${id}:`, error)
-
-		if (isDev) {
-			// Update mock post in development
-			const index = mockPosts.findIndex((p) => p.id === id)
-			if (index !== -1) {
-				mockPosts[index] = {
-					...mockPosts[index],
-					...post,
-					updated_at: new Date().toISOString(),
-				}
-				return mockPosts[index]
-			}
-		}
-
-		throw error
-	}
-}
-
-/**
- * Deletes a post from Supabase
- * @param id Post ID
- * @returns Success status
- */
-export async function deletePost(id: string): Promise<boolean> {
-	const supabase = getSupabaseClient()
-
-	// Return mock data if no Supabase client
-	if (!supabase) {
-		if (isDev) {
-			console.warn(
-				"Using mock data for deleting post - Supabase client not initialized"
-			)
-		}
-
-		// Remove from mock posts
-		const index = mockPosts.findIndex((p) => p.id === id)
-		if (index !== -1) {
-			mockPosts.splice(index, 1)
-			return true
-		}
-
-		return false
-	}
-
-	try {
-		console.log(`Deleting post with ID: ${id}`)
-
-		const { error } = await supabase.from("posts").delete().eq("id", id)
-
-		if (error) {
-			console.error("Error deleting post:", error)
-			throw new Error(`Database query failed: ${error.message}`)
-		}
-
-		return true
-	} catch (error) {
-		console.error(`Exception deleting post with ID ${id}:`, error)
-
-		if (isDev) {
-			// Remove from mock posts in development
-			const index = mockPosts.findIndex((p) => p.id === id)
-			if (index !== -1) {
-				mockPosts.splice(index, 1)
-				return true
-			}
-		}
-
-		throw error
-	}
-}
-
-export default getSupabaseClient

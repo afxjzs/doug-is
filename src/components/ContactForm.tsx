@@ -1,19 +1,16 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import {
+	submitContactForm,
+	ContactFormData,
+} from "@/lib/actions/contactActions"
 
-type FormState = {
-	name: string
-	email: string
-	subject: string
-	message: string
-}
+type FormState = ContactFormData
 
 type FormStatus = "idle" | "submitting" | "success" | "error"
 
 export default function ContactForm() {
-	const router = useRouter()
 	const [formState, setFormState] = useState<FormState>({
 		name: "",
 		email: "",
@@ -45,29 +42,11 @@ export default function ContactForm() {
 		setErrorMessage("")
 
 		try {
-			const response = await fetch("/api/connecting", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(formState),
-			})
+			// Using server action instead of fetch API
+			const result = await submitContactForm(formState)
 
-			// Check if response is JSON
-			const contentType = response.headers.get("content-type")
-			if (!contentType || !contentType.includes("application/json")) {
-				// Handle non-JSON response (like HTML error pages)
-				const text = await response.text()
-				console.error("Non-JSON response:", text)
-				throw new Error(
-					"Server returned an invalid response. Please try again later."
-				)
-			}
-
-			const data = await response.json()
-
-			if (!response.ok) {
-				throw new Error(data.message || "Something went wrong")
+			if (!result.success) {
+				throw new Error(result.message || "Something went wrong")
 			}
 
 			setStatus("success")
@@ -77,23 +56,11 @@ export default function ContactForm() {
 				subject: "",
 				message: "",
 			})
-
-			// No longer redirecting to thank-you page
 		} catch (error) {
 			setStatus("error")
-			if (error instanceof SyntaxError && error.message.includes("JSON")) {
-				// Handle JSON parsing errors specifically
-				console.error("JSON parsing error:", error)
-				setErrorMessage(
-					"The server returned an invalid response. This might be due to a temporary issue. Please try again later."
-				)
-			} else {
-				setErrorMessage(
-					error instanceof Error
-						? error.message
-						: "An unexpected error occurred"
-				)
-			}
+			setErrorMessage(
+				error instanceof Error ? error.message : "An unexpected error occurred"
+			)
 			console.error("Form submission error:", error)
 		}
 	}
