@@ -65,30 +65,39 @@ A modern personal website built with Next.js, React, TypeScript, and Tailwind CS
 - `/supabase`: Supabase configuration and migrations
 - `/scripts`: Utility scripts for development and database management
 
-## Database Migrations
+## Database Schema and Migrations
 
-The project uses Supabase migrations to manage database schema changes. Migration files are stored in the `/supabase/migrations` directory.
+The project uses a simplified single-file migration approach for Supabase. The complete schema is defined in `/supabase/migrations/20000000000000_schema_setup.sql`.
 
-### Running Migrations
+### Database Reset and Migrations
 
-We provide helper scripts to simplify working with migrations:
+If you need to reset your database and apply the migration:
 
-1. Create a new migration:
-   ```bash
-   ./scripts/create-migration.sh add_new_table
+1. Reset your database (WARNING: this will delete all data):
+   ```sql
+   -- Run this in Supabase SQL Editor
+   DROP SCHEMA public CASCADE;
+   CREATE SCHEMA public;
+   GRANT ALL ON SCHEMA public TO postgres;
+   GRANT ALL ON SCHEMA public TO public;
    ```
 
-2. Run migrations:
+2. Apply the migration:
    ```bash
-   ./scripts/run-migrations.sh up
+   # Make sure you've logged in and linked your project first
+   supabase login
+   supabase link --project-ref tzffjzocrazemvtgqavg
+   
+   # Push migrations
+   supabase db push
    ```
 
-3. Roll back migrations:
-   ```bash
-   ./scripts/run-migrations.sh down
-   ```
+### Database Tables
 
-For more details, see the [Supabase Migrations README](./supabase/README.md).
+The schema includes these main tables:
+- `posts`: Blog posts with title, content, and publishing status
+- `contact_messages`: Contact form submissions 
+- `user_roles`: User role assignments for access control
 
 ## Deployment
 
@@ -100,6 +109,18 @@ Make sure to set the following environment variables in your Vercel project:
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+## Development
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## License
 

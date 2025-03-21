@@ -79,6 +79,30 @@ export interface Database {
 				}
 				Relationships: []
 			}
+			user_roles: {
+				Row: {
+					user_id: string
+					role: string
+					email: string | null
+					created_at: string
+					updated_at: string | null
+				}
+				Insert: {
+					user_id: string
+					role: string
+					email?: string | null
+					created_at?: string
+					updated_at?: string | null
+				}
+				Update: {
+					user_id?: string
+					role?: string
+					email?: string | null
+					created_at?: string
+					updated_at?: string | null
+				}
+				Relationships: []
+			}
 		}
 		Views: {
 			[_ in never]: never

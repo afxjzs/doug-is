@@ -1,19 +1,41 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	// Configure external packages for server components
-	serverExternalPackages: ["gray-matter", "remark-gfm"],
+	// Stable features (formerly experimental)
+	bundlePagesRouterDependencies: true,
+	serverExternalPackages: ["sharp"], // Add packages that should be bundled separately
 
+	// Router cache configuration
 	experimental: {
-		// Add optimizations to improve build performance
-		optimizePackageImports: ["react", "react-dom", "lucide-react"],
-		// Performance optimization for page caching
 		staleTimes: {
-			dynamic: 30, // Cache dynamic pages for 30 seconds
-			static: 180, // Cache static pages for 3 minutes
+			dynamic: 30,
+			static: 180,
 		},
-		// Use only in development
-		webpackBuildWorker: process.env.NODE_ENV === "development",
-		// Reduce memory usage during builds
+		// Fix CSS loading issues
+		optimizeCss: true,
+		optimizeServerReact: true,
+		webpackBuildWorker: true,
+	},
+
+	// Force build and dev server to use file-system cache
+	onDemandEntries: {
+		// Make Next.js keep pages in memory for longer
+		maxInactiveAge: 60 * 60 * 1000, // 1 hour
+		pagesBufferLength: 5,
+	},
+
+	// Disable image optimization during development for faster builds
+	images: {
+		disableStaticImages: true,
+	},
+
+	// Increase build memory limit
+	experimental: {
+		// Maintain existing experimental options
+		staleTimes: {
+			dynamic: 30,
+			static: 180,
+		},
+		// Add memory optimization
 		memoryBasedWorkersCount: true,
 	},
 

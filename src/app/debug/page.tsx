@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Post } from "@/lib/supabase/client"
+import { Post } from "@/lib/supabase/publicClient"
 
 async function fetchPosts(): Promise<{
 	posts: Post[]

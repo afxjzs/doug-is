@@ -3,8 +3,10 @@
 import Link from "next/link"
 import { formatDate } from "@/lib/utils"
 import SafeImage from "@/components/SafeImage"
-import { Post } from "@/lib/supabase/client"
+import { Post } from "@/lib/supabase/publicClient"
 import { useState, useEffect } from "react"
+import { Metadata } from "next"
+import { getPosts } from "@/lib/supabase/publicClient"
 
 async function fetchPosts(): Promise<{ posts: Post[]; error: string | null }> {
 	try {

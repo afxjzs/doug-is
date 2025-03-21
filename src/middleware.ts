@@ -1,20 +1,90 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
+import { createServerClient, type CookieOptions } from "@supabase/ssr"
 
-// This middleware protects admin routes
-export function middleware(request: NextRequest) {
+// Single admin email - only this account has admin access
+const ALLOWED_ADMIN_EMAILS = ["douglas.rogers@gmail.com"]
+
+/**
+ * This middleware intercepts requests and adds auth protection for admin routes
+ */
+export async function middleware(request: NextRequest) {
 	const pathname = request.nextUrl.pathname
 
-	// Only apply to admin routes
+	// Only apply auth protection to admin routes
 	if (pathname.startsWith("/admin")) {
-		// For now, just display a message that admin is not implemented
-		// In the future, this should implement proper authentication
+		// Skip auth check for auth-related pages to prevent redirect loops
+		if (
+			pathname === "/admin/login" ||
+			pathname === "/admin/register" ||
+			pathname.startsWith("/api/auth/")
+		) {
+			return NextResponse.next()
+		}
 
-		// Create a Response with a simple message
-		return new NextResponse(
-			`<html>
+		// Initialize response to modify
+		let response = NextResponse.next({
+			request: {
+				headers: request.headers,
+			},
+		})
+
+		// Create a Supabase client specifically for middleware usage
+		const supabase = createServerClient(
+			process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+			process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+			{
+				cookies: {
+					get(name) {
+						return request.cookies.get(name)?.value
+					},
+					set(name, value, options) {
+						// This is used for setting cookies in the response
+						response.cookies.set({
+							name,
+							value,
+							...options,
+						})
+					},
+					remove(name, options) {
+						// This is used for removing cookies in the response
+						response.cookies.set({
+							name,
+							value: "",
+							...options,
+						})
+					},
+				},
+			}
+		)
+
+		// Check if there's an authenticated user using getUser() which is more secure
+		// than getSession() as it verifies with the auth server
+		const {
+			data: { user },
+		} = await supabase.auth.getUser()
+
+		// If no authenticated user, redirect to login
+		if (!user) {
+			// Use a simple redirect with only the pathname to avoid encoding issues
+			const redirectUrl = new URL("/admin/login", request.url)
+			redirectUrl.searchParams.set("redirect", pathname)
+
+			// Return a clean redirect response
+			return NextResponse.redirect(redirectUrl.toString())
+		}
+
+		// Check if the user's email is in the admin allowlist
+		const userEmail = user.email
+		const isAdmin =
+			userEmail && ALLOWED_ADMIN_EMAILS.includes(userEmail.toLowerCase())
+
+		if (!isAdmin) {
+			// User is logged in but not an admin
+			return new NextResponse(
+				`<html>
         <head>
-          <title>Admin Not Implemented</title>
+          <title>Access Denied</title>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <style>
@@ -38,7 +108,10 @@ export function middleware(request: NextRequest) {
             }
             h1 {
               margin-top: 0;
-              color: #8899f8;
+              color: #f87171;
+            }
+            p {
+              margin-bottom: 1.5rem;
             }
             a {
               display: inline-block;
@@ -58,25 +131,31 @@ export function middleware(request: NextRequest) {
         </head>
         <body>
           <div class="container">
-            <h1>Admin Area Not Implemented</h1>
-            <p>The admin area is not yet implemented. Please check back later.</p>
+            <h1>Access Denied</h1>
+            <p>You don't have permission to access this area.</p>
+            <p>Please contact the administrator if you believe this is an error.</p>
             <a href="/">Return to Home</a>
           </div>
         </body>
       </html>`,
-			{
-				status: 403,
-				headers: {
-					"Content-Type": "text/html",
-				},
-			}
-		)
+				{
+					status: 403,
+					headers: {
+						"Content-Type": "text/html",
+					},
+				}
+			)
+		}
+
+		// User is an admin, allow the request to proceed
+		return response
 	}
 
+	// For non-admin routes, proceed normally
 	return NextResponse.next()
 }
 
-// See "Matching Paths" below to learn more
+// Only apply this middleware to admin routes
 export const config = {
 	matcher: ["/admin/:path*"],
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { getPosts } from "@/lib/supabase/client"
+import { getPosts } from "@/lib/supabase/publicClient"
 
 // Use force-dynamic to ensure fresh data on each request
 // Consider using ISR (revalidate) for production if data doesn't change frequently

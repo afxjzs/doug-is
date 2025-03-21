@@ -1,0 +1,105 @@
+/* Admin UI specific styles */
+
+.admin-layout {
+	--admin-bg-color: #131118;
+	--admin-sidebar-bg: #0f0d14;
+	--admin-border-color: rgba(255, 255, 255, 0.1);
+	--admin-card-bg: rgba(30, 25, 40, 0.6);
+	--admin-highlight: rgba(139, 92, 246, 0.2);
+	--admin-text-primary: rgba(255, 255, 255, 0.9);
+	--admin-text-secondary: rgba(255, 255, 255, 0.6);
+
+	background-color: var(--admin-bg-color);
+	color: var(--admin-text-primary);
+	min-height: 100vh;
+}
+
+.admin-sidebar {
+	background-color: var(--admin-sidebar-bg);
+	border-right: 1px solid var(--admin-border-color);
+	width: 16rem;
+	flex-shrink: 0;
+}
+
+.admin-main {
+	background-color: var(--admin-bg-color);
+	flex: 1;
+	padding: 1.5rem;
+	overflow: auto;
+}
+
+.admin-card {
+	background-color: var(--admin-card-bg);
+	border: 1px solid var(--admin-border-color);
+	border-radius: 0.5rem;
+	padding: 1.5rem;
+	margin-bottom: 1.5rem;
+}
+
+.admin-card-highlight {
+	border-left: 3px solid rgba(139, 92, 246, 0.6);
+}
+
+.admin-table {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
+.admin-table th {
+	text-align: left;
+	padding: 0.75rem 1rem;
+	border-bottom: 1px solid var(--admin-border-color);
+	color: var(--admin-text-secondary);
+	font-weight: 500;
+}
+
+.admin-table td {
+	padding: 0.75rem 1rem;
+	border-bottom: 1px solid var(--admin-border-color);
+}
+
+.admin-table tr:hover {
+	background-color: var(--admin-highlight);
+}
+
+/* Override any white backgrounds with dark backgrounds */
+.admin-layout div[class*="bg-white"] {
+	background-color: var(--admin-card-bg) !important;
+	color: var(--admin-text-primary) !important;
+	border-color: var(--admin-border-color) !important;
+}
+
+/* Fix text colors in admin layout */
+.admin-layout h1,
+.admin-layout h2,
+.admin-layout h3,
+.admin-layout h4,
+.admin-layout p,
+.admin-layout span:not([class*="text-"]) {
+	color: var(--admin-text-primary);
+}
+
+.admin-layout
+	div[class*="text-[rgba(var(--color-foreground)"]:not([class*="hover"]) {
+	color: var(--admin-text-primary) !important;
+}
+
+/* Fix divider colors */
+.admin-layout div[class*="divide-y"] {
+	--tw-divide-opacity: 0.1;
+	border-color: rgba(255, 255, 255, var(--tw-divide-opacity));
+}
+
+/* Fix table styles */
+.admin-layout table {
+	color: var(--admin-text-primary);
+}
+
+.admin-layout tbody tr {
+	border-bottom-color: var(--admin-border-color);
+}
+
+.admin-layout th {
+	color: var(--admin-text-secondary);
+}

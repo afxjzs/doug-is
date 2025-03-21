@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
-import { getPosts } from "@/lib/supabase/client"
+import { getPosts } from "@/lib/supabase/publicClient"
 import { formatDate } from "@/lib/utils"
 import SafeImage from "@/components/SafeImage"
 import ConnectCta from "@/components/ConnectCta"

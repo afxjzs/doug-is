@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Metadata } from "next"
-import { getPostsByCategory } from "@/lib/supabase/client"
+import { getPostsByCategory } from "@/lib/supabase/publicClient"
 import { formatDate } from "@/lib/utils"
 import SafeImage from "@/components/SafeImage"
 import { notFound } from "next/navigation"

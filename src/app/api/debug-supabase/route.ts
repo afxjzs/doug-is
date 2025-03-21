@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { getSupabaseClient } from "@/lib/supabase/client"
+import { getPublicSupabaseClient } from "@/lib/supabase/publicClient"
 import { createClient } from "@supabase/supabase-js"
 
 export async function GET() {
@@ -10,7 +10,7 @@ export async function GET() {
 		const hasAnonKey = !!supabaseAnonKey
 
 		// Get the Supabase client
-		const supabase = getSupabaseClient()
+		const supabase = getPublicSupabaseClient()
 		const isConnected = !!supabase
 
 		// Create a local Supabase client to ensure it's not null

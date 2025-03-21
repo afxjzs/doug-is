@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { getPostBySlug, getPosts } from "@/lib/supabase/client"
+import { getPostBySlug, getPosts } from "@/lib/supabase/publicClient"
 import type { Metadata } from "next"
 
 // Generate metadata for the page
@@ -28,12 +28,34 @@ export async function generateMetadata({
 
 // Generate static params for all posts
 export async function generateStaticParams() {
-	const posts = await getPosts()
-
-	return posts.map((post) => ({
-		primary_category: post.category,
-		slug: post.slug,
-	}))
+	try {
+		const posts = await getPosts()
+		return posts.map((post) => ({
+			primary_category: post.category,
+			slug: post.slug,
+		}))
+	} catch (error) {
+		console.warn("Error generating static params for posts:", error)
+		// Return empty array in production, or mock data in development
+		if (process.env.NODE_ENV === "development") {
+			// Return mock paths for development
+			return [
+				{
+					primary_category: "investing",
+					slug: "investment-strategies-for-2023",
+				},
+				{
+					primary_category: "general",
+					slug: "getting-started-with-vaporwave-design",
+				},
+				{
+					primary_category: "advisory",
+					slug: "role-of-ai-in-business-advisory",
+				},
+			]
+		}
+		return []
+	}
 }
 
 export default async function ThinkingPostPage({

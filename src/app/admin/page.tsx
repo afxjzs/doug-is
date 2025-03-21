@@ -1,148 +1,241 @@
+/**
+ * Admin Dashboard Page
+ *
+ * This is the main dashboard page that displays an overview of the site's statistics
+ * and provides quick access to key admin features.
+ */
+
 import { Metadata } from "next"
+import { getServerUser, isAdminUser } from "@/lib/auth/supabaseServerAuth"
+import {
+	adminGetPosts,
+	adminGetContactSubmissions,
+	Post,
+	ContactMessage,
+} from "@/lib/supabase/serverClient"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-	title: "Admin Dashboard | Doug.is",
-	description: "Admin dashboard for managing the website",
+	title: "Admin Dashboard | Doug Rogers",
+	description: "Admin dashboard for site management",
 }
 
-export default function AdminPage() {
+export default async function AdminDashboardPage() {
+	// Get current user and admin status
+	const user = await getServerUser()
+	const isAdmin = await isAdminUser()
+
+	// Fetch posts and contact messages
+	// These will return empty arrays if there's a permission error or no data
+	const posts = await adminGetPosts()
+	const contactMessages = await adminGetContactSubmissions()
+
+	// Count published and draft posts
+	const publishedPosts = posts.filter((post) => post.published_at)
+	const draftPosts = posts.filter((post) => !post.published_at)
+
+	// Get recent posts and messages (up to 5 of each)
+	const recentPosts = [...posts]
+		.sort((a, b) => {
+			const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
+			const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
+			return dateB - dateA
+		})
+		.slice(0, 5)
+
+	const recentMessages = [...contactMessages]
+		.sort((a, b) => {
+			const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
+			const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
+			return dateB - dateA
+		})
+		.slice(0, 5)
+
+	// Format the date for display
+	const formatDate = (dateString: string | undefined) => {
+		if (!dateString) return "Unknown date"
+
+		const date = new Date(dateString)
+		return date.toLocaleDateString("en-US", {
+			year: "numeric",
+			month: "short",
+			day: "numeric",
+		})
+	}
+
 	return (
-		<div className="max-w-4xl mx-auto">
-			<div className="mb-12">
-				<h1 className="text-4xl font-bold gradient-heading mb-4">
-					Admin Dashboard
-				</h1>
-				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
-					Manage your website content and settings.
-				</p>
+		<div>
+			<h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+			<p className="mb-8">Welcome, {user?.email}</p>
+
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+				{/* Total Posts Card */}
+				<div className="admin-card">
+					<h2 className="text-xl font-semibold mb-2">Total Posts</h2>
+					<p className="text-3xl">{posts.length}</p>
+					<Link
+						href="/admin/posts"
+						className="text-sm text-[rgba(var(--color-violet),0.9)] mt-2 block hover:underline"
+					>
+						View all posts
+					</Link>
+				</div>
+
+				{/* Published Posts Card */}
+				<div className="admin-card">
+					<h2 className="text-xl font-semibold mb-2">Published Posts</h2>
+					<p className="text-3xl">{publishedPosts.length}</p>
+					<Link
+						href="/admin/posts?status=published"
+						className="text-sm text-[rgba(var(--color-violet),0.9)] mt-2 block hover:underline"
+					>
+						View published
+					</Link>
+				</div>
+
+				{/* Draft Posts Card */}
+				<div className="admin-card">
+					<h2 className="text-xl font-semibold mb-2">Draft Posts</h2>
+					<p className="text-3xl">{draftPosts.length}</p>
+					<Link
+						href="/admin/posts?status=draft"
+						className="text-sm text-[rgba(var(--color-violet),0.9)] mt-2 block hover:underline"
+					>
+						View drafts
+					</Link>
+				</div>
+
+				{/* Contact Messages Card */}
+				<div className="admin-card">
+					<h2 className="text-xl font-semibold mb-2">Contact Messages</h2>
+					<p className="text-3xl">{contactMessages.length}</p>
+					<Link
+						href="/admin/messages"
+						className="text-sm text-[rgba(var(--color-violet),0.9)] mt-2 block hover:underline"
+					>
+						View messages
+					</Link>
+				</div>
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-				<AdminCard
-					title="Contact Messages"
-					description="View and manage contact form submissions"
-					href="/admin/contact"
-					icon={
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="h-8 w-8"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
+			{/* Recent Posts Section */}
+			<div className="admin-card mb-8">
+				<h2 className="text-xl font-semibold mb-4">Recent Posts</h2>
+				{recentPosts.length > 0 ? (
+					<div className="overflow-x-auto">
+						<table className="w-full admin-table">
+							<thead>
+								<tr>
+									<th>Title</th>
+									<th>Status</th>
+									<th>Date</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								{recentPosts.map((post) => (
+									<tr key={post.id}>
+										<td className="font-medium">{post.title}</td>
+										<td>
+											{post.published_at ? (
+												<span className="px-2 py-1 text-xs rounded-full bg-[rgba(var(--color-emerald),0.1)] text-[rgba(var(--color-emerald),0.9)]">
+													Published
+												</span>
+											) : (
+												<span className="px-2 py-1 text-xs rounded-full bg-[rgba(var(--color-foreground),0.1)] text-[rgba(var(--color-foreground),0.6)]">
+													Draft
+												</span>
+											)}
+										</td>
+										<td className="text-sm">{formatDate(post.created_at)}</td>
+										<td>
+											<Link
+												href={`/admin/posts/${post.id}`}
+												className="text-sm text-[rgba(var(--color-violet),0.9)] hover:underline"
+											>
+												Edit
+											</Link>
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				) : (
+					<div className="p-4 bg-[rgba(var(--color-foreground),0.05)] rounded-md">
+						<p>No posts found. Create your first post to get started.</p>
+						<Link
+							href="/admin/posts/new"
+							className="mt-2 inline-block px-4 py-2 bg-[rgba(var(--color-violet),0.1)] border border-[rgba(var(--color-violet),0.3)] rounded-md text-[rgba(var(--color-violet),0.9)] hover:bg-[rgba(var(--color-violet),0.15)] transition-colors"
 						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-							/>
-						</svg>
-					}
-				/>
-				<AdminCard
-					title="Blog Posts"
-					description="Create, edit, and manage blog posts"
-					href="/admin/posts"
-					icon={
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="h-8 w-8"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-							/>
-						</svg>
-					}
-				/>
-				<AdminCard
-					title="Projects"
-					description="Manage your portfolio projects"
-					href="/admin/projects"
-					icon={
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="h-8 w-8"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-							/>
-						</svg>
-					}
-				/>
-				<AdminCard
-					title="Settings"
-					description="Configure website settings"
-					href="/admin/settings"
-					icon={
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="h-8 w-8"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-							/>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-							/>
-						</svg>
-					}
-				/>
+							Create a post
+						</Link>
+					</div>
+				)}
+
+				{recentPosts.length > 0 && (
+					<Link
+						href="/admin/posts"
+						className="block mt-4 text-sm text-[rgba(var(--color-violet),0.9)] hover:underline"
+					>
+						View all posts →
+					</Link>
+				)}
+			</div>
+
+			{/* Recent Messages Section */}
+			<div className="admin-card">
+				<h2 className="text-xl font-semibold mb-4">Recent Messages</h2>
+				{recentMessages.length > 0 ? (
+					<div className="overflow-x-auto">
+						<table className="w-full admin-table">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Email</th>
+									<th>Date</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								{recentMessages.map((message) => (
+									<tr key={message.id}>
+										<td className="font-medium">{message.name}</td>
+										<td className="text-sm">{message.email}</td>
+										<td className="text-sm">
+											{formatDate(message.created_at)}
+										</td>
+										<td>
+											<Link
+												href={`/admin/messages/${message.id}`}
+												className="text-sm text-[rgba(var(--color-violet),0.9)] hover:underline"
+											>
+												View
+											</Link>
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				) : (
+					<div className="p-4 bg-[rgba(var(--color-foreground),0.05)] rounded-md">
+						<p>
+							No contact messages found. Messages will appear here when visitors
+							submit the contact form.
+						</p>
+					</div>
+				)}
+
+				{recentMessages.length > 0 && (
+					<Link
+						href="/admin/messages"
+						className="block mt-4 text-sm text-[rgba(var(--color-violet),0.9)] hover:underline"
+					>
+						View all messages →
+					</Link>
+				)}
 			</div>
 		</div>
-	)
-}
-
-function AdminCard({
-	title,
-	description,
-	href,
-	icon,
-}: {
-	title: string
-	description: string
-	href: string
-	icon: React.ReactNode
-}) {
-	return (
-		<Link
-			href={href}
-			className="p-6 bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] hover:border-[rgba(var(--color-violet),0.2)] rounded-xl transition-all duration-300 group"
-		>
-			<div className="flex items-start space-x-4">
-				<div className="text-[rgba(var(--color-violet),0.7)] group-hover:text-[rgba(var(--color-violet),1)] transition-colors">
-					{icon}
-				</div>
-				<div>
-					<h2 className="text-xl font-semibold text-[rgba(var(--color-foreground),0.9)] mb-2 group-hover:text-[rgba(var(--color-violet),1)] transition-colors">
-						{title}
-					</h2>
-					<p className="text-[rgba(var(--color-foreground),0.7)]">
-						{description}
-					</p>
-				</div>
-			</div>
-		</Link>
 	)
 }
