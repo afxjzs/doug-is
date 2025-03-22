@@ -16,6 +16,10 @@ import {
 import Link from "next/link"
 import { redirect } from "next/navigation"
 
+// Mark this page as dynamic to prevent static generation
+// This is needed because we're using cookies for authentication
+export const dynamic = "force-dynamic"
+
 export const metadata: Metadata = {
 	title: "Admin Dashboard | Doug Rogers",
 	description: "Admin dashboard for site management",

@@ -179,6 +179,7 @@ const mockContactSubmissions = [
 export async function adminGetPosts(): Promise<Post[]> {
 	console.log("Getting posts...")
 	const supabase = createServiceClient()
+	const isDev = process.env.NODE_ENV === "development"
 
 	try {
 		// Test if service role is working by checking if we can count posts
@@ -187,11 +188,24 @@ export async function adminGetPosts(): Promise<Post[]> {
 			.select("*", { count: "exact", head: true })
 
 		if (testError) {
-			console.error("Error fetching posts:", testError)
+			// Handle the permission denied error gracefully
+			if (
+				testError.code === "42501" &&
+				testError.message.includes("permission denied")
+			) {
+				console.error(
+					"Permission denied when accessing posts table. This could be due to missing RLS policies or insufficient privileges."
+				)
+				console.log(
+					"If you're seeing this in production, check your database permissions."
+				)
+			} else {
+				console.error("Error fetching posts:", testError)
+			}
 
 			// Return mock data during development
 			if (isDev) {
-				console.log("Returning mock posts due to permission error")
+				console.log("Returning mock posts due to database error")
 				return mockPosts
 			}
 			return []
@@ -204,13 +218,32 @@ export async function adminGetPosts(): Promise<Post[]> {
 			.order("published_at", { ascending: false })
 
 		if (error) {
-			console.error("Error fetching posts:", error)
+			// Handle specific error types
+			if (
+				error.code === "42501" &&
+				error.message.includes("permission denied")
+			) {
+				console.error(
+					"Permission denied when querying posts. Check your database RLS policies."
+				)
+			} else {
+				console.error("Error fetching posts:", error)
+			}
+
+			if (isDev) {
+				return mockPosts
+			}
 			return []
 		}
 
 		return data || []
 	} catch (err) {
-		console.error("Error in adminGetPosts:", err)
+		console.error("Exception fetching posts:", err)
+
+		// Always return an empty array in case of error to prevent breaking the UI
+		if (isDev) {
+			return mockPosts
+		}
 		return []
 	}
 }
@@ -221,6 +254,7 @@ export async function adminGetPosts(): Promise<Post[]> {
 export async function adminGetContactSubmissions(): Promise<ContactMessage[]> {
 	console.log("Getting contact submissions...")
 	const supabase = createServiceClient()
+	const isDev = process.env.NODE_ENV === "development"
 
 	try {
 		// Test if service role is working by checking if we can count contact_messages
@@ -229,13 +263,24 @@ export async function adminGetContactSubmissions(): Promise<ContactMessage[]> {
 			.select("*", { count: "exact", head: true })
 
 		if (testError) {
-			console.error("Error fetching contact submissions:", testError)
+			// Handle the permission denied error gracefully
+			if (
+				testError.code === "42501" &&
+				testError.message.includes("permission denied")
+			) {
+				console.error(
+					"Permission denied when accessing contact_messages table. This could be due to missing RLS policies or insufficient privileges."
+				)
+				console.log(
+					"If you're seeing this in production, check your database permissions."
+				)
+			} else {
+				console.error("Error fetching contact submissions:", testError)
+			}
 
 			// Return mock data during development
 			if (isDev) {
-				console.log(
-					"Returning mock contact submissions due to permission error"
-				)
+				console.log("Returning mock contact submissions due to database error")
 				return mockContactSubmissions
 			}
 			return []
@@ -248,13 +293,32 @@ export async function adminGetContactSubmissions(): Promise<ContactMessage[]> {
 			.order("created_at", { ascending: false })
 
 		if (error) {
-			console.error("Error fetching contact submissions:", error)
+			// Handle specific error types
+			if (
+				error.code === "42501" &&
+				error.message.includes("permission denied")
+			) {
+				console.error(
+					"Permission denied when querying contact_messages. Check your database RLS policies."
+				)
+			} else {
+				console.error("Error fetching contact submissions:", error)
+			}
+
+			if (isDev) {
+				return mockContactSubmissions
+			}
 			return []
 		}
 
 		return data || []
 	} catch (err) {
-		console.error("Error in adminGetContactSubmissions:", err)
+		console.error("Exception fetching contact submissions:", err)
+
+		// Always return an empty array in case of error to prevent breaking the UI
+		if (isDev) {
+			return mockContactSubmissions
+		}
 		return []
 	}
 }

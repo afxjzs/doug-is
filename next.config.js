@@ -18,14 +18,22 @@ const nextConfig = {
 
 	// Force build and dev server to use file-system cache
 	onDemandEntries: {
-		// Make Next.js keep pages in memory for longer
-		maxInactiveAge: 60 * 60 * 1000, // 1 hour
-		pagesBufferLength: 5,
+		// Keep the build running when there are errors
+		maxInactiveAge: 25 * 1000,
+		pagesBufferLength: 2,
 	},
 
 	// Disable image optimization during development for faster builds
 	images: {
 		disableStaticImages: true,
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "**",
+			},
+		],
+		// Disable image optimization only in development
+		unoptimized: false,
 	},
 
 	// Increase build memory limit
@@ -112,6 +120,10 @@ const nextConfig = {
 	// Reduce the amount of information logged during development
 	logging: {
 		level: process.env.NODE_ENV === "development" ? "warn" : "info",
+		fetches: {
+			// Don't log fetch requests during build for cleaner output
+			fullUrl: process.env.NODE_ENV === "development",
+		},
 	},
 }
 

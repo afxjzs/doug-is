@@ -1,173 +1,95 @@
-import Image from "next/image"
-import Link from "next/link"
-import { notFound } from "next/navigation"
-import { getPostBySlug, getPosts } from "@/lib/supabase/publicClient"
-import type { Metadata } from "next"
+/**
+ * Individual blog post page
+ */
 
-// Generate metadata for the page
+import { Metadata } from "next"
+import { getPostBySlug, getPosts } from "@/lib/supabase/publicClient"
+import { notFound } from "next/navigation"
+import PostView from "@/components/PostView"
+
+// Set a reasonable fallback for cache revalidation
+export const revalidate = 3600 // 1 hour
+
+// Generate metadata for the post
 export async function generateMetadata({
 	params,
 }: {
-	params: Promise<{ primary_category: string; slug: string }>
+	params: { slug: string }
 }): Promise<Metadata> {
-	const resolvedParams = await params
-	const post = await getPostBySlug(resolvedParams.slug)
+	try {
+		const post = await getPostBySlug(params.slug)
 
-	if (!post) {
-		return {
-			title: "Post Not Found | Doug.is",
-			description: "The requested post could not be found.",
+		if (!post) {
+			return {
+				title: "Post Not Found | Doug.is",
+				description: "The requested blog post could not be found.",
+			}
 		}
-	}
 
-	return {
-		title: `${post.title} | Doug.is`,
-		description: post.excerpt,
+		return {
+			title: `${post.title} | Doug.is`,
+			description: post.excerpt,
+		}
+	} catch (error) {
+		console.error("Error generating metadata for post:", error)
+		return {
+			title: "Blog Post | Doug.is",
+			description: "A blog post by Douglas Rogers",
+		}
 	}
 }
 
-// Generate static params for all posts
+// Generate static paths for all posts
 export async function generateStaticParams() {
 	try {
 		const posts = await getPosts()
+
+		// Handle case where posts can't be fetched
+		if (!posts || !Array.isArray(posts)) {
+			console.warn("Failed to fetch posts for static generation, posts:", posts)
+			return []
+		}
+
 		return posts.map((post) => ({
-			primary_category: post.category,
+			"primary-category": post.category.toLowerCase(),
 			slug: post.slug,
 		}))
 	} catch (error) {
-		console.warn("Error generating static params for posts:", error)
-		// Return empty array in production, or mock data in development
-		if (process.env.NODE_ENV === "development") {
-			// Return mock paths for development
-			return [
-				{
-					primary_category: "investing",
-					slug: "investment-strategies-for-2023",
-				},
-				{
-					primary_category: "general",
-					slug: "getting-started-with-vaporwave-design",
-				},
-				{
-					primary_category: "advisory",
-					slug: "role-of-ai-in-business-advisory",
-				},
-			]
-		}
+		console.error("Error generating static params for posts:", error)
+		// Return empty array to allow fallback
 		return []
 	}
 }
 
-export default async function ThinkingPostPage({
+export default async function BlogPostPage({
 	params,
 }: {
-	params: Promise<{ primary_category: string; slug: string }>
+	params: { slug: string; "primary-category": string }
 }) {
-	const resolvedParams = await params
-	const post = await getPostBySlug(resolvedParams.slug)
+	try {
+		const post = await getPostBySlug(params.slug)
 
-	if (!post) {
+		if (!post) {
+			notFound()
+		}
+
+		// Verify the category in the URL matches the post's category
+		// This prevents duplicate content issues with SEO
+		if (
+			params["primary-category"] !== post.category.toLowerCase() &&
+			process.env.NODE_ENV === "production"
+		) {
+			console.warn(
+				`Category mismatch: URL has ${
+					params["primary-category"]
+				} but post category is ${post.category.toLowerCase()}`
+			)
+			notFound()
+		}
+
+		return <PostView post={post} />
+	} catch (error) {
+		console.error("Error fetching blog post:", error)
 		notFound()
 	}
-
-	// Simple function to convert newlines to <br> tags
-	const formatContent = (content: string) => {
-		return content
-			.split("\n\n")
-			.map((paragraph) => `<p>${paragraph.replace(/\n/g, "<br>")}</p>`)
-			.join("")
-	}
-
-	const content = formatContent(post.content)
-
-	return (
-		<article className="max-w-3xl mx-auto">
-			{/* Header */}
-			<div className="mb-8 text-center">
-				<Link
-					href="/thinking"
-					className="inline-flex items-center text-[rgba(var(--color-foreground),0.6)] hover:text-[rgba(var(--color-foreground),1)] mb-6 transition-colors"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="h-4 w-4 mr-2"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="M15 19l-7-7 7-7"
-						/>
-					</svg>
-					Back to Thinking
-				</Link>
-
-				<h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 gradient-heading">
-					{post.title}
-				</h1>
-
-				<div className="flex items-center justify-center space-x-4 text-[rgba(var(--color-foreground),0.6)] text-sm">
-					<span>
-						{new Date(post.published_at || "").toLocaleDateString("en-US", {
-							year: "numeric",
-							month: "long",
-							day: "numeric",
-						})}
-					</span>
-					<span>•</span>
-					<Link
-						href={`/thinking/${post.category}`}
-						className="uppercase tracking-wider hover:text-[rgba(var(--color-foreground),1)] transition-colors"
-					>
-						{post.category}
-					</Link>
-				</div>
-			</div>
-
-			{/* Featured Image */}
-			{post.featured_image && (
-				<div className="relative h-64 md:h-96 mb-8 rounded-xl overflow-hidden">
-					<Image
-						src={post.featured_image}
-						alt={post.title}
-						fill
-						className="object-cover"
-						priority
-					/>
-				</div>
-			)}
-
-			{/* Content */}
-			<div className="prose prose-invert prose-lg max-w-none prose-headings:gradient-text-violet prose-a:text-[rgba(var(--color-cyan),0.9)] prose-a:no-underline hover:prose-a:text-[rgba(var(--color-cyan),1)] prose-a:transition-colors prose-img:rounded-xl">
-				<div dangerouslySetInnerHTML={{ __html: content }} />
-			</div>
-
-			{/* Footer */}
-			<div className="mt-12 pt-8 border-t border-[rgba(var(--color-foreground),0.1)]">
-				<Link
-					href="/thinking"
-					className="inline-flex items-center text-[rgba(var(--color-foreground),0.6)] hover:text-[rgba(var(--color-foreground),1)] transition-colors"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="h-4 w-4 mr-2"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="M15 19l-7-7 7-7"
-						/>
-					</svg>
-					Back to Thinking
-				</Link>
-			</div>
-		</article>
-	)
 }

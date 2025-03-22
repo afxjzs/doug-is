@@ -1,77 +1,136 @@
 /**
- * Admin Contacts Page
+ * Admin Contact Messages Page
  *
- * This page displays all contact form submissions with options to
- * mark as read, filter, and respond to messages.
+ * This page displays all contact form submissions received on the site
  */
 
 import { Metadata } from "next"
-import {
-	adminGetContactSubmissions,
-	ContactMessage,
-} from "@/lib/supabase/serverClient"
-import ContactsList from "@/components/admin/ContactsList"
+import { getServerUser, isAdminUser } from "@/lib/auth/supabaseServerAuth"
+import { adminGetContactSubmissions } from "@/lib/supabase/serverClient"
+import { redirect } from "next/navigation"
+
+// Mark this page as dynamic to prevent static generation
+export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
-	title: "Contact Messages | Admin",
+	title: "Contact Messages | Admin Dashboard",
 	description: "Manage contact form submissions",
 }
 
 export default async function AdminContactsPage() {
-	// Get all contact messages
-	const contactMessages = await adminGetContactSubmissions()
+	try {
+		// Verify user is authenticated and is an admin
+		const user = await getServerUser()
+		const isAdmin = await isAdminUser()
 
-	return (
-		<div className="space-y-6">
-			<div className="flex justify-between items-center">
-				<h1 className="text-2xl font-semibold">Contact Messages</h1>
-			</div>
+		if (!user || !isAdmin) {
+			console.log("Not authenticated as admin, redirecting to login")
+			redirect("/admin/login?redirect=/admin/contacts")
+		}
 
-			{/* Summary statistics */}
-			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-				<div className="bg-white rounded-lg shadow-sm border border-[rgba(var(--color-foreground),0.1)] p-4">
-					<h2 className="text-sm font-medium text-[rgba(var(--color-foreground),0.6)]">
-						Total Messages
-					</h2>
-					<p className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)]">
-						{contactMessages.length}
-					</p>
-				</div>
-				<div className="bg-white rounded-lg shadow-sm border border-[rgba(var(--color-foreground),0.1)] p-4">
-					<h2 className="text-sm font-medium text-[rgba(var(--color-foreground),0.6)]">
-						Unread Messages
-					</h2>
-					<p className="text-2xl font-bold text-[rgba(var(--color-cyan),1)]">
-						{
-							contactMessages.filter((msg: ContactMessage) => !msg.is_read)
-								.length
-						}
-					</p>
-				</div>
-				<div className="bg-white rounded-lg shadow-sm border border-[rgba(var(--color-foreground),0.1)] p-4">
-					<h2 className="text-sm font-medium text-[rgba(var(--color-foreground),0.6)]">
-						Read Messages
-					</h2>
-					<p className="text-2xl font-bold text-[rgba(var(--color-green),1)]">
-						{
-							contactMessages.filter((msg: ContactMessage) => msg.is_read)
-								.length
-						}
-					</p>
-				</div>
-			</div>
+		// Fetch all contact messages
+		const messages = await adminGetContactSubmissions()
 
-			{/* Contact messages list */}
-			<div className="bg-white rounded-lg shadow-sm border border-[rgba(var(--color-foreground),0.1)] p-6">
-				{contactMessages.length === 0 ? (
-					<div className="text-center py-8 text-[rgba(var(--color-foreground),0.6)]">
-						No contact submissions found. Once visitors submit contact forms,
-						they will appear here.
+		// Format date for display
+		const formatDate = (dateString: string | undefined) => {
+			if (!dateString) return "Unknown date"
+
+			const date = new Date(dateString)
+			return date.toLocaleDateString("en-US", {
+				year: "numeric",
+				month: "short",
+				day: "numeric",
+				hour: "2-digit",
+				minute: "2-digit",
+			})
+		}
+
+		return (
+			<div>
+				<h1 className="text-3xl font-bold mb-6">Contact Messages</h1>
+				<p className="mb-8">Messages received through the contact form.</p>
+
+				{messages.length > 0 ? (
+					<div className="admin-card overflow-x-auto">
+						<table className="w-full admin-table">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Email</th>
+									<th>Subject</th>
+									<th>Date</th>
+									<th>Status</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								{messages.map((message) => (
+									<tr key={message.id}>
+										<td className="font-medium">{message.name}</td>
+										<td className="text-sm">
+											<a
+												href={`mailto:${message.email}`}
+												className="text-[rgba(var(--color-violet),0.9)] hover:underline"
+											>
+												{message.email}
+											</a>
+										</td>
+										<td className="text-sm">
+											{message.subject || "No Subject"}
+										</td>
+										<td className="text-sm">
+											{formatDate(message.created_at)}
+										</td>
+										<td>
+											{message.is_read ? (
+												<span className="px-2 py-1 text-xs rounded-full bg-[rgba(var(--color-foreground),0.1)] text-[rgba(var(--color-foreground),0.6)]">
+													Read
+												</span>
+											) : (
+												<span className="px-2 py-1 text-xs rounded-full bg-[rgba(var(--color-cyan),0.1)] text-[rgba(var(--color-cyan),0.9)]">
+													New
+												</span>
+											)}
+										</td>
+										<td>
+											<a
+												href={`/admin/contacts/${message.id}`}
+												className="text-sm text-[rgba(var(--color-violet),0.9)] hover:underline"
+											>
+												View
+											</a>
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
 					</div>
 				) : (
-					<ContactsList initialContacts={contactMessages} />
+					<div className="admin-card p-6 text-center">
+						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
+							No contact messages found
+						</p>
+						<p className="text-sm">
+							Messages submitted through the contact form will appear here.
+						</p>
+					</div>
 				)}
 			</div>
-		</div>
-	)
+		)
+	} catch (error) {
+		console.error("Error in AdminContactsPage:", error)
+		return (
+			<div className="admin-card p-6">
+				<h1 className="text-3xl font-bold text-[rgba(var(--color-red),0.9)] mb-6">
+					Error
+				</h1>
+				<p className="mb-4">
+					An error occurred while loading contact messages.
+				</p>
+				<p className="text-sm text-[rgba(var(--color-foreground),0.7)]">
+					Please try refreshing the page or contact the administrator.
+				</p>
+			</div>
+		)
+	}
 }
