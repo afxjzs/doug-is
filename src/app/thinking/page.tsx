@@ -94,7 +94,11 @@ export default function ThinkingPage() {
 							key={post.id}
 							className="border-b border-[rgba(var(--color-foreground),0.1)] pb-12 last:border-0"
 						>
-							<Link href={`/thinking/${post.category}/${post.slug}`}>
+							<Link
+								href={`/thinking/about/${post.category.toLowerCase()}/${
+									post.slug
+								}`}
+							>
 								<div className="group">
 									{post.featured_image && (
 										<div className="relative h-64 w-full mb-6 overflow-hidden rounded-lg">

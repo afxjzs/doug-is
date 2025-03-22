@@ -18,7 +18,7 @@ const isMissingCredentials = !supabaseUrl || !supabaseAnonKey
 if (isDev) {
 	if (isMissingCredentials) {
 		console.warn(
-			"⚠️ Supabase credentials missing. Using mock data for development."
+			"⚠️ Supabase credentials missing. Missing required environment variables."
 		)
 	} else {
 		console.log(
@@ -28,7 +28,7 @@ if (isDev) {
 }
 
 // Sample mock data for development
-const mockPosts: Post[] = [
+export const mockPosts: Post[] = [
 	{
 		id: "1",
 		title: "Getting Started with Vaporwave Design",
@@ -78,7 +78,7 @@ export interface Post {
 	excerpt: string
 	published_at: string
 	category: string
-	featured_image?: string
+	featured_image: string | null
 	created_at?: string
 	updated_at?: string
 }
@@ -91,7 +91,7 @@ export const createPublicSupabaseClient = () => {
 	// Validate environment variables
 	if (!supabaseUrl || !supabaseAnonKey) {
 		if (isDev) {
-			console.warn("⚠️ Using mock Supabase client in development")
+			console.warn("⚠️ Missing Supabase credentials")
 			return null
 		}
 
@@ -135,7 +135,7 @@ export const getPublicSupabaseClient = () => {
  */
 
 /**
- * Fetches posts from Supabase or returns mock data in development
+ * Fetches posts from Supabase
  * @param limit Optional number of posts to fetch
  * @param category Optional category to filter by
  * @returns Array of posts
@@ -146,10 +146,10 @@ export const getPosts = async (
 ): Promise<Post[]> => {
 	const supabase = getPublicSupabaseClient()
 
-	// Return mock data if no Supabase client
+	// Return empty array if no Supabase client
 	if (!supabase) {
-		console.log("Using mock posts data")
-		return mockPosts
+		console.error("No Supabase client available")
+		return []
 	}
 
 	try {
@@ -173,20 +173,13 @@ export const getPosts = async (
 
 		if (error) {
 			console.error("Error fetching posts:", error)
-			throw new Error(`Database query failed: ${error.message}`)
+			return []
 		}
 
 		return data as Post[]
 	} catch (error) {
 		console.error("Exception fetching posts:", error)
-
-		// Fallback to mock data in development
-		if (isDev) {
-			console.warn("⚠️ Using mock data due to error")
-			return mockPosts
-		}
-
-		throw error
+		return []
 	}
 }
 
@@ -198,10 +191,10 @@ export const getPosts = async (
 export const getPostBySlug = async (slug: string): Promise<Post | null> => {
 	const supabase = getPublicSupabaseClient()
 
-	// Return mock data if no Supabase client
+	// Return null if no Supabase client
 	if (!supabase) {
-		const mockPost = mockPosts.find((post) => post.slug === slug)
-		return mockPost || null
+		console.error("No Supabase client available")
+		return null
 	}
 
 	try {
@@ -218,45 +211,31 @@ export const getPostBySlug = async (slug: string): Promise<Post | null> => {
 			}
 
 			console.error("Error fetching post by slug:", error)
-			throw new Error(`Database query failed: ${error.message}`)
+			return null
 		}
 
 		return data as Post
 	} catch (error) {
 		console.error("Exception fetching post by slug:", error)
-
-		// Fallback to mock data in development
-		if (isDev) {
-			const mockPost = mockPosts.find((post) => post.slug === slug)
-			return mockPost || null
-		}
-
-		throw error
+		return null
 	}
 }
 
 /**
- * Fetches posts by category from Supabase or returns mock data in development
+ * Fetches posts by category from Supabase
  * @param category The category to filter by
  * @returns Array of posts in the specified category
  */
 export async function getPostsByCategory(category: string): Promise<Post[]> {
 	const supabase = getPublicSupabaseClient()
 
-	// Return mock data if no Supabase client
+	// Return empty array if no Supabase client
 	if (!supabase) {
-		if (isDev) {
-			console.warn(
-				"Using mock data for posts - Supabase client not initialized"
-			)
-		}
-		// Filter mock posts by category
-		return mockPosts.filter((post) => post.category === category)
+		console.error("No Supabase client available")
+		return []
 	}
 
 	try {
-		console.log(`Fetching posts in category: ${category}`)
-
 		const { data, error } = await supabase
 			.from("posts")
 			.select("*")
@@ -265,19 +244,12 @@ export async function getPostsByCategory(category: string): Promise<Post[]> {
 
 		if (error) {
 			console.error("Error fetching posts by category:", error)
-			throw new Error(`Database query failed: ${error.message}`)
+			return []
 		}
 
 		return data as Post[]
 	} catch (error) {
 		console.error("Exception fetching posts by category:", error)
-
-		// Fallback to mock data in development
-		if (isDev) {
-			console.warn("⚠️ Using mock data due to error")
-			return mockPosts.filter((post) => post.category === category)
-		}
-
-		throw error
+		return []
 	}
 }

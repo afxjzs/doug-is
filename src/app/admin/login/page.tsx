@@ -29,9 +29,9 @@ export default async function AdminLoginPage(props: {
 		typeof redirectValue === "string" ? redirectValue : undefined
 
 	return (
-		<div className="flex min-h-screen flex-col items-center justify-center bg-[rgba(var(--color-background),1)]">
+		<div className="flex min-h-screen flex-col items-center justify-center">
 			<div className="w-full max-w-md">
-				<div className="rounded-lg border border-[rgba(var(--color-foreground),0.1)] bg-[rgba(var(--color-background),0.6)] p-8 shadow-lg backdrop-blur-sm">
+				<div className="rounded-lg border border-[rgba(var(--color-foreground),0.1)] bg-[rgba(0,0,0,0.9)] p-8 shadow-lg backdrop-blur-sm">
 					<div className="mb-6 text-center">
 						<h1 className="text-3xl font-bold gradient-heading mb-2">
 							Admin Login
@@ -50,18 +50,6 @@ export default async function AdminLoginPage(props: {
 
 					{/* Login form component */}
 					<LoginForm redirectTo={redirectTo} />
-
-					<div className="mt-6 text-center text-sm text-[rgba(var(--color-foreground),0.6)]">
-						<p>Don't have an account yet?</p>
-						<p className="mt-2">
-							<a
-								href="/admin/register"
-								className="text-[rgba(var(--color-cyan),0.9)] hover:text-[rgba(var(--color-cyan),1)] hover:underline transition-colors"
-							>
-								Create an account
-							</a>
-						</p>
-					</div>
 				</div>
 			</div>
 		</div>

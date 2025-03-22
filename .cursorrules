@@ -1,4 +1,5 @@
-
+WHEN YOU NEED TO RESTART THE SERVER, THE PROVIDED COMMAND NEEDS TO ALSO KILL THE RUNNING SERVER:
+cd /Users/afxjzs/dev/projects/doug-is && kill $(lsof -t -i:3000) || true && npm run dev
 
 # Next.js 15 (React 19, Vercel AI, Tailwind)
 

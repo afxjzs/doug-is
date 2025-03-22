@@ -8,8 +8,8 @@
 import { Metadata } from "next"
 import { getServerUser, isAdminUser } from "@/lib/auth/supabaseServerAuth"
 import {
-	adminGetPosts,
-	adminGetContactSubmissions,
+	getPosts,
+	getContactSubmissions,
 	Post,
 	ContactMessage,
 } from "@/lib/supabase/serverClient"
@@ -39,8 +39,8 @@ export default async function AdminDashboardPage() {
 
 		// Fetch posts and contact messages
 		// These will return empty arrays if there's a permission error or no data
-		const posts = (await adminGetPosts()) || []
-		const contactMessages = (await adminGetContactSubmissions()) || []
+		const posts = (await getPosts()) || []
+		const contactMessages = (await getContactSubmissions()) || []
 
 		// Count published and draft posts
 		const publishedPosts = posts.filter((post) => post.published_at)

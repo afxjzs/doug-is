@@ -149,9 +149,7 @@ export function useAuth() {
 					throw error
 				}
 
-				// After successful login, force router refresh and redirect
-				router.refresh()
-
+				// Don't trigger router refresh here - let the component handle redirection
 				return { success: true, data }
 			} catch (error) {
 				console.error("Login error:", error)
@@ -163,7 +161,7 @@ export function useAuth() {
 				setLoading(false)
 			}
 		},
-		[supabase, router]
+		[supabase]
 	)
 
 	/**
@@ -207,14 +205,31 @@ export function useAuth() {
 	const logout = useCallback(async () => {
 		setLoading(true)
 		try {
-			const { error } = await supabase.auth.signOut()
+			// Clear local state first
+			setUser(null)
+			setSession(null)
+
+			// Sign out from Supabase
+			const { error } = await supabase.auth.signOut({
+				scope: "global", // Sign out from all tabs/windows
+			})
+
 			if (error) {
 				console.error("Logout error:", error)
 				return { success: false, error: error.message }
 			}
 
-			// After logout, force router refresh
-			router.refresh()
+			// Force cleanup of all cookies
+			document.cookie =
+				"sb-access-token=; Max-Age=0; path=/; domain=" +
+				window.location.hostname
+			document.cookie =
+				"sb-refresh-token=; Max-Age=0; path=/; domain=" +
+				window.location.hostname
+
+			// Force a hard reload to clear any client-side state
+			// This will trigger middleware to handle the redirect
+			window.location.href = "/admin/login"
 
 			return { success: true }
 		} catch (error) {
@@ -226,7 +241,7 @@ export function useAuth() {
 		} finally {
 			setLoading(false)
 		}
-	}, [supabase, router])
+	}, [supabase])
 
 	// Determine if the user is an admin based on their email
 	const isAdmin = user?.email

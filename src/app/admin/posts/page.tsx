@@ -6,7 +6,7 @@
 
 import { Metadata } from "next"
 import { getServerUser, isAdminUser } from "@/lib/auth/supabaseServerAuth"
-import { adminGetPosts } from "@/lib/supabase/serverClient"
+import { getPosts } from "@/lib/supabase/serverClient"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 
@@ -14,37 +14,40 @@ import { redirect } from "next/navigation"
 export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
-	title: "Posts | Admin Dashboard",
-	description: "Manage site posts and articles",
+	title: "Admin Posts | Doug Rogers",
+	description: "Manage blog posts",
 }
 
 export default async function AdminPostsPage({
 	searchParams,
 }: {
-	searchParams: { [key: string]: string | string[] | undefined }
+	searchParams?: { [key: string]: string | string[] | undefined }
 }) {
 	try {
-		// Verify user is authenticated and is an admin
+		// Get current user and check admin status
 		const user = await getServerUser()
 		const isAdmin = await isAdminUser()
 
+		// Redirect if not admin
 		if (!user || !isAdmin) {
 			console.log("Not authenticated as admin, redirecting to login")
 			redirect("/admin/login?redirect=/admin/posts")
 		}
 
-		// Get status filter from query params, defaulting to "all"
-		const statusParam = searchParams.status || "all"
-		const status = typeof statusParam === "string" ? statusParam : "all"
+		// Parse search params
+		const statusFilter = searchParams?.status
+			? String(searchParams.status)
+			: "all"
 
-		// Fetch all posts
-		const allPosts = await adminGetPosts()
+		// Get all posts and apply local filtering
+		// This ensures we still work if there's a database error
+		const allPosts = await getPosts()
 
 		// Filter posts based on status
 		const posts =
-			status === "published"
+			statusFilter === "published"
 				? allPosts.filter((post) => !!post.published_at)
-				: status === "draft"
+				: statusFilter === "draft"
 				? allPosts.filter((post) => !post.published_at)
 				: allPosts
 
@@ -77,7 +80,7 @@ export default async function AdminPostsPage({
 					<Link
 						href="/admin/posts"
 						className={`px-3 py-1 rounded-md text-sm ${
-							status === "all"
+							statusFilter === "all"
 								? "bg-[rgba(var(--color-violet),0.1)] text-[rgba(var(--color-violet),0.9)]"
 								: "bg-[rgba(var(--color-foreground),0.05)] text-[rgba(var(--color-foreground),0.7)] hover:bg-[rgba(var(--color-foreground),0.1)]"
 						}`}
@@ -87,7 +90,7 @@ export default async function AdminPostsPage({
 					<Link
 						href="/admin/posts?status=published"
 						className={`px-3 py-1 rounded-md text-sm ${
-							status === "published"
+							statusFilter === "published"
 								? "bg-[rgba(var(--color-emerald),0.1)] text-[rgba(var(--color-emerald),0.9)]"
 								: "bg-[rgba(var(--color-foreground),0.05)] text-[rgba(var(--color-foreground),0.7)] hover:bg-[rgba(var(--color-foreground),0.1)]"
 						}`}
@@ -97,7 +100,7 @@ export default async function AdminPostsPage({
 					<Link
 						href="/admin/posts?status=draft"
 						className={`px-3 py-1 rounded-md text-sm ${
-							status === "draft"
+							statusFilter === "draft"
 								? "bg-[rgba(var(--color-foreground),0.1)] text-[rgba(var(--color-foreground),0.9)]"
 								: "bg-[rgba(var(--color-foreground),0.05)] text-[rgba(var(--color-foreground),0.7)] hover:bg-[rgba(var(--color-foreground),0.1)]"
 						}`}
@@ -148,7 +151,7 @@ export default async function AdminPostsPage({
 												</Link>
 												{post.published_at && (
 													<Link
-														href={`/thinking/${post.category.toLowerCase()}/${
+														href={`/thinking/about/${post.category.toLowerCase()}/${
 															post.slug
 														}`}
 														className="text-sm text-[rgba(var(--color-cyan),0.9)] hover:underline"

@@ -106,6 +106,7 @@ export async function getServerUser() {
 /**
  * Checks if the current user is an admin
  * Uses an allowlist of specific admin email addresses
+ * This avoids querying the user_roles table, which can cause permission issues
  */
 export async function isAdminUser() {
 	const user = await getServerUser()

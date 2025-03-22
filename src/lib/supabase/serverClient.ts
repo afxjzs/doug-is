@@ -1,369 +1,234 @@
-import { createClient } from "@supabase/supabase-js"
+/**
+ * Supabase client for server-side components only
+ * This file contains server-only functionality
+ */
+
+import { createClient as createServiceClient } from "@supabase/supabase-js"
+import { type CookieOptions, createServerClient } from "@supabase/ssr"
+import { cookies as nextCookies } from "next/headers"
 import type { Database } from "../types/supabase"
-import { cookies } from "next/headers"
 
-// This file should ONLY be imported in server components or API routes
-// The service role key gives full access to your database without RLS
-if (typeof window !== "undefined") {
-	throw new Error("This file should not be imported on the client side")
-}
-
-// Define development mode flag
-const isDev = process.env.NODE_ENV === "development"
-
-// Use the service role key for admin operations
+// Environment variables
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ""
 
-if (!supabaseUrl || !supabaseServiceKey) {
-	throw new Error("Missing Supabase server credentials")
-} else {
-	// Log key info for debugging (only first/last 5 chars for security)
-	console.log("Supabase URL available:", Boolean(supabaseUrl))
-	console.log(
-		"Service key available:",
-		Boolean(supabaseServiceKey),
-		`${supabaseServiceKey.substring(0, 5)}...${supabaseServiceKey.substring(
-			supabaseServiceKey.length - 5
-		)}`
-	)
-}
-
-/**
- * Creates a Supabase admin client with service role key
- * This client bypasses Row Level Security (RLS) and should
- * only be used in server contexts (API routes, server components)
- */
-export const createServiceClient = () => {
-	try {
-		// Create a direct client with the service key
-		// Don't use any additional auth configuration that might interfere
-		const client = createClient<Database>(supabaseUrl, supabaseServiceKey, {
-			db: {
-				schema: "public",
-			},
-			auth: {
-				autoRefreshToken: false,
-				persistSession: false,
-			},
-		})
-
-		console.log("Created server client with service role")
-
-		return client
-	} catch (error) {
-		console.error("Failed to create server Supabase client:", error)
-		throw new Error("Failed to initialize server database client")
-	}
-}
-
-/**
- * Initialize the Supabase client with cookies for server components
- * This client respects Row Level Security (RLS) and uses the user's session
- */
-export const getServerSupabaseClient = () => {
-	const cookieStore = cookies()
-
-	// Instead of using cookieStore directly, convert it to a string manually
-	const cookieHeader = cookieStore.toString()
-
-	return createClient<Database>(
-		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-		{
-			auth: {
-				persistSession: false,
-			},
-			global: {
-				fetch: fetch.bind(globalThis),
-				headers: {
-					cookie: cookieHeader,
-				},
-			},
-		}
-	)
-}
-
-/**
- * Post interface for consistency across components
- */
+// Define the Post type
 export interface Post {
 	id: string
 	title: string
 	slug: string
 	content: string
 	excerpt: string
-	published_at: string
 	category: string
-	featured_image?: string | null
-	image_url?: string
-	published?: boolean
-	created_at?: string
-	updated_at?: string
+	published_at: string | null
+	featured_image: string | null
+	created_at: string
+	updated_at: string
 }
 
-/**
- * Contact message interface for consistency
- */
+// Define the Contact Message type
 export interface ContactMessage {
 	id: string
 	name: string
 	email: string
-	subject: string
 	message: string
-	is_read: boolean
 	created_at: string
 }
 
-// Mock data for development and testing
-const mockPosts = [
-	{
-		id: "1",
-		title: "Getting Started with Next.js 13",
-		slug: "getting-started-with-nextjs-13",
-		content:
-			"# Getting Started with Next.js 13\n\nNext.js 13 introduces several new features...",
-		excerpt: "Learn how to build modern web applications with Next.js 13",
-		image_url: "https://example.com/images/nextjs.jpg",
-		published: true,
-		published_at: new Date().toISOString(),
-		created_at: new Date().toISOString(),
-		category: "Development",
-	},
-	{
-		id: "2",
-		title: "Understanding TypeScript Generics",
-		slug: "understanding-typescript-generics",
-		content:
-			"# Understanding TypeScript Generics\n\nGenerics are a powerful feature in TypeScript...",
-		excerpt:
-			"Deep dive into TypeScript generics and how to use them effectively",
-		image_url: "https://example.com/images/typescript.jpg",
-		published: true,
-		published_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-		created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-		category: "TypeScript",
-	},
-]
+/**
+ * Creates a Supabase client for server-side components
+ * This handles the asynchronous cookie store in Next.js 15
+ */
+export async function createServerComponentClient() {
+	// Get the cookie store from Next.js
+	const cookieStore = await nextCookies()
 
-const mockContactSubmissions = [
-	{
-		id: "1",
-		name: "John Doe",
-		email: "john.doe@example.com",
-		subject: "Collaboration Opportunity",
-		message:
-			"Hi there! I saw your portfolio and would love to discuss a potential collaboration on a project I'm working on.",
-		is_read: false,
-		created_at: new Date().toISOString(),
-	},
-	{
-		id: "2",
-		name: "Jane Smith",
-		email: "jane.smith@example.com",
-		subject: "Speaking Engagement",
-		message:
-			"Hello! I'm organizing a tech conference and would be interested in having you as a speaker. Could we set up a call to discuss?",
-		is_read: false,
-		created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-	},
-]
-
-// ------------------------------------------------------------
-// Admin functions for managing posts
-// ------------------------------------------------------------
+	return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
+		cookies: {
+			get(name: string) {
+				return cookieStore.get(name)?.value
+			},
+			set(name: string, value: string, options: CookieOptions) {
+				// This only works in a Server Action or Route Handler
+				try {
+					cookieStore.set({ name, value, ...options })
+				} catch (error) {
+					// Cookies cannot be modified outside of a Server Action or Route Handler
+					console.warn("Cannot set cookie in this context:", error)
+				}
+			},
+			remove(name: string, options: CookieOptions) {
+				// This only works in a Server Action or Route Handler
+				try {
+					cookieStore.set({ name, value: "", ...options, maxAge: 0 })
+				} catch (error) {
+					// Cookies cannot be modified outside of a Server Action or Route Handler
+					console.warn("Cannot remove cookie in this context:", error)
+				}
+			},
+		},
+	})
+}
 
 /**
- * Get all posts (published and drafts) for the admin panel
+ * Creates a Supabase client with admin privileges
+ * This bypasses RLS and should ONLY be used in server-side code
  */
-export async function adminGetPosts(): Promise<Post[]> {
-	console.log("Getting posts...")
-	const supabase = createServiceClient()
-	const isDev = process.env.NODE_ENV === "development"
+export function createAdminClient() {
+	if (typeof window !== "undefined") {
+		throw new Error("Admin client can only be used on the server")
+	}
+
+	if (!serviceRoleKey) {
+		throw new Error("Service role key is missing")
+	}
+
+	console.log("Creating admin client with service role")
+
+	return createServiceClient<Database>(supabaseUrl, serviceRoleKey, {
+		auth: {
+			autoRefreshToken: false,
+			persistSession: false,
+		},
+	})
+}
+
+/**
+ * Fetches a single post by ID using admin privileges
+ * @param id - The UUID of the post to fetch
+ * @returns The post object or null if not found
+ */
+export async function adminGetPostById(id: string): Promise<Post | null> {
+	console.log("Fetching post by ID:", id)
 
 	try {
-		// Test if service role is working by checking if we can count posts
-		const { count, error: testError } = await supabase
-			.from("posts")
-			.select("*", { count: "exact", head: true })
+		// Create the admin client that bypasses RLS
+		const supabase = createAdminClient()
 
-		if (testError) {
-			// Handle the permission denied error gracefully
-			if (
-				testError.code === "42501" &&
-				testError.message.includes("permission denied")
-			) {
-				console.error(
-					"Permission denied when accessing posts table. This could be due to missing RLS policies or insufficient privileges."
-				)
-				console.log(
-					"If you're seeing this in production, check your database permissions."
-				)
-			} else {
-				console.error("Error fetching posts:", testError)
-			}
-
-			// Return mock data during development
-			if (isDev) {
-				console.log("Returning mock posts due to database error")
-				return mockPosts
-			}
-			return []
-		}
-
-		console.log(`Found ${count} posts`)
 		const { data, error } = await supabase
 			.from("posts")
 			.select("*")
-			.order("published_at", { ascending: false })
+			.eq("id", id)
+			.single()
 
 		if (error) {
-			// Handle specific error types
-			if (
-				error.code === "42501" &&
-				error.message.includes("permission denied")
-			) {
-				console.error(
-					"Permission denied when querying posts. Check your database RLS policies."
-				)
-			} else {
-				console.error("Error fetching posts:", error)
-			}
-
-			if (isDev) {
-				return mockPosts
-			}
-			return []
+			console.error("Error fetching post by ID:", error)
+			return null
 		}
 
-		return data || []
-	} catch (err) {
-		console.error("Exception fetching posts:", err)
-
-		// Always return an empty array in case of error to prevent breaking the UI
-		if (isDev) {
-			return mockPosts
+		if (!data) {
+			console.log("Post not found with ID:", id)
+			return null
 		}
-		return []
+
+		console.log("Found post:", data.title)
+		return data as Post
+	} catch (error) {
+		console.error("Exception in adminGetPostById:", error)
+		return null
 	}
 }
 
 /**
- * Get all contact form submissions for the admin panel
+ * Fetches all contact submissions using admin privileges
+ * This bypasses RLS and should only be used in server-side admin components
+ * @returns Array of contact messages
  */
 export async function adminGetContactSubmissions(): Promise<ContactMessage[]> {
-	console.log("Getting contact submissions...")
-	const supabase = createServiceClient()
-	const isDev = process.env.NODE_ENV === "development"
+	console.log("Fetching contact submissions as admin...")
 
 	try {
-		// Test if service role is working by checking if we can count contact_messages
-		const { count, error: testError } = await supabase
-			.from("contact_messages")
-			.select("*", { count: "exact", head: true })
+		// Create the admin client that bypasses RLS
+		const supabase = createAdminClient()
 
-		if (testError) {
-			// Handle the permission denied error gracefully
-			if (
-				testError.code === "42501" &&
-				testError.message.includes("permission denied")
-			) {
-				console.error(
-					"Permission denied when accessing contact_messages table. This could be due to missing RLS policies or insufficient privileges."
-				)
-				console.log(
-					"If you're seeing this in production, check your database permissions."
-				)
-			} else {
-				console.error("Error fetching contact submissions:", testError)
-			}
-
-			// Return mock data during development
-			if (isDev) {
-				console.log("Returning mock contact submissions due to database error")
-				return mockContactSubmissions
-			}
-			return []
-		}
-
-		console.log(`Found ${count} contact submissions`)
 		const { data, error } = await supabase
 			.from("contact_messages")
 			.select("*")
 			.order("created_at", { ascending: false })
 
 		if (error) {
-			// Handle specific error types
-			if (
-				error.code === "42501" &&
-				error.message.includes("permission denied")
-			) {
-				console.error(
-					"Permission denied when querying contact_messages. Check your database RLS policies."
-				)
-			} else {
-				console.error("Error fetching contact submissions:", error)
-			}
-
-			if (isDev) {
-				return mockContactSubmissions
-			}
+			console.error("Error fetching contact submissions:", error)
 			return []
 		}
 
-		return data || []
-	} catch (err) {
-		console.error("Exception fetching contact submissions:", err)
-
-		// Always return an empty array in case of error to prevent breaking the UI
-		if (isDev) {
-			return mockContactSubmissions
-		}
+		console.log(`Found ${data?.length || 0} contact submissions`)
+		return data as ContactMessage[]
+	} catch (error) {
+		console.error("Exception in adminGetContactSubmissions:", error)
 		return []
 	}
 }
 
 /**
- * Create a new blog post
+ * Gets all posts with optional filtering
  */
-export async function adminCreatePost(post: Omit<Post, "id" | "created_at">) {
-	const supabase = createServiceClient()
-	return await supabase
-		.from("posts")
-		.insert({
-			title: post.title,
-			slug: post.slug,
-			content: post.content,
-			excerpt: post.excerpt,
-			image_url: post.image_url,
-			published: post.published,
-			published_at: post.published_at,
-			category: post.category,
-		})
-		.select()
-		.single()
+export async function getPosts(
+	limit?: number,
+	category?: string
+): Promise<Post[]> {
+	console.log("Getting posts...")
+
+	try {
+		// Create the admin client that bypasses RLS
+		const supabase = createAdminClient()
+		console.log("Created server client with service role")
+
+		let query = supabase
+			.from("posts")
+			.select("*")
+			.order("published_at", { ascending: false })
+
+		// Apply category filter if provided
+		if (category) {
+			query = query.eq("category", category)
+		}
+
+		// Apply limit if provided
+		if (limit) {
+			query = query.limit(limit)
+		}
+
+		const { data, error } = await query
+
+		if (error) {
+			console.error("Error fetching posts:", error)
+			return []
+		}
+
+		console.log(`Found ${data?.length || 0} posts`)
+		return data || []
+	} catch (error) {
+		console.error("Exception in getPosts:", error)
+		return []
+	}
 }
 
 /**
- * Update an existing blog post
+ * Gets all contact submissions
  */
-export async function adminUpdatePost(
-	id: string,
-	post: Partial<Omit<Post, "id" | "created_at">>
-) {
-	const supabase = createServiceClient()
-	return await supabase
-		.from("posts")
-		.update({ ...post })
-		.eq("id", id)
-		.select()
-		.single()
-}
+export async function getContactSubmissions(): Promise<ContactMessage[]> {
+	console.log("Getting contact submissions...")
 
-/**
- * Delete a blog post
- */
-export async function adminDeletePost(id: string) {
-	const supabase = createServiceClient()
-	return await supabase.from("posts").delete().eq("id", id)
+	try {
+		// Create the admin client that bypasses RLS
+		const supabase = createAdminClient()
+		console.log("Created server client with service role")
+
+		const { data, error } = await supabase
+			.from("contact_messages")
+			.select("*")
+			.order("created_at", { ascending: false })
+
+		if (error) {
+			console.error("Error fetching contact submissions:", error)
+			return []
+		}
+
+		console.log(`Found ${data?.length || 0} contact submissions`)
+		return data || []
+	} catch (error) {
+		console.error("Exception in getContactSubmissions:", error)
+		return []
+	}
 }

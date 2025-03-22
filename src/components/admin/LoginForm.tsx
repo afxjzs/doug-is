@@ -15,7 +15,15 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ redirectTo }: LoginFormProps) {
-	const { loginWithEmail, sendMagicLink, loading, initialized } = useAuth()
+	const {
+		loginWithEmail,
+		sendMagicLink,
+		loading,
+		initialized,
+		user,
+		isAdmin,
+		logout,
+	} = useAuth()
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [authMethod, setAuthMethod] = useState<"password" | "magic">("password")
@@ -24,14 +32,59 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const router = useRouter()
 
-	// Wait for auth initialization to complete
+	// Wait for auth initialization with timeout
 	const [authReady, setAuthReady] = useState(false)
+	const [initializationTimeout, setInitializationTimeout] = useState(false)
 
 	useEffect(() => {
 		if (initialized) {
 			setAuthReady(true)
 		}
+
+		// Add a timeout to handle cases where initialization gets stuck
+		const timeoutId = setTimeout(() => {
+			if (!initialized) {
+				console.warn("Auth initialization timeout - forcing ready state")
+				setInitializationTimeout(true)
+				setAuthReady(true)
+			}
+		}, 3000) // 3 second timeout
+
+		return () => clearTimeout(timeoutId)
 	}, [initialized])
+
+	// Force a refresh if initialization is taking too long
+	useEffect(() => {
+		if (initializationTimeout) {
+			// Force refresh page after 1 second
+			const refreshId = setTimeout(() => {
+				window.location.reload()
+			}, 1000)
+
+			return () => clearTimeout(refreshId)
+		}
+	}, [initializationTimeout])
+
+	// Check if user is already authenticated and redirect if needed
+	useEffect(() => {
+		if (initialized && user && isAdmin) {
+			// User is already authenticated and is an admin
+			console.log(
+				"User is already authenticated, redirecting to admin dashboard"
+			)
+			if (redirectTo) {
+				router.push(redirectTo)
+			} else {
+				router.push("/admin")
+			}
+		} else if (initialized && user && !isAdmin) {
+			// User is authenticated but not an admin, force logout
+			console.log("Non-admin user detected, forcing logout")
+			logout().then(() => {
+				// Page will be reloaded by the logout function
+			})
+		}
+	}, [initialized, user, isAdmin, redirectTo, router, logout])
 
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault()
@@ -42,13 +95,9 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 		// Set local submitting state to show feedback
 		setIsSubmitting(true)
 
-		// Ensure auth is ready before proceeding
+		// If auth still not ready, force it to be ready
 		if (!authReady) {
-			setErrorMessage(
-				"Authentication system is initializing. Please try again."
-			)
-			setIsSubmitting(false)
-			return
+			setAuthReady(true)
 		}
 
 		try {
@@ -66,13 +115,15 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 
 				if (!result.success) {
 					setErrorMessage(result.error as string)
+					setIsSubmitting(false)
 				} else {
-					// If login was successful and we have a redirect, go there
-					if (redirectTo) {
-						router.push(redirectTo)
-					} else {
-						router.push("/admin")
-					}
+					// Direct redirect after successful login without waiting for the useEffect
+					console.log("Login successful, redirecting to admin dashboard")
+
+					// Use window.location for a full page reload to ensure clean auth state
+					// Keep the isSubmitting state true until navigation occurs
+					window.location.href = redirectTo || "/admin"
+					return // Exit early to keep the processing state
 				}
 			} else {
 				// Magic link login
@@ -90,8 +141,10 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 					setSuccessMessage(
 						"Check your email for a magic link to sign in. You can close this page."
 					)
+					setIsSubmitting(false)
 				} else {
 					setErrorMessage(result.error as string)
+					setIsSubmitting(false)
 				}
 			}
 		} catch (error) {
@@ -101,9 +154,9 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 					? `Login error: ${error.message}`
 					: "An unexpected error occurred. Please try again."
 			)
-		} finally {
 			setIsSubmitting(false)
 		}
+		// Removed the finally block to allow isSubmitting to stay true on success
 	}
 
 	// Handle switching between login methods
@@ -122,8 +175,25 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 		)
 	}
 
+	// If initialization timed out, show a retry button
+	if (initializationTimeout) {
+		return (
+			<div className="space-y-4">
+				<div className="text-amber-600 text-sm bg-amber-50 p-4 rounded border border-amber-200">
+					<p>We're having trouble connecting to the authentication service.</p>
+				</div>
+				<button
+					onClick={() => window.location.reload()}
+					className="w-full py-2 px-4 bg-[rgba(var(--color-violet),0.9)] hover:bg-[rgba(var(--color-violet),1)] text-white font-semibold rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgba(var(--color-violet),0.6)]"
+				>
+					Retry Connection
+				</button>
+			</div>
+		)
+	}
+
 	// Don't allow form submission until auth is ready
-	const isFormDisabled = loading || isSubmitting || !authReady
+	const isFormDisabled = loading || isSubmitting
 
 	return (
 		<form onSubmit={handleLogin} className="space-y-4">
@@ -191,10 +261,8 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 			>
 				{isSubmitting
 					? "Processing..."
-					: !authReady
-					? "Initializing..."
 					: authMethod === "password"
-					? "Sign In"
+					? "Sign in"
 					: "Send Magic Link"}
 			</button>
 
@@ -212,8 +280,8 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 				</button>
 			</div>
 
-			{/* Link to create account - note: this should be hidden for production */}
-			<div className="border-t border-[rgba(var(--color-foreground),0.1)] pt-4 mt-6">
+			{/* Link to create account - note: remove in production if not needed */}
+			{/* <div className="border-t border-[rgba(var(--color-foreground),0.1)] pt-4 mt-6">
 				<p className="text-sm text-[rgba(var(--color-foreground),0.7)] mb-2">
 					Don't have an account yet?
 				</p>
@@ -223,7 +291,7 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 				>
 					Create an account
 				</Link>
-			</div>
+			</div> */}
 		</form>
 	)
 }

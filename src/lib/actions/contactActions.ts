@@ -1,7 +1,7 @@
 "use server"
 
 import { z } from "zod"
-import { createServiceClient } from "@/lib/supabase/serverClient"
+import { createAdminClient } from "@/lib/supabase/serverClient"
 import { revalidatePath } from "next/cache"
 
 /**
@@ -44,8 +44,8 @@ export async function submitContactForm(
 	}
 
 	try {
-		// Create service client with admin role to bypass RLS
-		const supabase = createServiceClient()
+		// Create admin client with service role to bypass RLS
+		const supabase = createAdminClient()
 		console.log("Created server client with service role")
 
 		// Insert form data into database

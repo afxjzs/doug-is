@@ -1,60 +1,128 @@
 import { NextResponse } from "next/server"
-import { getPosts } from "@/lib/supabase/publicClient"
+import { createAdminClient } from "@/lib/supabase/serverClient"
+import { getPublicSupabaseClient } from "@/lib/supabase/publicClient"
 
 // Use force-dynamic to ensure fresh data on each request
-// Consider using ISR (revalidate) for production if data doesn't change frequently
 export const dynamic = "force-dynamic"
 
-/**
- * GET handler for fetching posts
- * Supports query parameters:
- * - limit: number of posts to return
- * - category: filter by category
- */
 export async function GET(request: Request) {
-	// Get URL to parse query parameters
-	const url = new URL(request.url)
-	const limit = url.searchParams.get("limit")
-		? parseInt(url.searchParams.get("limit") as string, 10)
-		: undefined
-	const category = url.searchParams.get("category") || undefined
-
 	try {
-		// Log request information in development
-		if (process.env.NODE_ENV === "development") {
-			console.log("API route: Fetching posts...", { limit, category })
+		console.log("Fetching public posts...")
+
+		// Use the public client for GET requests so anonymous users can access posts
+		const supabase = getPublicSupabaseClient()
+
+		if (!supabase) {
+			console.error("Could not create Supabase client")
+			return NextResponse.json(
+				{ error: "Database connection error" },
+				{ status: 500 }
+			)
 		}
 
-		// Fetch posts with the updated client function
-		const posts = await getPosts(limit, category)
+		const { data, error } = await supabase
+			.from("posts")
+			.select("*")
+			.not("published_at", "is", null) // Only return published posts
+			.order("published_at", { ascending: false })
 
-		// Log success in development
-		if (process.env.NODE_ENV === "development") {
-			console.log(`API route: Successfully fetched ${posts?.length || 0} posts`)
-			if (posts && posts.length > 0) {
-				console.log("API route: First post:", JSON.stringify(posts[0], null, 2))
-			}
+		if (error) {
+			console.error("Error fetching posts:", error)
+			return NextResponse.json(
+				{ error: "Failed to fetch posts" },
+				{ status: 500 }
+			)
 		}
 
-		// Return successful response with posts
-		return NextResponse.json({
-			posts,
-			meta: {
-				count: posts.length,
-				limit,
-				category,
-			},
+		return NextResponse.json({ posts: data })
+	} catch (error) {
+		console.error("Exception in GET /api/posts:", error)
+		return NextResponse.json(
+			{ error: "Internal server error" },
+			{ status: 500 }
+		)
+	}
+}
+
+export async function POST(request: Request) {
+	try {
+		console.log("Creating a new post...")
+		const supabase = createAdminClient()
+
+		// Get post data from request
+		const json = await request.json()
+		console.log("Post data received:", {
+			title: json.title,
+			slug: json.slug,
+			content: json.content?.substring(0, 50) + "...",
 		})
-	} catch (err) {
-		// Log detailed error information
-		console.error("API route: Exception fetching posts:", err)
 
-		// Return appropriate error response
+		// First check if the slug exists
+		console.log("Checking if slug exists:", json.slug)
+		const { data: slugCheckData, error: slugCheckError } = await supabase
+			.from("posts")
+			.select("id")
+			.eq("slug", json.slug)
+			.maybeSingle()
+
+		if (slugCheckError) {
+			console.error("Error checking slug:", slugCheckError)
+			return NextResponse.json(
+				{ error: "Failed to check slug" },
+				{ status: 500 }
+			)
+		}
+
+		if (slugCheckData) {
+			console.log("Slug already exists:", json.slug)
+			return NextResponse.json(
+				{ error: "A post with this slug already exists" },
+				{ status: 400 }
+			)
+		}
+
+		// Insert the post with only the columns that exist in the DB schema
+		console.log("Inserting post:", json.title)
+
+		// Include all fields that exist in the table
+		const postData = {
+			title: json.title,
+			slug: json.slug,
+			content: json.content,
+			excerpt: json.excerpt || "",
+			category: json.category || "General",
+			featured_image: json.featured_image || null,
+			published_at: json.published ? new Date().toISOString() : null,
+		}
+
+		console.log("Inserting with data:", postData)
+
+		// Cast to any to bypass type checking
+		const { data, error } = await supabase
+			.from("posts")
+			.insert(postData as any)
+			.select()
+			.single()
+
+		if (error) {
+			console.error("Error creating post:", error)
+			return NextResponse.json(
+				{
+					error: "Failed to create post",
+					details: error.message,
+				},
+				{ status: 500 }
+			)
+		}
+
+		console.log("Post created successfully:", data.id)
+		return NextResponse.json(data, { status: 201 })
+	} catch (error) {
+		console.error("Exception in POST /api/posts:", error)
 		return NextResponse.json(
 			{
-				error: err instanceof Error ? err.message : "Unknown error",
-				code:
-					err instanceof Error && "code" in err ? (err as any).code : undefined,
+				error: "Internal server error",
+				details: error instanceof Error ? error.message : String(error),
 			},
 			{ status: 500 }
 		)

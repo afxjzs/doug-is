@@ -6,12 +6,14 @@
  */
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
+import { useAuth } from "@/lib/auth/supabaseClientAuth"
 
 export default function AdminNavigation() {
 	const pathname = usePathname()
 	const [isOpen, setIsOpen] = useState(false)
+	const router = useRouter()
 
 	// Navigation links for admin area
 	const navItems = [
@@ -98,6 +100,17 @@ export default function AdminNavigation() {
 						))}
 					</ul>
 				</nav>
+
+				{/* Admin Actions */}
+				<div className="absolute bottom-14 left-0 right-0 p-4 border-t border-[rgba(var(--color-foreground),0.1)]">
+					<Link
+						href="/logout"
+						className="w-full py-2 px-4 flex items-center justify-center text-[rgba(var(--color-red),0.8)] bg-[rgba(var(--color-red),0.05)] rounded-md hover:bg-[rgba(var(--color-red),0.1)] transition-colors"
+					>
+						<span className="mr-2">🚪</span>
+						Sign Out
+					</Link>
+				</div>
 
 				{/* View Website Link */}
 				<div className="absolute bottom-0 left-0 right-0 p-4 border-t border-[rgba(var(--color-foreground),0.1)]">

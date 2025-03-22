@@ -1,161 +1,227 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { createServerClient, type CookieOptions } from "@supabase/ssr"
+import { ALLOWED_ADMIN_EMAILS } from "@/lib/auth/helpers"
 
-// Single admin email - only this account has admin access
-const ALLOWED_ADMIN_EMAILS = ["douglas.rogers@gmail.com"]
+// Environment variables
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
 
 /**
- * This middleware intercepts requests and adds auth protection for admin routes
+ * Primary middleware function for handling Supabase authentication
  */
 export async function middleware(request: NextRequest) {
-	const pathname = request.nextUrl.pathname
+	// Create a response object to modify and return
+	const response = NextResponse.next()
+	const { pathname } = request.nextUrl
 
-	// Only apply auth protection to admin routes
-	if (pathname.startsWith("/admin")) {
-		// Skip auth check for auth-related pages to prevent redirect loops
-		if (
-			pathname === "/admin/login" ||
-			pathname === "/admin/register" ||
-			pathname.startsWith("/api/auth/")
-		) {
-			return NextResponse.next()
-		}
+	// Log middleware execution in development
+	if (process.env.NODE_ENV === "development") {
+		console.log(`Middleware running for: ${pathname}`)
+	}
 
-		// Initialize response to modify
-		let response = NextResponse.next({
-			request: {
-				headers: request.headers,
+	// Skip middleware for static assets
+	if (pathname.match(/\.(jpg|jpeg|png|gif|svg|ico|css|js)$/)) {
+		return response
+	}
+
+	try {
+		// Create a Supabase client with the request cookies
+		const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+			cookies: {
+				get(name: string) {
+					return request.cookies.get(name)?.value
+				},
+				set(name: string, value: string, options: CookieOptions) {
+					// This is used for setting cookies in the response
+					response.cookies.set({
+						name,
+						value,
+						...options,
+					})
+				},
+				remove(name: string, options: CookieOptions) {
+					// This is used for removing cookies in the response
+					response.cookies.set({
+						name,
+						value: "",
+						...options,
+					})
+				},
 			},
 		})
 
-		// Create a Supabase client specifically for middleware usage
-		const supabase = createServerClient(
-			process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-			process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
-			{
-				cookies: {
-					get(name) {
-						return request.cookies.get(name)?.value
-					},
-					set(name, value, options) {
-						// This is used for setting cookies in the response
-						response.cookies.set({
-							name,
-							value,
-							...options,
-						})
-					},
-					remove(name, options) {
-						// This is used for removing cookies in the response
-						response.cookies.set({
-							name,
-							value: "",
-							...options,
-						})
-					},
-				},
-			}
-		)
-
-		// Check if there's an authenticated user using getUser() which is more secure
-		// than getSession() as it verifies with the auth server
+		// Get the user and refresh the session if needed
 		const {
 			data: { user },
 		} = await supabase.auth.getUser()
 
-		// If no authenticated user, redirect to login
-		if (!user) {
-			// Use a simple redirect with only the pathname to avoid encoding issues
-			const redirectUrl = new URL("/admin/login", request.url)
-			redirectUrl.searchParams.set("redirect", pathname)
-
-			// Return a clean redirect response
-			return NextResponse.redirect(redirectUrl.toString())
-		}
-
-		// Check if the user's email is in the admin allowlist
-		const userEmail = user.email
-		const isAdmin =
-			userEmail && ALLOWED_ADMIN_EMAILS.includes(userEmail.toLowerCase())
-
-		if (!isAdmin) {
-			// User is logged in but not an admin
-			return new NextResponse(
-				`<html>
-        <head>
-          <title>Access Denied</title>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <style>
-            body {
-              font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              height: 100vh;
-              margin: 0;
-              background: #0f1214;
-              color: rgba(255, 255, 255, 0.9);
-            }
-            .container {
-              max-width: 600px;
-              padding: 2rem;
-              text-align: center;
-              background: rgba(255, 255, 255, 0.03);
-              border: 1px solid rgba(255, 255, 255, 0.1);
-              border-radius: 10px;
-            }
-            h1 {
-              margin-top: 0;
-              color: #f87171;
-            }
-            p {
-              margin-bottom: 1.5rem;
-            }
-            a {
-              display: inline-block;
-              margin-top: 1rem;
-              padding: 0.5rem 1rem;
-              background: rgba(136, 153, 248, 0.1);
-              border: 1px solid rgba(136, 153, 248, 0.3);
-              border-radius: 5px;
-              color: #8899f8;
-              text-decoration: none;
-              transition: all 0.2s ease;
-            }
-            a:hover {
-              background: rgba(136, 153, 248, 0.2);
-            }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h1>Access Denied</h1>
-            <p>You don't have permission to access this area.</p>
-            <p>Please contact the administrator if you believe this is an error.</p>
-            <a href="/">Return to Home</a>
-          </div>
-        </body>
-      </html>`,
-				{
-					status: 403,
-					headers: {
-						"Content-Type": "text/html",
-					},
-				}
+		// Log auth status in development
+		if (process.env.NODE_ENV === "development") {
+			console.log(
+				`Auth status for ${pathname}: ${
+					user ? "Authenticated" : "Not authenticated"
+				}`
 			)
+			if (user) {
+				console.log(`User: ${user.email}`)
+			}
 		}
 
-		// User is an admin, allow the request to proceed
+		// Handle login page - redirect authenticated users to admin dashboard
+		if (pathname === "/admin/login") {
+			if (user) {
+				// Check if the user is an admin
+				if (
+					user.email &&
+					ALLOWED_ADMIN_EMAILS.includes(user.email.toLowerCase())
+				) {
+					// User is authenticated and is an admin, redirect to admin dashboard
+					if (process.env.NODE_ENV === "development") {
+						console.log(
+							`Redirecting authenticated admin from login page to dashboard`
+						)
+					}
+					return NextResponse.redirect(new URL("/admin", request.url))
+				} else {
+					// User is authenticated but not an admin, force logout
+					if (process.env.NODE_ENV === "development") {
+						console.log(`Non-admin user at login page, clearing session`)
+					}
+
+					// Clear auth cookies
+					response.cookies.set({
+						name: "sb-access-token",
+						value: "",
+						maxAge: 0,
+						path: "/",
+					})
+					response.cookies.set({
+						name: "sb-refresh-token",
+						value: "",
+						maxAge: 0,
+						path: "/",
+					})
+
+					// Keep them on the login page
+					return response
+				}
+			}
+		}
+
+		// Handle admin routes - restrict access to authenticated users only
+		if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
+			// Check if user is authenticated
+			if (!user) {
+				// Redirect to login page
+				const redirectUrl = new URL("/admin/login", request.url)
+				redirectUrl.searchParams.set("redirect", pathname)
+
+				// Log redirection in development
+				if (process.env.NODE_ENV === "development") {
+					console.log(
+						`Redirecting unauthenticated user from ${pathname} to ${redirectUrl.pathname}`
+					)
+				}
+
+				return NextResponse.redirect(redirectUrl)
+			}
+
+			// Check if the user is an admin
+			if (
+				user &&
+				user.email &&
+				!ALLOWED_ADMIN_EMAILS.includes(user.email.toLowerCase())
+			) {
+				// User is authenticated but not an admin
+				if (process.env.NODE_ENV === "development") {
+					console.log(`Access denied: ${user.email} is not an admin`)
+				}
+
+				// Clear auth cookies before redirecting
+				response.cookies.set({
+					name: "sb-access-token",
+					value: "",
+					maxAge: 0,
+					path: "/",
+				})
+				response.cookies.set({
+					name: "sb-refresh-token",
+					value: "",
+					maxAge: 0,
+					path: "/",
+				})
+
+				return NextResponse.redirect(new URL("/admin/login", request.url))
+			}
+		}
+
+		// Handle API routes in the admin namespace
+		if (pathname.startsWith("/api/")) {
+			// API endpoints that need authentication
+			const protectedApiRoutes = [
+				"/api/upload",
+				"/api/posts/[id]", // Only protect individual post endpoints
+				"/api/contact",
+				"/api/admin",
+			]
+
+			// Check if this is a protected API route
+			const isProtectedApi = protectedApiRoutes.some((route) =>
+				pathname.startsWith(route)
+			)
+
+			if (isProtectedApi && !user) {
+				// Return 401 Unauthorized for API routes
+				// Log unauthorized API access in development
+				if (process.env.NODE_ENV === "development") {
+					console.log(`Unauthorized API access: ${pathname}`)
+				}
+
+				return NextResponse.json(
+					{ error: "Unauthorized access" },
+					{ status: 401 }
+				)
+			}
+
+			// Check if the user is an admin for protected API routes
+			if (
+				isProtectedApi &&
+				user &&
+				user.email &&
+				!ALLOWED_ADMIN_EMAILS.includes(user.email.toLowerCase())
+			) {
+				// User is authenticated but not an admin
+				if (process.env.NODE_ENV === "development") {
+					console.log(`API access denied: ${user.email} is not an admin`)
+				}
+
+				return NextResponse.json(
+					{ error: "Admin privileges required" },
+					{ status: 403 }
+				)
+			}
+		}
+
+		return response
+	} catch (error) {
+		// Log error and continue
+		console.error("Error in middleware:", error)
 		return response
 	}
-
-	// For non-admin routes, proceed normally
-	return NextResponse.next()
 }
 
-// Only apply this middleware to admin routes
+/**
+ * Define which routes should be processed by this middleware
+ */
 export const config = {
-	matcher: ["/admin/:path*"],
+	matcher: [
+		// Admin paths
+		"/admin/:path*",
+		// API paths that need authentication
+		"/api/upload/:path*",
+		"/api/posts/:id*", // Changed to only match /api/posts/[id] routes
+		"/api/contact/:path*",
+		"/api/admin/:path*",
+	],
 }

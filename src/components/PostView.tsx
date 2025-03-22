@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Post } from "@/lib/supabase/serverClient"
+import { Post } from "@/lib/supabase/publicClient"
 
 /**
  * Component to display an individual blog post
@@ -57,7 +57,7 @@ export default function PostView({ post }: { post: Post }) {
 					</span>
 					<span>•</span>
 					<Link
-						href={`/thinking/${post.category.toLowerCase()}`}
+						href={`/thinking/about/${post.category.toLowerCase()}`}
 						className="uppercase tracking-wider hover:text-[rgba(var(--color-foreground),1)] transition-colors"
 					>
 						{post.category}

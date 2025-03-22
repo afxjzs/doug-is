@@ -17,8 +17,8 @@ export interface Database {
 					slug: string
 					content: string
 					excerpt: string
-					published_at: string
 					category: string
+					published_at: string | null
 					featured_image: string | null
 					created_at: string
 					updated_at: string
@@ -28,9 +28,9 @@ export interface Database {
 					title: string
 					slug: string
 					content: string
-					excerpt: string
-					published_at?: string
-					category: string
+					excerpt?: string
+					category?: string
+					published_at?: string | null
 					featured_image?: string | null
 					created_at?: string
 					updated_at?: string
@@ -41,8 +41,8 @@ export interface Database {
 					slug?: string
 					content?: string
 					excerpt?: string
-					published_at?: string
 					category?: string
+					published_at?: string | null
 					featured_image?: string | null
 					created_at?: string
 					updated_at?: string
@@ -56,16 +56,16 @@ export interface Database {
 					email: string
 					subject: string
 					message: string
-					is_read: boolean
+					read_at: string | null
 					created_at: string
 				}
 				Insert: {
 					id?: string
 					name: string
 					email: string
-					subject: string
+					subject?: string
 					message: string
-					is_read?: boolean
+					read_at?: string | null
 					created_at?: string
 				}
 				Update: {
@@ -74,7 +74,7 @@ export interface Database {
 					email?: string
 					subject?: string
 					message?: string
-					is_read?: boolean
+					read_at?: string | null
 					created_at?: string
 				}
 				Relationships: []
@@ -83,23 +83,23 @@ export interface Database {
 				Row: {
 					user_id: string
 					role: string
-					email: string | null
+					id: string
 					created_at: string
-					updated_at: string | null
+					updated_at: string
 				}
 				Insert: {
 					user_id: string
 					role: string
-					email?: string | null
+					id?: string
 					created_at?: string
-					updated_at?: string | null
+					updated_at?: string
 				}
 				Update: {
 					user_id?: string
 					role?: string
-					email?: string | null
+					id?: string
 					created_at?: string
-					updated_at?: string | null
+					updated_at?: string
 				}
 				Relationships: []
 			}
