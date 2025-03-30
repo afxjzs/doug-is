@@ -16,6 +16,7 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
+		"@openpanel/nextjs": "^1.0.7",
 		"@supabase/auth-helpers-nextjs": "^0.10.0",
 		"@supabase/ssr": "^0.6.1",
 		"@supabase/supabase-js": "^2.49.1",
@@ -32,6 +33,7 @@
 		"@vercel/analytics": "^1.5.0",
 		"@vercel/og": "^0.6.5",
 		"clsx": "^2.1.1",
+		"critters": "^0.0.25",
 		"date-fns": "^3.3.1",
 		"dotenv": "^16.4.7",
 		"framer-motion": "^12.5.0",

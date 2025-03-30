@@ -10,8 +10,12 @@ const nextConfig = {
 			dynamic: 30,
 			static: 180,
 		},
-		// Fix CSS loading issues
-		optimizeCss: true,
+		// CSS optimization configuration
+		optimizeCss: {
+			// This ensures critters works correctly
+			cssModules: true,
+			fontLoaders: [{ loader: "next-font-loader" }],
+		},
 		optimizeServerReact: true,
 		webpackBuildWorker: true,
 		// Add memory optimization
