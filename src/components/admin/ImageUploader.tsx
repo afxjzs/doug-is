@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useState, useEffect } from "react"
 import Image from "next/image"
 import { useDropzone } from "react-dropzone"
 
@@ -20,6 +20,14 @@ export default function ImageUploader({
 	const [previewUrl, setPreviewUrl] = useState<string | null>(
 		defaultImage || null
 	)
+
+	// Update preview URL when defaultImage changes
+	useEffect(() => {
+		if (defaultImage) {
+			setPreviewUrl(defaultImage)
+			setUploadError(null)
+		}
+	}, [defaultImage])
 
 	const onDrop = useCallback(
 		async (acceptedFiles: File[]) => {
@@ -166,6 +174,11 @@ export default function ImageUploader({
 							alt="Preview"
 							fill
 							className="object-contain rounded-md"
+							unoptimized={true}
+							onError={() => {
+								console.error("Error loading image preview:", previewUrl)
+								setUploadError("Failed to load image preview")
+							}}
 						/>
 					</div>
 				) : (

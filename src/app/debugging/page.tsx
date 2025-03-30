@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Post } from "@/lib/supabase/publicClient"
+import StatusMessage from "@/components/StatusMessage"
 
 async function fetchPosts(): Promise<{
 	posts: Post[]
@@ -59,30 +60,25 @@ export default function DebugPage() {
 			<h1 className="text-3xl font-bold mb-6">Debug Page</h1>
 
 			{loading ? (
-				<div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8">
-					<p className="text-blue-700">Loading data...</p>
-				</div>
+				<StatusMessage type="loading" message="Loading data..." />
 			) : (
 				<>
 					<div className="mb-8">
 						<h2 className="text-xl font-semibold mb-2">Status:</h2>
 						{result.error ? (
-							<div className="bg-red-50 border-l-4 border-red-500 p-4">
-								<p className="text-red-700">Error: {result.error}</p>
-							</div>
+							<StatusMessage type="error" message={`Error: ${result.error}`} />
 						) : (
-							<div className="bg-green-50 border-l-4 border-green-500 p-4">
-								<p className="text-green-700">
-									Success! Found {result.posts.length} posts.
-								</p>
-							</div>
+							<StatusMessage
+								type="success"
+								message={`Success! Found ${result.posts.length} posts.`}
+							/>
 						)}
 					</div>
 
 					<div className="mb-8">
 						<h2 className="text-xl font-semibold mb-2">Posts:</h2>
 						{result.posts.length === 0 ? (
-							<p>No posts found.</p>
+							<StatusMessage type="info" message="No posts found." />
 						) : (
 							<div className="space-y-4">
 								{result.posts.map((post) => (
@@ -106,7 +102,7 @@ export default function DebugPage() {
 
 					<div>
 						<h2 className="text-xl font-semibold mb-2">Raw Response:</h2>
-						<pre className="bg-gray-100 p-4 rounded-lg overflow-auto max-h-96 text-sm">
+						<pre className="bg-gray-100 p-4 rounded-lg overflow-auto max-h-96 text-sm text-gray-900">
 							{JSON.stringify(result.raw, null, 2)}
 						</pre>
 					</div>

@@ -63,8 +63,8 @@ export default function HustlingPage() {
 							Development
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)]">
-							Building modern web applications with React, Next.js, and other
-							cutting-edge technologies.
+							Building modern mobile &amp; web applications with Typescript,
+							Ruby, Flutter, and other technologies.
 						</p>
 					</div>
 					<div className="dark-card">
@@ -72,8 +72,8 @@ export default function HustlingPage() {
 							Investing
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)]">
-							Strategic investments in public markets, private companies, and
-							alternative assets.
+							I work directly with corporate accelerator programs, as well as
+							invest my own money from time to time.
 						</p>
 					</div>
 					<div className="dark-card">

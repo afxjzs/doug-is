@@ -236,18 +236,59 @@ export async function getPostsByCategory(category: string): Promise<Post[]> {
 	}
 
 	try {
-		const { data, error } = await supabase
+		console.log(`Fetching posts for category: '${category}'`)
+
+		// Format the category properly for comparison (capitalize first letter)
+		const formattedCategory = category
+			.split("-")
+			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(" ")
+			.trim()
+
+		// Try first with proper formatting
+		let { data, error } = await supabase
 			.from("posts")
 			.select("*")
-			.eq("category", category)
+			.eq("category", formattedCategory)
 			.order("published_at", { ascending: false })
+
+		// If no results, try with original category input
+		if ((!data || data.length === 0) && !error) {
+			console.log(
+				`No posts found with formatted category '${formattedCategory}', trying with original value`
+			)
+			const result = await supabase
+				.from("posts")
+				.select("*")
+				.eq("category", category)
+				.order("published_at", { ascending: false })
+
+			data = result.data
+			error = result.error
+		}
+
+		// If still no results, try case-insensitive search with ilike
+		if ((!data || data.length === 0) && !error) {
+			console.log(
+				`No posts found with exact match, trying case-insensitive search`
+			)
+			const result = await supabase
+				.from("posts")
+				.select("*")
+				.ilike("category", `%${category.replace(/-/g, "%")}%`)
+				.order("published_at", { ascending: false })
+
+			data = result.data
+			error = result.error
+		}
 
 		if (error) {
 			console.error("Error fetching posts by category:", error)
 			return []
 		}
 
-		return data as Post[]
+		console.log(`Found ${data?.length || 0} posts for category '${category}'`)
+		return (data || []) as Post[]
 	} catch (error) {
 		console.error("Exception fetching posts by category:", error)
 		return []

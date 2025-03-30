@@ -74,7 +74,9 @@ export async function PATCH(
 			excerpt: postData.excerpt,
 			category: postData.category,
 			featured_image: postData.featured_image || null,
-			published_at: postData.published ? new Date().toISOString() : null,
+			published_at:
+				postData.published_at ||
+				(postData.published ? new Date().toISOString() : null),
 			updated_at: new Date().toISOString(),
 		}
 

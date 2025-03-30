@@ -7,6 +7,8 @@ import { Post } from "@/lib/supabase/publicClient"
 import { useState, useEffect } from "react"
 import { Metadata } from "next"
 import { getPosts } from "@/lib/supabase/publicClient"
+import Image from "next/image"
+import StatusMessage from "@/components/StatusMessage"
 
 async function fetchPosts(): Promise<{ posts: Post[]; error: string | null }> {
 	try {
@@ -66,64 +68,77 @@ export default function ThinkingPage() {
 				</p>
 			</div>
 
-			{loading && (
-				<div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8">
-					<p className="text-blue-700">Loading posts...</p>
-				</div>
-			)}
+			{loading && <StatusMessage type="loading" message="Loading posts..." />}
 
 			{error && !loading && (
-				<div className="bg-red-50 border-l-4 border-red-500 p-4 mb-8">
-					<p className="text-red-700">
-						There was an error loading posts. Please try again later.
-					</p>
-					{process.env.NODE_ENV === "development" && (
-						<p className="text-red-500 text-sm mt-2">{error}</p>
-					)}
-				</div>
+				<StatusMessage
+					type="error"
+					message="There was an error loading posts. Please try again later."
+					details={error}
+				/>
 			)}
 
 			{sortedPosts.length === 0 && !error && !loading ? (
-				<div className="bg-yellow-50 border-l-4 border-yellow-500 p-4">
-					<p>No posts found. Check back later for new content.</p>
-				</div>
+				<StatusMessage
+					type="info"
+					message="No posts found. Check back later for new content."
+				/>
 			) : (
-				<div className="space-y-12">
+				<div className="space-y-8">
 					{sortedPosts.map((post) => (
 						<article
 							key={post.id}
-							className="border-b border-[rgba(var(--color-foreground),0.1)] pb-12 last:border-0"
+							className="flex flex-col overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 bg-[rgba(var(--color-background-alt),0.5)] border border-[rgba(var(--color-foreground),0.1)]"
 						>
-							<Link
-								href={`/thinking/about/${post.category.toLowerCase()}/${
-									post.slug
-								}`}
-							>
-								<div className="group">
-									{post.featured_image && (
-										<div className="relative h-64 w-full mb-6 overflow-hidden rounded-lg">
-											<SafeImage
-												src={post.featured_image}
-												alt={post.title}
-												fill
-												className="object-cover group-hover:scale-105 transition-transform duration-300"
-											/>
-										</div>
-									)}
-									<div>
-										<p className="text-sm text-[rgba(var(--color-foreground),0.6)] mb-2">
-											{post.published_at ? formatDate(post.published_at) : ""} •{" "}
-											<span className="hover:text-[rgba(var(--color-foreground),0.9)] transition-colors">
-												{post.category}
-											</span>
-										</p>
+							<div className="group">
+								{post.featured_image ? (
+									<Link
+										href={`/thinking/about/${post.category.toLowerCase()}/${
+											post.slug
+										}`}
+										className="block relative w-full h-64 overflow-hidden"
+									>
+										<Image
+											src={post.featured_image}
+											alt={post.title}
+											fill
+											priority
+											sizes="(max-width: 768px) 100vw, 800px"
+											className="object-cover group-hover:scale-105 transition-transform duration-500"
+											unoptimized={post.featured_image.includes("supabase")}
+										/>
+									</Link>
+								) : (
+									<div className="relative h-64 w-full bg-gradient-to-br from-[rgba(var(--color-violet),0.2)] to-[rgba(var(--color-cyan),0.2)]"></div>
+								)}
+								<div className="p-6">
+									<div className="flex items-center mb-3">
+										<Link
+											href={`/thinking/about/${post.category.toLowerCase()}`}
+											className="text-xs font-medium px-2.5 py-1 rounded-full bg-[rgba(var(--color-violet),0.1)] text-[rgba(var(--color-violet),0.8)] hover:bg-[rgba(var(--color-violet),0.2)] transition-colors"
+										>
+											{post.category}
+										</Link>
+										<span className="mx-2 text-[rgba(var(--color-foreground),0.3)]">
+											•
+										</span>
+										<time className="text-sm text-[rgba(var(--color-foreground),0.6)]">
+											{post.published_at ? formatDate(post.published_at) : ""}
+										</time>
+									</div>
+									<Link
+										href={`/thinking/about/${post.category.toLowerCase()}/${
+											post.slug
+										}`}
+										className="block"
+									>
 										<h2 className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-3 group-hover:text-[rgb(var(--color-violet))] transition-colors">
 											{post.title}
 										</h2>
 										<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
 											{post.excerpt}
 										</p>
-										<span className="neon-link">
+										<div className="neon-link inline-flex items-center">
 											Read more
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -137,10 +152,10 @@ export default function ThinkingPage() {
 													clipRule="evenodd"
 												/>
 											</svg>
-										</span>
-									</div>
+										</div>
+									</Link>
 								</div>
-							</Link>
+							</div>
 						</article>
 					))}
 				</div>

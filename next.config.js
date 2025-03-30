@@ -14,6 +14,8 @@ const nextConfig = {
 		optimizeCss: true,
 		optimizeServerReact: true,
 		webpackBuildWorker: true,
+		// Add memory optimization
+		memoryBasedWorkersCount: true,
 	},
 
 	// Force build and dev server to use file-system cache
@@ -23,37 +25,16 @@ const nextConfig = {
 		pagesBufferLength: 2,
 	},
 
-	// Disable image optimization during development for faster builds
-	images: {
-		disableStaticImages: true,
-		remotePatterns: [
-			{
-				protocol: "https",
-				hostname: "**",
-			},
-		],
-		// Disable image optimization only in development
-		unoptimized: false,
-	},
-
-	// Increase build memory limit
-	experimental: {
-		// Maintain existing experimental options
-		staleTimes: {
-			dynamic: 30,
-			static: 180,
-		},
-		// Add memory optimization
-		memoryBasedWorkersCount: true,
-	},
-
 	// Image configuration
 	images: {
+		formats: ["image/avif", "image/webp"],
+		dangerouslyAllowSVG: true,
+		contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
 		remotePatterns: [
 			{
 				protocol: "https",
 				hostname: "tzffjzocrazemvtgqavg.supabase.co",
-				pathname: "**",
+				pathname: "/storage/v1/object/public/**",
 			},
 			{
 				protocol: "https",
@@ -88,10 +69,11 @@ const nextConfig = {
 			{
 				protocol: "https",
 				hostname: "placehold.co",
+				pathname: "**",
 			},
 		],
-		// Disable image optimization only in development
-		unoptimized: false,
+		// Don't disable optimization
+		unoptimized: process.env.NODE_ENV === "development",
 	},
 
 	// Increase timeout for builds

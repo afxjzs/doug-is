@@ -1,111 +1,67 @@
 "use client"
 
+import { FC } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Post } from "@/lib/supabase/publicClient"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 
 /**
  * Component to display an individual blog post
  */
-export default function PostView({ post }: { post: Post }) {
-	// Simple function to convert newlines to <br> tags
-	const formatContent = (content: string) => {
-		return content
-			.split("\n\n")
-			.map((paragraph) => `<p>${paragraph.replace(/\n/g, "<br>")}</p>`)
-			.join("")
-	}
-
-	const content = formatContent(post.content)
+export const PostView: FC<{ post: Post }> = ({ post }) => {
+	const formattedDate = new Date(
+		post.published_at || post.created_at || ""
+	).toLocaleDateString("en-US", {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+	})
 
 	return (
-		<article className="max-w-3xl mx-auto">
-			{/* Header */}
-			<div className="mb-8 text-center">
-				<Link
-					href="/thinking"
-					className="inline-flex items-center text-[rgba(var(--color-foreground),0.6)] hover:text-[rgba(var(--color-foreground),1)] mb-6 transition-colors"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="h-4 w-4 mr-2"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="M15 19l-7-7 7-7"
-						/>
-					</svg>
-					Back to Thinking
-				</Link>
-
-				<h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 gradient-heading">
-					{post.title}
-				</h1>
-
-				<div className="flex items-center justify-center space-x-4 text-[rgba(var(--color-foreground),0.6)] text-sm">
-					<span>
-						{new Date(post.published_at || "").toLocaleDateString("en-US", {
-							year: "numeric",
-							month: "long",
-							day: "numeric",
-						})}
-					</span>
-					<span>•</span>
+		<div className="max-w-3xl mx-auto p-6">
+			<header className="mb-8">
+				<h1 className="text-4xl font-bold mb-4">{post.title}</h1>
+				<div className="flex items-center text-gray-500 mb-4">
+					<time dateTime={post.published_at || post.created_at || ""}>
+						{formattedDate}
+					</time>
+					<span className="mx-2">•</span>
 					<Link
 						href={`/thinking/about/${post.category.toLowerCase()}`}
-						className="uppercase tracking-wider hover:text-[rgba(var(--color-foreground),1)] transition-colors"
+						className="capitalize text-blue-500 hover:text-blue-600 transition-colors"
 					>
 						{post.category}
 					</Link>
 				</div>
-			</div>
+				{post.featured_image && (
+					<div className="relative h-96 w-full mb-8 rounded-lg overflow-hidden">
+						<Image
+							src={post.featured_image}
+							alt={post.title}
+							fill
+							className="object-cover"
+							priority
+						/>
+					</div>
+				)}
+			</header>
 
-			{/* Featured Image */}
-			{post.featured_image && (
-				<div className="relative h-64 md:h-96 mb-8 rounded-xl overflow-hidden">
-					<Image
-						src={post.featured_image}
-						alt={post.title}
-						fill
-						className="object-cover"
-						priority
-					/>
-				</div>
-			)}
+			<article className="prose dark:prose-invert lg:prose-lg max-w-none mb-12 prose-headings:text-gray-800 dark:prose-headings:text-gray-100 prose-headings:font-bold prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:font-medium prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-pre:bg-gray-800 dark:prose-pre:bg-gray-900 prose-pre:text-gray-200 prose-blockquote:text-gray-600 dark:prose-blockquote:text-gray-400 prose-blockquote:border-l-4 prose-blockquote:border-gray-300 dark:prose-blockquote:border-gray-700 prose-blockquote:pl-4 prose-blockquote:italic">
+				<ReactMarkdown remarkPlugins={[remarkGfm]}>
+					{post.content || ""}
+				</ReactMarkdown>
+			</article>
 
-			{/* Content */}
-			<div className="prose prose-invert prose-lg max-w-none prose-headings:gradient-text-violet prose-a:text-[rgba(var(--color-cyan),0.9)] prose-a:no-underline hover:prose-a:text-[rgba(var(--color-cyan),1)] prose-a:transition-colors prose-img:rounded-xl">
-				<div dangerouslySetInnerHTML={{ __html: content }} />
-			</div>
-
-			{/* Footer */}
-			<div className="mt-12 pt-8 border-t border-[rgba(var(--color-foreground),0.1)]">
+			<footer className="pt-6 border-t border-gray-200 dark:border-gray-700">
 				<Link
 					href="/thinking"
-					className="inline-flex items-center text-[rgba(var(--color-foreground),0.6)] hover:text-[rgba(var(--color-foreground),1)] transition-colors"
+					className="text-blue-500 hover:text-blue-600 transition-colors"
 				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="h-4 w-4 mr-2"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="M15 19l-7-7 7-7"
-						/>
-					</svg>
-					Back to Thinking
+					← Back to Thinking
 				</Link>
-			</div>
-		</article>
+			</footer>
+		</div>
 	)
 }

@@ -9,6 +9,7 @@
  */
 import type { Config } from "tailwindcss"
 import tailwindcssAnimate from "tailwindcss-animate"
+import typography from "@tailwindcss/typography"
 
 const config = {
 	content: [
@@ -23,9 +24,12 @@ const config = {
 				"gradient-conic":
 					"conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
 			},
+			animation: {
+				"pulse-slide": "pulse-slide 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+			},
 		},
 	},
-	plugins: [tailwindcssAnimate],
+	plugins: [tailwindcssAnimate, typography],
 	future: {
 		hoverOnlyWhenSupported: true,
 	},

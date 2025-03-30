@@ -5,7 +5,7 @@
 import { Metadata } from "next"
 import { getPostBySlug, getPosts } from "@/lib/supabase/publicClient"
 import { notFound } from "next/navigation"
-import PostView from "@/components/PostView"
+import { PostView } from "@/components/PostView"
 
 // Set a reasonable fallback for cache revalidation
 export const revalidate = 3600 // 1 hour

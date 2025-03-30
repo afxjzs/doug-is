@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 
@@ -37,48 +37,55 @@ export default function SafeImage({
 	onLoad,
 	onError,
 }: SafeImageProps) {
-	const [imgSrc, setImgSrc] = useState<string>(src)
-	const [isLoading, setIsLoading] = useState<boolean>(true)
 	const [hasError, setHasError] = useState<boolean>(false)
+	const [isLoaded, setIsLoaded] = useState<boolean>(false)
 
-	// Reset state when src changes
-	useEffect(() => {
-		setImgSrc(src)
-		setIsLoading(true)
-		setHasError(false)
-	}, [src])
+	// Check if image is from Supabase to disable optimization
+	const isSupabaseImage =
+		typeof src === "string" &&
+		(src.includes("supabase.co") || src.includes("supabase.in"))
 
 	// Handle image load error
 	const handleError = () => {
+		console.error(
+			`Image failed to load: ${src}${
+				isSupabaseImage ? " (Supabase image)" : ""
+			}`
+		)
+		// Log extra details to help with debugging
+		if (typeof window !== "undefined") {
+			console.debug("Browser:", navigator.userAgent)
+			console.debug("Image dimensions:", fill ? "fill" : `${width}x${height}`)
+		}
 		setHasError(true)
-		setImgSrc(fallbackSrc)
-		setIsLoading(false)
 		onError?.()
 	}
 
 	// Handle image load success
 	const handleLoad = () => {
-		setIsLoading(false)
+		setIsLoaded(true)
 		onLoad?.()
 	}
 
+	// Use the fallback if there's an error
+	const imageSrc = hasError ? fallbackSrc : src
+
 	return (
 		<div className={cn("relative overflow-hidden", className)}>
-			{/* Loading indicator */}
-			{isLoading && (
-				<div className="absolute inset-0 bg-gray-100 animate-pulse" />
+			{/* Loading state */}
+			{!isLoaded && !hasError && (
+				<div className="absolute inset-0 bg-gray-100 dark:bg-gray-800 animate-pulse" />
 			)}
 
 			{/* Image component with error handling */}
 			<Image
-				src={imgSrc}
+				src={imageSrc}
 				alt={alt}
 				width={!fill ? width : undefined}
 				height={!fill ? height : undefined}
 				className={cn(
 					"transition-opacity duration-300",
-					isLoading ? "opacity-0" : "opacity-100",
-					hasError ? "bg-gray-100" : ""
+					isLoaded ? "opacity-100" : "opacity-0"
 				)}
 				onError={handleError}
 				onLoad={handleLoad}
@@ -86,6 +93,7 @@ export default function SafeImage({
 				fill={fill}
 				sizes={sizes}
 				quality={quality}
+				unoptimized={isSupabaseImage || hasError} // Don't optimize Supabase images or fallback images
 			/>
 		</div>
 	)

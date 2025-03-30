@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { createClient } from "@supabase/supabase-js"
+import StatusMessage from "@/components/StatusMessage"
 
 export default function SupaTestPage() {
 	const [posts, setPosts] = useState<any[]>([])
@@ -91,13 +92,21 @@ export default function SupaTestPage() {
 			<div className="mb-8">
 				<h2 className="text-xl font-semibold mb-2">Status:</h2>
 				{loading ? (
-					<p className="text-blue-600">Loading...</p>
+					<StatusMessage
+						type="loading"
+						message="Connecting to Supabase and fetching data..."
+					/>
 				) : error ? (
-					<p className="text-red-600">Error: {error}</p>
+					<StatusMessage
+						type="error"
+						message="Error connecting to Supabase"
+						details={error}
+					/>
 				) : (
-					<p className="text-green-600">
-						Success! Fetched {posts.length} posts
-					</p>
+					<StatusMessage
+						type="success"
+						message={`Success! Fetched ${posts.length} posts`}
+					/>
 				)}
 			</div>
 

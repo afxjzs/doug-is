@@ -33,6 +33,8 @@ export interface ContactMessage {
 	name: string
 	email: string
 	message: string
+	subject?: string
+	is_read?: boolean
 	created_at: string
 }
 

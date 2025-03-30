@@ -36,8 +36,9 @@ export default async function EditPostPage({
 			redirect("/admin/login?redirect=/admin/posts")
 		}
 
-		// Get the post ID from the URL params
-		const { id } = params
+		// Get the post ID from the URL params - await params to fix sync error
+		const paramsData = await params
+		const { id } = paramsData
 
 		if (!id) {
 			redirect("/admin/posts")

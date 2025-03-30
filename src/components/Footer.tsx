@@ -102,14 +102,14 @@ export default function Footer() {
 										Investing
 									</Link>
 								</li>
-								{/* <li>
+								<li>
 									<Link
 										href="/thinking"
 										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),1)] transition-colors"
 									>
 										Writing
 									</Link>
-								</li> */}
+								</li>
 							</ul>
 						</div>
 						<div>

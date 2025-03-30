@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/serverClient"
 import { getPublicSupabaseClient } from "@/lib/supabase/publicClient"
+import { nanoid } from "nanoid"
 
 // Use force-dynamic to ensure fresh data on each request
 export const dynamic = "force-dynamic"
@@ -81,18 +82,19 @@ export async function POST(request: Request) {
 			)
 		}
 
-		// Insert the post with only the columns that exist in the DB schema
-		console.log("Inserting post:", json.title)
-
-		// Include all fields that exist in the table
+		// Prepare post data with all fields
 		const postData = {
+			id: nanoid(),
 			title: json.title,
 			slug: json.slug,
 			content: json.content,
-			excerpt: json.excerpt || "",
-			category: json.category || "General",
+			excerpt: json.excerpt,
+			category: json.category,
 			featured_image: json.featured_image || null,
-			published_at: json.published ? new Date().toISOString() : null,
+			published_at:
+				json.published_at || (json.published ? new Date().toISOString() : null),
+			created_at: new Date().toISOString(),
+			updated_at: new Date().toISOString(),
 		}
 
 		console.log("Inserting with data:", postData)

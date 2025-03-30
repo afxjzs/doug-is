@@ -15,7 +15,12 @@ export const metadata: Metadata = {
 		"Personal website of Douglas E. Rogers - Developer, Investor, and Entrepreneur",
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+	// Fetch the latest blog post
+	const latestPosts = await getPosts(1)
+	const latestPost =
+		latestPosts && latestPosts.length > 0 ? latestPosts[0] : null
+
 	return (
 		<div className="max-w-4xl mx-auto">
 			{/* Hero Section */}
@@ -214,7 +219,8 @@ export default function HomePage() {
 					</Link> */}
 				</div>
 
-				<div className="mt-8 grid grid-cols-1 gap-8">
+				{/* About + Latest Post Section */}
+				<div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
 					<Link
 						href="/hustling"
 						className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-foreground),0.05)] transition-all duration-300 hover:border-purple-500/30 hover:shadow-[0_0_15px_rgba(168,85,247,0.15)]"
@@ -244,6 +250,68 @@ export default function HomePage() {
 							</div>
 						</div>
 					</Link>
+
+					{latestPost && (
+						<Link
+							href={`/thinking/about/${latestPost.category.toLowerCase()}/${
+								latestPost.slug
+							}`}
+							className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-foreground),0.05)] transition-all duration-300 hover:border-pink-500/30 hover:shadow-[0_0_15px_rgba(236,72,153,0.15)]"
+						>
+							<div className="absolute inset-0 bg-gradient-to-br from-pink-900/10 to-pink-800/5 opacity-50 group-hover:opacity-70 transition-opacity duration-300"></div>
+							<div className="relative flex flex-col h-full">
+								{latestPost.featured_image && (
+									<div className="w-full h-48 overflow-hidden">
+										<Image
+											src={latestPost.featured_image}
+											alt={latestPost.title}
+											width={400}
+											height={200}
+											priority
+											className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+											unoptimized={true}
+										/>
+									</div>
+								)}
+								<div className="p-6 flex-1 flex flex-col">
+									<div className="flex items-center mb-3">
+										<span className="text-xs font-medium px-2.5 py-1 rounded-full bg-[rgba(var(--color-pink),0.1)] text-[rgba(var(--color-pink),0.8)]">
+											Latest Post
+										</span>
+										<span className="mx-2 text-[rgba(var(--color-foreground),0.3)]">
+											•
+										</span>
+										<time className="text-sm text-[rgba(var(--color-foreground),0.6)]">
+											{latestPost.published_at
+												? formatDate(latestPost.published_at)
+												: ""}
+										</time>
+									</div>
+									<h3 className="text-xl font-semibold mb-2 text-pink-300 leading-[1.2] group-hover:text-[rgb(var(--color-pink))] transition-colors">
+										{latestPost.title}
+									</h3>
+									<p className="text-[rgba(var(--color-foreground),0.7)] mb-4 leading-[1.2] line-clamp-2">
+										{latestPost.excerpt}
+									</p>
+									<div className="flex items-center text-pink-400 mt-auto">
+										<span className="leading-[1.2]">Read Post</span>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform"
+											viewBox="0 0 20 20"
+											fill="currentColor"
+										>
+											<path
+												fillRule="evenodd"
+												d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+												clipRule="evenodd"
+											/>
+										</svg>
+									</div>
+								</div>
+							</div>
+						</Link>
+					)}
 				</div>
 			</div>
 

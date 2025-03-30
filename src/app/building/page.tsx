@@ -47,14 +47,23 @@ const projects = [
 	// 	appStore: "https://apps.apple.com/us/app/justateapp",
 	// },
 	{
+		id: "doug-is",
+		title: "This Website (doug.is)",
+		description:
+			"My own personal website, built with Next.js, Tailwind CSS, and TypeScript. Vibe-coding experiment.",
+		image: "/images/projects/doug-is.png",
+		tags: ["Next.js", "Tailwind CSS", "TypeScript", "Vercel"],
+		link: "/building/doug-is",
+		github: "https://github.com/afxjzs/doug-is",
+	},
+	{
 		id: "hopping-list",
 		title: "Hopping List",
-		description:
-			"A shopping list app that helps you organize your grocery shopping by store sections.",
-		image: "/images/hopping-list-logo.png",
+		description: "A shopping list app built for couples and families.",
+		image: "/images/projects/hopping-list-logo.png",
 		tags: ["Flutter", "FlutterFlow", "Firebase", "Firestore"],
 		link: "/building/hopping-list",
-		github: "https://github.com/afxjzs/hopping-list",
+		github: "https://github.com/afxjzs/hoppinglist",
 		testflight: "https://testflight.apple.com/join/CscPEAD4",
 	},
 	// {

@@ -10,6 +10,7 @@ const navItems = [
 	{ name: "/building", path: "/building" },
 	{ name: "/advising", path: "/advising" },
 	{ name: "/investing", path: "/investing" },
+	{ name: "/thinking", path: "/thinking" },
 ]
 
 export default function Header() {
