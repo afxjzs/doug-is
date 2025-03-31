@@ -14,7 +14,7 @@ const companies = [
 		id: "dubprime",
 		title: "DubPrime",
 		description:
-			"DubPrime is fintech startup that's modernizing Duplicate Payment recovery for enterprise companies through software automation and expert services.",
+			"DubPrime bridges the gap between investors seeking portfolio diversification and borrowers needing quick capital. Our portfolio approach distributes capital across thousands of small-dollar loans, creating natural risk diffusion that traditional investments cannot match.",
 		role: "Co-Founder, CPO/CTO",
 		image: "/images/dubprime-grad-horizontal.png",
 		website: "https://www.dubprime.com/",
