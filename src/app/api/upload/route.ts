@@ -4,10 +4,8 @@
 
 import { NextRequest, NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/serverClient"
-import { getCurrentUser } from "@/lib/supabase/auth"
-import { isAdminUser } from "@/lib/auth/helpers"
+import { isCurrentUserAdmin } from "@/lib/supabase/auth"
 import { nanoid } from "nanoid"
-import { cookies } from "next/headers"
 
 // Set maximum upload size (10MB)
 export const config = {
@@ -32,29 +30,19 @@ export async function POST(request: NextRequest) {
 		console.log("Cookie header present:", cookie !== "none" ? "Yes" : "No")
 		console.log("Cookie contents:", cookie)
 
-		// Get the current user and check permissions
+		// Check if user is authenticated and has admin privileges
 		try {
-			const user = await getCurrentUser()
-			console.log(
-				"Current user:",
-				user ? `ID: ${user.id}, Email: ${user.email}` : "Not authenticated"
-			)
+			const isAdmin = await isCurrentUserAdmin()
 
-			if (!user) {
-				console.error("Upload failed: User not authenticated")
-				return NextResponse.json(
-					{ error: "You must be logged in to upload files" },
-					{ status: 401 }
-				)
-			}
-
-			if (!isAdminUser(user)) {
-				console.error("Upload failed: User not an admin", user.email)
+			if (!isAdmin) {
+				console.error("Upload failed: User not authenticated or not an admin")
 				return NextResponse.json(
 					{ error: "Admin privileges required" },
 					{ status: 403 }
 				)
 			}
+
+			console.log("Admin user verified, continuing with upload")
 		} catch (authError) {
 			console.error("Authentication error:", authError)
 			return NextResponse.json(

@@ -10,29 +10,52 @@ import { useRouter } from "next/navigation"
 import { useState, useEffect, useCallback } from "react"
 import type { Database } from "../types/supabase"
 import type { User, Session } from "@supabase/supabase-js"
+import { AuthChangeEvent } from "@supabase/supabase-js"
+import { getSupabaseStorageKey } from "@/lib/auth/helpers"
 
 // Environment variables
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-// This is for UI display only - actual access control happens on the server
-// Keep in sync with the server-side ALLOWED_ADMIN_EMAILS list
-const ALLOWED_ADMIN_EMAILS = ["douglas.rogers@gmail.com"]
+// Get cookie name from helpers
+const STORAGE_KEY = getSupabaseStorageKey()
+
+// List of allowed admin emails
+export const ALLOWED_ADMIN_EMAILS = ["afxjzs@gmail.com", "doug@doug.is"].map(
+	(email) => email.toLowerCase()
+)
+
+let supabaseClient: ReturnType<typeof createBrowserClient> | null = null
 
 /**
  * Creates a Supabase client for client-side authentication
  */
-export function createSupabaseClient() {
-	return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey, {
-		cookieOptions: {
-			name: "sb",
-			domain: process.env.NODE_ENV === "production" ? ".doug.is" : undefined,
-			sameSite: "lax",
-			secure: process.env.NODE_ENV === "production",
-			path: "/",
-			maxAge: 60 * 60 * 24 * 7, // 7 days
-		},
-	})
+export const createSupabaseClient = () => {
+	if (!supabaseClient) {
+		if (!supabaseUrl || !supabaseAnonKey) {
+			throw new Error("Missing Supabase credentials")
+		}
+
+		console.log(
+			"🔑 Creating new Supabase browser client with storage key:",
+			STORAGE_KEY
+		)
+
+		// Create the browser client with correct settings
+		supabaseClient = createBrowserClient(supabaseUrl, supabaseAnonKey, {
+			auth: {
+				autoRefreshToken: true,
+				persistSession: true,
+				detectSessionInUrl: true,
+				flowType: "pkce",
+				debug: true, // Always enable debug to troubleshoot
+				storageKey: STORAGE_KEY, // Key for localStorage - MUST match server-side
+			},
+		})
+
+		console.log("🔑 Supabase browser client created")
+	}
+	return supabaseClient
 }
 
 /**
@@ -42,109 +65,140 @@ export function createSupabaseClient() {
 export function useAuth() {
 	const [user, setUser] = useState<User | null>(null)
 	const [session, setSession] = useState<Session | null>(null)
-	const [loading, setLoading] = useState(false)
+	const [loading, setLoading] = useState(true)
 	const [initialized, setInitialized] = useState(false)
 	const router = useRouter()
 	const supabase = createSupabaseClient()
 
+	// Log tokens on start for debugging
+	const logSessionInfo = useCallback(async () => {
+		try {
+			const { data, error } = await supabase.auth.getSession()
+			console.log("📊 AUTH DEBUG - Session info:", {
+				hasSession: !!data.session,
+				userId: data.session?.user?.id || "none",
+				email: data.session?.user?.email || "none",
+				error: error?.message || "none",
+				accessTokenLength: data.session?.access_token?.length || 0,
+				refreshTokenLength: data.session?.refresh_token?.length || 0,
+				expiresAt: data.session?.expires_at || "none",
+				storageKey: STORAGE_KEY,
+			})
+
+			// Check localStorage for items
+			console.log("📊 AUTH DEBUG - localStorage items:", {
+				authToken: localStorage.getItem(STORAGE_KEY) ? "exists" : "missing",
+			})
+
+			// Check cookies
+			console.log("📊 AUTH DEBUG - document.cookie:", document.cookie)
+		} catch (e) {
+			console.error("Error logging session info:", e)
+		}
+	}, [supabase])
+
 	// Load user on mount
 	useEffect(() => {
 		let isMounted = true
+		console.log("🔄 useAuth hook mounted")
 
 		async function loadUserData() {
 			try {
-				// First, try to get the session to see if we're already logged in
-				const { data: sessionData, error: sessionError } =
-					await supabase.auth.getSession()
+				console.log("🔍 Loading initial user data...")
+				await logSessionInfo()
+
+				// Get initial session
+				const {
+					data: { session: initialSession },
+					error: sessionError,
+				} = await supabase.auth.getSession()
 
 				if (sessionError) {
-					console.error("Error getting session:", sessionError)
+					console.error("❌ Error getting initial session:", sessionError)
 					if (isMounted) {
 						setSession(null)
 						setUser(null)
-					}
-				} else if (sessionData.session) {
-					if (isMounted) setSession(sessionData.session)
-
-					// Only try to get user if we have a session to avoid AuthSessionMissingError
-					try {
-						const { data: userData, error: userError } =
-							await supabase.auth.getUser()
-
-						if (userError) {
-							console.error("Error getting user:", userError)
-							if (isMounted) setUser(null)
-						} else if (userData.user) {
-							if (isMounted) setUser(userData.user)
-						}
-					} catch (userFetchError) {
-						console.error("Failed to fetch user details:", userFetchError)
-						if (isMounted) setUser(null)
 					}
 				} else {
-					// No session, so no user
+					console.log("✅ Initial session loaded:", {
+						hasSession: !!initialSession,
+						user: initialSession?.user?.email,
+						expiresAt: initialSession?.expires_at
+							? new Date(initialSession.expires_at * 1000).toISOString()
+							: "none",
+					})
+
 					if (isMounted) {
-						setSession(null)
-						setUser(null)
+						setSession(initialSession)
+						if (initialSession?.user) {
+							setUser(initialSession.user)
+						}
 					}
 				}
 			} catch (error) {
-				console.error("Error in auth loading:", error)
+				console.error("❌ Error in initial auth loading:", error)
 				if (isMounted) {
 					setUser(null)
 					setSession(null)
 				}
 			} finally {
-				if (isMounted) setInitialized(true)
+				if (isMounted) {
+					setLoading(false)
+					setInitialized(true)
+					console.log("✅ Auth initialization complete")
+				}
 			}
 		}
 
-		// Initial data load
+		// Load initial data
 		loadUserData()
 
-		// Listen for auth changes
+		// Set up auth state change listener
 		const {
 			data: { subscription },
-		} = supabase.auth.onAuthStateChange(async (event, newSession) => {
-			console.log("Auth state changed:", event, !!newSession)
+		} = supabase.auth.onAuthStateChange(
+			async (event: AuthChangeEvent, currentSession: Session | null) => {
+				console.log("🔔 Auth state changed:", event, {
+					hasSession: !!currentSession,
+					user: currentSession?.user?.email,
+					expiresAt: currentSession?.expires_at
+						? new Date(currentSession.expires_at * 1000).toISOString()
+						: "none",
+				})
 
-			if (isMounted) setSession(newSession)
+				// Log full auth state details for debugging
+				await logSessionInfo()
 
-			// Only try to get user if we have a session to avoid AuthSessionMissingError
-			if (newSession) {
-				try {
-					const { data, error } = await supabase.auth.getUser()
-					if (error) {
-						console.error("Error getting user after auth change:", error)
-						if (isMounted) setUser(null)
-					} else if (data.user) {
-						if (isMounted) setUser(data.user)
+				if (isMounted) {
+					setSession(currentSession)
+					setUser(currentSession?.user ?? null)
+
+					// Hard refresh the page on certain auth events to ensure
+					// server and client are in sync
+					if (
+						event === "SIGNED_IN" ||
+						event === "SIGNED_OUT" ||
+						event === "TOKEN_REFRESHED"
+					) {
+						router.refresh()
 					}
-				} catch (e) {
-					console.error("Failed to fetch user after auth change:", e)
-					if (isMounted) setUser(null)
 				}
-			} else {
-				if (isMounted) setUser(null)
 			}
+		)
 
-			// Refresh server-side data related to authenticated state
-			router.refresh()
-		})
-
-		// Clean up subscription
 		return () => {
+			console.log("🔄 useAuth hook cleanup")
 			isMounted = false
 			subscription.unsubscribe()
 		}
-	}, [supabase, router])
+	}, [supabase, router, logSessionInfo])
 
 	/**
 	 * Handles login with email and password
 	 */
 	const loginWithEmail = useCallback(
 		async (email: string, password: string) => {
-			console.log("Starting loginWithEmail", { email })
+			console.log("🔑 Starting loginWithEmail", { email })
 			setLoading(true)
 			try {
 				const { data, error } = await supabase.auth.signInWithPassword({
@@ -152,16 +206,25 @@ export function useAuth() {
 					password,
 				})
 
-				console.log("Login response:", { success: !error, data, error })
+				console.log("🔑 Login response:", {
+					success: !error,
+					hasSession: !!data.session,
+					user: data.user?.email,
+					userId: data.user?.id,
+					expiresAt: data.session?.expires_at
+						? new Date(data.session.expires_at * 1000).toISOString()
+						: "none",
+				})
+
+				await logSessionInfo()
 
 				if (error) {
 					throw error
 				}
 
-				// Don't trigger router refresh here - let the component handle redirection
 				return { success: true, data }
 			} catch (error) {
-				console.error("Login error:", error)
+				console.error("❌ Login error:", error)
 				return {
 					success: false,
 					error: error instanceof Error ? error.message : "Unknown error",
@@ -170,7 +233,7 @@ export function useAuth() {
 				setLoading(false)
 			}
 		},
-		[supabase]
+		[supabase, logSessionInfo]
 	)
 
 	/**
@@ -178,7 +241,7 @@ export function useAuth() {
 	 */
 	const sendMagicLink = useCallback(
 		async (email: string) => {
-			console.log("Starting sendMagicLink", { email })
+			console.log("✉️ Starting sendMagicLink", { email })
 			setLoading(true)
 			try {
 				const { data, error } = await supabase.auth.signInWithOtp({
@@ -188,7 +251,7 @@ export function useAuth() {
 					},
 				})
 
-				console.log("Magic link response:", { success: !error, data, error })
+				console.log("✉️ Magic link response:", { success: !error, data, error })
 
 				if (error) {
 					throw error
@@ -196,7 +259,7 @@ export function useAuth() {
 
 				return { success: true, data }
 			} catch (error) {
-				console.error("Magic link error:", error)
+				console.error("❌ Magic link error:", error)
 				return {
 					success: false,
 					error: error instanceof Error ? error.message : "Unknown error",
@@ -214,6 +277,9 @@ export function useAuth() {
 	const logout = useCallback(async () => {
 		setLoading(true)
 		try {
+			console.log("🚪 Starting logout process")
+			await logSessionInfo()
+
 			// Clear local state first
 			setUser(null)
 			setSession(null)
@@ -224,25 +290,19 @@ export function useAuth() {
 			})
 
 			if (error) {
-				console.error("Logout error:", error)
+				console.error("❌ Logout error:", error)
 				return { success: false, error: error.message }
 			}
 
-			// Force cleanup of all cookies
-			document.cookie =
-				"sb-access-token=; Max-Age=0; path=/; domain=" +
-				window.location.hostname
-			document.cookie =
-				"sb-refresh-token=; Max-Age=0; path=/; domain=" +
-				window.location.hostname
+			console.log("✅ Logout successful")
 
-			// Force a hard reload to clear any client-side state
-			// This will trigger middleware to handle the redirect
+			// Force a hard reload to ensure we're completely signed out
+			// This is more reliable than router.refresh() for auth state changes
 			window.location.href = "/admin/login"
 
 			return { success: true }
 		} catch (error) {
-			console.error("Logout error:", error)
+			console.error("❌ Logout error:", error)
 			return {
 				success: false,
 				error: error instanceof Error ? error.message : "Unknown error",
@@ -250,7 +310,7 @@ export function useAuth() {
 		} finally {
 			setLoading(false)
 		}
-	}, [supabase])
+	}, [supabase, logSessionInfo])
 
 	// Determine if the user is an admin based on their email
 	const isAdmin = user?.email
@@ -266,5 +326,6 @@ export function useAuth() {
 		loginWithEmail,
 		sendMagicLink,
 		logout,
+		logSessionInfo,
 	}
 }

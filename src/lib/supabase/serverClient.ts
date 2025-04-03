@@ -4,8 +4,8 @@
  */
 
 import { createClient as createServiceClient } from "@supabase/supabase-js"
-import { type CookieOptions, createServerClient } from "@supabase/ssr"
-import { cookies as nextCookies } from "next/headers"
+import { createServerClient } from "@supabase/ssr"
+import { cookies } from "next/headers"
 import type { Database } from "../types/supabase"
 
 // Environment variables
@@ -43,30 +43,23 @@ export interface ContactMessage {
  * This handles the asynchronous cookie store in Next.js 15
  */
 export async function createServerComponentClient() {
-	// Get the cookie store from Next.js
-	const cookieStore = await nextCookies()
+	const cookieStore = await cookies()
 
 	return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
 		cookies: {
-			get(name: string) {
-				return cookieStore.get(name)?.value
+			getAll() {
+				return cookieStore.getAll()
 			},
-			set(name: string, value: string, options: CookieOptions) {
-				// This only works in a Server Action or Route Handler
+			setAll(cookiesToSet) {
 				try {
-					cookieStore.set({ name, value, ...options })
+					cookiesToSet.forEach(({ name, value, options }) => {
+						cookieStore.set(name, value, options)
+					})
 				} catch (error) {
-					// Cookies cannot be modified outside of a Server Action or Route Handler
-					console.warn("Cannot set cookie in this context:", error)
-				}
-			},
-			remove(name: string, options: CookieOptions) {
-				// This only works in a Server Action or Route Handler
-				try {
-					cookieStore.set({ name, value: "", ...options, maxAge: 0 })
-				} catch (error) {
-					// Cookies cannot be modified outside of a Server Action or Route Handler
-					console.warn("Cannot remove cookie in this context:", error)
+					// The `set` method was called from a Server Component.
+					// This can be ignored if you have middleware refreshing
+					// user sessions.
+					console.error("Error setting cookies:", error)
 				}
 			},
 		},

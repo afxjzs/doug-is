@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getCurrentUser } from "@/lib/supabase/auth"
+import { getCurrentUser, isCurrentUserAdmin } from "@/lib/supabase/auth"
 import { createAdminClient } from "@/lib/supabase/serverClient"
-import { isAdminUser } from "@/lib/auth/helpers"
 
 export async function PATCH(
 	request: NextRequest,
@@ -11,11 +10,11 @@ export async function PATCH(
 		// Properly await the params object to avoid Next.js warning
 		const id = await params.id
 
-		// Get the current user
-		const user = await getCurrentUser()
-
 		// Check if user is authenticated and has admin privileges
-		if (!user || !isAdminUser(user)) {
+		const isAdmin = await isCurrentUserAdmin()
+
+		if (!isAdmin) {
+			console.error("Unauthorized access attempt to PATCH /api/posts/[id]")
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 		}
 
@@ -128,11 +127,11 @@ export async function DELETE(
 		// Properly await the params object to avoid Next.js warning
 		const id = await params.id
 
-		// Get the current user
-		const user = await getCurrentUser()
-
 		// Check if user is authenticated and has admin privileges
-		if (!user || !isAdminUser(user)) {
+		const isAdmin = await isCurrentUserAdmin()
+
+		if (!isAdmin) {
+			console.error("Unauthorized access attempt to DELETE /api/posts/[id]")
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 		}
 

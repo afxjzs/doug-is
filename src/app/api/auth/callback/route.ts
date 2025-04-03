@@ -3,62 +3,55 @@
  * It's the callback endpoint for Supabase auth redirects (magic links, OAuth, etc.)
  */
 
-import { NextRequest, NextResponse } from "next/server"
-import { createServerClient, type CookieOptions } from "@supabase/ssr"
+import { NextResponse } from "next/server"
+import { createServerClient } from "@supabase/ssr"
+import type { NextRequest } from "next/server"
 
+/**
+ * Handle Supabase auth callback
+ * This route is called by Supabase after a user signs in with OAuth or magic link
+ */
 export async function GET(request: NextRequest) {
-	// Get the auth code from the URL
 	const requestUrl = new URL(request.url)
 	const code = requestUrl.searchParams.get("code")
-	const origin = requestUrl.origin
 
+	// Debug logging
 	console.log("Auth callback received:", {
-		code: code ? "present" : "missing",
+		url: requestUrl.toString(),
+		code: !!code,
 		params: Object.fromEntries(requestUrl.searchParams.entries()),
 	})
 
-	// Get the redirect URL from the query params, defaulting to /admin
-	let redirectTo = requestUrl.searchParams.get("redirect_to") || "/admin"
-	console.log("Initial redirectTo:", { redirectTo })
-
-	// If no code in URL, redirect to login page with error
+	// If code is missing, redirect with error
 	if (!code) {
-		const redirectUrl = new URL("/admin/login", origin)
-		redirectUrl.searchParams.set("error", "No auth code provided")
-		return NextResponse.redirect(redirectUrl.toString())
+		console.error("No code in auth callback request")
+		return NextResponse.redirect(
+			new URL("/admin/login?error=Missing+code", request.url)
+		)
 	}
 
-	// Create a response with an absolute URL for the redirect
-	// NextResponse.redirect requires absolute URLs
-	const absoluteRedirectUrl = new URL(redirectTo, origin).toString()
-	console.log("Final redirect URL:", absoluteRedirectUrl)
-	const response = NextResponse.redirect(absoluteRedirectUrl)
+	// Create a response object
+	const redirectTo = requestUrl.searchParams.get("redirect_to") || "/admin"
+	const response = NextResponse.redirect(new URL(redirectTo, request.url))
 
-	// Create a Supabase client using the server component pattern
-	const cookieStore = request.cookies
-
+	// Create a Supabase client
 	const supabase = createServerClient(
-		process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+		process.env.NEXT_PUBLIC_SUPABASE_URL!,
+		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 		{
 			cookies: {
-				get(name: string) {
-					return cookieStore.get(name)?.value
+				getAll() {
+					return request.cookies.getAll()
 				},
-				set(name: string, value: string, options: CookieOptions) {
-					response.cookies.set({
-						name,
-						value,
-						...options,
-					})
-				},
-				remove(name: string, options: CookieOptions) {
-					response.cookies.set({
-						name,
-						value: "",
-						...options,
-						maxAge: 0,
-					})
+				setAll(cookiesToSet) {
+					cookiesToSet.forEach(({ name, value }) =>
+						request.cookies.set(name, value)
+					)
+					// We need to create a new response with the updated request object
+					// This ensures we're not modifying the original response
+					cookiesToSet.forEach(({ name, value, options }) =>
+						response.cookies.set(name, value, options)
+					)
 				},
 			},
 		}
@@ -66,24 +59,33 @@ export async function GET(request: NextRequest) {
 
 	try {
 		// Exchange the code for a session
+		console.log("Exchanging code for session...")
 		const { error } = await supabase.auth.exchangeCodeForSession(code)
 
 		if (error) {
-			console.error("Auth callback error:", error)
-			const redirectUrl = new URL("/admin/login", origin)
-			redirectUrl.searchParams.set("error", error.message)
-			return NextResponse.redirect(redirectUrl.toString())
+			console.error("Error exchanging code for session:", error)
+			throw error
 		}
 
-		// Success - redirect to the intended destination
+		console.log(
+			"Successfully exchanged code for session, redirecting to:",
+			redirectTo
+		)
 		return response
 	} catch (error) {
-		console.error("Unexpected auth callback error:", error)
-		const redirectUrl = new URL("/admin/login", origin)
-		redirectUrl.searchParams.set(
-			"error",
-			"Authentication failed. Please try again."
+		console.error("Authentication error:", error)
+		return NextResponse.redirect(
+			new URL("/admin/login?error=Could+not+authenticate+user", request.url)
 		)
-		return NextResponse.redirect(redirectUrl.toString())
 	}
+}
+
+// Helper function to get a parameter with a default value
+function requestParams(
+	params: URLSearchParams,
+	name: string,
+	defaultValue: string
+): string {
+	const value = params.get(name)
+	return value || defaultValue
 }

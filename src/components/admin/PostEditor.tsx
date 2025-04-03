@@ -111,26 +111,40 @@ export default function PostEditor({ post, mode }: PostEditorProps) {
 
 			const method = mode === "create" ? "POST" : "PATCH"
 
+			// Use a more robust fetch with credentials and detailed error handling
 			const response = await fetch(endpoint, {
 				method,
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify(postData),
-				credentials: "include", // Add credentials to include cookies
+				credentials: "include", // Include cookies for authentication
+				cache: "no-store", // Prevent caching
 			})
 
-			const data = await response.json()
+			// Handle non-JSON responses
+			const contentType = response.headers.get("content-type")
+			let data
+
+			if (contentType && contentType.includes("application/json")) {
+				data = await response.json()
+			} else {
+				const text = await response.text()
+				console.warn("Non-JSON response:", text)
+				data = { error: "Unexpected response from server" }
+			}
 
 			if (!response.ok) {
-				console.error("Failed to save post:", data)
+				console.error("Failed to save post:", { status: response.status, data })
 
 				// Handle authentication errors
-				if (response.status === 401 || response.status === 403) {
-					throw new Error("Authentication error. Please log in again.")
+				if (response.status === 401) {
+					console.error("Authentication error - redirecting to login")
+					router.push("/admin/login")
+					throw new Error("Session expired. Please log in again.")
 				}
 
-				throw new Error(data.error || "Failed to save post")
+				throw new Error(data.error || `Server error: ${response.status}`)
 			}
 
 			console.log("Post saved successfully:", data)
@@ -154,6 +168,7 @@ export default function PostEditor({ post, mode }: PostEditorProps) {
 					? err.message
 					: "An error occurred while saving the post"
 			)
+		} finally {
 			setIsSubmitting(false)
 		}
 	}
@@ -169,11 +184,35 @@ export default function PostEditor({ post, mode }: PostEditorProps) {
 			const response = await fetch(`/api/posts/${post.id}`, {
 				method: "DELETE",
 				credentials: "include",
+				cache: "no-store",
 			})
 
+			// Handle non-JSON responses
+			const contentType = response.headers.get("content-type")
+			let data
+
+			if (contentType && contentType.includes("application/json")) {
+				data = await response.json()
+			} else {
+				const text = await response.text()
+				console.warn("Non-JSON response:", text)
+				data = { error: "Unexpected response from server" }
+			}
+
 			if (!response.ok) {
-				const data = await response.json()
-				throw new Error(data.error || "Failed to delete post")
+				console.error("Failed to delete post:", {
+					status: response.status,
+					data,
+				})
+
+				// Handle authentication errors
+				if (response.status === 401) {
+					console.error("Authentication error - redirecting to login")
+					router.push("/admin/login")
+					throw new Error("Session expired. Please log in again.")
+				}
+
+				throw new Error(data.error || `Server error: ${response.status}`)
 			}
 
 			// Show success message
@@ -191,6 +230,7 @@ export default function PostEditor({ post, mode }: PostEditorProps) {
 					? err.message
 					: "An error occurred while deleting the post"
 			)
+		} finally {
 			setIsDeleting(false)
 			setShowDeleteConfirm(false)
 		}

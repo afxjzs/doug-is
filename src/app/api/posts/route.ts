@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/serverClient"
 import { getPublicSupabaseClient } from "@/lib/supabase/publicClient"
 import { nanoid } from "nanoid"
+import { isCurrentUserAdmin } from "@/lib/supabase/auth"
 
 // Use force-dynamic to ensure fresh data on each request
 export const dynamic = "force-dynamic"
@@ -48,6 +49,15 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
 	try {
 		console.log("Creating a new post...")
+
+		// Check if user is authenticated and has admin privileges
+		const isAdmin = await isCurrentUserAdmin()
+
+		if (!isAdmin) {
+			console.error("Unauthorized access attempt to POST /api/posts")
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+		}
+
 		const supabase = createAdminClient()
 
 		// Get post data from request
