@@ -38,6 +38,12 @@ export async function middleware(request: NextRequest) {
 						name,
 						value,
 						...options,
+						// Ensure cookies work in production
+						domain:
+							process.env.NODE_ENV === "production" ? ".doug.is" : undefined,
+						secure: process.env.NODE_ENV === "production",
+						sameSite: "lax",
+						path: "/",
 					})
 				},
 				remove(name: string, options: CookieOptions) {
@@ -46,6 +52,13 @@ export async function middleware(request: NextRequest) {
 						name,
 						value: "",
 						...options,
+						// Ensure cookies work in production
+						domain:
+							process.env.NODE_ENV === "production" ? ".doug.is" : undefined,
+						secure: process.env.NODE_ENV === "production",
+						sameSite: "lax",
+						path: "/",
+						maxAge: 0,
 					})
 				},
 			},

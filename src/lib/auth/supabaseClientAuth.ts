@@ -23,7 +23,16 @@ const ALLOWED_ADMIN_EMAILS = ["douglas.rogers@gmail.com"]
  * Creates a Supabase client for client-side authentication
  */
 export function createSupabaseClient() {
-	return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey)
+	return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey, {
+		cookieOptions: {
+			name: "sb",
+			domain: process.env.NODE_ENV === "production" ? ".doug.is" : undefined,
+			sameSite: "lax",
+			secure: process.env.NODE_ENV === "production",
+			path: "/",
+			maxAge: 60 * 60 * 24 * 7, // 7 days
+		},
+	})
 }
 
 /**
