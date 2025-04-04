@@ -48,10 +48,12 @@ export const PostView: FC<{ post: Post }> = ({ post }) => {
 				)}
 			</header>
 
-			<article className="prose dark:prose-invert lg:prose-lg max-w-none mb-12 prose-headings:text-gray-800 dark:prose-headings:text-gray-100 prose-headings:font-bold prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:font-medium prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-pre:bg-gray-800 dark:prose-pre:bg-gray-900 prose-pre:text-gray-200 prose-blockquote:text-gray-600 dark:prose-blockquote:text-gray-400 prose-blockquote:border-l-4 prose-blockquote:border-gray-300 dark:prose-blockquote:border-gray-700 prose-blockquote:pl-4 prose-blockquote:italic">
-				<ReactMarkdown remarkPlugins={[remarkGfm]}>
-					{post.content || ""}
-				</ReactMarkdown>
+			<article className="prose dark:prose-invert lg:prose-lg max-w-none mb-12 prose-headings:text-gray-800 dark:prose-headings:text-gray-100 prose-headings:font-bold prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:font-medium prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-pre:bg-gray-800 dark:prose-pre:bg-gray-900 prose-pre:text-gray-200 prose-blockquote:text-gray-600 dark:prose-blockquote:text-gray-400 prose-blockquote:border-l-4 prose-blockquote:border-gray-300 dark:prose-blockquote:border-gray-700 prose-blockquote:pl-4 prose-blockquote:italic prose-p:my-6">
+				<div className="[&>p]:mb-8">
+					<ReactMarkdown remarkPlugins={[remarkGfm]}>
+						{post.content || ""}
+					</ReactMarkdown>
+				</div>
 			</article>
 
 			<footer className="pt-6 border-t border-gray-200 dark:border-gray-700">
