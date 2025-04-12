@@ -25,7 +25,7 @@ export default function HoppingListPage() {
 				</p>
 			</div>
 
-			<div className="relative h-160 rounded-lg overflow-hidden mb-12">
+			<div className="relative h-160 rounded-lg overflow-hidden mb-8">
 				<Image
 					src="/images/projects/hopping-list/overview.webp"
 					alt="Hopping List Overview"
@@ -35,95 +35,110 @@ export default function HoppingListPage() {
 				/>
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-				<div className="dark-card">
-					<h2 className="text-xl font-semibold gradient-text-cyan mb-4">
-						Technologies
-					</h2>
-					<ul className="space-y-2 text-[rgba(var(--color-foreground),0.7)]">
-						<li className="flex items-center">
-							<span className="check-mark mr-2">✓</span>
-							Flutter
-						</li>
-						<li className="flex items-center">
-							<span className="check-mark mr-2">✓</span>
-							FlutterFlow
-						</li>
-						<li className="flex items-center">
-							<span className="check-mark mr-2">✓</span>
-							Supabase
-						</li>
-						<li className="flex items-center">
-							<span className="check-mark mr-2">✓</span>
-							PostgreSQL
-						</li>
-						<li className="flex items-center">
-							<span className="check-mark mr-2">✓</span>
-							Custom FlutterFlow components
-						</li>
-					</ul>
-				</div>
+			{/* Main CTA */}
+			<div className="flex justify-center mb-12">
+				<Link
+					href="https://testflight.apple.com/join/CscPEAD4"
+					target="_blank"
+					rel="noopener noreferrer"
+					className="neon-button-magenta text-xl py-3 px-8"
+				>
+					Sign up to be a beta tester
+				</Link>
+			</div>
 
+			{/* How to become a beta tester */}
+			<div className="mb-12">
+				<h2 className="text-2xl font-semibold gradient-heading mb-6">
+					How to Become a Beta Tester
+				</h2>
 				<div className="dark-card">
-					<h2 className="text-xl font-semibold gradient-text-magenta mb-4">
-						Features
-					</h2>
-					<ul className="space-y-2 text-[rgba(var(--color-foreground),0.7)]">
-						<li className="flex items-center">
-							<span className="check-mark mr-2">✓</span>
-							Add items to multiple stores at once
+					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
+						Becoming a beta tester for Hopping List is simple and free:
+					</p>
+					<ol className="list-decimal pl-6 space-y-3 text-[rgba(var(--color-foreground),0.8)]">
+						<li>
+							<strong>Download TestFlight</strong> - First, download the free
+							TestFlight app from the App Store. TestFlight is Apple's official
+							app for testing beta versions.
 						</li>
-						<li className="flex items-center">
-							<span className="check-mark mr-2">✓</span>
-							Store-specific shopping lists
-						</li>
-						<li className="flex items-center">
-							<span className="check-mark mr-2">✓</span>
-							Real-time list updates
-						</li>
-						<li className="flex items-center">
-							<span className="check-mark mr-2">✓</span>
-							Shared lists for families/couples
-						</li>
-						<li className="flex items-center">
-							<span className="check-mark mr-2">✓</span>
-							Simple, intuitive UI
-						</li>
-					</ul>
-				</div>
-
-				<div className="dark-card">
-					<h2 className="text-xl font-semibold gradient-text-violet mb-4">
-						Links
-					</h2>
-					<div className="space-y-4">
-						<div>
+						<li>
+							<strong>Join the Hopping List Beta</strong> - Click the "Sign up
+							to be a beta tester" button above, or use{" "}
 							<Link
 								href="https://testflight.apple.com/join/CscPEAD4"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="neon-button-cyan w-full text-center inline-block"
+								className="text-[rgba(var(--color-magenta),0.9)] hover:text-[rgba(var(--color-magenta),1)] underline"
 							>
-								TestFlight (iOS)
+								this TestFlight link
 							</Link>
-						</div>
-						<div>
-							<Link
-								href="https://github.com/afxjzs/hoppinglist"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="neon-button-violet w-full text-center inline-block"
-							>
-								GitHub Repository
-							</Link>
-						</div>
+							.
+						</li>
+						<li>
+							<strong>Install Hopping List</strong> - Once you've joined the
+							beta through TestFlight, you can install Hopping List directly
+							from the TestFlight app.
+						</li>
+						<li>
+							<strong>Provide Feedback</strong> - Your feedback is invaluable to
+							me and helps improve the app before its official release.
+						</li>
+					</ol>
+					<div className="mt-6 p-4 bg-[rgba(var(--color-foreground),0.05)] rounded-lg border border-[rgba(var(--color-foreground),0.1)]">
+						<p className="text-[rgba(var(--color-foreground),0.8)]">
+							<strong>Note:</strong> TestFlight is only available for iOS
+							devices. Android version coming soon, probably.
+						</p>
 					</div>
+				</div>
+			</div>
+
+			{/* Features */}
+			<div className="mb-12">
+				<h2 className="text-2xl font-semibold gradient-heading mb-6">
+					Key Features
+				</h2>
+				<div className="dark-card">
+					<ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[rgba(var(--color-foreground),0.8)]">
+						<li className="flex items-start">
+							<span className="check-mark mr-2 mt-1">✓</span>
+							<div>
+								<strong>Add Items to Multiple Stores</strong>
+								<p>
+									Add a single item to appear on lists for multiple locations
+								</p>
+							</div>
+						</li>
+						<li className="flex items-start">
+							<span className="check-mark mr-2 mt-1">✓</span>
+							<div>
+								<strong>Store-Specific Shopping Lists</strong>
+								<p>
+									Only see items available at the store you're currently
+									shopping at
+								</p>
+							</div>
+						</li>
+						<li className="flex items-start">
+							<span className="check-mark mr-2 mt-1">✓</span>
+							<div>
+								<strong>Real-time List Updates</strong>
+								<p>Changes instantly sync between family members</p>
+							</div>
+						</li>
+						<li className="flex items-start">
+							<span className="check-mark mr-2 mt-1">✓</span>
+							<div>
+								<strong>Simple, Intuitive UI</strong>
+								<p>No complex setup or learning curve required</p>
+							</div>
+						</li>
+					</ul>
 				</div>
 			</div>
 
 			<div className="mb-12">
 				<h2 className="text-2xl font-semibold gradient-heading mb-6">
-					Project Overview
+					The Problem & Solution
 				</h2>
 				<div className="dark-card">
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
@@ -239,9 +254,24 @@ export default function HoppingListPage() {
 				</div>
 			</div>
 
+			{/* Secondary CTA */}
+			<div className="flex justify-center mb-16">
+				<Link
+					href="https://testflight.apple.com/join/CscPEAD4"
+					target="_blank"
+					rel="noopener noreferrer"
+					className="neon-button-magenta text-xl py-3 px-8"
+				>
+					Become a Beta Tester Now
+				</Link>
+			</div>
+
+			<hr className="border-[rgba(var(--color-foreground),0.1)] mb-12" />
+
+			{/* Technical Details Section */}
 			<div className="mb-12">
 				<h2 className="text-2xl font-semibold gradient-heading mb-6">
-					Development Process
+					Behind the App
 				</h2>
 				<div className="dark-card">
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
@@ -253,12 +283,6 @@ export default function HoppingListPage() {
 						served dual purposes.
 					</p>
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
-						Hopping List was developed using FlutterFlow, a visual development
-						platform for Flutter apps, which enabled rapid prototyping and
-						iteration. Supabase provides the backend with PostgreSQL database,
-						authentication, and real-time updates for shared lists.
-					</p>
-					<p className="text-[rgba(var(--color-foreground),0.8)]">
 						The app was designed with simplicity in mind, focusing on solving
 						the core problem without unnecessary complexity. The user interface
 						is intuitive, making it easy for anyone to use without a learning
@@ -272,19 +296,66 @@ export default function HoppingListPage() {
 				</div>
 			</div>
 
-			<div className="flex justify-center mb-8">
-				<Link
-					href="https://testflight.apple.com/join/CscPEAD4"
-					target="_blank"
-					rel="noopener noreferrer"
-					className="neon-button-magenta"
-				>
-					Try on TestFlight
-				</Link>
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+				<div className="dark-card">
+					<h2 className="text-xl font-semibold gradient-text-cyan mb-4">
+						Technical Details
+					</h2>
+					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
+						Hopping List was developed using FlutterFlow, a visual development
+						platform for Flutter apps, which enabled rapid prototyping and
+						iteration. Supabase provides the backend with PostgreSQL database,
+						authentication, and real-time updates for shared lists.
+					</p>
+					<ul className="space-y-2 text-[rgba(var(--color-foreground),0.7)]">
+						<li className="flex items-center">
+							<span className="check-mark mr-2">✓</span>
+							Flutter
+						</li>
+						<li className="flex items-center">
+							<span className="check-mark mr-2">✓</span>
+							FlutterFlow
+						</li>
+						<li className="flex items-center">
+							<span className="check-mark mr-2">✓</span>
+							Supabase
+						</li>
+						<li className="flex items-center">
+							<span className="check-mark mr-2">✓</span>
+							PostgreSQL
+						</li>
+						<li className="flex items-center">
+							<span className="check-mark mr-2">✓</span>
+							Custom FlutterFlow Components
+						</li>
+					</ul>
+				</div>
+
+				<div className="dark-card">
+					<h2 className="text-xl font-semibold gradient-text-violet mb-4">
+						Development Resources
+					</h2>
+					<div className="space-y-4">
+						<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
+							Source code and resources for developers interested in the
+							technical implementation.
+						</p>
+						<div>
+							<Link
+								href="https://github.com/afxjzs/hoppinglist"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="neon-button-magenta w-full text-center inline-block"
+							>
+								GitHub Repository
+							</Link>
+						</div>
+					</div>
+				</div>
 			</div>
 
 			<div className="flex justify-center">
-				<Link href="/building" className="neon-button-cyan">
+				<Link href="/building" className="neon-button-magenta">
 					← Back to Projects
 				</Link>
 			</div>

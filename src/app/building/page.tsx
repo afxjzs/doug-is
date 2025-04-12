@@ -209,7 +209,11 @@ export default function BuildingPage() {
 					{projects.map((project) => (
 						<div
 							key={project.id}
-							className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] hover:border-[rgba(var(--color-violet),0.2)] rounded-xl overflow-hidden transition-all duration-300 group"
+							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] ${
+								project.id === "hopping-list"
+									? "hover:border-[rgba(var(--color-magenta),0.2)]"
+									: "hover:border-[rgba(var(--color-violet),0.2)]"
+							} rounded-xl overflow-hidden transition-all duration-300 group`}
 						>
 							<div className="flex flex-col md:flex-row">
 								<div className="md:w-2/5 bg-[rgba(var(--color-background),0.6)] flex items-center justify-center p-8 rounded-xl overflow-hidden">
@@ -240,12 +244,24 @@ export default function BuildingPage() {
 								<div className="p-6 md:w-3/5">
 									{project.link ? (
 										<Link href={project.link} className="hover:no-underline">
-											<h2 className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 group-hover:text-[rgba(var(--color-violet),1)] transition-colors">
+											<h2
+												className={`text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 ${
+													project.id === "hopping-list"
+														? "group-hover:text-[rgba(var(--color-magenta),1)]"
+														: "group-hover:text-[rgba(var(--color-violet),1)]"
+												} transition-colors`}
+											>
 												{project.title}
 											</h2>
 										</Link>
 									) : (
-										<h2 className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 group-hover:text-[rgba(var(--color-violet),1)] transition-colors">
+										<h2
+											className={`text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 ${
+												project.id === "hopping-list"
+													? "group-hover:text-[rgba(var(--color-magenta),1)]"
+													: "group-hover:text-[rgba(var(--color-violet),1)]"
+											} transition-colors`}
+										>
 											{project.title}
 										</h2>
 									)}
@@ -256,7 +272,11 @@ export default function BuildingPage() {
 										{project.tags.map((tag) => (
 											<span
 												key={tag}
-												className="text-xs px-2 py-1 rounded-full bg-[rgba(var(--color-violet),0.1)] text-[rgba(var(--color-violet),0.9)]"
+												className={`text-xs px-2 py-1 rounded-full ${
+													project.id === "hopping-list"
+														? "bg-[rgba(var(--color-magenta),0.1)] text-[rgba(var(--color-magenta),0.9)]"
+														: "bg-[rgba(var(--color-violet),0.1)] text-[rgba(var(--color-violet),0.9)]"
+												}`}
 											>
 												{tag}
 											</span>
@@ -267,7 +287,7 @@ export default function BuildingPage() {
 											<div className="w-full mb-3">
 												<Link
 													href={project.link}
-													className="neon-button-violet text-center block"
+													className="neon-button-magenta text-center block"
 												>
 													View Project Details
 												</Link>
