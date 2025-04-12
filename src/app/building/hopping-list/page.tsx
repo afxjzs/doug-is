@@ -7,6 +7,30 @@ export const metadata: Metadata = {
 	title: "Hopping List | Building | Doug.is",
 	description:
 		"A dynamic shopping list app for families and couples that lets you manage items across multiple stores",
+	openGraph: {
+		title: "Hopping List - The Smart Multi-Store Shopping List App",
+		description:
+			"A shopping list app that shows you what you need at each specific store",
+		url: "https://www.doug.is/building/hopping-list",
+		siteName: "Doug.is",
+		images: [
+			{
+				url: "https://www.doug.is/images/projects/hopping-list-logo.png",
+				width: 800,
+				height: 800,
+				alt: "Hopping List App Icon",
+			},
+		],
+		locale: "en_US",
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Hopping List - Smart Shopping List",
+		description:
+			"A shopping list app that shows you what you need at each specific store",
+		images: ["https://www.doug.is/images/projects/hopping-list-logo.png"],
+	},
 }
 
 export default function HoppingListPage() {
