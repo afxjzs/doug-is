@@ -5,7 +5,7 @@ import SafeImage from "@/components/SafeImage"
 
 export const metadata: Metadata = {
 	title: "Building | Doug.is",
-	description: "Companies and projects I've built",
+	description: "Companies and projects I'm building.",
 }
 
 // Companies I'm currently building
@@ -59,9 +59,10 @@ const projects = [
 	{
 		id: "hopping-list",
 		title: "Hopping List",
-		description: "A shopping list app built for couples and families.",
+		description:
+			"A dynamic shopping list app that lets you see what items you need at each specific store.",
 		image: "/images/projects/hopping-list-logo.png",
-		tags: ["Flutter", "FlutterFlow", "Firebase", "Firestore"],
+		tags: ["Flutter", "FlutterFlow", "Supabase", "PostgreSQL"],
 		link: "/building/hopping-list",
 		github: "https://github.com/afxjzs/hoppinglist",
 		testflight: "https://testflight.apple.com/join/CscPEAD4",
@@ -124,15 +125,15 @@ export default function BuildingPage() {
 							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] hover:border-[rgba(var(--color-${company.color}),0.3)] rounded-xl overflow-hidden transition-all duration-300 group`}
 						>
 							<div className="flex flex-col md:flex-row">
-								<div className="md:w-2/5 bg-[rgba(var(--color-background),0.6)] flex items-center justify-center p-8">
+								<div className="md:w-2/5 bg-[rgba(var(--color-background),0.6)] flex items-center justify-center p-8 rounded-xl overflow-hidden">
 									<div className="w-full h-full flex items-center justify-center">
-										<div className="relative w-full h-[140px]">
+										<div className="relative w-full h-[140px] overflow-hidden rounded-xl">
 											<Image
 												src={company.image}
 												alt={company.title}
 												fill
 												style={{ objectFit: "contain" }}
-												className="transition-transform duration-500 group-hover:scale-105"
+												className="transition-transform duration-500 group-hover:scale-105 rounded-xl"
 												priority
 											/>
 										</div>
@@ -211,23 +212,43 @@ export default function BuildingPage() {
 							className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] hover:border-[rgba(var(--color-violet),0.2)] rounded-xl overflow-hidden transition-all duration-300 group"
 						>
 							<div className="flex flex-col md:flex-row">
-								<div className="flex items-center justify-center p-8 md:w-2/5">
+								<div className="md:w-2/5 bg-[rgba(var(--color-background),0.6)] flex items-center justify-center p-8 rounded-xl overflow-hidden">
 									<div className="w-full h-full flex items-center justify-center">
-										<div className="relative w-full h-[200px]">
-											<Image
-												src={project.image}
-												alt={project.title}
-												fill
-												style={{ objectFit: "contain" }}
-												className="transition-transform duration-500 group-hover:scale-105"
-											/>
+										<div className="relative w-full h-[200px] overflow-hidden rounded-xl">
+											{project.link ? (
+												<Link href={project.link}>
+													<Image
+														src={project.image}
+														alt={project.title}
+														fill
+														style={{ objectFit: "contain" }}
+														className="transition-transform duration-500 group-hover:scale-105 rounded-xl"
+													/>
+												</Link>
+											) : (
+												<Image
+													src={project.image}
+													alt={project.title}
+													fill
+													style={{ objectFit: "contain" }}
+													className="transition-transform duration-500 group-hover:scale-105 rounded-xl"
+												/>
+											)}
 										</div>
 									</div>
 								</div>
 								<div className="p-6 md:w-3/5">
-									<h2 className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 group-hover:text-[rgba(var(--color-violet),1)] transition-colors">
-										{project.title}
-									</h2>
+									{project.link ? (
+										<Link href={project.link} className="hover:no-underline">
+											<h2 className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 group-hover:text-[rgba(var(--color-violet),1)] transition-colors">
+												{project.title}
+											</h2>
+										</Link>
+									) : (
+										<h2 className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 group-hover:text-[rgba(var(--color-violet),1)] transition-colors">
+											{project.title}
+										</h2>
+									)}
 									<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
 										{project.description}
 									</p>
@@ -242,23 +263,16 @@ export default function BuildingPage() {
 										))}
 									</div>
 									<div className="flex flex-wrap gap-4">
-										{/* {project.link && (
-											<Link href={project.link} className="neon-link">
-												View Project
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													className="h-4 w-4 ml-1"
-													viewBox="0 0 20 20"
-													fill="currentColor"
+										{project.id === "hopping-list" && project.link && (
+											<div className="w-full mb-3">
+												<Link
+													href={project.link}
+													className="neon-button-violet text-center block"
 												>
-													<path
-														fillRule="evenodd"
-														d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-														clipRule="evenodd"
-													/>
-												</svg>
-											</Link>
-										)} */}
+													View Project Details
+												</Link>
+											</div>
+										)}
 										{project.github && (
 											<Link
 												href={project.github}

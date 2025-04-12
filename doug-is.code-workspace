@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../utils/next.js/examples/with-supabase"
+		}
+	],
+	"settings": {}
+}
