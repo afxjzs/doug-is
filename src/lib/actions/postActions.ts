@@ -1,6 +1,7 @@
 "use server"
 
-import { getServerSupabaseClient, Post } from "@/lib/supabase/serverClient"
+import { createServerComponentClient, Post } from "@/lib/supabase/serverClient"
+import { normalizeCategory } from "@/lib/supabase/publicClient"
 
 /**
  * Server action to fetch all posts with optional filtering
@@ -11,7 +12,7 @@ export async function fetchPosts(
 	category?: string
 ): Promise<Post[]> {
 	try {
-		const supabase = getServerSupabaseClient()
+		const supabase = await createServerComponentClient()
 
 		// Build query with proper type safety
 		let query = supabase
@@ -21,7 +22,8 @@ export async function fetchPosts(
 
 		// Apply optional filters
 		if (category) {
-			query = query.eq("category", category)
+			const normalizedCategory = normalizeCategory(category)
+			query = query.eq("category", normalizedCategory)
 		}
 
 		if (limit) {
@@ -44,11 +46,36 @@ export async function fetchPosts(
 }
 
 /**
+ * Server action to fetch a post by ID
+ */
+export async function fetchPostById(id: string): Promise<Post | null> {
+	try {
+		const supabase = await createServerComponentClient()
+
+		const { data, error } = await supabase
+			.from("posts")
+			.select("*")
+			.eq("id", id)
+			.maybeSingle()
+
+		if (error) {
+			console.error("Error fetching post by ID:", error)
+			return null
+		}
+
+		return data as Post
+	} catch (error) {
+		console.error("Exception fetching post by ID:", error)
+		return null
+	}
+}
+
+/**
  * Server action to fetch a single post by slug
  */
 export async function fetchPostBySlug(slug: string): Promise<Post | null> {
 	try {
-		const supabase = getServerSupabaseClient()
+		const supabase = await createServerComponentClient()
 
 		const { data, error } = await supabase
 			.from("posts")
@@ -77,12 +104,17 @@ export async function fetchPostBySlug(slug: string): Promise<Post | null> {
  */
 export async function fetchPostsByCategory(category: string): Promise<Post[]> {
 	try {
-		const supabase = getServerSupabaseClient()
+		const supabase = await createServerComponentClient()
+		const normalizedCategory = normalizeCategory(category)
+
+		console.log(
+			`Fetching posts for normalized category: '${normalizedCategory}'`
+		)
 
 		const { data, error } = await supabase
 			.from("posts")
 			.select("*")
-			.eq("category", category)
+			.eq("category", normalizedCategory)
 			.order("published_at", { ascending: false })
 
 		if (error) {

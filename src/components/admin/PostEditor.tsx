@@ -3,21 +3,24 @@
 import { useState, useEffect, FormEvent } from "react"
 import { useRouter } from "next/navigation"
 import { Post } from "@/lib/supabase/serverClient"
+import { normalizeCategory } from "@/lib/supabase/publicClient"
 import ImageUploader from "@/components/admin/ImageUploader"
 import TiptapEditor from "@/components/admin/TiptapEditor"
 import { nanoid } from "nanoid"
 import { getClientUser } from "@/lib/supabase/client"
 
-// Define the allowed post categories
+// Define the allowed post categories (capitalized for display)
 const POST_CATEGORIES = [
-	"Development",
-	"Design",
+	"Advisory",
 	"Business",
+	"Design",
+	"Development",
 	"Finance",
-	"Personal",
-	"Technology",
+	"General",
 	"Investing",
 	"Lifestyle",
+	"Personal",
+	"Technology",
 	"Travel",
 	"Other",
 ]
@@ -59,7 +62,9 @@ export default function PostEditor({ post, mode }: PostEditorProps) {
 	const [slug, setSlug] = useState(post?.slug || "")
 	const [content, setContent] = useState(post?.content || "")
 	const [excerpt, setExcerpt] = useState(post?.excerpt || "")
-	const [category, setCategory] = useState(post?.category || POST_CATEGORIES[0])
+	const [category, setCategory] = useState(
+		post?.category ? normalizeCategory(post.category) : POST_CATEGORIES[0]
+	)
 	const [published, setPublished] = useState(post?.published_at ? true : false)
 	const [publishDate, setPublishDate] = useState(
 		formatDateForInput(post?.published_at || null)
@@ -93,7 +98,7 @@ export default function PostEditor({ post, mode }: PostEditorProps) {
 				slug,
 				content,
 				excerpt,
-				category,
+				category: normalizeCategory(category),
 				featured_image: featuredImage || null,
 				published: published,
 				published_at: published
@@ -290,8 +295,8 @@ export default function PostEditor({ post, mode }: PostEditorProps) {
 					disabled={autoSlug}
 				/>
 				<p className="text-xs text-[rgba(var(--color-foreground),0.6)]">
-					This will be used in the URL: /thinking/about/{category.toLowerCase()}
-					/{slug}
+					This will be used in the URL: /thinking/about/
+					{normalizeCategory(category).toLowerCase()}/{slug}
 				</p>
 			</div>
 

@@ -222,6 +222,22 @@ export const getPostBySlug = async (slug: string): Promise<Post | null> => {
 }
 
 /**
+ * Normalizes a category string to ensure consistent formatting
+ * @param category The category string to normalize
+ * @returns The normalized category string with proper capitalization
+ */
+export function normalizeCategory(category: string): string {
+	// Handle hyphenated categories from URLs
+	const words = category.replace(/-/g, " ").split(" ")
+
+	// Capitalize each word
+	return words
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+		.join(" ")
+		.trim()
+}
+
+/**
  * Fetches posts by category from Supabase
  * @param category The category to filter by
  * @returns Array of posts in the specified category
@@ -238,14 +254,11 @@ export async function getPostsByCategory(category: string): Promise<Post[]> {
 	try {
 		console.log(`Fetching posts for category: '${category}'`)
 
-		// Format the category properly for comparison (capitalize first letter)
-		const formattedCategory = category
-			.split("-")
-			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-			.join(" ")
-			.trim()
+		// Format the category properly for comparison
+		const formattedCategory = normalizeCategory(category)
+		console.log(`Normalized category: '${formattedCategory}'`)
 
-		// Try first with proper formatting
+		// Try first with normalized formatting
 		let { data, error } = await supabase
 			.from("posts")
 			.select("*")
@@ -255,7 +268,7 @@ export async function getPostsByCategory(category: string): Promise<Post[]> {
 		// If no results, try with original category input
 		if ((!data || data.length === 0) && !error) {
 			console.log(
-				`No posts found with formatted category '${formattedCategory}', trying with original value`
+				`No posts found with normalized category '${formattedCategory}', trying with original value`
 			)
 			const result = await supabase
 				.from("posts")
