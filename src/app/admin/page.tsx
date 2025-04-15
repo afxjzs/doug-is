@@ -6,7 +6,7 @@
  */
 
 import { Metadata } from "next"
-import { getServerUser, isAdminUser } from "@/lib/auth/supabaseServerAuth"
+import { getServerSession } from "@/lib/auth/supabaseServerAuth"
 import {
 	getPosts,
 	getContactSubmissions,
@@ -14,7 +14,7 @@ import {
 	ContactMessage,
 } from "@/lib/supabase/serverClient"
 import Link from "next/link"
-import { redirect } from "next/navigation"
+import { ALLOWED_ADMIN_EMAILS } from "@/lib/auth/supabase"
 
 // Mark this page as dynamic to prevent static generation
 // This is needed because we're using cookies for authentication
@@ -25,22 +25,69 @@ export const metadata: Metadata = {
 	description: "Admin dashboard for site management",
 }
 
+// Admin Error Dashboard Component
+function AdminErrorDashboard({ message }: { message: string }) {
+	return (
+		<div className="w-full">
+			<h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+			<div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+				<h2 className="text-xl font-semibold mb-4 text-red-700">
+					Error Loading Dashboard
+				</h2>
+				<p className="text-gray-700 mb-4">{message}</p>
+				<ul className="list-disc list-inside space-y-2 mb-6 text-gray-700">
+					<li>Authentication issues - please try logging in again</li>
+					<li>Database connection problems</li>
+					<li>Permission errors - make sure you have admin access</li>
+				</ul>
+				<div className="flex flex-wrap gap-3">
+					<Link
+						href="/admin/login"
+						className="inline-block px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-md transition-colors"
+					>
+						Go to Login
+					</Link>
+					<Link
+						href="/logout"
+						className="inline-block px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition-colors"
+					>
+						Force Logout
+					</Link>
+				</div>
+			</div>
+		</div>
+	)
+}
+
 export default async function AdminDashboardPage() {
 	try {
-		// Get current user and admin status
-		const user = await getServerUser()
-		const isAdmin = await isAdminUser()
+		// Get current user and admin status from session
+		const session = await getServerSession()
+		const userEmail = session?.user?.email || null
+		const isAdmin = userEmail
+			? ALLOWED_ADMIN_EMAILS.includes(userEmail.toLowerCase())
+			: false
 
 		// Redirect if not admin
-		if (!user || !isAdmin) {
+		if (!session?.user || !isAdmin) {
 			console.log("Not authenticated as admin, redirecting to login")
-			redirect("/admin/login?redirect=/admin")
+			return (
+				<AdminErrorDashboard message="You are not authenticated or don't have admin privileges." />
+			)
 		}
 
 		// Fetch posts and contact messages
 		// These will return empty arrays if there's a permission error or no data
-		const posts = (await getPosts()) || []
-		const contactMessages = (await getContactSubmissions()) || []
+		let posts: Post[] = []
+		let contactMessages: ContactMessage[] = []
+
+		try {
+			posts = (await getPosts()) || []
+			contactMessages = (await getContactSubmissions()) || []
+		} catch (error) {
+			console.error("Error fetching admin data:", error)
+			// Continue with empty arrays, allowing partial dashboard rendering
+		}
 
 		// Count published and draft posts
 		const publishedPosts = posts.filter((post) => post.published_at)
@@ -78,7 +125,7 @@ export default async function AdminDashboardPage() {
 		return (
 			<div>
 				<h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
-				<p className="mb-8">Welcome, {user?.email}</p>
+				<p className="mb-8">Welcome, {userEmail}</p>
 
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 					{/* Total Posts Card */}
@@ -251,33 +298,9 @@ export default async function AdminDashboardPage() {
 			</div>
 		)
 	} catch (error) {
-		console.error("Error in AdminDashboardPage:", error)
+		console.error("Error in admin dashboard:", error)
 		return (
-			<div>
-				<h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
-				<div className="bg-red-50 border border-red-200 text-red-800 rounded-md p-4 mb-8">
-					<h2 className="text-lg font-semibold mb-2">
-						Error Loading Dashboard
-					</h2>
-					<p>
-						There was an error loading the admin dashboard data. This might be
-						due to:
-					</p>
-					<ul className="list-disc ml-5 mt-2">
-						<li>Authentication issues - please try logging in again</li>
-						<li>Database connection problems</li>
-						<li>Permission errors - make sure you have admin access</li>
-					</ul>
-					<div className="mt-4">
-						<Link
-							href="/admin/login"
-							className="px-4 py-2 bg-red-100 text-red-800 rounded-md border border-red-200 hover:bg-red-200 transition-colors"
-						>
-							Go to Login
-						</Link>
-					</div>
-				</div>
-			</div>
+			<AdminErrorDashboard message="An unexpected error occurred while loading the dashboard." />
 		)
 	}
 }

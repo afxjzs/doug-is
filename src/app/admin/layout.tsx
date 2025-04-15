@@ -7,7 +7,9 @@
  */
 
 import AdminNavigation from "@/components/admin/AdminNavigation"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import Link from "next/link"
 import "./admin.css"
 
 /**
@@ -21,6 +23,8 @@ export default function AdminLayout({
 	children: React.ReactNode
 }) {
 	const pathname = usePathname()
+	const router = useRouter()
+	const [isLoggingOut, setIsLoggingOut] = useState(false)
 
 	// Check if the current path is an auth page
 	const isAuthPage =
@@ -28,6 +32,13 @@ export default function AdminLayout({
 		pathname === "/admin/register" ||
 		pathname?.startsWith("/admin/login?") ||
 		pathname?.startsWith("/admin/register?")
+
+	// Hard logout that definitely works by using window location
+	const handleForceLogout = () => {
+		setIsLoggingOut(true)
+		// This will force a complete page reload going to the logout route
+		window.location.href = "/force-logout"
+	}
 
 	// For auth pages, render just the content without the admin navigation
 	if (isAuthPage) {
@@ -50,7 +61,19 @@ export default function AdminLayout({
 
 			{/* Main content area */}
 			<main className="admin-main">
-				<div style={{ maxWidth: "64rem", margin: "0 auto" }}>{children}</div>
+				<div className="max-w-4xl mx-auto relative">
+					{/* Emergency logout button */}
+					<div className="absolute top-4 right-4">
+						<a
+							href="/force-logout"
+							className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors inline-block"
+						>
+							Emergency Logout
+						</a>
+					</div>
+
+					{children}
+				</div>
 			</main>
 		</div>
 	)

@@ -8,7 +8,6 @@
 import { useState } from "react"
 import Link from "next/link"
 import { User } from "@supabase/supabase-js"
-import { useAuth } from "@/lib/auth/supabaseClientAuth"
 import AdminNavigation from "./AdminNavigation"
 
 interface AdminHeaderProps {
@@ -17,17 +16,10 @@ interface AdminHeaderProps {
 
 export default function AdminHeader({ user }: AdminHeaderProps) {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-	const { logout } = useAuth()
 
 	// Get user's display name or email for header
 	const displayName =
 		user.user_metadata?.name || user.email?.split("@")[0] || "Admin User"
-
-	// Handle logout
-	const handleLogout = async () => {
-		await logout()
-		// Redirect happens automatically via the auth hook
-	}
 
 	return (
 		<header className="bg-white border-b border-[rgba(var(--color-foreground),0.1)] sticky top-0 z-10">
@@ -85,12 +77,12 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
 						Welcome, {displayName}
 					</span>
 
-					<button
-						onClick={handleLogout}
+					<Link
+						href="/logout"
 						className="text-sm text-[rgba(var(--color-red),0.8)] hover:text-[rgba(var(--color-red),1)] transition-colors"
 					>
 						Logout
-					</button>
+					</Link>
 				</div>
 			</div>
 

@@ -93,8 +93,10 @@ function LoginForm() {
 	return (
 		<div className="w-full max-w-md space-y-8">
 			<div className="text-center">
-				<h1 className="text-4xl font-bold tracking-tight">Admin Login</h1>
-				<p className="mt-2 text-gray-600">
+				<h1 className="text-4xl font-bold tracking-tight text-white">
+					Admin Login
+				</h1>
+				<p className="mt-2 text-gray-300">
 					Sign in to access the admin dashboard
 				</p>
 			</div>
@@ -143,7 +145,7 @@ function LoginForm() {
 				{message && (
 					<div
 						className={`text-center ${
-							message.type === "error" ? "text-red-500" : "text-green-500"
+							message.type === "error" ? "text-red-400" : "text-green-400"
 						}`}
 					>
 						{message.text}
@@ -169,7 +171,7 @@ function LoginForm() {
 				<div className="text-center">
 					<button
 						type="button"
-						className="text-sm text-indigo-600 hover:text-indigo-500"
+						className="text-sm text-indigo-300 hover:text-indigo-200"
 						onClick={toggleMethod}
 						disabled={isLoading}
 					>
@@ -188,16 +190,16 @@ function LoginFormSkeleton() {
 	return (
 		<div className="w-full max-w-md space-y-8 animate-pulse">
 			<div className="text-center">
-				<div className="h-10 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
-				<div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+				<div className="h-10 bg-gray-700 rounded w-3/4 mx-auto mb-4"></div>
+				<div className="h-4 bg-gray-700 rounded w-1/2 mx-auto"></div>
 			</div>
 			<div className="mt-8 space-y-6">
 				<div className="space-y-4">
-					<div className="h-10 bg-gray-200 rounded w-full"></div>
-					<div className="h-10 bg-gray-200 rounded w-full"></div>
+					<div className="h-10 bg-gray-700 rounded w-full"></div>
+					<div className="h-10 bg-gray-700 rounded w-full"></div>
 				</div>
-				<div className="h-10 bg-gray-200 rounded w-full"></div>
-				<div className="h-4 bg-gray-200 rounded w-40 mx-auto"></div>
+				<div className="h-10 bg-gray-700 rounded w-full"></div>
+				<div className="h-4 bg-gray-700 rounded w-40 mx-auto"></div>
 			</div>
 		</div>
 	)

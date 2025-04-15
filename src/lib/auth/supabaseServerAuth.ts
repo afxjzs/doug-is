@@ -18,17 +18,16 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
 const ALLOWED_ADMIN_EMAILS = ["douglas.rogers@gmail.com"]
 
 /**
- * Creates a Supabase client for server-side authentication
- * using the built-in cookies() function from Next.js
- *
- * In Next.js 15, cookies() is an async function, and we properly
- * handle that here by using it with await.
+ * Creates a read-only Supabase client for server-side components
+ * Important: This version ONLY reads cookies, it doesn't try to set or remove them
+ * which would cause errors in server components
  */
 export async function createSupabaseServerClient() {
 	// Get cookie store with await for Next.js 15 compatibility
 	const cookieStore = await cookies()
 
 	// Create a cookie handler that works with the createServerClient API
+	// This is a READ-ONLY version that doesn't try to modify cookies
 	const cookieHandler = {
 		get(name: string) {
 			try {
@@ -38,19 +37,16 @@ export async function createSupabaseServerClient() {
 				return undefined
 			}
 		},
+		// These functions do nothing in server components to prevent errors
 		set(name: string, value: string, options: any) {
-			try {
-				cookieStore.set({ name, value, ...options })
-			} catch (e) {
-				console.error("Error setting cookie:", e)
-			}
+			// Do nothing - can't set cookies in server components
+			// This prevents errors, but means auth state changes won't be saved
+			// This is OK for read-only operations like checking auth status
 		},
 		remove(name: string, options: any) {
-			try {
-				cookieStore.set({ name, value: "", ...options, maxAge: 0 })
-			} catch (e) {
-				console.error("Error removing cookie:", e)
-			}
+			// Do nothing - can't remove cookies in server components
+			// This prevents errors, but means auth state changes won't be saved
+			// This is OK for read-only operations like checking auth status
 		},
 	}
 
@@ -80,23 +76,17 @@ export async function getServerSession() {
 /**
  * Gets the current user from the server
  * Used in server components and API routes
- * Uses getUser() which authenticates with the Supabase Auth server
+ * Uses getSession() instead of getUser() to avoid authentication errors
  */
 export async function getServerUser() {
 	const supabase = await createSupabaseServerClient()
 
 	try {
-		const {
-			data: { user },
-			error,
-		} = await supabase.auth.getUser()
+		// Use getSession instead of getUser to avoid authentication errors
+		// getUser requires an active connection to Supabase's auth server
+		const { data } = await supabase.auth.getSession()
 
-		if (error) {
-			console.error("Auth error getting user:", error.message)
-			return null
-		}
-
-		return user
+		return data.session?.user || null
 	} catch (error) {
 		console.error("Unexpected error getting user:", error)
 		return null

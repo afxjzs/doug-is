@@ -6,6 +6,7 @@
 import { NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import type { NextRequest } from "next/server"
+import { COOKIE_OPTIONS } from "@/lib/auth/supabase"
 
 /**
  * Handle Supabase auth callback
@@ -49,9 +50,14 @@ export async function GET(request: NextRequest) {
 					)
 					// We need to create a new response with the updated request object
 					// This ensures we're not modifying the original response
-					cookiesToSet.forEach(({ name, value, options }) =>
-						response.cookies.set(name, value, options)
-					)
+					cookiesToSet.forEach(({ name, value, options }) => {
+						// Apply centralized cookie options
+						const cookieOptions = {
+							...options,
+							...COOKIE_OPTIONS,
+						}
+						response.cookies.set(name, value, cookieOptions)
+					})
 				},
 			},
 		}

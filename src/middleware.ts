@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { createServerClient } from "@supabase/ssr"
-import { isAdmin } from "@/lib/auth/supabase"
+import { isAdmin, COOKIE_OPTIONS } from "@/lib/auth/supabase"
 
 /**
  * Middleware to handle authentication and authorization
@@ -31,9 +31,14 @@ export async function middleware(request: NextRequest) {
 							headers: request.headers,
 						},
 					})
-					cookiesToSet.forEach(({ name, value, options }) =>
-						response.cookies.set(name, value, options)
-					)
+					cookiesToSet.forEach(({ name, value, options }) => {
+						// Apply centralized cookie options
+						const cookieOptions = {
+							...options,
+							...COOKIE_OPTIONS,
+						}
+						response.cookies.set(name, value, cookieOptions)
+					})
 				},
 			},
 		}
@@ -53,6 +58,14 @@ export async function middleware(request: NextRequest) {
 
 	// Handle admin routes
 	if (pathname.startsWith("/admin")) {
+		// Special handling for root admin page - needs to redirect to login if not authenticated
+		if (pathname === "/admin" || pathname === "/admin/") {
+			if (!session || !isAdmin(session.user.email)) {
+				console.log("Root admin access denied - redirecting to login")
+				return NextResponse.redirect(new URL("/admin/login", request.url))
+			}
+		}
+
 		// If at login page and already authenticated as admin, redirect to admin dashboard
 		if (pathname === "/admin/login" && session?.user) {
 			if (isAdmin(session.user.email)) {
@@ -83,5 +96,5 @@ export async function middleware(request: NextRequest) {
  * Define which routes this middleware should run on
  */
 export const config = {
-	matcher: ["/admin/:path*", "/api/auth/callback"],
+	matcher: ["/admin", "/admin/:path*", "/api/auth/callback"],
 }

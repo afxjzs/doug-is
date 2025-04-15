@@ -8,7 +8,6 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
-import { useAuth } from "@/lib/auth/supabaseClientAuth"
 
 export default function AdminNavigation() {
 	const pathname = usePathname()
@@ -17,9 +16,14 @@ export default function AdminNavigation() {
 
 	// Navigation links for admin area
 	const navItems = [
-		{ name: "Dashboard", href: "/admin", icon: "dashboard" },
-		{ name: "Posts", href: "/admin/posts", icon: "posts" },
-		{ name: "Contact Messages", href: "/admin/contacts", icon: "contacts" },
+		{ id: "dashboard", name: "Dashboard", href: "/admin", icon: "dashboard" },
+		{ id: "posts", name: "Posts", href: "/admin/posts", icon: "posts" },
+		{
+			id: "contacts",
+			name: "Contact Messages",
+			href: "/admin/contacts",
+			icon: "contacts",
+		},
 	]
 
 	const toggleSidebar = () => {
@@ -76,7 +80,7 @@ export default function AdminNavigation() {
 				<nav className="p-4">
 					<ul className="space-y-2">
 						{navItems.map((item) => (
-							<li key={item.name}>
+							<li key={item.id}>
 								<Link
 									href={item.href}
 									className={`flex items-center px-4 py-3 rounded-md transition-colors ${
@@ -103,13 +107,13 @@ export default function AdminNavigation() {
 
 				{/* Admin Actions */}
 				<div className="absolute bottom-14 left-0 right-0 p-4 border-t border-[rgba(var(--color-foreground),0.1)]">
-					<Link
-						href="/logout"
+					<a
+						href="/force-logout"
 						className="w-full py-2 px-4 flex items-center justify-center text-[rgba(var(--color-red),0.8)] bg-[rgba(var(--color-red),0.05)] rounded-md hover:bg-[rgba(var(--color-red),0.1)] transition-colors"
 					>
 						<span className="mr-2">🚪</span>
 						Sign Out
-					</Link>
+					</a>
 				</div>
 
 				{/* View Website Link */}

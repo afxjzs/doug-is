@@ -13,6 +13,24 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
 export const ALLOWED_ADMIN_EMAILS = ["douglas.rogers@gmail.com"]
 
 /**
+ * Centralized cookie settings to maintain consistency
+ */
+export const COOKIE_OPTIONS = {
+	// Set more permissive SameSite attribute to help with redirects
+	sameSite: "lax" as const,
+	// Secure in production
+	secure: process.env.NODE_ENV === "production",
+	// Extended max age to 30 days
+	maxAge: 60 * 60 * 24 * 30, // 30 days
+	// Ensure cookies work across the entire domain
+	path: "/",
+	// Set domain for production environments
+	...(process.env.NODE_ENV === "production" && {
+		domain: ".doug.is",
+	}),
+}
+
+/**
  * Check if a user has admin privileges
  */
 export function isAdmin(email?: string | null): boolean {
@@ -26,7 +44,10 @@ export function isAdmin(email?: string | null): boolean {
 export function createClient() {
 	return createBrowserClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+		{
+			cookieOptions: COOKIE_OPTIONS,
+		}
 	)
 }
 
@@ -40,21 +61,28 @@ export function createMiddlewareClient(req: NextRequest, res: NextResponse) {
 				return req.cookies.get(name)?.value
 			},
 			set(name: string, value: string, options: any) {
+				// Apply centralized cookie options
+				const cookieOptions = {
+					...options,
+					...COOKIE_OPTIONS,
+				}
 				res.cookies.set({
 					name,
 					value,
-					...options,
-					sameSite: "lax",
-					path: "/",
+					...cookieOptions,
 				})
 			},
 			remove(name: string, options: any) {
+				// Apply centralized cookie options when removing
+				const cookieOptions = {
+					...options,
+					...COOKIE_OPTIONS,
+					maxAge: 0, // Override maxAge for cookie removal
+				}
 				res.cookies.set({
 					name,
 					value: "",
-					...options,
-					maxAge: 0,
-					path: "/",
+					...cookieOptions,
 				})
 			},
 		},
