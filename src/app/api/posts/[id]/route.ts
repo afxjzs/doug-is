@@ -1,6 +1,74 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getCurrentUser, isCurrentUserAdmin } from "@/lib/supabase/auth"
 import { createAdminClient } from "@/lib/supabase/serverClient"
+import { getPublicSupabaseClient } from "@/lib/supabase/publicClient"
+
+export async function GET(
+	request: NextRequest,
+	{ params }: { params: { id: string } }
+) {
+	try {
+		// Properly await the params object to avoid Next.js warning
+		const id = await params.id
+		console.log("Fetching post:", id)
+
+		// Use the public client for GET requests so anonymous users can access the post
+		const supabase = getPublicSupabaseClient()
+
+		if (!supabase) {
+			console.error("Could not create Supabase client")
+			return NextResponse.json(
+				{ error: "Database connection error" },
+				{ status: 500 }
+			)
+		}
+
+		// Query the post either by ID or slug
+		let query = supabase.from("posts").select("*")
+
+		// Check if the id looks like a slug rather than an ID
+		if (id.length > 30) {
+			// Likely an ID (nanoid is typically longer)
+			query = query.eq("id", id)
+		} else {
+			// Likely a slug
+			query = query.eq("slug", id)
+		}
+
+		const { data, error } = await query.maybeSingle()
+
+		if (error) {
+			console.error("Error fetching post:", error)
+			return NextResponse.json(
+				{ error: "Failed to fetch post" },
+				{ status: 500 }
+			)
+		}
+
+		if (!data) {
+			return NextResponse.json({ error: "Post not found" }, { status: 404 })
+		}
+
+		// For published posts, return directly
+		if (data.published_at) {
+			return NextResponse.json(data)
+		}
+
+		// For unpublished posts, check if user is admin
+		const isAdmin = await isCurrentUserAdmin()
+		if (!isAdmin) {
+			return NextResponse.json({ error: "Post not found" }, { status: 404 })
+		}
+
+		return NextResponse.json(data)
+	} catch (error) {
+		console.error("Exception in GET /api/posts/[id]:", error)
+		return NextResponse.json(
+			{ error: "Internal server error" },
+			{ status: 500 }
+		)
+	}
+}
 
 export async function PATCH(
 	request: NextRequest,
