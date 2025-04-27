@@ -13,7 +13,10 @@
 		"debug-build": "next build --debug",
 		"verbose-build": "NODE_OPTIONS='--trace-warnings --max-old-space-size=3072' NEXT_TELEMETRY_DISABLED=1 DEBUG=* next build",
 		"start": "next start",
-		"lint": "next lint"
+		"lint": "next lint",
+		"test": "jest",
+		"test:watch": "jest --watch",
+		"test:coverage": "jest --coverage"
 	},
 	"dependencies": {
 		"@openpanel/nextjs": "^1.0.7",
@@ -56,15 +59,24 @@
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3",
+		"@playwright/test": "^1.52.0",
 		"@tailwindcss/postcss": "^4.0.14",
+		"@testing-library/jest-dom": "^6.6.3",
+		"@testing-library/react": "^16.3.0",
+		"@types/jest": "^29.5.14",
 		"@types/node": "^20",
 		"@types/react": "^19",
 		"@types/react-dom": "^19",
 		"autoprefixer": "^10.4.18",
 		"eslint": "^9",
 		"eslint-config-next": "^15.2.4",
+		"jest": "^29.7.0",
+		"jest-environment-jsdom": "^29.7.0",
 		"postcss": "^8.4.35",
 		"tailwindcss": "^4.0.0",
+		"ts-jest": "^29.3.2",
+		"ts-node": "^10.9.2",
+		"tsx": "^4.19.3",
 		"typescript": "^5.3.3"
 	}
 }

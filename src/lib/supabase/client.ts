@@ -7,16 +7,30 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import type { Database } from "../types/supabase"
 
 // Environment variables
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+const getSupabaseConfig = () => {
+	// Use test environment variables in test environment
+	if (process.env.NODE_ENV === "test") {
+		return {
+			supabaseUrl: process.env.TEST_SUPABASE_URL || "",
+			supabaseKey: process.env.TEST_SUPABASE_ANON_KEY || "",
+		}
+	}
+
+	// Use production/development environment variables
+	return {
+		supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+		supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+	}
+}
 
 /**
  * Creates a Supabase client for client-side components
  */
 export function createClientClient() {
+	const { supabaseUrl, supabaseKey } = getSupabaseConfig()
 	return createClientComponentClient<Database>({
 		supabaseUrl,
-		supabaseKey: supabaseAnonKey,
+		supabaseKey,
 	})
 }
 
