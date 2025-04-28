@@ -4,6 +4,8 @@ import { supabase } from "@/lib/supabase/publicClient"
 import { useEffect, useState, ChangeEvent } from "react"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
+import { TRIGGER_COLORS, type TriggerValue } from "@/lib/constants/colors"
+import { CheckIcon } from "@heroicons/react/24/outline"
 
 interface MigraineTrigger {
 	id: number
@@ -16,6 +18,11 @@ interface MigraineTrigger {
 	notes: string | null
 	created_at: string
 	updated_at: string
+}
+
+interface TriggerFilter {
+	value: TriggerValue
+	enabled: boolean
 }
 
 export default function MigrainePage() {
@@ -31,6 +38,22 @@ export default function MigrainePage() {
 		categories: "",
 		chemical_triggers: "",
 	})
+	const [triggerFilters, setTriggerFilters] = useState<TriggerFilter[]>([
+		{ value: "Avoid", enabled: true },
+		{ value: "OK", enabled: true },
+		{ value: "Caution", enabled: true },
+		{ value: "Conflicted", enabled: true },
+	])
+
+	const toggleTriggerFilter = (value: TriggerValue) => {
+		setTriggerFilters(
+			triggerFilters.map((filter) =>
+				filter.value === value
+					? { ...filter, enabled: !filter.enabled }
+					: filter
+			)
+		)
+	}
 
 	useEffect(() => {
 		async function fetchTriggers() {
@@ -61,6 +84,18 @@ export default function MigrainePage() {
 
 	useEffect(() => {
 		const filtered = triggers.filter((trigger) => {
+			// First check if the trigger type is enabled
+			const normalizedTrigger = trigger.trigger
+				.toLowerCase()
+				.replace("yes", "avoid")
+				.replace("no", "ok")
+				.replace("ing", "ed")
+			const triggerEnabled =
+				triggerFilters.find((f) => f.value.toLowerCase() === normalizedTrigger)
+					?.enabled ?? true
+
+			if (!triggerEnabled) return false
+
 			const foodMatch = trigger.food
 				.toLowerCase()
 				.includes(filters.food.toLowerCase())
@@ -84,20 +119,26 @@ export default function MigrainePage() {
 			)
 		})
 		setFilteredTriggers(filtered)
-	}, [filters, triggers])
+	}, [filters, triggers, triggerFilters])
 
-	const getTriggerRowColor = (trigger: string) => {
-		switch (trigger.toLowerCase()) {
-			case "yes":
-				return "bg-red-900/20 hover:bg-red-900/30"
-			case "no":
-				return "bg-green-900/20 hover:bg-green-900/30"
-			case "caution":
-				return "bg-yellow-900/20 hover:bg-yellow-900/30"
-			case "conflict":
-				return "bg-blue-900/20 hover:bg-blue-900/30"
-			default:
-				return "hover:bg-gray-800/20"
+	const getTriggerStyle = (value: TriggerValue, enabled: boolean) => {
+		switch (value) {
+			case "Avoid":
+				return enabled
+					? "border-red-500/30 text-red-400"
+					: "border-gray-700 text-gray-500"
+			case "OK":
+				return enabled
+					? "border-green-500/30 text-green-400"
+					: "border-gray-700 text-gray-500"
+			case "Caution":
+				return enabled
+					? "border-yellow-500/30 text-yellow-400"
+					: "border-gray-700 text-gray-500"
+			case "Conflicted":
+				return enabled
+					? "border-violet-500/30 text-violet-400"
+					: "border-gray-700 text-gray-500"
 		}
 	}
 
@@ -128,6 +169,22 @@ export default function MigrainePage() {
 						A comprehensive database of foods and ingredients that may trigger
 						migraines, along with their chemical triggers and categories.
 					</p>
+				</div>
+
+				{/* Trigger Type Toggles */}
+				<div className="flex flex-wrap justify-center gap-4">
+					{triggerFilters.map((filter) => (
+						<button
+							key={filter.value}
+							onClick={() => toggleTriggerFilter(filter.value)}
+							className={`px-6 py-2 rounded-full text-base border transition-all flex items-center gap-2
+								${getTriggerStyle(filter.value, filter.enabled)}
+								hover:bg-gray-800/50`}
+						>
+							{filter.enabled && <CheckIcon className="h-4 w-4" />}
+							{filter.value}
+						</button>
+					))}
 				</div>
 
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -239,9 +296,37 @@ export default function MigrainePage() {
 								{filteredTriggers.map((trigger) => (
 									<tr
 										key={trigger.id}
-										className={`transition-colors ${getTriggerRowColor(
-											trigger.trigger
-										)}`}
+										className={`transition-colors hover:bg-gray-800/20 ${
+											triggerFilters.find(
+												(f) =>
+													f.value.toLowerCase() ===
+													trigger.trigger
+														.toLowerCase()
+														.replace("yes", "avoid")
+														.replace("no", "ok")
+														.replace("ing", "ed")
+											)?.enabled
+												? trigger.trigger
+														.toLowerCase()
+														.replace("yes", "avoid")
+														.replace("no", "ok")
+														.replace("ing", "ed") === "avoid"
+													? "bg-red-900/20"
+													: trigger.trigger
+															.toLowerCase()
+															.replace("yes", "avoid")
+															.replace("no", "ok")
+															.replace("ing", "ed") === "ok"
+													? "bg-green-900/20"
+													: trigger.trigger
+															.toLowerCase()
+															.replace("yes", "avoid")
+															.replace("no", "ok")
+															.replace("ing", "ed") === "caution"
+													? "bg-yellow-900/20"
+													: "bg-violet-900/20"
+												: ""
+										}`}
 									>
 										<td className="px-6 py-4 whitespace-nowrap">
 											<div className="text-sm font-medium text-gray-100">
