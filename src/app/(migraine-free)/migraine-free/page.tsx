@@ -161,7 +161,7 @@ export default function MigrainePage() {
 			<div className="flex-grow space-y-8">
 				<div className="flex flex-col items-center justify-center text-center space-y-4">
 					<h1 className="text-4xl font-bold text-gray-100">
-						Migraine Trigger Foods Database
+						Migraine Trigger Foods Database (MTFDB)
 					</h1>
 					<p className="text-lg text-gray-300 max-w-2xl">
 						A comprehensive database of foods and ingredients that may trigger
