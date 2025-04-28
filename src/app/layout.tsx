@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import localFont from "next/font/local"
 import LayoutWrapper from "@/components/LayoutWrapper"
 import { ClientAnalyticsWrapper } from "@/components/ClientAnalyticsWrapper"
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 // Local font fallback
 const interLocal = localFont({
@@ -108,7 +109,7 @@ export default function RootLayout({
 		>
 			<head />
 			<body>
-				{children}
+				<TooltipProvider delayDuration={100}>{children}</TooltipProvider>
 				<ClientAnalyticsWrapper />
 			</body>
 		</html>
