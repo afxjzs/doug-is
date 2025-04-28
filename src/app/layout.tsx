@@ -2,9 +2,8 @@ import "./globals.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import localFont from "next/font/local"
-import { Analytics } from "@vercel/analytics/react"
 import LayoutWrapper from "@/components/LayoutWrapper"
-import { OpenPanelComponent } from "@openpanel/nextjs"
+import { ClientAnalyticsWrapper } from "@/components/ClientAnalyticsWrapper"
 
 // Local font fallback
 const interLocal = localFont({
@@ -107,27 +106,10 @@ export default function RootLayout({
 			lang="en"
 			className={`scroll-smooth ${inter.variable} ${interLocal.variable}`}
 		>
-			<body className="min-h-screen flex flex-col">
-				{/* Subtle grid background */}
-				<div className="fixed inset-0 bg-[url('/grid-bg.svg')] opacity-5 z-0 pointer-events-none"></div>
-
-				{/* Subtle gradient overlay */}
-				<div className="fixed inset-0 bg-gradient-to-br from-[rgba(var(--color-violet),0.05)] via-transparent to-[rgba(var(--color-cyan),0.05)] z-0 pointer-events-none"></div>
-
-				{/* Subtle noise texture */}
-				<div className="fixed inset-0 bg-[url('/noise.png')] opacity-[0.02] z-0 pointer-events-none mix-blend-overlay"></div>
-
-				{/* Scanlines effect */}
-				<div className="fixed inset-0 scanlines opacity-10 z-0 pointer-events-none"></div>
-
-				<LayoutWrapper>{children}</LayoutWrapper>
-				<Analytics />
-				<OpenPanelComponent
-					clientId="6df4af06-599f-46ec-b7ee-977066751d43"
-					trackScreenViews={true}
-					trackOutgoingLinks={true}
-					trackAttributes={true}
-				/>
+			<head />
+			<body>
+				{children}
+				<ClientAnalyticsWrapper />
 			</body>
 		</html>
 	)

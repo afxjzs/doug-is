@@ -57,6 +57,15 @@ const projects = [
 		github: "https://github.com/afxjzs/doug-is",
 	},
 	{
+		id: "migraine-free",
+		title: "Migraine Trigger Database",
+		description:
+			"A comprehensive database of foods and ingredients that may trigger migraines, along with their chemical triggers and categories. Built to help migraine sufferers make informed dietary choices.",
+		image: "/images/projects/migraine-square.webp",
+		tags: ["Next.js", "Supabase", "PostgreSQL", "TypeScript"],
+		link: "/migraine-free",
+	},
+	{
 		id: "hopping-list",
 		title: "Hopping List",
 		description:
@@ -283,16 +292,24 @@ export default function BuildingPage() {
 										))}
 									</div>
 									<div className="flex flex-wrap gap-4">
-										{project.id === "hopping-list" && project.link && (
-											<div className="w-full mb-3">
-												<Link
-													href={project.link}
-													className="neon-button-magenta text-center block"
-												>
-													View Project Details
-												</Link>
-											</div>
-										)}
+										{(project.id === "hopping-list" ||
+											project.id === "migraine-free") &&
+											project.link && (
+												<div className="w-full mb-3">
+													<Link
+														href={project.link}
+														className={`neon-button-${
+															project.id === "hopping-list"
+																? "magenta"
+																: "violet"
+														} text-center block`}
+													>
+														{project.id === "hopping-list"
+															? "View Project Details"
+															: "View Database"}
+													</Link>
+												</div>
+											)}
 										{project.github && (
 											<Link
 												href={project.github}

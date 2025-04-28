@@ -4,8 +4,9 @@
 			"command": "npx",
 			"args": [
 				"-y",
-				"@modelcontextprotocol/server-postgres",
-				"postgresql://postgres.tzffjzocrazemvtgqavg:ZX1tMBCzhWCiMW5w@aws-0-us-west-1.pooler.supabase.com:5432/postgres"
+				"@supabase/mcp-server-supabase@latest",
+				"--access-token",
+				"sbp_fcc493ec8695c6464f05e3a1229a16f93c6d15ae"
 			]
 		}
 	}

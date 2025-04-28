@@ -1,6 +1,7 @@
 import { ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { format, parseISO } from "date-fns"
+import { enUS } from "date-fns/locale"
 
 /**
  * Combines class names with Tailwind CSS classes
@@ -24,7 +25,7 @@ export function formatDate(
 
 	try {
 		const date = parseISO(dateString)
-		return format(date, formatStr)
+		return format(date, formatStr, { locale: enUS })
 	} catch (error) {
 		console.error("Error formatting date:", error)
 		return dateString

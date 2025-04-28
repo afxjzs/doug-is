@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 
 export default function Footer() {
@@ -198,24 +200,20 @@ export default function Footer() {
 	)
 }
 
-function SocialLink({
-	href,
-	children,
-	className,
-	...props
-}: React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+interface SocialLinkProps
+	extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
 	href: string
 	children: React.ReactNode
 	className?: string
-}) {
+}
+
+function SocialLink({ href, children, className, ...props }: SocialLinkProps) {
 	return (
 		<Link
 			href={href}
-			className={`text-[rgba(var(--color-foreground),0.6)] hover:text-[rgba(var(--color-foreground),1)] transition-all duration-300 ${
-				className || ""
-			}`}
 			target="_blank"
 			rel="noopener noreferrer"
+			className={`text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),1)] transition-colors ${className}`}
 			{...props}
 		>
 			{children}

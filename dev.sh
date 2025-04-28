@@ -43,6 +43,9 @@ fi
 export NODE_OPTIONS="--max-old-space-size=4096"
 export NEXT_TELEMETRY_DISABLED=1
 
+# Kill any existing processes on port 3000
+kill $(lsof -t -i:3000) 2>/dev/null || true
+
 # Start development server with optimizations
 echo "🌐 Starting Next.js development server with optimizations..."
 npm run dev -- --turbo

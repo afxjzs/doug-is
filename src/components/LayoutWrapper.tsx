@@ -6,7 +6,7 @@ import Footer from "./Footer"
 
 /**
  * Client component wrapper to conditionally render Header and Footer
- * Only shows header and footer for non-admin pages
+ * Only shows header and footer for main site pages
  */
 export default function LayoutWrapper({
 	children,
@@ -15,11 +15,14 @@ export default function LayoutWrapper({
 }) {
 	const pathname = usePathname()
 
-	// Check if the current page is in the admin section
-	const isAdminPage = pathname?.startsWith("/admin")
+	// Check if the current page should skip the main layout
+	const skipMainLayout =
+		pathname?.startsWith("/admin") ||
+		pathname?.startsWith("/migraine-free") ||
+		pathname?.startsWith("/test")
 
-	// If it's an admin page, don't show the header and footer
-	if (isAdminPage) {
+	// If it's a page that should skip the main layout, just render the content
+	if (skipMainLayout) {
 		return <main className="flex-grow relative z-10">{children}</main>
 	}
 

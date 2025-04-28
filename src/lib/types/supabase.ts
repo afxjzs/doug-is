@@ -10,6 +10,45 @@ export type Json =
 export interface Database {
 	public: {
 		Tables: {
+			migraine_triggers: {
+				Row: {
+					id: number
+					food: string
+					trigger: string
+					reason: string | null
+					categories: string[] | null
+					chemical_triggers: string[] | null
+					source: string | null
+					notes: string | null
+					created_at: string
+					updated_at: string
+				}
+				Insert: {
+					id?: number
+					food: string
+					trigger: string
+					reason?: string | null
+					categories?: string[] | null
+					chemical_triggers?: string[] | null
+					source?: string | null
+					notes?: string | null
+					created_at?: string
+					updated_at?: string
+				}
+				Update: {
+					id?: number
+					food?: string
+					trigger?: string
+					reason?: string | null
+					categories?: string[] | null
+					chemical_triggers?: string[] | null
+					source?: string | null
+					notes?: string | null
+					created_at?: string
+					updated_at?: string
+				}
+				Relationships: []
+			}
 			posts: {
 				Row: {
 					id: string
