@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
 
 			<div className="mb-12">
 				<p className="text-lg mb-6 text-center">
-					How we handle your information
+					How "we" handle your information
 				</p>
 			</div>
 
