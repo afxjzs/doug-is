@@ -32,12 +32,7 @@ export default function MigrainePage() {
 	)
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
-	const [filters, setFilters] = useState({
-		food: "",
-		reason: "",
-		categories: "",
-		chemical_triggers: "",
-	})
+	const [searchQuery, setSearchQuery] = useState("")
 	const [triggerFilters, setTriggerFilters] = useState<TriggerFilter[]>([
 		{ value: "Avoid", enabled: true },
 		{ value: "OK", enabled: true },
@@ -96,30 +91,24 @@ export default function MigrainePage() {
 
 			if (!triggerEnabled) return false
 
-			const foodMatch = trigger.food
-				.toLowerCase()
-				.includes(filters.food.toLowerCase())
-			const reasonMatch =
-				trigger.reason?.toLowerCase().includes(filters.reason.toLowerCase()) ??
-				false
+			// Search across all fields
+			const query = searchQuery.toLowerCase()
+			if (query === "") return true
+
+			const foodMatch = trigger.food.toLowerCase().includes(query)
+			const reasonMatch = trigger.reason?.toLowerCase().includes(query) ?? false
 			const categoriesMatch =
-				trigger.categories?.some((cat) =>
-					cat.toLowerCase().includes(filters.categories.toLowerCase())
-				) ?? false
+				trigger.categories?.some((cat) => cat.toLowerCase().includes(query)) ??
+				false
 			const chemicalMatch =
 				trigger.chemical_triggers?.some((chem) =>
-					chem.toLowerCase().includes(filters.chemical_triggers.toLowerCase())
+					chem.toLowerCase().includes(query)
 				) ?? false
 
-			return (
-				foodMatch &&
-				(filters.reason === "" || reasonMatch) &&
-				(filters.categories === "" || categoriesMatch) &&
-				(filters.chemical_triggers === "" || chemicalMatch)
-			)
+			return foodMatch || reasonMatch || categoriesMatch || chemicalMatch
 		})
 		setFilteredTriggers(filtered)
-	}, [filters, triggers, triggerFilters])
+	}, [searchQuery, triggers, triggerFilters])
 
 	const getTriggerStyle = (value: TriggerValue, enabled: boolean) => {
 		switch (value) {
@@ -140,6 +129,15 @@ export default function MigrainePage() {
 					? "border-violet-500/30 text-violet-400"
 					: "border-gray-700 text-gray-500"
 		}
+	}
+
+	const normalizeTriggerDisplay = (trigger: string): string => {
+		return trigger
+			.toLowerCase()
+			.replace("yes", "avoid")
+			.replace("no", "ok")
+			.replace("ing", "ed")
+			.replace(/^[a-z]/, (c) => c.toUpperCase()) // Capitalize first letter
 	}
 
 	if (loading) {
@@ -171,78 +169,28 @@ export default function MigrainePage() {
 					</p>
 				</div>
 
-				{/* Trigger Type Toggles */}
-				<div className="flex flex-wrap justify-center gap-4">
-					{triggerFilters.map((filter) => (
-						<button
-							key={filter.value}
-							onClick={() => toggleTriggerFilter(filter.value)}
-							className={`px-6 py-2 rounded-full text-base border transition-all flex items-center gap-2
-								${getTriggerStyle(filter.value, filter.enabled)}
-								hover:bg-gray-800/50`}
-						>
-							{filter.enabled && <CheckIcon className="h-4 w-4" />}
-							{filter.value}
-						</button>
-					))}
-				</div>
-
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-					<div>
-						<label className="block text-sm font-medium text-gray-300 mb-1">
-							Filter by Food
-						</label>
-						<Input
-							type="text"
-							placeholder="Search foods..."
-							value={filters.food}
-							onChange={(e: ChangeEvent<HTMLInputElement>) =>
-								setFilters((prev) => ({ ...prev, food: e.target.value }))
-							}
-							className="w-full bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-500"
-						/>
+				<div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+					<div className="flex flex-wrap justify-center gap-4">
+						{triggerFilters.map((filter) => (
+							<button
+								key={filter.value}
+								onClick={() => toggleTriggerFilter(filter.value)}
+								className={`px-6 py-2 rounded-full text-base border transition-all flex items-center gap-2
+									${getTriggerStyle(filter.value, filter.enabled)}
+									hover:bg-gray-800/50`}
+							>
+								{filter.enabled && <CheckIcon className="h-4 w-4" />}
+								{filter.value}
+							</button>
+						))}
 					</div>
-					<div>
-						<label className="block text-sm font-medium text-gray-300 mb-1">
-							Filter by Reason
-						</label>
+					<div className="w-full sm:w-auto sm:min-w-[300px]">
 						<Input
 							type="text"
-							placeholder="Search reasons..."
-							value={filters.reason}
+							placeholder="Search foods, reasons, categories, or chemical triggers..."
+							value={searchQuery}
 							onChange={(e: ChangeEvent<HTMLInputElement>) =>
-								setFilters((prev) => ({ ...prev, reason: e.target.value }))
-							}
-							className="w-full bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-500"
-						/>
-					</div>
-					<div>
-						<label className="block text-sm font-medium text-gray-300 mb-1">
-							Filter by Categories
-						</label>
-						<Input
-							type="text"
-							placeholder="Search categories..."
-							value={filters.categories}
-							onChange={(e: ChangeEvent<HTMLInputElement>) =>
-								setFilters((prev) => ({ ...prev, categories: e.target.value }))
-							}
-							className="w-full bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-500"
-						/>
-					</div>
-					<div>
-						<label className="block text-sm font-medium text-gray-300 mb-1">
-							Filter by Chemical Triggers
-						</label>
-						<Input
-							type="text"
-							placeholder="Search chemical triggers..."
-							value={filters.chemical_triggers}
-							onChange={(e: ChangeEvent<HTMLInputElement>) =>
-								setFilters((prev) => ({
-									...prev,
-									chemical_triggers: e.target.value,
-								}))
+								setSearchQuery(e.target.value)
 							}
 							className="w-full bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-500"
 						/>
@@ -335,7 +283,7 @@ export default function MigrainePage() {
 										</td>
 										<td className="px-6 py-4 whitespace-nowrap">
 											<div className="text-sm text-gray-300">
-												{trigger.trigger}
+												{normalizeTriggerDisplay(trigger.trigger)}
 											</div>
 										</td>
 										<td className="px-6 py-4">
