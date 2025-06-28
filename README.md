@@ -53,7 +53,7 @@ A modern personal website built with Next.js, React, TypeScript, and Tailwind CS
    ./start.sh
    ```
 
-5. Open [http://localhost:5001](http://localhost:5001) in your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
 ## Project Structure
 
@@ -214,7 +214,7 @@ chmod +x start.sh
 ./start.sh
 ```
 
-Open [http://localhost:5001](http://localhost:5001) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## License
 

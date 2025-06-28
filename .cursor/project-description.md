@@ -157,7 +157,7 @@ Defined in globals.css with RGB values for easy opacity adjustments:
 
 ### Local Development
 ```bash
-# Start development server (runs on port 5001)
+# Start development server (runs on port 3000)
 ./start.sh
 
 # Alternative optimized Node.js setup
@@ -227,7 +227,7 @@ The site is deployed on Vercel with:
 
 ## Server Management
 
-**CRITICAL**: Development server runs on port 5001 (not 3000). Server restart command:
+**CRITICAL**: Development server runs on port 3000. Server restart command:
 ```bash
-cd /Users/afxjzs/dev/projects/doug-is && kill $(lsof -t -i:5001) || true && npm run dev
+cd /Users/afxjzs/dev/projects/doug-is && kill $(lsof -t -i:3000) || true && npm run dev
 ``` 

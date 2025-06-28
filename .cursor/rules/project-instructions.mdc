@@ -11,7 +11,7 @@ This document provides instructions and best practices tailored specifically to 
 
 -   All new features and bug fixes **must** follow the TDD workflow detailed in `.cursor/rules/testing.mdc`.
 -   This project uses **Tailwind CSS v4**. Do not use legacy v3 syntax. All theme and utility guidance is in `.cursor/rules/tailwind4.mdc`.
--   The development server runs on **port 5001** and must be managed with the `./start.sh` script.
+-   The development server runs on **port 3000** and must be managed with the `./start.sh` script.
 -   All database mutations **must** be performed via server-side clients in Server Actions, as specified in the two-client security model in `.cursor/rules/supabase.mdc`.
 -   Adhere strictly to the established **Route Groups architecture** for adding or modifying pages, as documented in `.cursor/rules/nextjs.mdc`.
 
@@ -34,9 +34,9 @@ This project is built with a modern web stack. Adherence to the best practices f
 
 -   **Development Server**: To start or restart the local development server, use the following command. This ensures the port is cleared before starting.
     ```bash
-    cd /Users/afxjzs/dev/projects/doug-is && kill $(lsof -t -i:5001) || true && npm run dev
+    cd /Users/afxjzs/dev/projects/doug-is && kill $(lsof -t -i:3000) || true && npm run dev
     ```
-    **Note**: The app runs on port 5001, not 3000.
+    **Note**: The app runs on port 3000, not 3000.
 -   **Turbopack**: The development environment uses Turbopack for faster performance (`--turbopack` flag is in the `dev` script).
 -   **MCP Servers**: This project may use read-only MCP servers for Supabase and browser interactions. If any MCP tool fails to connect or operate correctly, stop immediately and notify the user.
 
