@@ -14,11 +14,15 @@ type FieldErrors = {
 	[key in keyof FormState]?: string
 }
 
-export default function ContactForm() {
+interface ContactFormProps {
+	subjects?: string[]
+}
+
+export default function ContactForm({ subjects }: ContactFormProps) {
 	const [formState, setFormState] = useState<FormState>({
 		name: "",
 		email: "",
-		subject: "",
+		subject: subjects?.[0] ?? "",
 		message: "",
 	})
 	const [status, setStatus] = useState<FormStatus>("idle")
@@ -35,7 +39,9 @@ export default function ContactForm() {
 	}, [status])
 
 	const handleChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+		e: React.ChangeEvent<
+			HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+		>
 	) => {
 		const { name, value } = e.target
 		setFormState((prev) => ({ ...prev, [name]: value }))
@@ -90,7 +96,7 @@ export default function ContactForm() {
 			setFormState({
 				name: "",
 				email: "",
-				subject: "",
+				subject: subjects?.[0] ?? "",
 				message: "",
 			})
 		} catch (error) {
@@ -206,20 +212,42 @@ export default function ContactForm() {
 				>
 					Subject
 				</label>
-				<input
-					type="text"
-					id="subject"
-					name="subject"
-					value={formState.subject}
-					onChange={handleChange}
-					required
-					disabled={status === "submitting"}
-					className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
-						fieldErrors.subject
-							? "border-[rgba(var(--color-red),0.5)]"
-							: "border-[rgba(var(--color-foreground),0.1)]"
-					} rounded-md focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.5)] focus:border-transparent text-[rgba(var(--color-foreground),0.9)]`}
-				/>
+				{subjects ? (
+					<select
+						id="subject"
+						name="subject"
+						value={formState.subject}
+						onChange={handleChange}
+						required
+						disabled={status === "submitting"}
+						className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
+							fieldErrors.subject
+								? "border-[rgba(var(--color-red),0.5)]"
+								: "border-[rgba(var(--color-foreground),0.1)]"
+						} rounded-md focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.5)] focus:border-transparent text-[rgba(var(--color-foreground),0.9)]`}
+					>
+						{subjects.map((option) => (
+							<option key={option} value={option}>
+								{option}
+							</option>
+						))}
+					</select>
+				) : (
+					<input
+						type="text"
+						id="subject"
+						name="subject"
+						value={formState.subject}
+						onChange={handleChange}
+						required
+						disabled={status === "submitting"}
+						className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
+							fieldErrors.subject
+								? "border-[rgba(var(--color-red),0.5)]"
+								: "border-[rgba(var(--color-foreground),0.1)]"
+						} rounded-md focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.5)] focus:border-transparent text-[rgba(var(--color-foreground),0.9)]`}
+					/>
+				)}
 				{fieldErrors.subject && (
 					<p className="mt-1 text-sm text-[rgba(var(--color-red),0.9)]">
 						{fieldErrors.subject}

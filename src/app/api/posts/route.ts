@@ -68,6 +68,18 @@ export async function POST(request: Request) {
 			content: json.content?.substring(0, 50) + "...",
 		})
 
+		// Validate required fields
+		const requiredFields = ["title", "slug", "content", "excerpt", "category"]
+		for (const field of requiredFields) {
+			if (!json[field]) {
+				console.error(`Missing required field: ${field}`)
+				return NextResponse.json(
+					{ error: `Missing required field: ${field}` },
+					{ status: 400 }
+				)
+			}
+		}
+
 		// First check if the slug exists
 		console.log("Checking if slug exists:", json.slug)
 		const { data: slugCheckData, error: slugCheckError } = await supabase
@@ -94,7 +106,6 @@ export async function POST(request: Request) {
 
 		// Prepare post data with all fields
 		const postData = {
-			id: nanoid(),
 			title: json.title,
 			slug: json.slug,
 			content: json.content,

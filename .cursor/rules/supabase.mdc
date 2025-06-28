@@ -1,0 +1,653 @@
+---
+description: anything supabase or database related
+globs: 
+alwaysApply: false
+---
+# Supabase Integration Guide
+
+## Project Overview
+
+This project uses Supabase as the backend database with a security-focused architecture that separates client-side and server-side operations.
+
+**Key Dependencies:**
+- `@supabase/supabase-js`: ^2.49.1
+- `@supabase/ssr`: ^0.6.1
+- `@supabase/auth-helpers-nextjs`: ^0.10.0
+
+## MCP Server Integration
+
+### Read-Only MCP Server Access
+- **Available**: Read-only MCP server for Supabase operations
+- **Usage**: Browser MCP available for web-based operations
+- **CRITICAL**: If MCP servers fail to connect or operate, stop immediately and alert the user
+- **No cURL**: Use Browser MCP tool instead of cURL for HTTP requests
+
+### MCP Server Commands (Available via Tools)
+```javascript
+// Example MCP server operations
+mcp_supabase_list_projects()        // List all projects
+mcp_supabase_get_project(id)        // Get project details
+mcp_supabase_execute_sql(query)     // Execute SQL queries
+mcp_supabase_list_tables()          // List database tables
+mcp_supabase_get_logs(service)      // Get service logs
+```
+
+## Security Architecture
+
+### Environment Variables
+
+**PUBLIC (Client-side safe):**
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+```
+
+**PRIVATE (Server-side only):**
+```bash
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+```
+
+### Client Architecture
+
+**Two-Client Security Model:**
+
+1. **Public Client** (`src/lib/supabase/publicClient.ts`)
+   - Uses anon key (safe for client-side)
+   - READ-ONLY operations only
+   - Used in client components and pages
+
+2. **Server Client** (`src/lib/supabase/serverClient.ts`)
+   - Uses service role key (server-side only)
+   - Full database access
+   - Used in server actions and API routes
+
+### Client Configuration Examples
+
+```typescript
+// Public Client (src/lib/supabase/publicClient.ts)
+import { createClient } from "@supabase/supabase-js"
+import type { Database } from "../types/supabase"
+
+export const supabase = createClient<Database>(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+    },
+  }
+)
+
+// Server Client (src/lib/supabase/serverClient.ts)
+import { createClient } from "@supabase/supabase-js"
+
+export const supabaseServer = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  }
+)
+```
+
+## Database Schema
+
+### Core Tables
+
+**Posts Table** - Blog posts and articles
+```sql
+CREATE TABLE posts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
+    content TEXT NOT NULL,
+    published_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT now() NOT NULL,
+    category TEXT,
+    excerpt TEXT,
+    featured_image TEXT,
+    
+    CONSTRAINT valid_slug CHECK (slug ~ '^[a-z0-9]+(?:-[a-z0-9]+)*$')
+);
+```
+
+**Contact Messages Table** - Contact form submissions
+```sql
+CREATE TABLE contact_messages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    subject TEXT,
+    message TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
+    read_at TIMESTAMPTZ,
+    
+    CONSTRAINT valid_email CHECK (email ~* '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$')
+);
+```
+
+**User Roles Table** - Access control
+```sql
+CREATE TABLE user_roles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    role TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT now() NOT NULL,
+    
+    CONSTRAINT valid_role CHECK (role IN ('admin', 'editor', 'viewer')),
+    UNIQUE (user_id, role)
+);
+```
+
+## Row Level Security (RLS) Policies
+
+### Posts Table Policies
+```sql
+-- Public can read only published posts
+CREATE POLICY posts_public_read_policy ON posts 
+    FOR SELECT 
+    TO public 
+    USING (published_at IS NOT NULL AND published_at <= now());
+
+-- Authenticated users (admins) can do anything
+CREATE POLICY posts_admin_all_policy ON posts 
+    FOR ALL 
+    TO authenticated 
+    USING (true);
+```
+
+### Contact Messages Policies
+```sql
+-- Public can insert contact messages
+CREATE POLICY contact_messages_public_insert_policy ON contact_messages 
+    FOR INSERT 
+    TO public 
+    WITH CHECK (true);
+
+-- Authenticated users can read contact messages
+CREATE POLICY contact_messages_admin_read_policy ON contact_messages 
+    FOR SELECT 
+    TO authenticated 
+    USING (true);
+```
+
+### User Roles Policies
+```sql
+-- Authenticated users can manage user roles
+CREATE POLICY user_roles_admin_all_policy ON user_roles 
+    FOR ALL 
+    TO authenticated 
+    USING (true);
+```
+
+## Data Access Patterns
+
+### Read Operations (Client-side safe)
+```typescript
+// Using public client for read operations
+import { getPublicSupabaseClient } from '@/lib/supabase/publicClient'
+
+export async function getPosts(limit?: number, category?: string) {
+  const supabase = getPublicSupabaseClient()
+  
+  let query = supabase
+    .from('posts')
+    .select('*')
+    .order('published_at', { ascending: false })
+
+  if (category) {
+    query = query.eq('category', category)
+  }
+
+  if (limit) {
+    query = query.limit(limit)
+  }
+
+  const { data, error } = await query
+
+  if (error) {
+    console.error('Error fetching posts:', error)
+    return []
+  }
+
+  return data
+}
+```
+
+### Write Operations (Server-side only)
+```typescript
+// Server action for write operations
+'use server'
+
+import { getServerSupabaseClient } from '@/lib/supabase/serverClient'
+
+export async function createPost(formData: FormData) {
+  const supabase = getServerSupabaseClient()
+  
+  const { data, error } = await supabase
+    .from('posts')
+    .insert({
+      title: formData.get('title') as string,
+      slug: formData.get('slug') as string,
+      content: formData.get('content') as string,
+      category: formData.get('category') as string,
+    })
+    .select()
+    .single()
+
+  if (error) {
+    throw new Error(`Failed to create post: ${error.message}`)
+  }
+
+  return data
+}
+```
+
+### Contact Form Pattern
+```typescript
+// Server action for contact form (secure)
+'use server'
+
+import { z } from 'zod'
+import { getServerSupabaseClient } from '@/lib/supabase/serverClient'
+
+const contactSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email address'),
+  subject: z.string().optional(),
+  message: z.string().min(1, 'Message is required'),
+})
+
+export async function submitContactForm(formData: FormData) {
+  const supabase = getServerSupabaseClient()
+  
+  // Validate input
+  const validatedFields = contactSchema.safeParse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+    subject: formData.get('subject'),
+    message: formData.get('message'),
+  })
+
+  if (!validatedFields.success) {
+    throw new Error('Invalid form data')
+  }
+
+  // Insert into database
+  const { error } = await supabase
+    .from('contact_messages')
+    .insert(validatedFields.data)
+
+  if (error) {
+    throw new Error(`Failed to submit message: ${error.message}`)
+  }
+
+  return { success: true }
+}
+```
+
+## Migration Management
+
+### Migration Structure
+```
+supabase/migrations/
+├── 20000000000000_schema_setup.sql       # Main schema
+├── 20240321_add_subject_to_contact_messages.sql
+├── 20240509_add_columns_to_posts.sql
+├── 20240510_fix_posts_permissions.sql
+├── 20240511_fix_posts_policy.sql
+└── 20240511_fix_user_roles_policy.sql
+```
+
+### Migration Commands
+```bash
+# Login and link project
+supabase login
+supabase link --project-ref your_project_ref
+
+# Push migrations to Supabase
+supabase db push
+
+# Pull remote schema changes
+supabase db pull
+
+# Reset database (WARNING: Deletes all data)
+supabase db reset
+```
+
+### Creating New Migrations
+```bash
+# Create new migration file
+supabase migration new add_new_feature
+
+# Example migration file content
+-- Add new column to posts table
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS tags TEXT[];
+
+-- Create index for tags
+CREATE INDEX IF NOT EXISTS posts_tags_idx ON posts USING GIN(tags);
+```
+
+## Testing and Mocking
+
+### Test Configuration
+```typescript
+// src/lib/test-utils.tsx
+import { createClient } from '@supabase/supabase-js'
+
+// Mock Supabase client for testing
+export const mockSupabaseClient = {
+  from: jest.fn(() => ({
+    select: jest.fn(() => ({
+      eq: jest.fn(() => ({
+        single: jest.fn(() => Promise.resolve({ data: null, error: null })),
+      })),
+      order: jest.fn(() => Promise.resolve({ data: [], error: null })),
+    })),
+    insert: jest.fn(() => Promise.resolve({ data: null, error: null })),
+    update: jest.fn(() => Promise.resolve({ data: null, error: null })),
+    delete: jest.fn(() => Promise.resolve({ data: null, error: null })),
+  })),
+}
+
+export function setupSupabaseMock() {
+  jest.mock('@/lib/supabase/publicClient', () => ({
+    getPublicSupabaseClient: () => mockSupabaseClient,
+  }))
+}
+```
+
+### Example Test
+```typescript
+import { render, screen } from '@/lib/test-utils'
+import { setupSupabaseMock } from '@/lib/test-utils'
+import PostsList from '../PostsList'
+
+describe('PostsList', () => {
+  beforeEach(() => {
+    setupSupabaseMock()
+  })
+
+  it('renders posts correctly', async () => {
+    const mockPosts = [
+      { id: '1', title: 'Test Post', slug: 'test-post', content: 'Content' }
+    ]
+    
+    mockSupabaseClient.from().select().order.mockResolvedValue({
+      data: mockPosts,
+      error: null
+    })
+
+    render(<PostsList />)
+    
+    expect(screen.getByText('Test Post')).toBeInTheDocument()
+  })
+})
+```
+
+## Type Safety
+
+### Database Types
+```typescript
+// src/lib/types/supabase.ts
+export interface Database {
+  public: {
+    Tables: {
+      posts: {
+        Row: {
+          id: string
+          title: string
+          slug: string
+          content: string
+          published_at: string | null
+          created_at: string
+          updated_at: string
+          category: string | null
+          excerpt: string | null
+          featured_image: string | null
+        }
+        Insert: {
+          id?: string
+          title: string
+          slug: string
+          content: string
+          published_at?: string | null
+          category?: string | null
+          excerpt?: string | null
+          featured_image?: string | null
+        }
+        Update: {
+          title?: string
+          slug?: string
+          content?: string
+          published_at?: string | null
+          category?: string | null
+          excerpt?: string | null
+          featured_image?: string | null
+        }
+      }
+      contact_messages: {
+        Row: {
+          id: string
+          name: string
+          email: string
+          subject: string | null
+          message: string
+          created_at: string
+          read_at: string | null
+        }
+        Insert: {
+          name: string
+          email: string
+          subject?: string | null
+          message: string
+        }
+        Update: {
+          read_at?: string | null
+        }
+      }
+    }
+  }
+}
+```
+
+## Error Handling
+
+### Standard Error Patterns
+```typescript
+// Standardized error handling
+export async function safeSupabaseOperation<T>(
+  operation: () => Promise<{ data: T | null; error: any }>
+): Promise<T | null> {
+  try {
+    const { data, error } = await operation()
+    
+    if (error) {
+      console.error('Supabase operation error:', error)
+      return null
+    }
+    
+    return data
+  } catch (exception) {
+    console.error('Supabase operation exception:', exception)
+    return null
+  }
+}
+
+// Usage example
+const posts = await safeSupabaseOperation(() =>
+  supabase.from('posts').select('*').order('published_at', { ascending: false })
+)
+```
+
+## Performance Optimization
+
+### Query Optimization
+```typescript
+// Use select() to limit columns
+const posts = await supabase
+  .from('posts')
+  .select('id, title, slug, excerpt, published_at') // Only needed columns
+  .limit(10)
+
+// Use indexes for common queries
+// Already created: posts_published_at_idx, posts_slug_idx
+
+// Use pagination for large datasets
+const { data, error } = await supabase
+  .from('posts')
+  .select('*')
+  .range(0, 9) // First 10 items
+  .order('published_at', { ascending: false })
+```
+
+### Caching Strategies
+```typescript
+// Cache at the Next.js level
+export const revalidate = 3600 // 1 hour
+
+// Or use fetch cache
+const response = await fetch('/api/posts', {
+  cache: 'force-cache',
+  next: { revalidate: 3600 }
+})
+```
+
+## Debugging and Monitoring
+
+### Environment Testing
+```typescript
+// Test Supabase connection
+export async function testSupabaseConnection() {
+  try {
+    const { data, error } = await supabase
+      .from('posts')
+      .select('count(*)')
+      .limit(1)
+    
+    if (error) {
+      console.error('Supabase connection failed:', error)
+      return false
+    }
+    
+    console.log('Supabase connection successful')
+    return true
+  } catch (exception) {
+    console.error('Supabase connection exception:', exception)
+    return false
+  }
+}
+```
+
+### Common Issues and Solutions
+
+1. **RLS Policy Blocking Operations**
+   - Check if user is authenticated
+   - Verify policy conditions
+   - Use service role key for admin operations
+
+2. **Environment Variable Missing**
+   - Verify .env.local file exists
+   - Check variable names match exactly
+   - Restart development server after changes
+
+3. **Migration Conflicts**
+   - Use `supabase db reset` to start fresh (WARNING: deletes data)
+   - Check migration order and dependencies
+   - Ensure unique migration timestamps
+
+4. **Type Safety Issues**
+   - Regenerate types: `supabase gen types typescript --local`
+   - Ensure Database interface is updated
+   - Check column names match exactly
+
+## Best Practices
+
+1. **Security First**
+   - Never expose service role key to client
+   - Use server actions for mutations
+   - Implement proper RLS policies
+
+2. **Type Safety**
+   - Always use typed Supabase client
+   - Keep Database interface updated
+   - Use proper TypeScript patterns
+
+3. **Error Handling**
+   - Always check for errors in responses
+   - Provide meaningful error messages
+   - Log errors for debugging
+
+4. **Performance**
+   - Use select() to limit columns
+   - Implement proper indexing
+   - Use pagination for large datasets
+   - Cache where appropriate
+
+5. **Testing**
+   - Mock Supabase client in tests
+   - Test both success and error cases
+   - Use proper test data setup
+
+## Security Verification Checklist
+
+Before deploying or after security changes, verify the following:
+
+### 1. **Service Role Key Protection**
+```bash
+# Verify no client components use service role key
+grep -r "SUPABASE_SERVICE_ROLE_KEY" src/components/
+grep -r "SUPABASE_SERVICE_ROLE_KEY" src/app/ | grep -v api/
+```
+**Expected Result**: No matches in client-side code
+
+### 2. **Data Mutation Security**
+-   ✅ All data mutations go through server actions or API routes
+-   ✅ No direct database mutations from client-side components
+-   ✅ Server actions use serverClient (service role key)
+-   ✅ Client components use publicClient (anon key) for read-only operations
+
+### 3. **Admin Route Protection**
+-   ✅ Admin routes (`/admin/*`) blocked by middleware
+-   ✅ Authentication verification implemented
+-   ✅ Role-based access control in place
+-   ✅ Proper redirect patterns for unauthorized access
+
+### 4. **Environment Variable Segregation**
+```bash
+# PUBLIC - Client-side safe (read-only operations)
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+# PRIVATE - Server-side only (protected operations)
+SUPABASE_SERVICE_ROLE_KEY
+```
+
+## Future Security Enhancements
+
+### 1. **API Security Improvements**
+-   **Rate Limiting**: Implement rate limiting on all API routes to prevent abuse
+-   **CSRF Protection**: Add CSRF tokens for form submissions
+-   **Request Validation**: Enhanced input validation and sanitization across all endpoints
+
+### 2. **Security Headers Implementation**
+-   **Content-Security-Policy**: Prevent XSS attacks through strict CSP headers
+-   **X-Frame-Options**: Prevent clickjacking attacks
+-   **X-Content-Type-Options**: Prevent MIME type sniffing vulnerabilities
+-   **Referrer-Policy**: Control referrer information leakage
+
+### 3. **Database Security Enhancements**
+-   **RLS Policy Review**: Regularly review and strengthen Row Level Security policies
+-   **Anon Key Permissions**: Further limit anonymous key permissions to minimum required
+-   **Audit Logging**: Implement comprehensive database access logging
+
+### 4. **Authentication System Enhancements**
+-   **Multi-Factor Authentication**: Add MFA for admin accounts
+-   **Session Management**: Implement secure session handling with proper expiration
+-   **Password Policies**: Enforce strong password requirements and rotation

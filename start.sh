@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# dev.sh - Development environment setup script for doug-is project
+#start.sh - Development environment setup script for doug-is project
 
 echo "🚀 Starting development environment setup..."
 

@@ -1,0 +1,533 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Comprehensive Testing Guide for doug-is
+
+## Overview
+
+This project implements a comprehensive testing strategy with Jest, React Testing Library, and Playwright, following Test-Driven Development (TDD) methodology. All new features and bug fixes must be developed using TDD practices.
+
+## Testing Philosophy
+
+### Test-Driven Development (TDD) - REQUIRED
+
+**TDD is mandatory for all new features and bug fixes.**
+
+#### TDD Workflow:
+1. **Write a failing test** that specifies the desired behavior
+2. **Write minimal code** to make the test pass
+3. **Refactor** the code while keeping the test passing
+4. **Repeat** for each small increment of functionality
+
+#### Benefits:
+- Better understanding of requirements before implementation
+- Higher code quality and better design
+- Comprehensive test coverage by default
+- Reduced debugging time and regression bugs
+
+## Testing Tools and Configuration
+
+### Core Testing Stack
+
+- **Test Runner**: Jest ^29.7.0
+- **Testing Library**: React Testing Library ^16.3.0
+- **Test Environment**: jsdom (browser-like testing)
+- **Coverage**: Built-in Jest coverage reporting
+- **E2E Testing**: Playwright ^1.52.0 (configured but not yet implemented)
+
+### Jest Configuration
+
+```typescript
+// jest.config.ts
+import type { Config } from "jest"
+import nextJest from "next/jest"
+
+const createJestConfig = nextJest({
+	dir: "./",
+})
+
+const config: Config = {
+	setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+	testEnvironment: "jest-environment-jsdom",
+	moduleNameMapper: {
+		"^@/(.*)$": "<rootDir>/src/$1",
+	},
+	testMatch: ["**/*.test.ts", "**/*.test.tsx"],
+	collectCoverage: true,
+	collectCoverageFrom: [
+		"src/**/*.{ts,tsx}",
+		"!src/**/*.d.ts",
+		"!src/**/*.stories.{ts,tsx}",
+		"!src/app/api/**/*",
+	],
+}
+
+export default createJestConfig(config)
+```
+
+### Test Scripts
+
+```json
+{
+	"scripts": {
+		"test": "jest",
+		"test:watch": "jest --watch",
+		"test:coverage": "jest --coverage"
+	}
+}
+```
+
+#### Script Usage:
+- **`npm run test`**: Run all tests once
+- **`npm run test:watch`**: Run tests in watch mode (recommended for development)
+- **`npm run test:coverage`**: Run tests with coverage reporting
+
+## Test Structure and Organization
+
+### File Organization
+
+Tests are co-located with components in `__tests__` directories:
+
+```
+src/
+├── components/
+│   ├── __tests__/
+│   │   └── StatusMessage.test.tsx
+│   └── admin/
+│       └── __tests__/
+│           ├── LoginForm.test.tsx
+│           └── PostsTable.test.tsx
+```
+
+### Naming Convention
+
+- **Test Files**: `ComponentName.test.tsx`
+- **Test Suites**: Use `describe()` blocks named after the component
+- **Test Cases**: Use descriptive `it()` statements that specify behavior
+
+## Custom Test Utilities
+
+### Enhanced Test Utils (`src/lib/test-utils.tsx`)
+
+```typescript
+import React from "react"
+import { render as rtlRender } from "@testing-library/react"
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+
+// Custom render function with providers
+export function render(ui: React.ReactElement, options = {}) {
+	return rtlRender(ui, {
+		wrapper: ({ children }: { children: React.ReactNode }) => children,
+		...options,
+	})
+}
+
+// Setup function for Supabase mocking
+export function setupSupabaseMock(
+	mockImplementation = () => mockSupabaseClient
+) {
+	;(createClientComponentClient as jest.Mock).mockImplementation(
+		mockImplementation
+	)
+}
+
+// Re-export all RTL utilities
+export * from "@testing-library/react"
+```
+
+#### Usage:
+```typescript
+import { render, screen, setupSupabaseMock } from '@/lib/test-utils'
+import MyComponent from '../MyComponent'
+
+describe('MyComponent', () => {
+  beforeEach(() => {
+    setupSupabaseMock()
+  })
+
+  it('renders correctly', () => {
+    render(<MyComponent />)
+    expect(screen.getByText('Expected text')).toBeInTheDocument()
+  })
+})
+```
+
+## Mocking Strategies
+
+### Next.js Components and Hooks
+
+Global mocks in `jest.setup.ts`:
+
+```typescript
+// Mock next/navigation
+jest.mock("next/navigation", () => ({
+	useRouter() {
+		return {
+			push: jest.fn(),
+			replace: jest.fn(),
+			prefetch: jest.fn(),
+			back: jest.fn(),
+		}
+	},
+	useSearchParams() {
+		return new URLSearchParams()
+	},
+	usePathname() {
+		return ""
+	},
+}))
+
+// Mock next/image
+jest.mock("next/image", () => ({
+	__esModule: true,
+	default: (props: any) => {
+		return React.createElement("img", { ...props, alt: props.alt })
+	},
+}))
+```
+
+### Supabase Client Mocking
+
+```typescript
+// Mock Supabase client
+export const mockSupabaseClient = {
+	auth: {
+		signInWithPassword: jest.fn(),
+		signOut: jest.fn(),
+		getUser: jest.fn(),
+	},
+	from: jest.fn(() => ({
+		select: jest.fn().mockReturnThis(),
+		insert: jest.fn().mockReturnThis(),
+		update: jest.fn().mockReturnThis(),
+		delete: jest.fn().mockReturnThis(),
+		eq: jest.fn().mockReturnThis(),
+		single: jest.fn(),
+		order: jest.fn().mockReturnThis(),
+	})),
+}
+```
+
+### Custom Hook Mocking
+
+```typescript
+// Mock custom auth hook
+jest.mock("@/lib/auth/supabaseClientAuth", () => ({
+	useAuth: jest.fn(),
+}))
+
+// In tests, configure mock behavior
+const mockAuthHook = {
+	loginWithEmail: jest.fn(),
+	loading: false,
+	user: null,
+	isAdmin: false,
+}
+
+beforeEach(() => {
+	;(useAuth as jest.Mock).mockReturnValue(mockAuthHook)
+})
+```
+
+## Testing Patterns and Examples
+
+### 1. Component Rendering Tests
+
+```typescript
+describe("StatusMessage", () => {
+	it("renders the message correctly", () => {
+		render(<StatusMessage type="info" message="Test message" />)
+		expect(screen.getByText("Test message")).toBeInTheDocument()
+	})
+
+	it("renders different status types with correct styles", () => {
+		const { rerender } = render(
+			<StatusMessage type="success" message="Success message" />
+		)
+		expect(
+			screen.getByText("Success message").parentElement?.parentElement
+		).toHaveClass("bg-[rgba(var(--color-emerald),0.05)]")
+
+		rerender(<StatusMessage type="error" message="Error message" />)
+		expect(
+			screen.getByText("Error message").parentElement?.parentElement
+		).toHaveClass("bg-[rgba(var(--color-magenta),0.05)]")
+	})
+})
+```
+
+### 2. Form Interaction Tests
+
+```typescript
+describe("LoginForm", () => {
+	it("handles password login successfully", async () => {
+		mockAuthHook.loginWithEmail.mockResolvedValue({ success: true })
+
+		render(<LoginForm />)
+
+		fireEvent.change(screen.getByLabelText(/email/i), {
+			target: { value: "test@example.com" },
+		})
+		fireEvent.change(screen.getByLabelText(/password/i), {
+			target: { value: "password123" },
+		})
+
+		fireEvent.click(screen.getByText(/sign in$/i))
+
+		await waitFor(() => {
+			expect(mockAuthHook.loginWithEmail).toHaveBeenCalledWith(
+				"test@example.com",
+				"password123"
+			)
+			expect(mockRouter.push).toHaveBeenCalledWith("/admin")
+		})
+	})
+})
+```
+
+### 3. Data Filtering and Search Tests
+
+```typescript
+describe("PostsTable", () => {
+	it("filters posts by search term", () => {
+		render(<PostsTable posts={mockPosts} />)
+
+		const searchInput = screen.getByPlaceholderText("Search posts...")
+		fireEvent.change(searchInput, { target: { value: "first" } })
+
+		expect(screen.getByText("First Post")).toBeInTheDocument()
+		expect(screen.queryByText("Second Post")).not.toBeInTheDocument()
+	})
+})
+```
+
+### 4. Authentication State Tests
+
+```typescript
+describe("LoginForm", () => {
+	it("redirects authenticated admin users", () => {
+		const authenticatedMockAuthHook = {
+			...mockAuthHook,
+			user: { id: "123", email: "admin@example.com" },
+			isAdmin: true,
+		}
+		;(useAuth as jest.Mock).mockReturnValue(authenticatedMockAuthHook)
+
+		render(<LoginForm redirectTo="/admin/posts" />)
+
+		expect(mockRouter.push).toHaveBeenCalledWith("/admin/posts")
+	})
+})
+```
+
+### 5. Error Handling Tests
+
+```typescript
+it("shows error message on failed login", async () => {
+	mockAuthHook.loginWithEmail.mockResolvedValue({
+		success: false,
+		error: "Invalid credentials",
+	})
+
+	render(<LoginForm />)
+
+	// ... form submission ...
+
+	await waitFor(() => {
+		expect(screen.getByText(/invalid credentials/i)).toBeInTheDocument()
+	})
+})
+```
+
+## Testing Best Practices
+
+### Test Organization
+
+1. **Group related tests** with `describe()` blocks
+2. **Use descriptive test names** that specify behavior
+3. **Follow AAA pattern**: Arrange, Act, Assert
+4. **Clean up after tests** with proper `beforeEach`/`afterEach`
+
+### Mock Management
+
+1. **Use `beforeEach` and `afterEach`** for setup and cleanup
+2. **Clear mocks** between tests: `jest.clearAllMocks()`
+3. **Mock at the right level**: module-level for global mocks, test-level for specific behavior
+4. **Verify mock calls** when testing interactions
+
+### Assertions
+
+1. **Use semantic queries**: `getByRole`, `getByLabelText`, `getByText`
+2. **Prefer `getBy*` for elements that should exist**
+3. **Use `queryBy*` for elements that might not exist**
+4. **Test user-visible behavior**, not implementation details
+
+### Async Testing
+
+1. **Use `waitFor`** for async operations
+2. **Mock async functions** with `mockResolvedValue`/`mockRejectedValue`
+3. **Test loading states** and error states
+4. **Don't forget to await** async assertions
+
+## Coverage Reporting
+
+### Coverage Configuration
+
+Coverage is automatically collected from:
+- All `src/**/*.{ts,tsx}` files
+- Excludes: type definitions, stories, API routes
+
+### Coverage Reports
+
+After running `npm run test:coverage`:
+- **HTML Report**: `coverage/lcov-report/index.html`
+- **LCOV Format**: `coverage/lcov.info` (for CI/CD)
+
+### Coverage Goals
+
+- **Statements**: Aim for >90%
+- **Branches**: Aim for >85%
+- **Functions**: Aim for >90%
+- **Lines**: Aim for >90%
+
+## Writing New Tests
+
+### TDD Process for New Features
+
+1. **Start with a failing test**:
+   ```typescript
+   it("should display user name when logged in", () => {
+     render(<UserProfile />)
+     expect(screen.getByText("John Doe")).toBeInTheDocument()
+   })
+   ```
+
+2. **Write minimal implementation**:
+   ```typescript
+   function UserProfile() {
+     return <div>John Doe</div>
+   }
+   ```
+
+3. **Refactor and enhance**:
+   ```typescript
+   function UserProfile({ user }: { user: User }) {
+     return <div>{user.name}</div>
+   }
+   ```
+
+4. **Add edge cases and error scenarios**:
+   ```typescript
+   it("should show loading state when user is being fetched", () => {
+     render(<UserProfile loading={true} />)
+     expect(screen.getByText("Loading...")).toBeInTheDocument()
+   })
+   ```
+
+### Test Structure Template
+
+```typescript
+import { render, screen } from '@/lib/test-utils'
+import ComponentName from '../ComponentName'
+
+describe('ComponentName', () => {
+  beforeEach(() => {
+    // Setup mocks
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  describe('rendering', () => {
+    it('renders correctly with default props', () => {
+      // Test basic rendering
+    })
+  })
+
+  describe('interactions', () => {
+    it('handles user interactions correctly', () => {
+      // Test user interactions
+    })
+  })
+
+  describe('edge cases', () => {
+    it('handles error states gracefully', () => {
+      // Test error scenarios
+    })
+  })
+})
+```
+
+## Debugging Tests
+
+### Common Issues and Solutions
+
+1. **Test timeouts**: Increase timeout or check for unresolved promises
+2. **Mock not working**: Verify mock is set up before component renders
+3. **Element not found**: Use `screen.debug()` to inspect rendered output
+4. **Async issues**: Ensure proper use of `waitFor` and `await`
+
+### Debugging Commands
+
+```bash
+# Run specific test file
+npm test -- StatusMessage.test.tsx
+
+# Run tests in watch mode with coverage
+npm run test:watch
+
+# Debug specific test
+npm test -- --testNamePattern="renders correctly"
+
+# Verbose output
+npm test -- --verbose
+```
+
+### Debug Utilities
+
+```typescript
+// Debug rendered output
+screen.debug()
+
+// Debug specific element
+screen.debug(screen.getByText("Some text"))
+
+// Log all queries available
+screen.logTestingPlaygroundURL()
+```
+
+## Future Testing Enhancements
+
+### E2E Testing with Playwright
+
+Playwright is installed but not yet configured. Future setup:
+
+1. Create `playwright.config.ts`
+2. Add E2E test scripts to `package.json`
+3. Create `tests/` directory for E2E tests
+4. Implement critical user journey tests
+
+### Integration Testing
+
+Consider adding integration tests for:
+- Complete user workflows
+- API route testing
+- Database interactions
+- Authentication flows
+
+### Performance Testing
+
+Future considerations:
+- Component render performance
+- Bundle size analysis
+- Lighthouse CI integration
+- Core Web Vitals monitoring
+
+## Conclusion
+
+This testing guide provides a comprehensive foundation for maintaining high code quality through TDD methodology. All team members must follow these practices to ensure robust, reliable, and maintainable code.
+
+Remember: **Tests are not just verification tools—they're design tools that help you write better code.**

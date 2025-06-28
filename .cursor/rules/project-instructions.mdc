@@ -1,0 +1,161 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Doug.is Project-Specific Instructions
+
+This document provides instructions and best practices tailored specifically to the `doug.is` personal website project.
+
+## Technology Stack (Verified Versions)
+
+This project is built with a modern web stack. Adherence to the best practices for these technologies is crucial.
+
+**Verified Versions (from package.json):**
+-   **Framework**: Next.js ^15.2.4 (App Router)
+-   **UI Library**: React ^19.0.0
+-   **Styling**: Tailwind CSS ^4.0.0
+-   **Database**: Supabase (via @supabase/supabase-js ^2.49.1)
+-   **Node.js**: >=20.11.1 (required minimum)
+-   **TypeScript**: ^5.3.3
+-   **State Management**: `useActionState`, `useFormStatus`, and URL state via `nuqs`
+-   **AI Integration**: Vercel AI SDK
+-   **UI Components**: Shadcn UI, Radix UI
+
+## Workflow and Commands
+
+-   **Development Server**: To start or restart the local development server, use the following command. This ensures the port is cleared before starting.
+    ```bash
+    cd /Users/afxjzs/dev/projects/doug-is && kill $(lsof -t -i:5001) || true && npm run dev
+    ```
+    **Note**: The app runs on port 5001, not 3000.
+-   **Turbopack**: The development environment uses Turbopack for faster performance (`--turbopack` flag is in the `dev` script).
+-   **MCP Servers**: This project may use read-only MCP servers for Supabase and browser interactions. If any MCP tool fails to connect or operate correctly, stop immediately and notify the user.
+
+## Development Methodology
+
+### Test-Driven Development (TDD)
+
+-   **TDD is required for all new features and bug fixes.**
+-   **Workflow**:
+    1.  **Write a Failing Test**: Before writing any implementation code, write a test that specifies the desired behavior and fails because the functionality does not yet exist.
+    2.  **Write Code to Pass the Test**: Write the simplest possible code to make the failing test pass.
+    3.  **Refactor**: Refactor the code for clarity, performance, and maintainability while ensuring all tests still pass.
+-   **Testing Tools**: Use React Testing Library for component testing. Plan for and implement unit and integration tests as appropriate.
+
+## Project-Specific Development Practices
+
+### Design System and UI Patterns
+-   **Cyberpunk Design Theme**: The site features a modern, cyberpunk-inspired design with neon accents
+-   **Content-First Approach**: Focus on content structure and readability before visual enhancements
+-   **Mobile-First Design**: Implement responsive design patterns starting from mobile breakpoints
+-   **Component Consistency**: Use established design patterns from existing components
+
+### Route Groups Architecture
+This project uses a specific Next.js App Router pattern combining **route groups** with **nested layouts**:
+
+```
+src/app/
+├── (site)/                    # Route group - doesn't affect URLs
+│   ├── layout.tsx            # Shared layout for all site pages
+│   ├── advising/
+│   │   └── page.tsx          # Page content: /advising
+│   ├── building/
+│   │   └── page.tsx          # Page content: /building
+│   └── investing/
+│       └── page.tsx          # Page content: /investing
+├── advising/                  # Regular route segment
+│   ├── layout.tsx            # Section-specific layout
+│   └── metadata.ts           # Section-specific metadata
+```
+
+**Pattern Explanation:**
+- **Route Groups** `(site)`: Contain actual page content (`page.tsx` files)
+- **Regular Folders** `/advising`: Contain layouts and metadata for URL paths
+- **Content comes from route groups**, **configuration from regular folders**
+### Content Management Patterns
+-   **Blog Content Structure**: All blog content is centralized under `/thinking` route with URL structure: `/thinking/[primary-category]/[slug]`
+-   **Database Integration**: Posts stored in Supabase with proper RLS policies for public/admin access
+-   **Content Categories**: Use consistent categorization (building, investing, hustling, advising, thinking)
+
+### Performance and SEO
+-   **Image Optimization**: Use `next/image` component with proper `alt` attributes
+-   **Font Loading**: Implement `next/font` optimization for Inter font family
+-   **Metadata Generation**: Utilize Next.js 15 metadata API for dynamic SEO
+-   **Static Generation**: Prefer static generation where possible for better performance
+
+## Environment Setup
+
+### Required Environment Variables
+```bash
+# PUBLIC (Client-side safe)
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+
+# PRIVATE (Server-side only)
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+```
+
+### Development Commands
+```bash
+# Start development with optimized setup
+./start.sh
+
+# Build for production  
+npm run build
+
+# Run tests
+npm test
+npm run test:watch
+npm run test:coverage
+```
+
+## Security Best Practices
+
+### Authentication and Authorization
+-   **Admin Routes**: Protected with middleware and authentication
+-   **RLS Policies**: Properly configured in Supabase for data access control
+-   **Environment Variables**: Proper separation of public and private keys
+-   **Server Actions**: Use for all data mutations instead of direct client access
+
+#### Admin Route Protection Implementation
+
+Admin routes (`/admin/*`) are secured through comprehensive middleware protection:
+
+**Middleware Security Pattern:**
+```typescript
+// middleware.ts - Admin route protection
+export function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith('/admin')) {
+    // Block access to admin routes for unauthorized users
+    // Check authentication status and admin role
+    // Redirect non-admin users to appropriate pages
+    // Set up for future authentication implementation
+  }
+}
+```
+
+**Security Measures:**
+-   **Access Blocking**: All admin routes blocked by default for unauthorized users
+-   **Authentication Check**: Validates user authentication status
+-   **Role-Based Access**: Verifies admin role before granting access
+-   **Redirect Strategy**: Non-admin users redirected to login or home pages
+-   **Future-Ready**: Architecture prepared for full authentication system implementation
+
+### Data Validation
+-   **Input Validation**: Use Zod schemas for form validation
+-   **SQL Injection Prevention**: Supabase client handles parameterized queries
+-   **XSS Protection**: Sanitize user inputs before rendering
+
+## Deployment and Infrastructure
+
+### Vercel Deployment
+-   **Automatic Deployments**: Triggered on main branch pushes
+-   **Environment Variables**: Configured in Vercel dashboard
+-   **Analytics**: Vercel Analytics integrated for performance monitoring
+-   **Build Optimization**: Configured for standalone output
+
+### Database Management
+-   **Migration System**: Use Supabase CLI for database migrations
+-   **Backup Strategy**: Regular database backups via Supabase dashboard
+-   **Monitoring**: Use Supabase logs and analytics for database monitoring 

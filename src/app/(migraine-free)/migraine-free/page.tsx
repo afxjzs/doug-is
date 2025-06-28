@@ -385,6 +385,14 @@ export default function MigrainePage() {
 						</Link>
 					</div>
 				</footer>
+				<div className="mt-8 flex justify-center">
+					<Link
+						href="/migraine-free/feedback"
+						className="inline-block text-cyan-600 hover:underline font-medium transition-colors"
+					>
+						Share Feedback &rarr;
+					</Link>
+				</div>
 			</div>
 		</TooltipProvider>
 	)
