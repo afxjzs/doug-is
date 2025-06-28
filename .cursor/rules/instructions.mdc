@@ -140,6 +140,12 @@ Since projects span multiple technology stacks (Python, Swift, Ruby, TypeScript,
 - **Progressive Enhancement**: Build core functionality first, then add enhancements
 - **Continuous Integration**: Establish automated testing and deployment practices
 
+### Applying Architectural Principles in This Project
+-   **Single Responsibility Principle (SRP)**: "Components are small and focused. For example, `ContactForm.tsx` is responsible only for form state and submission, not for page layout. Maintain this pattern."
+-   **Open/Closed Principle (OCP)**: "The site is extended by adding new page modules using the Route Groups pattern. This allows adding new functionality without modifying existing layouts."
+-   **Interface Segregation Principle (ISP)**: "The two-client Supabase setup (`publicClient` for reads, `serverClient` for writes) is a key application of ISP. It ensures client-side code does not depend on write/delete methods it must not use."
+-   **Dependency Inversion Principle (DIP)**: "Components and Server Actions depend on abstractions (e.g., `getPosts()`, `supabaseServer`) rather than concrete, low-level fetch implementations. Continue to use these data access abstractions."
+
 ## Workflow Guidelines
 
 - Use `./start.sh` to start/restart the app. Assume the app is already running.

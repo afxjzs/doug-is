@@ -7,6 +7,14 @@ alwaysApply: false
 
 This document provides instructions and best practices tailored specifically to the `doug.is` personal website project.
 
+## Critical Mandates
+
+-   All new features and bug fixes **must** follow the TDD workflow detailed in `.cursor/rules/testing.mdc`.
+-   This project uses **Tailwind CSS v4**. Do not use legacy v3 syntax. All theme and utility guidance is in `.cursor/rules/tailwind4.mdc`.
+-   The development server runs on **port 5001** and must be managed with the `./start.sh` script.
+-   All database mutations **must** be performed via server-side clients in Server Actions, as specified in the two-client security model in `.cursor/rules/supabase.mdc`.
+-   Adhere strictly to the established **Route Groups architecture** for adding or modifying pages, as documented in `.cursor/rules/nextjs.mdc`.
+
 ## Technology Stack (Verified Versions)
 
 This project is built with a modern web stack. Adherence to the best practices for these technologies is crucial.
@@ -42,6 +50,7 @@ This project is built with a modern web stack. Adherence to the best practices f
     2.  **Write Code to Pass the Test**: Write the simplest possible code to make the failing test pass.
     3.  **Refactor**: Refactor the code for clarity, performance, and maintainability while ensuring all tests still pass.
 -   **Testing Tools**: Use React Testing Library for component testing. Plan for and implement unit and integration tests as appropriate.
+-   **Further Reading**: For detailed guidance on the testing workflow, mocking strategies for Supabase and Next.js, and practical code examples, refer to the comprehensive guide in `.cursor/rules/testing.mdc`.
 
 ## Project-Specific Development Practices
 
@@ -158,4 +167,10 @@ export function middleware(request: NextRequest) {
 ### Database Management
 -   **Migration System**: Use Supabase CLI for database migrations
 -   **Backup Strategy**: Regular database backups via Supabase dashboard
--   **Monitoring**: Use Supabase logs and analytics for database monitoring 
+-   **Monitoring**: Use Supabase logs and analytics for database monitoring
+
+## Further Reading
+For in-depth best practices, refer to:
+-   `.cursor/rules/nextjs.mdc` for Next.js 15, App Router, and React 19 patterns.
+-   `.cursor/rules/tailwind4.mdc` for the CSS-first v4 syntax and theme setup.
+-   `.cursor/rules/supabase.mdc` for data access patterns and security architecture. 
