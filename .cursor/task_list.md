@@ -410,3 +410,92 @@ The user correctly identified that I made a systematic error throughout the docu
 - ✅ When multiple tools fail, direct terminal commands can resolve file sync issues
 
 **DOCUMENTATION PROJECT STATUS**: 🎉 **FULLY COMPLETE AND PRODUCTION READY** 🎉
+
+## NEW PROJECT: Oil Price Ticker Implementation
+
+### Background and Motivation
+
+The user has requested adding a new project entry to the `/building` page for "Oil Price Ticker" - a macOS menu bar application that displays live oil price updates. The project assets are already available in the repository (zip file and screenshots), and the implementation should follow the existing project patterns established in the building section.
+
+### Project Details
+- **App Name**: Oil Price Ticker
+- **Platform**: macOS (menu bar application)
+- **Functionality**: Displays live oil price updates in macOS menu bar
+- **Assets Available**: 
+  - `/public/files/OilPriceTicker.zip` (application download)
+  - `/public/images/projects/oil-price-ticker/oil-price-icon.png` (app icon/logo)
+  - `/public/images/projects/oil-price-ticker/oil-price-ticker-screenshot.png` (main screenshot)
+  - `/public/images/projects/oil-price-ticker/oil-price-ticker-pref-screenshot.png` (preferences screenshot)
+- **Design Theme**: Orange color palette to match existing color scheme
+- **Placement**: Listed under "Hopping List" in the projects section
+
+## High-level Task Breakdown (New Project Implementation)
+
+### Phase 1: Building Page Integration
+
+- [ ] **Task 17: Add Oil Price Ticker to Building Page Projects Array**
+  - **Action**: Update `src/app/(site)/building/page.tsx` to include Oil Price Ticker project entry:
+    - Add new project object with id: "oil-price-ticker"
+    - Title: "Oil Price Ticker"
+    - Description: "A macOS menu bar app that displays live oil price updates with customizable preferences"
+    - Image: "/images/projects/oil-price-ticker/oil-price-icon.png"
+    - Tags: ["macOS", "Swift", "Menu Bar", "Live Data", "Objective-C"]
+    - Link: "/building/oil-price-ticker"
+    - Download link to zip file: "/files/OilPriceTicker.zip"
+  - **Color Scheme**: Use orange theme for hover effects and styling
+  - **Success Criteria**: Project appears in building page projects section with proper orange styling and download link
+
+### Phase 2: Project Detail Page Creation
+
+- [ ] **Task 18: Create Oil Price Ticker Detail Page**
+  - **Action**: Create `src/app/building/oil-price-ticker/page.tsx` following the hopping-list pattern:
+    - Implement proper metadata with OpenGraph and Twitter cards
+    - Create hero section with title, description, and main screenshot
+    - Add download CTA button linking to zip file
+    - Include feature sections: Live Updates, Menu Bar Integration, Preferences
+    - Add screenshots section showcasing main app and preferences
+    - Implement proper styling with orange color theme
+  - **Content Structure**:
+    - Hero section with main screenshot
+    - Download CTA (primary action)
+    - Key Features section
+    - How It Works section
+    - Screenshots section (main app + preferences)
+    - Technical Details section
+  - **Success Criteria**: Complete project detail page with proper styling, metadata, and content sections
+
+### Phase 3: Styling and Polish
+
+- [ ] **Task 19: Implement Orange Color Theme**
+  - **Action**: Ensure consistent orange color usage throughout:
+    - Update building page hover effects for oil-price-ticker project
+    - Implement orange neon button styling in detail page
+    - Add orange accent colors for tags and highlights
+    - Verify color consistency with existing design system
+  - **Reference**: Follow existing color patterns (magenta for hopping-list, violet for others)
+  - **Success Criteria**: Consistent orange theming throughout oil price ticker sections
+
+### Phase 4: Content Development and Testing
+
+- [ ] **Task 20: Develop Project Content and Verify Integration**
+  - **Action**: Complete content development and testing:
+    - Write compelling project description emphasizing utility and simplicity
+    - Create detailed feature descriptions (live updates, menu bar integration, preferences)
+    - Add technical details about macOS compatibility and installation
+    - Test all links and downloads work properly
+    - Verify responsive design on different screen sizes
+    - Ensure proper navigation between building page and detail page
+  - **Success Criteria**: Complete, polished project presentation with working downloads and navigation
+
+## Executor's Feedback or Assistance Requests
+
+**READY FOR EXECUTION**: All tasks are clearly defined with specific actions, success criteria, and follow established patterns from the existing codebase.
+
+**IMPLEMENTATION NOTES**:
+- Assets are already in correct locations in the repository
+- Color scheme should use orange theme to match existing palette
+- Follow the exact same pattern as hopping-list for consistency
+- Download functionality should link directly to existing zip file
+- All styling should use existing CSS classes and design system
+
+**NEXT STEPS**: Await user confirmation to proceed with Executor mode to implement these tasks.
