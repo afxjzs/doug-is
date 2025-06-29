@@ -98,6 +98,60 @@ The schema includes these main tables:
 - `contact_messages`: Contact form submissions 
 - `user_roles`: User role assignments for access control
 
+## Metadata and Social Media Sharing
+
+This project implements comprehensive metadata and social media sharing functionality across all pages using Next.js 15 Metadata API.
+
+### Features
+
+- **Complete Coverage**: All page types have proper OpenGraph and Twitter Card metadata
+- **Social Platform Support**: Optimized for Twitter/X, LinkedIn, Facebook, Discord, Slack, and messaging apps
+- **Dynamic Generation**: Content-driven metadata for blog posts and projects
+- **SEO Optimization**: Proper meta descriptions and canonical URLs for search engines
+- **Brand Consistency**: Unified "Doug.is" branding across all social sharing
+- **Security**: Admin pages protected with noindex metadata
+
+### Implementation Details
+
+**Metadata Patterns:**
+- Section pages: "Doug.is / SectionName"
+- Project pages: "ProjectName | Building | Doug.is"
+- Blog posts: "PostTitle | Thinking | Doug.is"
+
+**Social Sharing Images:**
+- Dimensions: 1200x630px for optimal platform compatibility
+- Location: `/public/images/` directory
+- Branding: Consistent doug.is visual identity
+
+### Documentation
+
+**Comprehensive Guide**: `.cursor/rules/metadata.mdc`
+- Implementation patterns and examples
+- Social sharing image workflow
+- Testing framework and validation
+- Troubleshooting and debug tools
+
+**Quick Reference**: `METADATA_MAINTENANCE_CHECKLIST.md`
+- Step-by-step checklists for adding new pages
+- Monthly and quarterly maintenance tasks
+- Emergency troubleshooting procedures
+
+### Testing Metadata
+
+```bash
+# Run metadata-specific tests
+npm test -- --testNamePattern="Metadata"
+
+# Validate metadata structure
+npm test src/components/__tests__/MetadataValidation.test.tsx
+```
+
+### Social Platform Debug Tools
+
+- Twitter: https://cards-dev.twitter.com/validator
+- Facebook: https://developers.facebook.com/tools/debug/
+- LinkedIn: https://www.linkedin.com/post-inspector/
+
 ## Deployment
 
 The project is deployed on Vercel. Any push to the main branch will trigger a new deployment.

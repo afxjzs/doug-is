@@ -18,6 +18,13 @@ export const dynamic = "force-dynamic"
 export const metadata: Metadata = {
 	title: "Edit Post | Admin",
 	description: "Edit blog post",
+	robots: {
+		index: false,
+		follow: false,
+		noarchive: true,
+		nosnippet: true,
+		noimageindex: true,
+	},
 }
 
 // Post edit page component

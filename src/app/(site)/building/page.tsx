@@ -1,12 +1,6 @@
-import { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
 import SafeImage from "@/components/SafeImage"
-
-export const metadata: Metadata = {
-	title: "Building | Doug.is",
-	description: "Companies and projects I'm building.",
-}
 
 // Companies I'm currently building
 const companies = [

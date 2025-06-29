@@ -17,6 +17,13 @@ export const dynamic = "force-dynamic"
 export const metadata: Metadata = {
 	title: "Create New Post | Admin",
 	description: "Create a new blog post",
+	robots: {
+		index: false,
+		follow: false,
+		noarchive: true,
+		nosnippet: true,
+		noimageindex: true,
+	},
 }
 
 // New post page component

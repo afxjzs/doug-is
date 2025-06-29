@@ -15,6 +15,7 @@ export default function Footer() {
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
 							This is my personal website. All views expressed here are my own
 							and do not represent the opinions of any affiliated organizations.
+							Or maybe they do. Whatever.
 						</p>
 						<div className="flex space-x-6">
 							<SocialLink
@@ -124,7 +125,7 @@ export default function Footer() {
 										href="/hustling"
 										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),1)] transition-colors"
 									>
-										Hustlin&apos;
+										About
 									</Link>
 								</li>
 								<li>

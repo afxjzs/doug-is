@@ -23,6 +23,13 @@ export const dynamic = "force-dynamic"
 export const metadata: Metadata = {
 	title: "Admin Dashboard | Doug Rogers",
 	description: "Admin dashboard for site management",
+	robots: {
+		index: false,
+		follow: false,
+		noarchive: true,
+		nosnippet: true,
+		noimageindex: true,
+	},
 }
 
 // Admin Error Dashboard Component

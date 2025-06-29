@@ -30,6 +30,33 @@ export const metadata: Metadata = {
 	title: "Doug.is | Developer, Investor, Entrepreneur",
 	description:
 		"Personal website of Douglas E. Rogers - Developer, Investor, and Entrepreneur",
+	openGraph: {
+		title: "Doug.is | Developer, Investor, Entrepreneur",
+		description:
+			"Personal website of Douglas E. Rogers - Developer, Investor, and Entrepreneur",
+		url: "https://doug.is",
+		siteName: "Doug.is",
+		type: "website",
+		images: [
+			{
+				url: "https://doug.is/images/doug-2024-cropped-compr.png",
+				width: 1200,
+				height: 630,
+				alt: "Doug.is - Developer, Investor, Entrepreneur",
+			},
+		],
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Doug.is | Developer, Investor, Entrepreneur",
+		description:
+			"Personal website of Douglas E. Rogers - Developer, Investor, and Entrepreneur",
+		images: ["https://doug.is/images/doug-2024-cropped-compr.png"],
+		creator: "@afxjzs",
+	},
+	alternates: {
+		canonical: "https://doug.is",
+	},
 }
 
 export default async function Home() {

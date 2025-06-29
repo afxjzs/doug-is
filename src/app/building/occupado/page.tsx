@@ -6,6 +6,33 @@ export const metadata: Metadata = {
 	title: "Occupado | Building | Doug.is",
 	description:
 		"A calendar combining app that helps you manage multiple calendars in one place",
+	openGraph: {
+		title: "Occupado - Calendar Combining App",
+		description:
+			"A smart calendar app that helps you manage multiple calendars in one unified view",
+		url: "https://doug.is/building/occupado",
+		siteName: "Doug.is",
+		type: "website",
+		images: [
+			{
+				url: "https://doug.is/images/projects/doug-is.png",
+				width: 1200,
+				height: 630,
+				alt: "Occupado Calendar App",
+			},
+		],
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Occupado - Calendar Combining App",
+		description:
+			"A smart calendar app that helps you manage multiple calendars in one unified view",
+		images: ["https://doug.is/images/projects/doug-is.png"],
+		creator: "@afxjzs",
+	},
+	alternates: {
+		canonical: "https://doug.is/building/occupado",
+	},
 }
 
 export default function OccupadoPage() {

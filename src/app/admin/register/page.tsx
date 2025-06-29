@@ -7,6 +7,13 @@ import RegisterForm from "@/components/admin/RegisterForm"
 export const metadata: Metadata = {
 	title: "Register Admin | Doug.is",
 	description: "Create your admin account",
+	robots: {
+		index: false,
+		follow: false,
+		noarchive: true,
+		nosnippet: true,
+		noimageindex: true,
+	},
 }
 
 /**

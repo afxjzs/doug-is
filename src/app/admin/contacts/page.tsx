@@ -15,6 +15,13 @@ export const dynamic = "force-dynamic"
 export const metadata: Metadata = {
 	title: "Contact Messages | Admin Dashboard",
 	description: "Manage contact form submissions",
+	robots: {
+		index: false,
+		follow: false,
+		noarchive: true,
+		nosnippet: true,
+		noimageindex: true,
+	},
 }
 
 export default async function AdminContactsPage() {

@@ -4,7 +4,7 @@ import Link from "next/link"
 import SocialIcons from "@/components/SocialIcons"
 
 export const metadata: Metadata = {
-	title: "Connect with Doug | Doug.is",
+	title: "Doug.is / Connecting",
 	description:
 		"Get in touch with Doug Rogers for consulting, advising, or collaboration opportunities.",
 }

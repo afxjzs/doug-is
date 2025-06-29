@@ -6,6 +6,33 @@ export const metadata: Metadata = {
 	title: "Inn Ruby Gem | Building | Doug.is",
 	description:
 		"A simple Ruby gem that adds the .in? method as an inverse of Ruby's .include? method",
+	openGraph: {
+		title: "Inn Ruby Gem - Inverse of .include? method",
+		description:
+			"A lightweight Ruby gem that adds the .in? method for improved code readability",
+		url: "https://doug.is/building/inn",
+		siteName: "Doug.is",
+		type: "website",
+		images: [
+			{
+				url: "https://doug.is/images/projects/rubygems-logo.png",
+				width: 1200,
+				height: 630,
+				alt: "Inn Ruby Gem",
+			},
+		],
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Inn Ruby Gem - Inverse of .include? method",
+		description:
+			"A lightweight Ruby gem that adds the .in? method for improved code readability",
+		images: ["https://doug.is/images/projects/rubygems-logo.png"],
+		creator: "@afxjzs",
+	},
+	alternates: {
+		canonical: "https://doug.is/building/inn",
+	},
 }
 
 export default function InnPage() {

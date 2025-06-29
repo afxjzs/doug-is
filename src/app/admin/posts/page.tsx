@@ -16,6 +16,13 @@ export const dynamic = "force-dynamic"
 export const metadata: Metadata = {
 	title: "Admin Posts | Doug Rogers",
 	description: "Manage blog posts",
+	robots: {
+		index: false,
+		follow: false,
+		noarchive: true,
+		nosnippet: true,
+		noimageindex: true,
+	},
 }
 
 export default async function AdminPostsPage({

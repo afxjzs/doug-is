@@ -1,15 +1,8 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Metadata } from "next"
 // import { getPostsByCategory } from "@/lib/supabase/client"
 // import { formatDate } from "@/lib/utils"
 import ConnectCta from "@/components/ConnectCta"
-
-export const metadata: Metadata = {
-	title: "Startup Advisory | Doug.is",
-	description:
-		"Startup advisory services from a YC and Techstars alum specializing in B2B startups and accelerator programs.",
-}
 
 export default async function AdvisingPage() {
 	// Get posts from Supabase with category "advisory"

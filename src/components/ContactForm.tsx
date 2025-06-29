@@ -22,7 +22,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 	const [formState, setFormState] = useState<FormState>({
 		name: "",
 		email: "",
-		subject: subjects?.[0] ?? "",
+		subject: subjects && subjects.length > 0 ? subjects[0] : "",
 		message: "",
 	})
 	const [status, setStatus] = useState<FormStatus>("idle")
@@ -96,7 +96,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 			setFormState({
 				name: "",
 				email: "",
-				subject: subjects?.[0] ?? "",
+				subject: subjects && subjects.length > 0 ? subjects[0] : "",
 				message: "",
 			})
 		} catch (error) {
@@ -212,7 +212,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 				>
 					Subject
 				</label>
-				{subjects ? (
+				{subjects && subjects.length > 0 ? (
 					<select
 						id="subject"
 						name="subject"

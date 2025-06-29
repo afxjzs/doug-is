@@ -1,5 +1,19 @@
 import React from "react"
 import "@testing-library/jest-dom"
+import { TextEncoder, TextDecoder } from "util"
+
+// Polyfills for Next.js server actions in Jest environment
+if (!global.TextEncoder) {
+	global.TextEncoder = TextEncoder
+}
+if (!global.TextDecoder) {
+	global.TextDecoder = TextDecoder as any
+}
+
+// Mock Web APIs not available in Node.js
+global.Request = global.Request || jest.fn()
+global.Response = global.Response || jest.fn()
+global.fetch = global.fetch || jest.fn()
 
 // Mock next/navigation
 jest.mock("next/navigation", () => ({

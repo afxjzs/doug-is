@@ -1,11 +1,5 @@
-import { Metadata } from "next"
 import Image from "next/image"
 import { quotes } from "./quotes"
-
-export const metadata: Metadata = {
-	title: "Investing | Doug.is",
-	description: "Founder-focused investment philosophy and startup advising",
-}
 
 // Function to get a random quote from the quotes array
 function getRandomQuote() {
@@ -33,8 +27,8 @@ export default function InvestingPage() {
 					Founder-Focused Investments
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
-					Former founder who understands what it takes to build something from
-					nothing.
+					Founder-focused investments from someone who understands what it takes
+					to build something from nothing.
 				</p>
 			</div>
 

@@ -65,7 +65,10 @@ export default function OilPriceTickerPage() {
 					</h1>
 					<p className="text-xl text-[rgba(var(--color-foreground),0.8)] max-w-2xl mx-auto leading-relaxed">
 						A macOS menu bar app that displays live oil price updates with
-						customizable preferences and real-time data.
+						customizable preferences and real-time data. Working with NOV, so
+						that means the price of oil is important to me and I just wanted to
+						see how fast I could put this together. <br />
+						Turns out it was about 45 minutes end to end.
 					</p>
 				</div>
 
@@ -364,7 +367,15 @@ export default function OilPriceTickerPage() {
 				</h2>
 				<p className="text-lg text-[rgba(var(--color-foreground),0.7)] mb-8 max-w-2xl mx-auto">
 					Download Oil Price Ticker now and keep up with live oil market data
-					directly from your macOS menu bar.
+					directly from your macOS menu bar. If it breaks or you have any
+					issues, feel free to{" "}
+					<Link
+						href="/contact"
+						className="text-[rgba(var(--color-orange),0.8)] hover:text-[rgba(var(--color-orange),1)] transition-colors"
+					>
+						reach out
+					</Link>
+					.
 				</p>
 				<Link
 					href="/files/OilPriceTicker.zip"

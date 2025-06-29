@@ -6,6 +6,33 @@ export const metadata: Metadata = {
 	title: "Bolt Form | Building | Doug.is",
 	description:
 		"A JavaScript form builder with validation, conditional logic, and API integration",
+	openGraph: {
+		title: "Bolt Form - Advanced JavaScript Form Builder",
+		description:
+			"A powerful form builder with drag-and-drop interface, validation, conditional logic, and API integration",
+		url: "https://doug.is/building/bolt-form",
+		siteName: "Doug.is",
+		type: "website",
+		images: [
+			{
+				url: "https://doug.is/images/projects/doug-is.png",
+				width: 1200,
+				height: 630,
+				alt: "Bolt Form JavaScript Form Builder",
+			},
+		],
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Bolt Form - Advanced JavaScript Form Builder",
+		description:
+			"A powerful form builder with drag-and-drop interface, validation, conditional logic, and API integration",
+		images: ["https://doug.is/images/projects/doug-is.png"],
+		creator: "@afxjzs",
+	},
+	alternates: {
+		canonical: "https://doug.is/building/bolt-form",
+	},
 }
 
 export default function BoltFormPage() {

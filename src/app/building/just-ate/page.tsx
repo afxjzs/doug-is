@@ -6,6 +6,33 @@ export const metadata: Metadata = {
 	title: "JustAte | Building | Doug.is",
 	description:
 		"A timer app that reminds you to exercise at the optimal time after eating to kickstart your metabolism",
+	openGraph: {
+		title: "JustAte - Post-Meal Exercise Timer",
+		description:
+			"A timer app that reminds you to exercise at the optimal time after eating to boost metabolism",
+		url: "https://doug.is/building/just-ate",
+		siteName: "Doug.is",
+		type: "website",
+		images: [
+			{
+				url: "https://doug.is/images/projects/just-ate.jpg",
+				width: 1200,
+				height: 630,
+				alt: "JustAte Exercise Timer App",
+			},
+		],
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "JustAte - Post-Meal Exercise Timer",
+		description:
+			"A timer app that reminds you to exercise at the optimal time after eating to boost metabolism",
+		images: ["https://doug.is/images/projects/just-ate.jpg"],
+		creator: "@afxjzs",
+	},
+	alternates: {
+		canonical: "https://doug.is/building/just-ate",
+	},
 }
 
 export default function JustAtePage() {

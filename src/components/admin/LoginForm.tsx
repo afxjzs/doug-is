@@ -38,9 +38,6 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 	useEffect(() => {
 		if (initialized && user && isAdmin) {
 			// User is already authenticated and is an admin
-			console.log(
-				"User is already authenticated, redirecting to admin dashboard"
-			)
 			if (redirectTo) {
 				router.push(redirectTo)
 			} else {
@@ -48,7 +45,6 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 			}
 		} else if (initialized && user && !isAdmin) {
 			// User is authenticated but not an admin, force logout
-			console.log("Non-admin user detected, forcing logout")
 			logout()
 		}
 	}, [initialized, user, isAdmin, redirectTo, router, logout])

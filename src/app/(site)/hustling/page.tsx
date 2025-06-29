@@ -5,7 +5,7 @@ import SocialIcons from "@/components/SocialIcons"
 import ConnectCta from "@/components/ConnectCta"
 
 export const metadata: Metadata = {
-	title: "Hustling | Doug.is",
+	title: "Doug.is / Hustling",
 	description: "About me and how to get in touch",
 }
 
@@ -64,7 +64,7 @@ export default function HustlingPage() {
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)]">
 							Building modern mobile &amp; web applications with Typescript,
-							Ruby, Flutter, and other technologies.
+							Ruby, Flutter, Swift, and other technologies.
 						</p>
 					</div>
 					<div className="dark-card">
@@ -86,6 +86,21 @@ export default function HustlingPage() {
 						</p>
 					</div>
 				</div>
+			</div>
+			<div className="mb-16">
+				<figure>
+					<Image
+						src="/images/tech-crunch.jpg"
+						alt="TechCrunch article featuring Doug Rogers"
+						width={800}
+						height={400}
+						className="rounded-lg w-full"
+						priority
+					/>
+					<figcaption className="text-center text-sm text-[rgba(var(--color-foreground),0.7)] mt-2">
+						Pitching DubPrime on stage at TechCrunch Disrupt 2024
+					</figcaption>
+				</figure>
 			</div>
 
 			{/* Connect CTA Section */}

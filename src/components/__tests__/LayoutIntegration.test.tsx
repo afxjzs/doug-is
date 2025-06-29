@@ -21,8 +21,38 @@ jest.mock("next/link", () => {
 
 // Mock Next.js Image component
 jest.mock("next/image", () => {
-	return function MockImage({ src, alt, ...props }: any) {
-		return <img src={src} alt={alt} {...props} />
+	return function MockImage({
+		src,
+		alt,
+		width,
+		height,
+		className,
+		style,
+		loading,
+		// Filter out Next.js-specific props that don't belong on HTML img
+		priority,
+		quality,
+		placeholder,
+		fill,
+		sizes,
+		blurDataURL,
+		onLoad,
+		onError,
+		unoptimized,
+		...htmlProps
+	}: any) {
+		return (
+			<img
+				src={src}
+				alt={alt}
+				width={width}
+				height={height}
+				className={className}
+				style={style}
+				loading={loading}
+				{...htmlProps}
+			/>
+		)
 	}
 })
 
