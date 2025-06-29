@@ -1,7 +1,7 @@
 ---
 description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 # Doug.is Project-Specific Instructions
 
@@ -14,6 +14,7 @@ This document provides instructions and best practices tailored specifically to 
 -   The development server runs on **port 3000** and must be managed with the `./start.sh` script.
 -   All database mutations **must** be performed via server-side clients in Server Actions, as specified in the two-client security model in `.cursor/rules/supabase.mdc`.
 -   Adhere strictly to the established **Route Groups architecture** for adding or modifying pages, as documented in `.cursor/rules/nextjs.mdc`.
+-   There is also a `.cursor/rules/instructions.mdc' file that contains all of the universal rules as well. 
 
 ## Technology Stack (Verified Versions)
 
@@ -36,7 +37,7 @@ This project is built with a modern web stack. Adherence to the best practices f
     ```bash
     cd /Users/afxjzs/dev/projects/doug-is && kill $(lsof -t -i:3000) || true && npm run dev
     ```
-    **Note**: The app runs on port 3000, not 3000.
+    **Note**: The app runs on port 3000 (Next.js default).
 -   **Turbopack**: The development environment uses Turbopack for faster performance (`--turbopack` flag is in the `dev` script).
 -   **MCP Servers**: This project may use read-only MCP servers for Supabase and browser interactions. If any MCP tool fails to connect or operate correctly, stop immediately and notify the user.
 

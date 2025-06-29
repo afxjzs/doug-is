@@ -76,6 +76,16 @@ const projects = [
 		github: "https://github.com/afxjzs/hoppinglist",
 		testflight: "https://testflight.apple.com/join/CscPEAD4",
 	},
+	{
+		id: "oil-price-ticker",
+		title: "Oil Price Ticker",
+		description:
+			"A macOS menu bar app that displays live oil price updates with customizable preferences.",
+		image: "/images/projects/oil-price-ticker/oil-price-icon.png",
+		tags: ["macOS", "Swift", "Menu Bar", "Live Data", "Objective-C"],
+		link: "/building/oil-price-ticker",
+		github: "https://github.com/afxjzs/oil-price-ticker",
+	},
 	// {
 	// 	id: "occupado",
 	// 	title: "Occupado",
@@ -221,6 +231,8 @@ export default function BuildingPage() {
 							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] ${
 								project.id === "hopping-list"
 									? "hover:border-[rgba(var(--color-magenta),0.2)]"
+									: project.id === "oil-price-ticker"
+									? "hover:border-[rgba(var(--color-orange),0.2)]"
 									: "hover:border-[rgba(var(--color-violet),0.2)]"
 							} rounded-xl overflow-hidden transition-all duration-300 group`}
 						>
@@ -257,6 +269,8 @@ export default function BuildingPage() {
 												className={`text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 ${
 													project.id === "hopping-list"
 														? "group-hover:text-[rgba(var(--color-magenta),1)]"
+														: project.id === "oil-price-ticker"
+														? "group-hover:text-[rgba(var(--color-orange),1)]"
 														: "group-hover:text-[rgba(var(--color-violet),1)]"
 												} transition-colors`}
 											>
@@ -268,6 +282,8 @@ export default function BuildingPage() {
 											className={`text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 ${
 												project.id === "hopping-list"
 													? "group-hover:text-[rgba(var(--color-magenta),1)]"
+													: project.id === "oil-price-ticker"
+													? "group-hover:text-[rgba(var(--color-orange),1)]"
 													: "group-hover:text-[rgba(var(--color-violet),1)]"
 											} transition-colors`}
 										>
@@ -284,6 +300,8 @@ export default function BuildingPage() {
 												className={`text-xs px-2 py-1 rounded-full ${
 													project.id === "hopping-list"
 														? "bg-[rgba(var(--color-magenta),0.1)] text-[rgba(var(--color-magenta),0.9)]"
+														: project.id === "oil-price-ticker"
+														? "bg-[rgba(var(--color-orange),0.1)] text-[rgba(var(--color-orange),0.9)]"
 														: "bg-[rgba(var(--color-violet),0.1)] text-[rgba(var(--color-violet),0.9)]"
 												}`}
 											>
@@ -293,7 +311,9 @@ export default function BuildingPage() {
 									</div>
 									<div className="flex flex-wrap gap-4">
 										{(project.id === "hopping-list" ||
-											project.id === "migraine-free") &&
+											project.id === "migraine-free" ||
+											project.id === "oil-price-ticker" ||
+											project.id === "inn") &&
 											project.link && (
 												<div className="w-full mb-3">
 													<Link
@@ -301,15 +321,22 @@ export default function BuildingPage() {
 														className={`neon-button-${
 															project.id === "hopping-list"
 																? "magenta"
+																: project.id === "oil-price-ticker"
+																? "orange"
 																: "violet"
 														} text-center block`}
 													>
 														{project.id === "hopping-list"
 															? "View Project Details"
+															: project.id === "oil-price-ticker"
+															? "View Project Details"
+															: project.id === "inn"
+															? "View Project Details"
 															: "View Database"}
 													</Link>
 												</div>
 											)}
+
 										{project.github && (
 											<Link
 												href={project.github}

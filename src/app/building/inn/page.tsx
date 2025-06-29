@@ -26,7 +26,7 @@ export default function InnPage() {
 
 			<div className="relative h-80 rounded-lg overflow-hidden mb-12 bg-white flex items-center justify-center">
 				<SafeImage
-					src="/images/projects/rubygems-logo.png"
+					src="/images/ruby-gems-logo.png"
 					alt="RubyGems Logo"
 					width={300}
 					height={300}
