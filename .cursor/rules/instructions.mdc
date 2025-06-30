@@ -115,6 +115,7 @@ Apply SOLID principles across all programming languages:
 - Consider unit, integration, and end-to-end testing
 - Use appropriate testing frameworks for your language
 - Write maintainable, focused test cases
+- Tests that pass, but produce errors in the testing output are NOT considered "passing."
 
 #### Documentation and Comments
 - Write self-documenting code that reduces comment needs

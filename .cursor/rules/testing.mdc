@@ -7,7 +7,7 @@ alwaysApply: false
 
 ## Overview
 
-This project implements a comprehensive testing strategy with Jest, React Testing Library, and Playwright, following Test-Driven Development (TDD) methodology. All new features and bug fixes must be developed using TDD practices.
+This project implements a comprehensive testing strategy with Jest, React Testing Library, and Playwright, following Test-Driven Development (TDD) methodology. All new features and bug fixes must be developed using TDD practices. Tests that pass, but produce errors in the testing output are NOT considered "passing." 
 
 ## Testing Philosophy
 

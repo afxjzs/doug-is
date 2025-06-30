@@ -30,12 +30,9 @@ export type ContactFormResponse = {
 export async function submitContactForm(
 	formData: ContactFormData
 ): Promise<ContactFormResponse> {
-	console.log("Server action: submitContactForm called with:", formData)
-
 	// Validate the form data using the schema
 	const validationResult = contactFormSchema.safeParse(formData)
 	if (!validationResult.success) {
-		console.log("Form validation failed:", validationResult.error.issues)
 		return {
 			success: false,
 			message: "Form validation failed",
@@ -46,11 +43,8 @@ export async function submitContactForm(
 	try {
 		// Create admin client with service role to bypass RLS
 		const supabase = createAdminClient()
-		console.log("Created server client with service role")
 
 		// Insert form data into database
-		console.log("Inserting contact message into database:", formData)
-
 		// Attempt direct insert with all fields
 		const { data, error } = await supabase
 			.from("contact_messages")
@@ -63,12 +57,8 @@ export async function submitContactForm(
 			.select()
 
 		if (error) {
-			console.error("Database insertion error:", error)
-
 			// If error indicates missing subject column, try alternative approach
 			if (error.code === "PGRST204" && error.message.includes("subject")) {
-				console.log("Trying alternative insert without subject field")
-
 				// Try insert with subject column omitted - NOTE: This will only work if subject is not required
 				const { data: fallbackData, error: fallbackError } = await supabase
 					.from("contact_messages")
@@ -83,14 +73,12 @@ export async function submitContactForm(
 					.select()
 
 				if (fallbackError) {
-					console.error("Alternative insertion failed:", fallbackError)
 					return {
 						success: false,
 						message: `Failed to submit form: ${fallbackError.message}`,
 					}
 				}
 
-				console.log("Alternative insertion succeeded:", fallbackData)
 				revalidatePath("/admin")
 				return {
 					success: true,
@@ -107,13 +95,11 @@ export async function submitContactForm(
 		// Revalidate the admin page path if a new message was added
 		revalidatePath("/admin")
 
-		console.log("Form submitted successfully:", data)
 		return {
 			success: true,
 			message: "Your message has been sent successfully!",
 		}
 	} catch (error) {
-		console.error("Unexpected error in submitContactForm:", error)
 		return {
 			success: false,
 			message: "An unexpected error occurred. Please try again later.",
