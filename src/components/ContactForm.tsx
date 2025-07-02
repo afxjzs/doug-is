@@ -5,6 +5,7 @@ import {
 	submitContactForm,
 	ContactFormData,
 } from "@/lib/actions/contactActions"
+import { useEventTracking } from "@/lib/analytics"
 
 type FormState = ContactFormData
 
@@ -30,13 +31,32 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 	const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
 	const [isVisible, setIsVisible] = useState(false)
 
+	// Analytics tracking
+	const {
+		trackContactFormView,
+		trackContactFormSubmit,
+		trackContactFormSuccess,
+		trackContactFormError,
+	} = useEventTracking()
+
+	// Determine form type based on subjects
+	const formType =
+		subjects && subjects.length > 0 ? "predefined_subjects" : "open_subject"
+
+	// Track form view on component mount
+	useEffect(() => {
+		trackContactFormView(formType)
+	}, [trackContactFormView, formType])
+
 	useEffect(() => {
 		if (status === "success") {
 			setIsVisible(true)
+			// Track successful form submission
+			trackContactFormSuccess(formType)
 		} else {
 			setIsVisible(false)
 		}
-	}, [status])
+	}, [status, trackContactFormSuccess, formType])
 
 	const handleChange = (
 		e: React.ChangeEvent<
@@ -52,6 +72,19 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 		}
 	}
 
+	const handleFieldFocus = (fieldName: string) => {
+		// Track field focus events using the generic event tracker
+		const { trackCustomEvent } = useEventTracking()
+		trackCustomEvent({
+			event: "contact_form_field_focus",
+			properties: {
+				field_name: fieldName,
+				form_type: formType,
+				timestamp: new Date().toISOString(),
+			},
+		})
+	}
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		console.log("Form submission started", formState)
@@ -59,10 +92,17 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 		setErrorMessage("")
 		setFieldErrors({})
 
+		// Track form submission attempt
+		trackContactFormSubmit(
+			formType,
+			typeof window !== "undefined" ? document.referrer : undefined
+		)
+
+		let result: any = null
 		try {
 			// Using server action instead of fetch API
 			console.log("Calling submitContactForm with:", formState)
-			const result = (await submitContactForm(formState)) || {
+			result = (await submitContactForm(formState)) || {
 				success: false,
 				message: "No response from server",
 			}
@@ -77,7 +117,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 				// Process field-specific errors if available
 				if (result?.errors && Array.isArray(result.errors)) {
 					const newFieldErrors: FieldErrors = {}
-					result.errors.forEach((error) => {
+					result.errors.forEach((error: any) => {
 						if (error.path && error.path.length > 0) {
 							const fieldName = error.path[0] as keyof FormState
 							newFieldErrors[fieldName] = error.message
@@ -85,6 +125,12 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 					})
 					setFieldErrors(newFieldErrors)
 				}
+
+				// Track form submission error
+				trackContactFormError(
+					result?.message || "Unknown submission error",
+					formType
+				)
 
 				throw new Error(
 					result?.message || "Something went wrong with form submission"
@@ -99,13 +145,24 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 				subject: subjects && subjects.length > 0 ? subjects[0] : "",
 				message: "",
 			})
-		} catch (error) {
+		} catch (error: any) {
 			console.error("Form submission error details:", error)
 			setStatus("error")
-			setErrorMessage(
+			const errorMsg =
 				error instanceof Error ? error.message : "An unexpected error occurred"
-			)
+			setErrorMessage(errorMsg)
+
+			// Track form submission error if not already tracked
+			if (!result || result.success !== false) {
+				trackContactFormError(errorMsg, formType)
+			}
 		}
+	}
+
+	const handleSendAnotherMessage = () => {
+		setStatus("idle")
+		// Track when user chooses to send another message
+		trackContactFormView(formType) // Track as a new form view
 	}
 
 	// Display thank you message when form is successfully submitted
@@ -131,7 +188,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 						possible.
 					</p>
 					<button
-						onClick={() => setStatus("idle")}
+						onClick={handleSendAnotherMessage}
 						className="neon-button-magenta px-6 py-2"
 					>
 						Send Another Message
@@ -162,6 +219,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 					name="name"
 					value={formState.name}
 					onChange={handleChange}
+					onFocus={() => handleFieldFocus("name")}
 					required
 					disabled={status === "submitting"}
 					className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
@@ -190,6 +248,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 					name="email"
 					value={formState.email}
 					onChange={handleChange}
+					onFocus={() => handleFieldFocus("email")}
 					required
 					disabled={status === "submitting"}
 					className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
@@ -218,6 +277,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 						name="subject"
 						value={formState.subject}
 						onChange={handleChange}
+						onFocus={() => handleFieldFocus("subject")}
 						required
 						disabled={status === "submitting"}
 						className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
@@ -239,6 +299,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 						name="subject"
 						value={formState.subject}
 						onChange={handleChange}
+						onFocus={() => handleFieldFocus("subject")}
 						required
 						disabled={status === "submitting"}
 						className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
@@ -267,6 +328,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 					name="message"
 					value={formState.message}
 					onChange={handleChange}
+					onFocus={() => handleFieldFocus("message")}
 					required
 					disabled={status === "submitting"}
 					rows={6}
