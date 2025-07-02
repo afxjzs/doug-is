@@ -7,6 +7,7 @@ import {
 	AnalyticsProviderComponent,
 	usePageViewTracking,
 } from "@/lib/analytics"
+import { PostHogDebugger } from "./PostHogDebugger"
 
 function PageViewTracker() {
 	const pathname = usePathname()
@@ -28,6 +29,7 @@ export function ClientAnalytics() {
 			<Analytics />
 			<AnalyticsProviderComponent>
 				<PageViewTracker />
+				{process.env.NODE_ENV === "development" && <PostHogDebugger />}
 			</AnalyticsProviderComponent>
 		</>
 	)

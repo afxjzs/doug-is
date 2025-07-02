@@ -1,16 +1,19 @@
 "use client"
 
-import { FC } from "react"
+import { FC, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Post } from "@/lib/supabase/publicClient"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
+import { useEventTracking } from "@/lib/analytics"
 
 /**
  * Component to display an individual blog post
  */
 export const PostView: FC<{ post: Post }> = ({ post }) => {
+	const { trackBlogPostView, trackBlogExternalLinkClick } = useEventTracking()
+
 	const formattedDate = new Date(
 		post.published_at || post.created_at || ""
 	).toLocaleDateString("en-US", {
@@ -18,6 +21,52 @@ export const PostView: FC<{ post: Post }> = ({ post }) => {
 		month: "long",
 		day: "numeric",
 	})
+
+	// Track blog post view on component mount
+	useEffect(() => {
+		if (post) {
+			trackBlogPostView(post.slug, post.title, post.category)
+		}
+	}, [post, trackBlogPostView])
+
+	// Custom link renderer for ReactMarkdown to track external link clicks
+	const LinkRenderer = ({
+		href,
+		children,
+		...props
+	}: React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+		children?: React.ReactNode
+	}) => {
+		const isExternal =
+			href && (href.startsWith("http") || href.startsWith("https"))
+
+		const handleExternalLinkClick = () => {
+			if (isExternal && href) {
+				trackBlogExternalLinkClick(href, post.slug)
+			}
+		}
+
+		if (isExternal) {
+			return (
+				<a
+					href={href}
+					onClick={handleExternalLinkClick}
+					target="_blank"
+					rel="noopener noreferrer"
+					{...props}
+				>
+					{children}
+				</a>
+			)
+		}
+
+		// Internal links or relative links
+		return (
+			<a href={href} {...props}>
+				{children}
+			</a>
+		)
+	}
 
 	return (
 		<div className="max-w-3xl mx-auto p-6">
@@ -50,7 +99,12 @@ export const PostView: FC<{ post: Post }> = ({ post }) => {
 
 			<article className="prose dark:prose-invert lg:prose-lg max-w-none mb-12 prose-headings:text-gray-800 dark:prose-headings:text-gray-100 prose-headings:font-bold prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:font-medium prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-pre:bg-gray-800 dark:prose-pre:bg-gray-900 prose-pre:text-gray-200 prose-blockquote:text-gray-600 dark:prose-blockquote:text-gray-400 prose-blockquote:border-l-4 prose-blockquote:border-gray-300 dark:prose-blockquote:border-gray-700 prose-blockquote:pl-4 prose-blockquote:italic prose-p:my-6">
 				<div className="[&>p]:mb-8">
-					<ReactMarkdown remarkPlugins={[remarkGfm]}>
+					<ReactMarkdown
+						remarkPlugins={[remarkGfm]}
+						components={{
+							a: LinkRenderer,
+						}}
+					>
 						{post.content || ""}
 					</ReactMarkdown>
 				</div>

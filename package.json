@@ -7,7 +7,7 @@
 		"node": ">=20.11.1"
 	},
 	"scripts": {
-		"dev": "./start.sh",
+		"dev": "next dev --turbopack",
 		"dev:turbo": "next dev --turbopack",
 		"build": "next build",
 		"debug-build": "next build --debug",

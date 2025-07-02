@@ -57,12 +57,20 @@ export interface ProjectEvent extends BaseEvent {
 		| "project_github_click"
 		| "project_store_click"
 		| "project_image_interaction"
+		| "portfolio_company_click"
+		| "portfolio_project_click"
+		| "portfolio_external_link_click"
 	properties: {
 		project_name?: string
 		project_type?: string
 		interaction_type?: string
 		external_url?: string
 		time_on_page?: number
+		// Portfolio-specific properties
+		company_id?: string
+		company_name?: string
+		project_id?: string
+		link_type?: string
 		timestamp?: string
 		[key: string]: any // Allow additional properties
 	}
@@ -75,6 +83,7 @@ export interface NavigationEvent extends BaseEvent {
 		| "mobile_menu_toggle"
 		| "internal_link_click"
 		| "analytics_initialized"
+		| "debug_test_event"
 	properties: {
 		from_section?: string
 		to_section?: string

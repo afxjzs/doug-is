@@ -202,6 +202,55 @@ export function useEventTracking() {
 			})
 		},
 
+		// Portfolio events
+		trackPortfolioCompanyClick: (
+			companyId: string,
+			companyName: string,
+			linkType: "website"
+		) => {
+			analytics.trackEvent({
+				event: "portfolio_company_click",
+				properties: {
+					company_id: companyId,
+					company_name: companyName,
+					link_type: linkType,
+					timestamp: new Date().toISOString(),
+				},
+			})
+		},
+
+		trackPortfolioProjectClick: (
+			projectId: string,
+			projectName: string,
+			linkType: "details" | "image"
+		) => {
+			analytics.trackEvent({
+				event: "portfolio_project_click",
+				properties: {
+					project_id: projectId,
+					project_name: projectName,
+					link_type: linkType,
+					timestamp: new Date().toISOString(),
+				},
+			})
+		},
+
+		trackPortfolioExternalLink: (
+			projectId: string,
+			linkType: "github" | "testflight" | "rubygems",
+			url: string
+		) => {
+			analytics.trackEvent({
+				event: "portfolio_external_link_click",
+				properties: {
+					project_id: projectId,
+					link_type: linkType,
+					external_url: url,
+					timestamp: new Date().toISOString(),
+				},
+			})
+		},
+
 		// Navigation events
 		trackSectionNavigation: (fromSection: string, toSection: string) => {
 			analytics.trackEvent({

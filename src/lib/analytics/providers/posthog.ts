@@ -26,21 +26,37 @@ export class PostHogProvider implements AnalyticsProvider {
 		}
 
 		if (!this.apiKey) {
-			console.warn("PostHog API key not found. Analytics will not be tracked.")
+			console.error(
+				"🚨 PostHog CRITICAL: API key not found in environment variables"
+			)
+			console.error("Expected: NEXT_PUBLIC_POSTHOG_KEY")
+			console.error(
+				"Available env vars:",
+				Object.keys(process.env).filter((key) => key.includes("POSTHOG"))
+			)
 			return
 		}
+
+		console.log("🚀 PostHog: Starting initialization...")
+		console.log("🔑 PostHog: API key found (length:", this.apiKey.length, ")")
+		console.log("🌐 PostHog: Host:", this.host)
+		console.log("🔧 PostHog: Environment:", process.env.NODE_ENV)
 
 		try {
 			posthog.init(this.apiKey, {
 				api_host: this.host,
 				defaults: "2025-05-24", // Required configuration snapshot date
-				person_profiles: "identified_only", // Privacy-friendly setting
+				person_profiles: "always", // Allow anonymous events to be processed
 				loaded: (posthog) => {
+					console.log("✅ PostHog: Successfully loaded and ready")
+					console.log("📊 PostHog: Instance details:", {
+						config: posthog.config,
+						persistence: posthog.persistence,
+						sessionRecording: posthog.sessionRecording,
+					})
 					if (process.env.NODE_ENV === "development") {
 						posthog.debug()
-						console.log("PostHog initialized successfully for development")
-					} else {
-						console.log("PostHog initialized successfully for production")
+						console.log("🐛 PostHog: Debug mode enabled for development")
 					}
 				},
 				capture_pageview: false, // We'll handle page views manually
@@ -49,14 +65,18 @@ export class PostHogProvider implements AnalyticsProvider {
 				respect_dnt: true, // Respect Do Not Track headers
 				opt_out_capturing_by_default: false,
 				enable_recording_console_log: false, // Privacy compliance
-				bootstrap: {
-					distinctID: undefined, // Let PostHog handle this
-				},
+				// Let PostHog auto-generate distinct_id for anonymous users
 			})
 
 			this.initialized = true
+			console.log("🎉 PostHog: Initialization completed successfully")
 		} catch (error) {
-			console.error("Failed to initialize PostHog:", error)
+			console.error("❌ PostHog: Initialization failed:", error)
+			console.error("🔍 PostHog: Error details:", {
+				name: error instanceof Error ? error.name : "Unknown",
+				message: error instanceof Error ? error.message : String(error),
+				stack: error instanceof Error ? error.stack : undefined,
+			})
 		}
 	}
 
@@ -72,16 +92,25 @@ export class PostHogProvider implements AnalyticsProvider {
 	 * Interface Segregation: Implements PageTracker interface
 	 */
 	trackPageView(url: string, title?: string): void {
-		if (!this.isInitialized()) return
+		console.log("📄 PostHog: Page view tracking called", { url, title })
+
+		if (!this.isInitialized()) {
+			console.warn("⚠️ PostHog: Page view tracking skipped - not initialized")
+			return
+		}
 
 		try {
-			posthog.capture("$pageview", {
+			const eventData = {
 				$current_url: url,
 				$title: title,
 				timestamp: new Date().toISOString(),
-			})
+			}
+
+			console.log("📤 PostHog: Sending page view event", eventData)
+			posthog.capture("$pageview", eventData)
+			console.log("✅ PostHog: Page view event sent successfully")
 		} catch (error) {
-			console.error("Failed to track page view:", error)
+			console.error("❌ PostHog: Failed to track page view:", error)
 		}
 	}
 
@@ -90,7 +119,18 @@ export class PostHogProvider implements AnalyticsProvider {
 	 * Interface Segregation: Implements EventTracker interface
 	 */
 	trackEvent(event: AnalyticsEvent): void {
-		if (!this.isInitialized()) return
+		console.log("🎯 PostHog: Custom event tracking called", {
+			eventName: event.event,
+			properties: event.properties,
+		})
+
+		if (!this.isInitialized()) {
+			console.warn(
+				"⚠️ PostHog: Custom event tracking skipped - not initialized",
+				event.event
+			)
+			return
+		}
 
 		try {
 			// Add timestamp if not provided
@@ -99,9 +139,14 @@ export class PostHogProvider implements AnalyticsProvider {
 				timestamp: event.timestamp || new Date().toISOString(),
 			}
 
+			console.log("📤 PostHog: Sending custom event", {
+				eventName: event.event,
+				eventData,
+			})
 			posthog.capture(event.event, eventData)
+			console.log("✅ PostHog: Custom event sent successfully", event.event)
 		} catch (error) {
-			console.error("Failed to track event:", error, event)
+			console.error("❌ PostHog: Failed to track event:", error, event)
 		}
 	}
 
@@ -153,5 +198,27 @@ export class PostHogProvider implements AnalyticsProvider {
 	 */
 	getInstance() {
 		return this.isInitialized() ? posthog : null
+	}
+
+	/**
+	 * Get comprehensive configuration status for debugging
+	 * Helps diagnose PostHog connectivity issues
+	 */
+	getDebugInfo() {
+		return {
+			isInitialized: this.initialized,
+			hasApiKey: !!this.apiKey,
+			apiKeyLength: this.apiKey?.length || 0,
+			host: this.host,
+			environment: process.env.NODE_ENV,
+			posthogInstance: this.isInitialized()
+				? {
+						config: posthog.config,
+						isLoaded: posthog.__loaded,
+						persistence: posthog.persistence?.props || {},
+				  }
+				: null,
+			timestamp: new Date().toISOString(),
+		}
 	}
 }

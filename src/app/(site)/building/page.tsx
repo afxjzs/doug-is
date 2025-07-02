@@ -1,6 +1,9 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
 import SafeImage from "@/components/SafeImage"
+import { useEventTracking } from "@/lib/analytics"
 
 // Companies I'm currently building
 const companies = [
@@ -114,6 +117,36 @@ const projects = [
 ]
 
 export default function BuildingPage() {
+	const {
+		trackPortfolioCompanyClick,
+		trackPortfolioProjectClick,
+		trackPortfolioExternalLink,
+	} = useEventTracking()
+
+	const handleCompanyClick = (
+		companyId: string,
+		companyName: string,
+		linkType: "website"
+	) => {
+		trackPortfolioCompanyClick(companyId, companyName, linkType)
+	}
+
+	const handleProjectClick = (
+		projectId: string,
+		projectName: string,
+		linkType: "details" | "image"
+	) => {
+		trackPortfolioProjectClick(projectId, projectName, linkType)
+	}
+
+	const handleExternalLinkClick = (
+		projectId: string,
+		linkType: "github" | "testflight" | "rubygems",
+		url: string
+	) => {
+		trackPortfolioExternalLink(projectId, linkType, url)
+	}
+
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-12">
@@ -188,6 +221,9 @@ export default function BuildingPage() {
 											target="_blank"
 											rel="noopener noreferrer"
 											className={`neon-button-${company.color} text-sm py-2`}
+											onClick={() =>
+												handleCompanyClick(company.id, company.title, "website")
+											}
 										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -235,7 +271,16 @@ export default function BuildingPage() {
 									<div className="w-full h-full flex items-center justify-center">
 										<div className="relative w-full h-[200px] overflow-hidden rounded-xl">
 											{project.link ? (
-												<Link href={project.link}>
+												<Link
+													href={project.link}
+													onClick={() =>
+														handleProjectClick(
+															project.id,
+															project.title,
+															"image"
+														)
+													}
+												>
 													<Image
 														src={project.image}
 														alt={project.title}
@@ -258,7 +303,13 @@ export default function BuildingPage() {
 								</div>
 								<div className="p-6 md:w-3/5">
 									{project.link ? (
-										<Link href={project.link} className="hover:no-underline">
+										<Link
+											href={project.link}
+											className="hover:no-underline"
+											onClick={() =>
+												handleProjectClick(project.id, project.title, "details")
+											}
+										>
 											<h2
 												className={`text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 ${
 													project.id === "hopping-list"
@@ -319,6 +370,13 @@ export default function BuildingPage() {
 																? "orange"
 																: "violet"
 														} text-center block`}
+														onClick={() =>
+															handleProjectClick(
+																project.id,
+																project.title,
+																"details"
+															)
+														}
 													>
 														{project.id === "hopping-list"
 															? "View Project Details"
@@ -337,6 +395,13 @@ export default function BuildingPage() {
 												target="_blank"
 												rel="noopener noreferrer"
 												className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),0.9)] transition-colors"
+												onClick={() =>
+													handleExternalLinkClick(
+														project.id,
+														"github",
+														project.github
+													)
+												}
 											>
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
@@ -355,6 +420,13 @@ export default function BuildingPage() {
 												target="_blank"
 												rel="noopener noreferrer"
 												className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),0.9)] transition-colors"
+												onClick={() =>
+													handleExternalLinkClick(
+														project.id,
+														"testflight",
+														project.testflight
+													)
+												}
 											>
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
@@ -373,6 +445,13 @@ export default function BuildingPage() {
 												target="_blank"
 												rel="noopener noreferrer"
 												className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),0.9)] transition-colors"
+												onClick={() =>
+													handleExternalLinkClick(
+														project.id,
+														"rubygems",
+														project.rubyGems
+													)
+												}
 											>
 												<svg
 													xmlns="http://www.w3.org/2000/svg"

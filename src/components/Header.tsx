@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils/index"
+import { useEventTracking } from "@/lib/analytics"
 
 // Updated navigation items to remove the contact link
 const navItems = [
@@ -17,6 +18,29 @@ export default function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 	const [scrolled, setScrolled] = useState(false)
 	const pathname = usePathname()
+	const { trackSectionNavigation, trackMobileMenuToggle, trackCustomEvent } =
+		useEventTracking()
+
+	const handleNavClick = (toSection: string) => {
+		const fromSection = pathname.split("/")[1] || "home"
+		if (fromSection !== toSection.substring(1)) {
+			// Remove leading slash for comparison
+			trackSectionNavigation(fromSection, toSection.substring(1))
+		}
+	}
+
+	const handleConnectClick = () => {
+		const currentSection = pathname.split("/")[1] || "home"
+		// Track as section navigation to connecting page
+		trackSectionNavigation(currentSection, "connecting")
+	}
+
+	const handleMobileMenuToggle = () => {
+		const newState = !isMenuOpen
+		setIsMenuOpen(newState)
+		// Track mobile menu usage
+		trackMobileMenuToggle(newState ? "open" : "close")
+	}
 
 	// Add scroll effect
 	useEffect(() => {
@@ -71,6 +95,7 @@ export default function Header() {
 							<Link
 								key={item.path}
 								href={item.path}
+								onClick={() => handleNavClick(item.path)}
 								className={`text-lg relative group transition-all duration-300 px-3 py-2 ${
 									pathname === item.path || pathname.startsWith(`${item.path}/`)
 										? "text-[rgba(var(--color-foreground),1)] drop-shadow-[0_0_3px_rgba(var(--color-cyan),0.7)]"
@@ -94,6 +119,7 @@ export default function Header() {
 					<div className="flex-1 flex justify-end">
 						<Link
 							href="/connecting"
+							onClick={handleConnectClick}
 							className="neon-button-magenta text-sm py-2 whitespace-nowrap"
 						>
 							Let&apos;s Connect
@@ -114,7 +140,7 @@ export default function Header() {
 					{/* Mobile menu button */}
 					<button
 						className="text-[rgba(var(--color-foreground),0.9)] z-50"
-						onClick={() => setIsMenuOpen(!isMenuOpen)}
+						onClick={handleMobileMenuToggle}
 						aria-label={isMenuOpen ? "Close menu" : "Open menu"}
 					>
 						{isMenuOpen ? (
@@ -169,7 +195,10 @@ export default function Header() {
 											? "text-[rgba(var(--color-cyan),1)] drop-shadow-[0_0_3px_rgba(var(--color-cyan),0.7)]"
 											: "text-[rgba(var(--color-foreground),0.8)] hover:text-[rgba(var(--color-foreground),1)]"
 									}`}
-									onClick={() => setIsMenuOpen(false)}
+									onClick={() => {
+										handleNavClick(item.path)
+										setIsMenuOpen(false)
+									}}
 								>
 									{item.name}
 									<span
@@ -186,7 +215,10 @@ export default function Header() {
 							<Link
 								href="/connecting"
 								className="neon-button-magenta mt-6"
-								onClick={() => setIsMenuOpen(false)}
+								onClick={() => {
+									handleConnectClick()
+									setIsMenuOpen(false)
+								}}
 							>
 								Let&apos;s Connect
 							</Link>
