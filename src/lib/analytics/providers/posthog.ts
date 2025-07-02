@@ -33,10 +33,14 @@ export class PostHogProvider implements AnalyticsProvider {
 		try {
 			posthog.init(this.apiKey, {
 				api_host: this.host,
+				defaults: "2025-05-24", // Required configuration snapshot date
 				person_profiles: "identified_only", // Privacy-friendly setting
 				loaded: (posthog) => {
 					if (process.env.NODE_ENV === "development") {
 						posthog.debug()
+						console.log("PostHog initialized successfully for development")
+					} else {
+						console.log("PostHog initialized successfully for production")
 					}
 				},
 				capture_pageview: false, // We'll handle page views manually
@@ -45,6 +49,9 @@ export class PostHogProvider implements AnalyticsProvider {
 				respect_dnt: true, // Respect Do Not Track headers
 				opt_out_capturing_by_default: false,
 				enable_recording_console_log: false, // Privacy compliance
+				bootstrap: {
+					distinctID: undefined, // Let PostHog handle this
+				},
 			})
 
 			this.initialized = true

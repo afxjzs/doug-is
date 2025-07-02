@@ -26,6 +26,18 @@ export function AnalyticsProviderComponent({
 	useEffect(() => {
 		// Initialize the analytics provider
 		provider.initialize()
+
+		// Send a test event to verify PostHog is working
+		if (provider.isInitialized()) {
+			provider.trackEvent({
+				event: "analytics_initialized",
+				properties: {
+					provider: "posthog",
+					timestamp: new Date().toISOString(),
+					environment: process.env.NODE_ENV || "production",
+				},
+			})
+		}
 	}, [provider])
 
 	return (

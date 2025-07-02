@@ -74,6 +74,7 @@ export interface NavigationEvent extends BaseEvent {
 		| "navigation_section_change"
 		| "mobile_menu_toggle"
 		| "internal_link_click"
+		| "analytics_initialized"
 	properties: {
 		from_section?: string
 		to_section?: string
