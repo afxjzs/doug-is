@@ -69,15 +69,15 @@ export default function AdminNavigation() {
 			<aside
 				className={`${
 					isOpen ? "translate-x-0" : "-translate-x-full"
-				} fixed inset-y-0 left-0 z-40 w-64 transition-transform duration-300 ease-in-out md:translate-x-0 bg-[rgba(var(--color-background-dark),0.97)] border-r border-[rgba(var(--color-foreground),0.1)]`}
+				} fixed inset-y-0 left-0 z-40 w-64 transition-transform duration-300 ease-in-out md:translate-x-0 bg-[rgba(var(--color-background-dark),0.97)] border-r border-[rgba(var(--color-foreground),0.1)] flex flex-col`}
 			>
 				{/* Admin Logo/Title */}
-				<div className="p-6 border-b border-[rgba(var(--color-foreground),0.1)]">
+				<div className="p-6 border-b border-[rgba(var(--color-foreground),0.1)] flex-shrink-0">
 					<h1 className="text-xl font-bold gradient-heading">Doug.is Admin</h1>
 				</div>
 
 				{/* Navigation Links */}
-				<nav className="p-4">
+				<nav className="p-4 flex-grow">
 					<ul className="space-y-2">
 						{navItems.map((item) => (
 							<li key={item.id}>
@@ -105,30 +105,33 @@ export default function AdminNavigation() {
 					</ul>
 				</nav>
 
-				{/* Admin Actions */}
-				<div className="absolute bottom-14 left-0 right-0 p-4 border-t border-[rgba(var(--color-foreground),0.1)]">
-					<a
-						href="/logout"
-						className="w-full py-2 px-4 flex items-center justify-center text-[rgba(var(--color-red),0.8)] bg-[rgba(var(--color-red),0.05)] rounded-md hover:bg-[rgba(var(--color-red),0.1)] transition-colors"
-						onClick={(e) => {
-							console.log("🚪 AdminNavigation logout clicked")
-							// Let the default navigation happen
-						}}
-					>
-						<span className="mr-2">🚪</span>
-						Sign Out
-					</a>
-				</div>
+				{/* Bottom Actions Section */}
+				<div className="flex-shrink-0">
+					{/* Admin Actions */}
+					<div className="p-4 border-t border-[rgba(var(--color-foreground),0.1)]">
+						<a
+							href="/logout"
+							className="w-full py-2 px-4 flex items-center justify-center text-[rgba(var(--color-red),0.8)] bg-[rgba(var(--color-red),0.05)] rounded-md hover:bg-[rgba(var(--color-red),0.1)] transition-colors"
+							onClick={(e) => {
+								console.log("🚪 AdminNavigation logout clicked")
+								// Let the default navigation happen
+							}}
+						>
+							<span className="mr-2">🚪</span>
+							Sign Out
+						</a>
+					</div>
 
-				{/* View Website Link */}
-				<div className="absolute bottom-0 left-0 right-0 p-4 border-t border-[rgba(var(--color-foreground),0.1)]">
-					<Link
-						href="/"
-						className="w-full py-2 px-4 flex items-center justify-center text-[rgba(var(--color-foreground),0.8)] bg-[rgba(var(--color-foreground),0.05)] rounded-md hover:bg-[rgba(var(--color-foreground),0.1)] transition-colors"
-					>
-						<span className="mr-2">🏠</span>
-						View Website
-					</Link>
+					{/* View Website Link */}
+					<div className="p-4 pt-0">
+						<Link
+							href="/"
+							className="w-full py-2 px-4 flex items-center justify-center text-[rgba(var(--color-foreground),0.8)] bg-[rgba(var(--color-foreground),0.05)] rounded-md hover:bg-[rgba(var(--color-foreground),0.1)] transition-colors"
+						>
+							<span className="mr-2">🏠</span>
+							View Website
+						</Link>
+					</div>
 				</div>
 			</aside>
 

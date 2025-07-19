@@ -134,18 +134,28 @@ export function useAuth(): AuthState & AuthActions {
 		// Set up auth state change listener
 		const {
 			data: { subscription },
-		} = supabase.auth.onAuthStateChange(async (event, currentSession) => {
+		} = supabase.auth.onAuthStateChange(async (event, _session) => {
 			if (!isMounted) return
 
 			console.log("🔄 Auth state changed:", event)
-			if (currentSession?.user) {
-				console.log("✅ User authenticated via state change")
-				setUser(currentSession.user)
-				// SECURITY FIX: Removed session setting
-			} else {
-				console.log("ℹ️ User logged out via state change")
+
+			// SECURITY FIX: Don't trust session from event, validate securely instead
+			if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+				console.log("✅ User signed in via state change - validating securely")
+				// Use secure getUser() to validate authentication
+				const {
+					data: { user: validatedUser },
+					error,
+				} = await supabase.auth.getUser()
+
+				if (!error && validatedUser) {
+					setUser(validatedUser)
+				} else {
+					setUser(null)
+				}
+			} else if (event === "SIGNED_OUT") {
+				console.log("ℹ️ User signed out via state change")
 				setUser(null)
-				// SECURITY FIX: Removed session setting
 			}
 		})
 

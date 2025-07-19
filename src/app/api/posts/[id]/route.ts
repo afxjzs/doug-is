@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { revalidatePath } from "next/cache"
 import {
 	getCurrentUser,
 	isCurrentUserAdmin,
@@ -107,10 +108,10 @@ export async function PATCH(
 		const supabase = createAdminSupabaseClient()
 		console.log("Created admin client for PATCH endpoint")
 
-		// Check if the post exists
+		// Check if the post exists and get current values for cache invalidation
 		const { data: existingPost, error: fetchError } = await supabase
 			.from("posts")
-			.select("id")
+			.select("id, category, slug")
 			.eq("id", id)
 			.single()
 
@@ -177,6 +178,38 @@ export async function PATCH(
 		}
 
 		console.log("Post updated successfully:", data.id)
+
+		// Revalidate all blog-related paths to ensure immediate cache invalidation
+		try {
+			// Always revalidate the main blog pages
+			revalidatePath("/thinking")
+
+			// Revalidate paths for the updated post
+			revalidatePath(`/thinking/${data.category.toLowerCase()}`)
+			revalidatePath(`/thinking/${data.category.toLowerCase()}/${data.slug}`)
+			revalidatePath(`/thinking/about/${data.category.toLowerCase()}`)
+			revalidatePath(
+				`/thinking/about/${data.category.toLowerCase()}/${data.slug}`
+			)
+
+			// If category or slug changed, also revalidate old paths
+			if (postData.category !== data.category || postData.slug !== data.slug) {
+				const oldCategory = existingPost.category?.toLowerCase()
+				const oldSlug = existingPost.slug
+				if (oldCategory && oldSlug) {
+					revalidatePath(`/thinking/${oldCategory}`)
+					revalidatePath(`/thinking/${oldCategory}/${oldSlug}`)
+					revalidatePath(`/thinking/about/${oldCategory}`)
+					revalidatePath(`/thinking/about/${oldCategory}/${oldSlug}`)
+				}
+			}
+
+			console.log("Cache revalidated for updated post:", data.slug)
+		} catch (revalidateError) {
+			console.warn("Error revalidating cache:", revalidateError)
+			// Don't fail the request if revalidation fails
+		}
+
 		return NextResponse.json(data)
 	} catch (error) {
 		console.error("Error in PATCH /api/posts/[id]:", error)
@@ -209,10 +242,10 @@ export async function DELETE(
 		// Create Supabase client with admin privileges
 		const supabase = createAdminSupabaseClient()
 
-		// Check if the post exists
+		// Check if the post exists and get values for cache invalidation
 		const { data: existingPost, error: fetchError } = await supabase
 			.from("posts")
-			.select("id")
+			.select("id, category, slug")
 			.eq("id", id)
 			.single()
 
@@ -229,6 +262,25 @@ export async function DELETE(
 				{ error: "Failed to delete post" },
 				{ status: 500 }
 			)
+		}
+
+		// Revalidate all blog-related paths to ensure immediate cache invalidation
+		try {
+			// Always revalidate the main blog pages
+			revalidatePath("/thinking")
+
+			// Revalidate paths for the deleted post
+			const category = existingPost.category.toLowerCase()
+			const slug = existingPost.slug
+			revalidatePath(`/thinking/${category}`)
+			revalidatePath(`/thinking/${category}/${slug}`)
+			revalidatePath(`/thinking/about/${category}`)
+			revalidatePath(`/thinking/about/${category}/${slug}`)
+
+			console.log("Cache revalidated for deleted post:", slug)
+		} catch (revalidateError) {
+			console.warn("Error revalidating cache:", revalidateError)
+			// Don't fail the request if revalidation fails
 		}
 
 		return NextResponse.json(

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { revalidatePath } from "next/cache"
 import { createAdminClient } from "@/lib/supabase/serverClient"
 import { getPublicSupabaseClient } from "@/lib/supabase/publicClient"
 import { nanoid } from "nanoid"
@@ -139,6 +140,22 @@ export async function POST(request: Request) {
 		}
 
 		console.log("Post created successfully:", data.id)
+
+		// Revalidate all blog-related paths to ensure immediate cache invalidation
+		try {
+			revalidatePath("/thinking")
+			revalidatePath(`/thinking/${data.category.toLowerCase()}`)
+			revalidatePath(`/thinking/${data.category.toLowerCase()}/${data.slug}`)
+			revalidatePath(`/thinking/about/${data.category.toLowerCase()}`)
+			revalidatePath(
+				`/thinking/about/${data.category.toLowerCase()}/${data.slug}`
+			)
+			console.log("Cache revalidated for new post:", data.slug)
+		} catch (revalidateError) {
+			console.warn("Error revalidating cache:", revalidateError)
+			// Don't fail the request if revalidation fails
+		}
+
 		return NextResponse.json(data, { status: 201 })
 	} catch (error) {
 		console.error("Exception in POST /api/posts:", error)
