@@ -110,6 +110,10 @@ export default function AdminNavigation() {
 					<a
 						href="/logout"
 						className="w-full py-2 px-4 flex items-center justify-center text-[rgba(var(--color-red),0.8)] bg-[rgba(var(--color-red),0.05)] rounded-md hover:bg-[rgba(var(--color-red),0.1)] transition-colors"
+						onClick={(e) => {
+							console.log("🚪 AdminNavigation logout clicked")
+							// Let the default navigation happen
+						}}
 					>
 						<span className="mr-2">🚪</span>
 						Sign Out

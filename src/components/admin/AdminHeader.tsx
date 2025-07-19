@@ -80,6 +80,10 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
 					<Link
 						href="/logout"
 						className="text-sm text-[rgba(var(--color-red),0.8)] hover:text-[rgba(var(--color-red),1)] transition-colors"
+						onClick={(e) => {
+							console.log("🚪 AdminHeader logout clicked")
+							// Let the default navigation happen
+						}}
 					>
 						Logout
 					</Link>
