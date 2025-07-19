@@ -60,7 +60,7 @@ export default function HoppingListPage() {
 			</div>
 
 			{/* Main CTA */}
-			<div className="flex justify-center mb-12">
+			<div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
 				<Link
 					href="https://testflight.apple.com/join/CscPEAD4"
 					target="_blank"
@@ -68,6 +68,12 @@ export default function HoppingListPage() {
 					className="neon-button-magenta text-xl py-3 px-8"
 				>
 					Sign up to be a beta tester
+				</Link>
+				<Link
+					href="/building/hopping-list/feedback"
+					className="neon-button-magenta text-xl py-3 px-8 border-2 border-[rgba(var(--color-magenta),0.3)] bg-transparent hover:bg-[rgba(var(--color-magenta),0.1)]"
+				>
+					Give Feedback
 				</Link>
 			</div>
 
@@ -104,14 +110,35 @@ export default function HoppingListPage() {
 						</li>
 						<li>
 							<strong>Provide Feedback</strong> - Your feedback is invaluable to
-							me and helps improve the app before its official release.
+							me and helps improve the app before its official release.{" "}
+							<Link
+								href="/building/hopping-list/feedback"
+								className="text-[rgba(var(--color-magenta),0.9)] hover:text-[rgba(var(--color-magenta),1)] underline font-medium"
+							>
+								Submit feedback here
+							</Link>
+							.
 						</li>
 					</ol>
 					<div className="mt-6 p-4 bg-[rgba(var(--color-foreground),0.05)] rounded-lg border border-[rgba(var(--color-foreground),0.1)]">
-						<p className="text-[rgba(var(--color-foreground),0.8)]">
+						<p className="text-[rgba(var(--color-foreground),0.8)] mb-3">
 							<strong>Note:</strong> TestFlight is only available for iOS
 							devices. Android version coming soon, probably.
 						</p>
+						<div className="flex flex-wrap gap-3">
+							<Link
+								href="/building/hopping-list/feedback"
+								className="text-sm text-[rgba(var(--color-magenta),0.9)] hover:text-[rgba(var(--color-magenta),1)] underline"
+							>
+								Report a Bug
+							</Link>
+							<Link
+								href="/building/hopping-list/feedback"
+								className="text-sm text-[rgba(var(--color-magenta),0.9)] hover:text-[rgba(var(--color-magenta),1)] underline"
+							>
+								Request a Feature
+							</Link>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -279,7 +306,7 @@ export default function HoppingListPage() {
 			</div>
 
 			{/* Secondary CTA */}
-			<div className="flex justify-center mb-16">
+			<div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
 				<Link
 					href="https://testflight.apple.com/join/CscPEAD4"
 					target="_blank"
@@ -287,6 +314,12 @@ export default function HoppingListPage() {
 					className="neon-button-magenta text-xl py-3 px-8"
 				>
 					Become a Beta Tester Now
+				</Link>
+				<Link
+					href="/building/hopping-list/feedback"
+					className="neon-button-magenta text-xl py-3 px-8 border-2 border-[rgba(var(--color-magenta),0.3)] bg-transparent hover:bg-[rgba(var(--color-magenta),0.1)]"
+				>
+					Share Your Feedback
 				</Link>
 			</div>
 

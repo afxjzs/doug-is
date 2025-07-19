@@ -23,13 +23,18 @@ function PageViewTracker() {
 	return null
 }
 
-export function ClientAnalytics() {
+interface ClientAnalyticsProps {
+	children?: React.ReactNode
+}
+
+export function ClientAnalytics({ children }: ClientAnalyticsProps) {
 	return (
 		<>
 			<Analytics />
 			<AnalyticsProviderComponent>
 				<PageViewTracker />
 				{process.env.NODE_ENV === "development" && <PostHogDebugger />}
+				{children}
 			</AnalyticsProviderComponent>
 		</>
 	)

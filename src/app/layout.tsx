@@ -109,8 +109,9 @@ export default function RootLayout({
 		>
 			<head />
 			<body>
-				<TooltipProvider delayDuration={100}>{children}</TooltipProvider>
-				<ClientAnalyticsWrapper />
+				<ClientAnalyticsWrapper>
+					<TooltipProvider delayDuration={100}>{children}</TooltipProvider>
+				</ClientAnalyticsWrapper>
 			</body>
 		</html>
 	)
