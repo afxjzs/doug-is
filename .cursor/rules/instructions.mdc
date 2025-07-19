@@ -151,6 +151,7 @@ Since projects span multiple technology stacks (Python, Swift, Ruby, TypeScript,
 
 - Use `./start.sh` to start/restart the app. Assume the app is already running. DO NOT USE `npm run dev` or any other script to start the app
 - You have access to a read-only MCP server for supabase.
+- NEVER EVER COMMIT CHANGES, CHECKOUT BRANCHES, OR PUSH CODE USING GIT. Only I can do that.
 - You have access to a browser MCP as well. If you cannot connect to it, stop immediately and notify me. You do not need to use cURL. Use the Browser MCP tool.
 - If you attempt to use either MCP server, and it does not work properly, immediately stop what you're doing and alert me
 - After you receive an initial prompt for a new task, update the "Background and Motivation" section, and then invoke the Planner to do the planning.

@@ -7,24 +7,47 @@
 
 import { Metadata } from "next"
 import { redirect } from "next/navigation"
-import { getServerUser, isAdminUser } from "@/lib/auth/supabaseServerAuth"
-import { adminGetPostById } from "@/lib/supabase/serverClient"
+import {
+	getCurrentUser,
+	isCurrentUserAdmin,
+	createAdminSupabaseClient,
+} from "@/lib/auth/unified-auth"
 import PostEditor from "@/components/admin/PostEditor"
 
 // Mark as dynamic to ensure we always get fresh data
 export const dynamic = "force-dynamic"
 
-// Generate metadata for the page
 export const metadata: Metadata = {
 	title: "Edit Post | Admin",
-	description: "Edit blog post",
+	description: "Edit an existing blog post",
 	robots: {
 		index: false,
 		follow: false,
-		noarchive: true,
-		nosnippet: true,
-		noimageindex: true,
 	},
+}
+
+// Admin function to get post by ID using unified auth
+async function adminGetPostById(id: string) {
+	try {
+		console.log("Getting post by ID:", id)
+		const supabase = createAdminSupabaseClient()
+
+		const { data, error } = await supabase
+			.from("posts")
+			.select("*")
+			.eq("id", id)
+			.single()
+
+		if (error) {
+			console.error("Error fetching post:", error)
+			return null
+		}
+
+		return data
+	} catch (error) {
+		console.error("Error in adminGetPostById:", error)
+		return null
+	}
 }
 
 // Post edit page component
@@ -34,9 +57,9 @@ export default async function EditPostPage({
 	params: { id: string }
 }) {
 	try {
-		// Verify user is authenticated and has admin privileges
-		const user = await getServerUser()
-		const isAdmin = await isAdminUser()
+		// Verify user is authenticated and has admin privileges using UNIFIED AUTH
+		const user = await getCurrentUser()
+		const isAdmin = await isCurrentUserAdmin()
 
 		if (!user || !isAdmin) {
 			console.log("Not authenticated as admin, redirecting to login")
@@ -51,7 +74,7 @@ export default async function EditPostPage({
 			redirect("/admin/posts")
 		}
 
-		// Fetch the post data
+		// Fetch the post data using unified auth
 		const post = await adminGetPostById(id)
 
 		if (!post) {

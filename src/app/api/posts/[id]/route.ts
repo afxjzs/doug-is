@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getCurrentUser, isCurrentUserAdmin } from "@/lib/supabase/auth"
-import { createAdminClient } from "@/lib/supabase/serverClient"
+import {
+	getCurrentUser,
+	isCurrentUserAdmin,
+	createAdminSupabaseClient,
+} from "@/lib/auth/unified-auth"
 import { getPublicSupabaseClient } from "@/lib/supabase/publicClient"
 
 export async function GET(
@@ -54,7 +57,7 @@ export async function GET(
 			return NextResponse.json(data)
 		}
 
-		// For unpublished posts, check if user is admin
+		// For unpublished posts, check if user is admin using UNIFIED AUTH
 		const isAdmin = await isCurrentUserAdmin()
 		if (!isAdmin) {
 			return NextResponse.json({ error: "Post not found" }, { status: 404 })
@@ -78,7 +81,7 @@ export async function PATCH(
 		// Properly await the params object to avoid Next.js warning
 		const id = await params.id
 
-		// Check if user is authenticated and has admin privileges
+		// Check if user is authenticated and has admin privileges using UNIFIED AUTH
 		const isAdmin = await isCurrentUserAdmin()
 
 		if (!isAdmin) {
@@ -100,8 +103,8 @@ export async function PATCH(
 			}
 		}
 
-		// Create Supabase client with admin privileges
-		const supabase = createAdminClient()
+		// Create Supabase client with admin privileges using UNIFIED AUTH
+		const supabase = createAdminSupabaseClient()
 		console.log("Created admin client for PATCH endpoint")
 
 		// Check if the post exists
@@ -204,7 +207,7 @@ export async function DELETE(
 		}
 
 		// Create Supabase client with admin privileges
-		const supabase = createAdminClient()
+		const supabase = createAdminSupabaseClient()
 
 		// Check if the post exists
 		const { data: existingPost, error: fetchError } = await supabase

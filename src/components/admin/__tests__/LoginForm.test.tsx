@@ -1,10 +1,10 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import LoginForm from "../LoginForm"
-import { useAuth } from "@/lib/auth/supabaseClientAuth"
+import { useAuth } from "@/lib/auth/unified-auth-hook"
 import { useRouter } from "next/navigation"
 
-// Mock the auth hook
-jest.mock("@/lib/auth/supabaseClientAuth", () => ({
+// Mock the unified auth hook
+jest.mock("@/lib/auth/unified-auth-hook", () => ({
 	useAuth: jest.fn(),
 }))
 

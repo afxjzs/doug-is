@@ -3,10 +3,12 @@
 /**
  * This component provides the login form for the admin area.
  * It includes both password and magic link authentication options.
+ *
+ * Uses UNIFIED AUTHENTICATION SYSTEM for consistency
  */
 
 import { useState, useEffect } from "react"
-import { useAuth } from "@/lib/auth/supabaseClientAuth"
+import { useAuth } from "@/lib/auth/unified-auth-hook"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
@@ -44,7 +46,7 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 				router.push("/admin")
 			}
 		} else if (initialized && user && !isAdmin) {
-			// User is authenticated but not an admin, force logout
+			// User is authenticated but not an admin, logout using the unified hook
 			logout()
 		}
 	}, [initialized, user, isAdmin, redirectTo, router, logout])
@@ -108,7 +110,7 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 		return (
 			<div className="space-y-4">
 				<div className="text-[rgba(var(--color-foreground),0.7)]">
-					<p>Initializing authentication system...</p>
+					<p>Initializing unified authentication system...</p>
 				</div>
 			</div>
 		)

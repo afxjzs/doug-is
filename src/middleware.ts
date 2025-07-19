@@ -1,10 +1,28 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { createServerClient } from "@supabase/ssr"
-import { isAdmin, COOKIE_OPTIONS } from "@/lib/auth/supabase"
+import { ADMIN_EMAILS } from "@/lib/auth/unified-auth"
+
+// Centralized cookie configuration
+const COOKIE_OPTIONS = {
+	httpOnly: false,
+	sameSite: "lax" as const,
+	secure: process.env.NODE_ENV === "production",
+	maxAge: 60 * 60 * 24 * 7, // 7 days
+	path: "/",
+}
+
+// Admin check function
+function isAdmin(email?: string): boolean {
+	if (!email) return false
+	return ADMIN_EMAILS.includes(
+		email.toLowerCase() as (typeof ADMIN_EMAILS)[number]
+	)
+}
 
 /**
  * Middleware to handle authentication and authorization
+ * Uses SECURE authentication validation
  */
 export async function middleware(request: NextRequest) {
 	// Create a response object that we'll modify
@@ -44,31 +62,39 @@ export async function middleware(request: NextRequest) {
 		}
 	)
 
-	// Refresh the auth session
+	// Use SECURE authentication validation - getUser() instead of getSession()
 	const {
-		data: { session },
-	} = await supabase.auth.getSession()
+		data: { user },
+		error,
+	} = await supabase.auth.getUser()
 
 	const { pathname } = request.nextUrl
 	console.log(
-		`Middleware path: ${pathname}, Session: ${!!session}, User: ${
-			session?.user?.email || "none"
+		`Middleware path: ${pathname}, Session: ${!!user}, User: ${
+			user?.email || "none"
 		}`
 	)
+
+	// Log authentication validation method for debugging
+	if (user) {
+		console.log("✅ User validated securely via getUser()")
+	} else if (error) {
+		console.log("⚠️ User validation failed:", error.message)
+	}
 
 	// Handle admin routes
 	if (pathname.startsWith("/admin")) {
 		// Special handling for root admin page - needs to redirect to login if not authenticated
 		if (pathname === "/admin" || pathname === "/admin/") {
-			if (!session || !isAdmin(session.user.email)) {
+			if (!user || !isAdmin(user.email)) {
 				console.log("Root admin access denied - redirecting to login")
 				return NextResponse.redirect(new URL("/admin/login", request.url))
 			}
 		}
 
 		// If at login page and already authenticated as admin, redirect to admin dashboard
-		if (pathname === "/admin/login" && session?.user) {
-			if (isAdmin(session.user.email)) {
+		if (pathname === "/admin/login" && user) {
+			if (isAdmin(user.email)) {
 				console.log("Admin already authenticated, redirecting to dashboard")
 				return NextResponse.redirect(new URL("/admin", request.url))
 			} else {
@@ -80,10 +106,7 @@ export async function middleware(request: NextRequest) {
 		}
 
 		// For other admin routes, require authentication
-		if (
-			pathname !== "/admin/login" &&
-			(!session || !isAdmin(session.user.email))
-		) {
+		if (pathname !== "/admin/login" && (!user || !isAdmin(user.email))) {
 			console.log("Access denied - redirecting to login")
 			return NextResponse.redirect(new URL("/admin/login", request.url))
 		}
@@ -92,9 +115,17 @@ export async function middleware(request: NextRequest) {
 	return response
 }
 
-/**
- * Define which routes this middleware should run on
- */
+// Configure which routes the middleware runs on
 export const config = {
-	matcher: ["/admin", "/admin/:path*", "/api/auth/callback"],
+	matcher: [
+		/*
+		 * Match all request paths except for the ones starting with:
+		 * - api (API routes)
+		 * - _next/static (static files)
+		 * - _next/image (image optimization files)
+		 * - favicon.ico (favicon file)
+		 * - logout/force-logout (logout routes)
+		 */
+		"/((?!api|_next/static|_next/image|favicon.ico|logout|force-logout).*)",
+	],
 }
