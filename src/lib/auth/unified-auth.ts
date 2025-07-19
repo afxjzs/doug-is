@@ -131,40 +131,9 @@ export async function getCurrentUser() {
 }
 
 /**
- * SECURE Session Check - Server Side
- * Validates session by contacting auth server
+ * SECURITY FIX: Removed getCurrentSession function - it was unused and contained getSession() calls
+ * Session data is not needed for security decisions and was causing warnings
  */
-export async function getCurrentSession() {
-	try {
-		const supabase = await createServerSupabaseClient()
-
-		// Get user first using secure method
-		const {
-			data: { user },
-			error,
-		} = await supabase.auth.getUser()
-
-		if (error || !user) {
-			return null
-		}
-
-		// Then get session for additional metadata
-		const {
-			data: { session },
-			error: sessionError,
-		} = await supabase.auth.getSession()
-
-		if (sessionError) {
-			console.warn("Session error:", sessionError.message)
-			return null
-		}
-
-		return session
-	} catch (error) {
-		console.error("Error getting current session:", error)
-		return null
-	}
-}
 
 /**
  * Admin Check - Secure validation

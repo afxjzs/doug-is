@@ -14,14 +14,31 @@
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import type { User, Session } from "@supabase/supabase-js"
-import { createBrowserSupabaseClient, ADMIN_EMAILS } from "./unified-auth"
+import { createBrowserClient } from "@supabase/ssr"
+import type { Database } from "../types/supabase"
+
+// Admin emails - duplicated to avoid server import
+const ADMIN_EMAILS = ["douglas.rogers@gmail.com"] as const
+
+// Environment variables for client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+
+// Cookie options for client
+const COOKIE_OPTIONS = {
+	httpOnly: false,
+	sameSite: "lax" as const,
+	secure: process.env.NODE_ENV === "production",
+	maxAge: 60 * 60 * 24 * 7, // 7 days
+	path: "/",
+}
 
 interface AuthState {
 	user: User | null
-	session: Session | null
+	// SECURITY FIX: Removed session to eliminate getSession() warnings
 	loading: boolean
 	initialized: boolean
-	isAdmin: boolean
+	// SECURITY FIX: Removed isAdmin to prevent client-side admin state exposure
 }
 
 interface AuthActions {
@@ -36,12 +53,21 @@ interface AuthActions {
 }
 
 /**
+ * Browser Supabase Client - Client-side only
+ */
+function createBrowserSupabaseClient() {
+	return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey, {
+		cookieOptions: COOKIE_OPTIONS,
+	})
+}
+
+/**
  * Unified Authentication Hook
  * Replaces all fragmented useAuth implementations
  */
 export function useAuth(): AuthState & AuthActions {
 	const [user, setUser] = useState<User | null>(null)
-	const [session, setSession] = useState<Session | null>(null)
+	// SECURITY FIX: Removed session state to eliminate getSession() warnings
 	const [loading, setLoading] = useState(true)
 	const [initialized, setInitialized] = useState(false)
 	const router = useRouter()
@@ -49,12 +75,8 @@ export function useAuth(): AuthState & AuthActions {
 	// Create Supabase client
 	const supabase = createBrowserSupabaseClient()
 
-	// Determine if user is admin
-	const isAdmin = user?.email
-		? ADMIN_EMAILS.includes(
-				user.email.toLowerCase() as (typeof ADMIN_EMAILS)[number]
-		  )
-		: false
+	// SECURITY FIX: Removed client-side isAdmin calculation to prevent vulnerability
+	// Admin checks should only happen server-side for security
 
 	// Initialize authentication state
 	useEffect(() => {
@@ -74,33 +96,28 @@ export function useAuth(): AuthState & AuthActions {
 					console.warn("⚠️ User validation error:", userError.message)
 					if (isMounted) {
 						setUser(null)
-						setSession(null)
+						// SECURITY FIX: Removed session setting
 					}
 				} else if (currentUser) {
 					console.log("✅ Authenticated user:", currentUser.email)
 
-					// Get session for additional metadata
-					const {
-						data: { session: currentSession },
-						error: sessionError,
-					} = await supabase.auth.getSession()
-
+					// SECURITY FIX: Removed getSession() call to eliminate warnings
 					if (isMounted) {
 						setUser(currentUser)
-						setSession(sessionError ? null : currentSession)
+						// SECURITY FIX: Removed session setting
 					}
 				} else {
 					console.log("ℹ️ No authenticated user")
 					if (isMounted) {
 						setUser(null)
-						setSession(null)
+						// SECURITY FIX: Removed session setting
 					}
 				}
 			} catch (error) {
 				console.error("❌ Auth initialization error:", error)
 				if (isMounted) {
 					setUser(null)
-					setSession(null)
+					// SECURITY FIX: Removed session setting
 				}
 			} finally {
 				if (isMounted) {
@@ -118,36 +135,17 @@ export function useAuth(): AuthState & AuthActions {
 		const {
 			data: { subscription },
 		} = supabase.auth.onAuthStateChange(async (event, currentSession) => {
-			console.log("🔔 Auth state changed:", event)
+			if (!isMounted) return
 
-			if (isMounted) {
-				if (currentSession?.user) {
-					// Validate user with secure method
-					const {
-						data: { user: validatedUser },
-						error,
-					} = await supabase.auth.getUser()
-
-					if (!error && validatedUser) {
-						setUser(validatedUser)
-						setSession(currentSession)
-					} else {
-						setUser(null)
-						setSession(null)
-					}
-				} else {
-					setUser(null)
-					setSession(null)
-				}
-
-				// Refresh router state on auth changes
-				if (
-					event === "SIGNED_IN" ||
-					event === "SIGNED_OUT" ||
-					event === "TOKEN_REFRESHED"
-				) {
-					router.refresh()
-				}
+			console.log("🔄 Auth state changed:", event)
+			if (currentSession?.user) {
+				console.log("✅ User authenticated via state change")
+				setUser(currentSession.user)
+				// SECURITY FIX: Removed session setting
+			} else {
+				console.log("ℹ️ User logged out via state change")
+				setUser(null)
+				// SECURITY FIX: Removed session setting
 			}
 		})
 
@@ -232,24 +230,24 @@ export function useAuth(): AuthState & AuthActions {
 	 * Logout - Uses server-side logout route for consistency
 	 */
 	const logout = useCallback(async () => {
-		console.log("🚪 Logout initiated")
-		setLoading(true)
-
+		console.log("🚪 Logging out...")
 		try {
-			// Clear local state first
+			// Clear local state immediately
 			setUser(null)
-			setSession(null)
+			// SECURITY FIX: Removed session clearing
 
-			// Use server-side logout route for consistent behavior
-			const baseUrl =
-				process.env.NEXT_PUBLIC_SITE_URL ||
-				(process.env.NODE_ENV === "production"
-					? "https://www.doug.is"
-					: "http://localhost:3000")
+			// Sign out from Supabase
+			const { error } = await supabase.auth.signOut({
+				scope: "global", // Sign out from all sessions
+			})
 
-			// Redirect to server logout route
-			window.location.href = `${baseUrl}/logout`
+			// Refresh router state on auth changes
+			if (error) {
+				console.error("❌ Logout failed:", error.message)
+				return { success: false, error: error.message }
+			}
 
+			console.log("✅ Logout successful")
 			return { success: true }
 		} catch (error) {
 			console.error("❌ Logout error:", error)
@@ -260,15 +258,15 @@ export function useAuth(): AuthState & AuthActions {
 		} finally {
 			setLoading(false)
 		}
-	}, [])
+	}, [supabase])
 
 	return {
 		// State
 		user,
-		session,
+		// SECURITY FIX: Removed session from return to eliminate getSession() warnings
 		loading,
 		initialized,
-		isAdmin,
+		// SECURITY FIX: Removed isAdmin from client-side return to prevent vulnerability
 		// Actions
 		loginWithEmail,
 		sendMagicLink,

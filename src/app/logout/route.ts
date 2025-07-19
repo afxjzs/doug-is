@@ -42,14 +42,14 @@ export async function GET() {
 		}
 	)
 
-	// Get current session for logging
+	// SECURITY FIX: Use getUser() instead of getSession() for logging
 	const {
-		data: { session },
-	} = await supabase.auth.getSession()
+		data: { user },
+	} = await supabase.auth.getUser()
 
 	console.log("🚪 Logout initiated:", {
-		hasSession: !!session,
-		user: session?.user?.email || "none",
+		hasUser: !!user,
+		user: user?.email || "none",
 		environment: process.env.NODE_ENV,
 	})
 

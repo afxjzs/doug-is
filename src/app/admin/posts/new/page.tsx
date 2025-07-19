@@ -1,37 +1,32 @@
 /**
  * New Post Page
  *
- * This page provides an interface for creating new blog posts,
- * including the ability to upload featured images.
+ * This page provides an interface for creating new blog posts.
+ * Uses UNIFIED AUTHENTICATION SYSTEM.
  */
 
 import { Metadata } from "next"
 import { redirect } from "next/navigation"
-import { getServerUser, isAdminUser } from "@/lib/auth/supabaseServerAuth"
+import { getCurrentUser, isCurrentUserAdmin } from "@/lib/auth/unified-auth"
 import PostEditor from "@/components/admin/PostEditor"
 
-// Mark as dynamic to ensure we don't cache authentication state
+// Mark as dynamic to ensure we always get fresh data
 export const dynamic = "force-dynamic"
 
-// Generate metadata for the page
 export const metadata: Metadata = {
-	title: "Create New Post | Admin",
+	title: "New Post | Admin",
 	description: "Create a new blog post",
 	robots: {
 		index: false,
 		follow: false,
-		noarchive: true,
-		nosnippet: true,
-		noimageindex: true,
 	},
 }
 
-// New post page component
 export default async function NewPostPage() {
 	try {
-		// Verify user is authenticated and has admin privileges
-		const user = await getServerUser()
-		const isAdmin = await isAdminUser()
+		// Verify user is authenticated and has admin privileges using UNIFIED AUTH
+		const user = await getCurrentUser()
+		const isAdmin = await isCurrentUserAdmin()
 
 		if (!user || !isAdmin) {
 			console.log("Not authenticated as admin, redirecting to login")

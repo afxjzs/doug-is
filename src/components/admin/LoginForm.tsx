@@ -5,6 +5,7 @@
  * It includes both password and magic link authentication options.
  *
  * Uses UNIFIED AUTHENTICATION SYSTEM for consistency
+ * SECURITY FIX: Removed client-side admin checks - admin verification happens server-side only
  */
 
 import { useState, useEffect } from "react"
@@ -23,7 +24,7 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 		loading: authLoading,
 		initialized,
 		user,
-		isAdmin,
+		// SECURITY FIX: Removed isAdmin to prevent client-side admin state exposure
 		logout,
 	} = useAuth()
 	const router = useRouter()
@@ -36,20 +37,19 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 	const [successMessage, setSuccessMessage] = useState<string | null>(null)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 
-	// Handle auth state changes
+	// SECURITY FIX: Removed client-side admin check logic
+	// Admin verification now happens server-side only
+	// After successful login, server-side middleware will handle admin route protection
 	useEffect(() => {
-		if (initialized && user && isAdmin) {
-			// User is already authenticated and is an admin
+		if (initialized && user) {
+			// User is authenticated - redirect to admin (server will verify admin status)
 			if (redirectTo) {
 				router.push(redirectTo)
 			} else {
 				router.push("/admin")
 			}
-		} else if (initialized && user && !isAdmin) {
-			// User is authenticated but not an admin, logout using the unified hook
-			logout()
 		}
-	}, [initialized, user, isAdmin, redirectTo, router, logout])
+	}, [initialized, user, redirectTo, router])
 
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault()
