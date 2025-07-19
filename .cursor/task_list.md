@@ -216,6 +216,34 @@
 
 **CURRENT STATUS**: Implementation complete, ready for testing phase
 
+**⚠️ CRITICAL ISSUE ENCOUNTERED DURING TESTING**:
+
+**BUG REPORT FROM USER**:
+- **Issue**: User was authenticated in admin dashboard but got "session expired" when saving blog post
+- **Symptoms**: PostEditor redirect to `/admin/login` with stuck "Initializing unified authentication system..." message  
+- **Impact**: Prevents testing of cache invalidation fix
+
+**🚨 IMMEDIATE FIXES IMPLEMENTED**:
+
+1. **Enhanced API Route Debugging**: Added comprehensive logging to PATCH `/api/posts/[id]` 
+   - Detailed authentication state logging
+   - User identification and admin status verification  
+   - Clear error messages with debug information
+
+2. **Authentication Hook Timeout Protection**: Added timeout mechanism to prevent infinite loading
+   - 10-second timeout on `supabase.auth.getUser()` calls
+   - Prevents authentication system from hanging indefinitely
+
+3. **Login Form Fallback Mechanism**: Added user-friendly fallback for stuck authentication
+   - 5-second timeout before showing fallback message
+   - "Refresh page" button for recovery
+   - Prevents users from being stuck on loading screen
+
+**🔍 DEBUGGING STRATEGY**:
+- Added emoji-prefixed console logs for easy identification
+- Detailed authentication flow tracking
+- Clear error differentiation (no user vs. not admin vs. other errors)
+
 **TESTING PLAN**:
 1. **Development Testing**: Test blog post create/edit/delete workflow in localhost:3000
 2. **Cache Validation**: Verify that blog post changes appear immediately on live pages
@@ -223,7 +251,16 @@
 4. **Production Deployment**: Test the same workflow on production environment
 
 **NEXT STEPS**: 
-1. Test the cache invalidation in development by editing a blog post
-2. Verify changes appear immediately on blog pages
-3. Deploy to production and validate live environment
-4. Move to Phase 2 (PostHog Analytics) once caching is confirmed working
+1. ✅ **Debug authentication issue** - Fixes implemented, enhanced logging added
+2. Test the cache invalidation in development by editing a blog post
+3. Verify changes appear immediately on blog pages
+4. Deploy to production and validate live environment
+5. Move to Phase 2 (PostHog Analytics) once caching is confirmed working
+
+**DEBUG LOGS TO WATCH**: Look for emoji-prefixed logs in console:
+- 🔧 API endpoint access
+- 🔍 Authentication checks  
+- 👤 User identification
+- 🔒 Admin verification
+- ✅ Success states
+- ❌ Error states

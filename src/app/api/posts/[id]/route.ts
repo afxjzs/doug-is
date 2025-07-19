@@ -81,17 +81,48 @@ export async function PATCH(
 	try {
 		// Properly await the params object to avoid Next.js warning
 		const id = await params.id
+		console.log("🔧 PATCH /api/posts/[id] - Post ID:", id)
+
+		// Debug: Check authentication state with detailed logging
+		console.log("🔍 Checking authentication...")
+		const user = await getCurrentUser()
+		console.log("👤 Current user:", user?.email || "none")
 
 		// Check if user is authenticated and has admin privileges using UNIFIED AUTH
 		const isAdmin = await isCurrentUserAdmin()
+		console.log("🔒 Is admin:", isAdmin)
+
+		if (!user) {
+			console.error("❌ No authenticated user found")
+			return NextResponse.json(
+				{
+					error: "Authentication required",
+					debug: "No user session found",
+				},
+				{ status: 401 }
+			)
+		}
 
 		if (!isAdmin) {
-			console.error("Unauthorized access attempt to PATCH /api/posts/[id]")
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+			console.error("❌ User not admin:", user.email)
+			return NextResponse.json(
+				{
+					error: "Admin privileges required",
+					debug: `User ${user.email} is not an admin`,
+				},
+				{ status: 401 }
+			)
 		}
+
+		console.log("✅ Authentication successful for admin user:", user.email)
 
 		// Parse the request body
 		const postData = await request.json()
+		console.log("📝 Updating post with data:", {
+			title: postData.title,
+			slug: postData.slug,
+			category: postData.category,
+		})
 
 		// Validate required fields - only check fields that exist in the actual database
 		const requiredFields = ["title", "slug", "content", "excerpt", "category"]
@@ -106,7 +137,7 @@ export async function PATCH(
 
 		// Create Supabase client with admin privileges using UNIFIED AUTH
 		const supabase = createAdminSupabaseClient()
-		console.log("Created admin client for PATCH endpoint")
+		console.log("📊 Created admin client for PATCH endpoint")
 
 		// Check if the post exists and get current values for cache invalidation
 		const { data: existingPost, error: fetchError } = await supabase
@@ -116,7 +147,7 @@ export async function PATCH(
 			.single()
 
 		if (fetchError || !existingPost) {
-			console.log("Post not found or error:", fetchError)
+			console.log("❌ Post not found or error:", fetchError)
 			return NextResponse.json({ error: "Post not found" }, { status: 404 })
 		}
 
@@ -151,7 +182,7 @@ export async function PATCH(
 			updated_at: new Date().toISOString(),
 		}
 
-		console.log("Updating post with data:", {
+		console.log("💾 Updating post with data:", {
 			id,
 			title: updateData.title,
 			slug: updateData.slug,
@@ -167,7 +198,7 @@ export async function PATCH(
 			.single()
 
 		if (error) {
-			console.error("Error updating post:", error)
+			console.error("❌ Error updating post:", error)
 			return NextResponse.json(
 				{
 					error: "Failed to update post",
@@ -177,7 +208,7 @@ export async function PATCH(
 			)
 		}
 
-		console.log("Post updated successfully:", data.id)
+		console.log("✅ Post updated successfully:", data.id)
 
 		// Revalidate all blog-related paths to ensure immediate cache invalidation
 		try {
@@ -204,15 +235,15 @@ export async function PATCH(
 				}
 			}
 
-			console.log("Cache revalidated for updated post:", data.slug)
+			console.log("🔄 Cache revalidated for updated post:", data.slug)
 		} catch (revalidateError) {
-			console.warn("Error revalidating cache:", revalidateError)
+			console.warn("⚠️ Error revalidating cache:", revalidateError)
 			// Don't fail the request if revalidation fails
 		}
 
 		return NextResponse.json(data)
 	} catch (error) {
-		console.error("Error in PATCH /api/posts/[id]:", error)
+		console.error("💥 Error in PATCH /api/posts/[id]:", error)
 		return NextResponse.json(
 			{
 				error: "Internal server error",

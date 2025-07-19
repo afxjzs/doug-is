@@ -37,6 +37,20 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 	const [successMessage, setSuccessMessage] = useState<string | null>(null)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 
+	// Fallback state for stuck auth
+	const [showFallback, setShowFallback] = useState(false)
+
+	// Add a timeout fallback in case auth gets stuck
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			if (authLoading) {
+				setShowFallback(true)
+			}
+		}, 5000) // Show fallback after 5 seconds
+
+		return () => clearTimeout(timer)
+	}, [authLoading])
+
 	// SECURITY FIX: Removed client-side admin check logic
 	// Admin verification now happens server-side only
 	// After successful login, server-side middleware will handle admin route protection
@@ -107,6 +121,22 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 
 	// Render loading state
 	if (authLoading) {
+		if (showFallback) {
+			return (
+				<div className="space-y-4">
+					<div className="text-[rgba(var(--color-foreground),0.7)]">
+						<p>Authentication system taking longer than expected...</p>
+						<button
+							onClick={() => window.location.reload()}
+							className="mt-2 text-[rgba(var(--color-violet),0.9)] hover:text-[rgba(var(--color-violet),1)] underline"
+						>
+							Refresh page to try again
+						</button>
+					</div>
+				</div>
+			)
+		}
+
 		return (
 			<div className="space-y-4">
 				<div className="text-[rgba(var(--color-foreground),0.7)]">

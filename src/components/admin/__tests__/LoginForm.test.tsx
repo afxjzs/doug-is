@@ -24,7 +24,7 @@ describe("LoginForm", () => {
 		loading: false,
 		initialized: true,
 		user: null,
-		isAdmin: false,
+		// SECURITY FIX: Removed isAdmin from client-side hook to prevent vulnerability
 		logout: jest.fn(),
 	}
 
@@ -131,29 +131,31 @@ describe("LoginForm", () => {
 		})
 	})
 
-	it("redirects authenticated admin users", () => {
+	it("redirects authenticated users to admin dashboard for server-side verification", () => {
+		const authenticatedMockAuthHook = {
+			...mockAuthHook,
+			user: { id: "123", email: "user@example.com" },
+			initialized: true,
+		}
+		;(useAuth as jest.Mock).mockReturnValue(authenticatedMockAuthHook)
+
+		render(<LoginForm />)
+
+		// SECURITY FIX: All authenticated users are redirected to /admin
+		// Server-side middleware handles admin verification
+		expect(mockRouter.push).toHaveBeenCalledWith("/admin")
+	})
+
+	it("redirects with custom redirect path when provided", () => {
 		const authenticatedMockAuthHook = {
 			...mockAuthHook,
 			user: { id: "123", email: "admin@example.com" },
-			isAdmin: true,
+			initialized: true,
 		}
 		;(useAuth as jest.Mock).mockReturnValue(authenticatedMockAuthHook)
 
 		render(<LoginForm redirectTo="/admin/posts" />)
 
 		expect(mockRouter.push).toHaveBeenCalledWith("/admin/posts")
-	})
-
-	it("logs out non-admin authenticated users", () => {
-		const nonAdminMockAuthHook = {
-			...mockAuthHook,
-			user: { id: "123", email: "user@example.com" },
-			isAdmin: false,
-		}
-		;(useAuth as jest.Mock).mockReturnValue(nonAdminMockAuthHook)
-
-		render(<LoginForm />)
-
-		expect(nonAdminMockAuthHook.logout).toHaveBeenCalled()
 	})
 })

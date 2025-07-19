@@ -86,11 +86,17 @@ export function useAuth(): AuthState & AuthActions {
 			try {
 				console.log("🔄 Initializing unified auth...")
 
+				// Add timeout to prevent infinite loading
+				const authPromise = supabase.auth.getUser()
+				const timeoutPromise = new Promise((_, reject) =>
+					setTimeout(() => reject(new Error("Auth timeout")), 10000)
+				)
+
 				// Use SECURE getUser() instead of insecure getSession()
 				const {
 					data: { user: currentUser },
 					error: userError,
-				} = await supabase.auth.getUser()
+				} = (await Promise.race([authPromise, timeoutPromise])) as any
 
 				if (userError) {
 					console.warn("⚠️ User validation error:", userError.message)
