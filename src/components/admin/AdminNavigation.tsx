@@ -108,7 +108,7 @@ export default function AdminNavigation() {
 				{/* Admin Actions */}
 				<div className="absolute bottom-14 left-0 right-0 p-4 border-t border-[rgba(var(--color-foreground),0.1)]">
 					<a
-						href="/force-logout"
+						href="/logout"
 						className="w-full py-2 px-4 flex items-center justify-center text-[rgba(var(--color-red),0.8)] bg-[rgba(var(--color-red),0.05)] rounded-md hover:bg-[rgba(var(--color-red),0.1)] transition-colors"
 					>
 						<span className="mr-2">🚪</span>

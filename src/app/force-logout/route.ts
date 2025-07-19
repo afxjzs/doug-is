@@ -1,29 +1,83 @@
 /**
- * Force logout route that matches the site's style
+ * Force logout route with best practices
+ * Uses Supabase SSR client and proper environment handling
  */
 
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
+import { createServerClient } from "@supabase/ssr"
+import { COOKIE_OPTIONS } from "@/lib/auth/supabase"
 
 export async function GET() {
 	// Get cookie store
 	const cookieStore = await cookies()
 
-	// Clear all auth-related cookies
+	// Create Supabase SSR client for proper session management
+	const supabase = createServerClient(
+		process.env.NEXT_PUBLIC_SUPABASE_URL!,
+		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+		{
+			cookies: {
+				get(name: string) {
+					return cookieStore.get(name)?.value
+				},
+				set(name: string, value: string, options: any) {
+					// Apply centralized cookie options
+					const cookieOptions = {
+						...options,
+						...COOKIE_OPTIONS,
+					}
+					cookieStore.set({ name, value, ...cookieOptions })
+				},
+				remove(name: string, options: any) {
+					// Apply centralized cookie options when removing
+					const cookieOptions = {
+						...options,
+						...COOKIE_OPTIONS,
+						maxAge: 0, // Override maxAge for cookie removal
+					}
+					cookieStore.set({ name, value: "", ...cookieOptions })
+				},
+			},
+		}
+	)
+
+	// Get current session for logging
+	const {
+		data: { session },
+	} = await supabase.auth.getSession()
+
+	console.log("🚪 Force logout initiated:", {
+		hasSession: !!session,
+		user: session?.user?.email || "none",
+		environment: process.env.NODE_ENV,
+	})
+
+	// Sign out from Supabase (this handles token invalidation)
+	const { error } = await supabase.auth.signOut({
+		scope: "global", // Sign out from all tabs/windows
+	})
+
+	if (error) {
+		console.error("❌ Supabase force logout error:", error)
+		// Continue with cookie cleanup even if Supabase logout fails
+	}
+
+	// Clear all auth-related cookies comprehensively
 	const authCookies = [
 		"sb-access-token",
 		"sb-refresh-token",
 		"supabase-auth-token",
 		"sb:token",
 		"supabase.auth.token",
-		"sb-tzffjzocrazemvtgqavg-auth-token",
+		"sb-tzffjzocrazemvtgqavg-auth-token", // Project-specific token
 	]
 
-	// Delete each cookie
+	// Delete each cookie with proper expiration
 	for (const name of authCookies) {
 		cookieStore.delete(name)
 
-		// Also try setting to expired
+		// Also set to expired for maximum compatibility
 		cookieStore.set({
 			name,
 			value: "",
@@ -33,7 +87,16 @@ export async function GET() {
 		})
 	}
 
-	// Return an HTML response with site styling
+	console.log("✅ Force logout completed successfully")
+
+	// Determine redirect URL based on environment
+	const baseUrl =
+		process.env.NEXT_PUBLIC_SITE_URL ||
+		(process.env.NODE_ENV === "production"
+			? "https://www.doug.is"
+			: "http://localhost:3000")
+
+	// Return an HTML response with site styling and client-side cleanup
 	const html = `
 	<!DOCTYPE html>
 	<html lang="en">
@@ -129,9 +192,12 @@ export async function GET() {
 			// Clear localStorage
 			localStorage.clear();
 			
+			// Clear sessionStorage
+			sessionStorage.clear();
+			
 			// Redirect after a short delay
 			setTimeout(function() {
-				window.location.href = "/admin/login";
+				window.location.href = "${baseUrl}/admin/login";
 			}, 1500);
 		</script>
 	</body>

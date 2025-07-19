@@ -163,9 +163,17 @@ export function useAuth() {
 			}
 
 			console.log("Logout successful")
+
+			// Determine redirect URL based on environment
+			const baseUrl =
+				process.env.NEXT_PUBLIC_SITE_URL ||
+				(process.env.NODE_ENV === "production"
+					? "https://www.doug.is"
+					: "http://localhost:3000")
+
 			// Force a hard reload to /admin/login using window.location
 			// to ensure all state is cleared properly
-			window.location.href = "/admin/login"
+			window.location.href = `${baseUrl}/admin/login`
 			return { success: true }
 		} catch (error) {
 			console.error("Logout error:", error)
