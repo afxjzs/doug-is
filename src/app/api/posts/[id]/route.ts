@@ -212,6 +212,9 @@ export async function PATCH(
 
 		// Revalidate all blog-related paths to ensure immediate cache invalidation
 		try {
+			// HOMEPAGE CACHE: Homepage displays latest blog post content (title, excerpt, etc.)
+			revalidatePath("/")
+
 			// Always revalidate the main blog pages
 			revalidatePath("/thinking")
 
@@ -235,7 +238,10 @@ export async function PATCH(
 				}
 			}
 
-			console.log("🔄 Cache revalidated for updated post:", data.slug)
+			console.log(
+				"🔄 Cache revalidated for updated post (including homepage):",
+				data.slug
+			)
 		} catch (revalidateError) {
 			console.warn("⚠️ Error revalidating cache:", revalidateError)
 			// Don't fail the request if revalidation fails
@@ -297,6 +303,9 @@ export async function DELETE(
 
 		// Revalidate all blog-related paths to ensure immediate cache invalidation
 		try {
+			// HOMEPAGE CACHE: Deletion might change which post appears as "latest" on homepage
+			revalidatePath("/")
+
 			// Always revalidate the main blog pages
 			revalidatePath("/thinking")
 
@@ -308,7 +317,10 @@ export async function DELETE(
 			revalidatePath(`/thinking/about/${category}`)
 			revalidatePath(`/thinking/about/${category}/${slug}`)
 
-			console.log("Cache revalidated for deleted post:", slug)
+			console.log(
+				"Cache revalidated for deleted post (including homepage):",
+				slug
+			)
 		} catch (revalidateError) {
 			console.warn("Error revalidating cache:", revalidateError)
 			// Don't fail the request if revalidation fails

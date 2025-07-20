@@ -143,6 +143,10 @@ export async function POST(request: Request) {
 
 		// Revalidate all blog-related paths to ensure immediate cache invalidation
 		try {
+			// HOMEPAGE CACHE: Homepage displays latest blog post content
+			revalidatePath("/")
+
+			// BLOG PAGES: All blog listing and individual post pages
 			revalidatePath("/thinking")
 			revalidatePath(`/thinking/${data.category.toLowerCase()}`)
 			revalidatePath(`/thinking/${data.category.toLowerCase()}/${data.slug}`)
@@ -150,7 +154,10 @@ export async function POST(request: Request) {
 			revalidatePath(
 				`/thinking/about/${data.category.toLowerCase()}/${data.slug}`
 			)
-			console.log("Cache revalidated for new post:", data.slug)
+			console.log(
+				"Cache revalidated for new post (including homepage):",
+				data.slug
+			)
 		} catch (revalidateError) {
 			console.warn("Error revalidating cache:", revalidateError)
 			// Don't fail the request if revalidation fails

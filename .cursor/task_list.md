@@ -283,6 +283,34 @@
 
 **IMPACT**: ✅ Post editing workflow now functional, protected by automated tests
 
+**🎯 CRITICAL HOMEPAGE CACHE FIX**:
+
+**USER FEEDBACK**: "It needs to invalidate the cache on the homepage too, because there's a blog there. including the excerpt as well."
+
+**ISSUE IDENTIFIED**: Homepage displays the latest blog post (title, excerpt, featured image, date) but wasn't being cache-invalidated when posts were updated.
+
+**HOMEPAGE CONTENT AFFECTED**:
+- Latest blog post title
+- Latest blog post excerpt  
+- Featured image
+- Published date
+- Category and link
+
+**SOLUTION IMPLEMENTED**:
+1. **POST Route** (`/api/posts`): Added `revalidatePath("/")` for new post creation
+2. **PATCH Route** (`/api/posts/[id]`): Added homepage revalidation for post updates  
+3. **DELETE Route** (`/api/posts/[id]`): Added homepage revalidation (deletion changes which post is "latest")
+
+**COMPREHENSIVE CACHE INVALIDATION NOW INCLUDES**:
+- ✅ Homepage (`/`) - Latest blog post content
+- ✅ Blog index (`/thinking`) - All blog posts listing
+- ✅ Category pages (`/thinking/[category]`) - Category-specific posts
+- ✅ Individual posts (`/thinking/[category]/[slug]`) - Post content
+- ✅ Alternative routes (`/thinking/about/[category]/[slug]`) - SEO optimization
+- ✅ Old paths when category/slug changes - Prevents broken links
+
+**IMPACT**: ✅ Blog content updates now appear immediately across the entire site including homepage
+
 **DEBUG LOGS TO WATCH**: Look for emoji-prefixed logs in console:
 - 🔧 API endpoint access
 - 🔍 Authentication checks  
