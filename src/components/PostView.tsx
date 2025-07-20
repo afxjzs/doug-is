@@ -75,7 +75,7 @@ export const PostView: FC<PostViewProps> = ({ post, isDraft = false }) => {
 	}
 
 	return (
-		<div className="max-w-3xl mx-auto p-6">
+		<div className="max-w-3xl mx-auto">
 			{/* Draft Banner - Only shown in admin preview */}
 			{isDraft && (
 				<div className="mb-6 p-4 bg-yellow-900/30 border border-yellow-600/50 rounded-lg">

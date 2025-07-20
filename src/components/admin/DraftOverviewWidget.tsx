@@ -19,8 +19,20 @@ export default function DraftOverviewWidget({
 					<h2 className="text-xl font-semibold">Draft Posts</h2>
 					<Link
 						href="/admin/posts/new"
-						className="bg-[rgba(var(--color-green),0.9)] hover:bg-[rgba(var(--color-green),1)] text-white px-3 py-1 rounded text-sm transition-colors"
+						className="bg-[rgba(var(--color-green),0.9)] hover:bg-[rgba(var(--color-green),1)] text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
 					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							className="h-4 w-4"
+							viewBox="0 0 20 20"
+							fill="currentColor"
+						>
+							<path
+								fillRule="evenodd"
+								d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+								clipRule="evenodd"
+							/>
+						</svg>
 						New Draft
 					</Link>
 				</div>
@@ -60,8 +72,20 @@ export default function DraftOverviewWidget({
 					</div>
 					<Link
 						href="/admin/posts/new"
-						className="bg-[rgba(var(--color-green),0.9)] hover:bg-[rgba(var(--color-green),1)] text-white px-3 py-1 rounded text-sm transition-colors"
+						className="bg-[rgba(var(--color-green),0.9)] hover:bg-[rgba(var(--color-green),1)] text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
 					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							className="h-4 w-4"
+							viewBox="0 0 20 20"
+							fill="currentColor"
+						>
+							<path
+								fillRule="evenodd"
+								d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+								clipRule="evenodd"
+							/>
+						</svg>
 						New Draft
 					</Link>
 				</div>

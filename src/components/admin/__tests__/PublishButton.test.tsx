@@ -234,6 +234,11 @@ describe("PublishButton", () => {
 	it("redirects to custom URL when redirectUrl is provided", async () => {
 		mockPublishPost.mockResolvedValue({ success: true })
 
+		// Mock window.location.href
+		const originalLocation = window.location
+		delete (window as any).location
+		window.location = { ...originalLocation, href: "/admin/posts" } as any
+
 		render(
 			<PublishButton
 				postId="test-id"
@@ -245,8 +250,15 @@ describe("PublishButton", () => {
 		const button = screen.getByRole("button", { name: /publish now/i })
 		fireEvent.click(button)
 
-		await waitFor(() => {
-			expect(window.location.href).toBe("/custom/url")
-		})
+		// Wait for the redirect to happen
+		await waitFor(
+			() => {
+				expect(window.location.href).toBe("/custom/url")
+			},
+			{ timeout: 2000 }
+		)
+
+		// Restore original location
+		window.location = originalLocation as any
 	})
 })

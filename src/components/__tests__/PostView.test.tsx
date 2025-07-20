@@ -106,6 +106,14 @@ describe("PostView Component", () => {
 		})
 	})
 
+	it("renders without container padding when used in layout", () => {
+		const { container } = render(<PostView post={mockPost} />)
+
+		const postContainer = container.firstChild as HTMLElement
+		expect(postContainer).toHaveClass("max-w-3xl", "mx-auto")
+		expect(postContainer).not.toHaveClass("p-6")
+	})
+
 	describe("Draft Mode Functionality", () => {
 		it("does not show draft banner in normal mode", () => {
 			render(<PostView post={mockPost} />)

@@ -81,6 +81,7 @@ export default async function EditPostPage({
 		if (!post) {
 			// Post not found, redirect back to posts list
 			redirect("/admin/posts")
+			return null // Early return to prevent JSX rendering
 		}
 
 		return (
