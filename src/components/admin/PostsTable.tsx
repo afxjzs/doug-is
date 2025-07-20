@@ -165,7 +165,7 @@ export default function PostsTable({ posts }: PostsTableProps) {
 										<td className="px-6 py-4 text-right whitespace-nowrap">
 											<div className="flex items-center justify-end gap-2">
 												<Link
-													href={`/admin/posts/edit/${post.id}`}
+													href={`/admin/posts/${post.id}`}
 													className="p-2 rounded-md text-[rgba(var(--color-violet),1)] hover:bg-[rgba(var(--color-violet),0.1)]"
 												>
 													<svg

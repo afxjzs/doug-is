@@ -101,4 +101,74 @@ describe("PostsTable", () => {
 		expect(excerpt.textContent?.length).toBeLessThanOrEqual(73) // 70 chars + "..."
 		expect(excerpt.textContent?.endsWith("...")).toBe(true)
 	})
+
+	it("generates correct edit URLs without /edit/ path to prevent 404 errors", () => {
+		const mockPosts: Post[] = [
+			{
+				id: "abc123",
+				title: "Test Post 1",
+				slug: "test-post-1",
+				content: "Test content 1",
+				excerpt: "Test excerpt 1",
+				category: "testing",
+				published_at: "2024-01-01T00:00:00.000Z",
+				featured_image: null,
+				created_at: "2024-01-01T00:00:00.000Z",
+				updated_at: "2024-01-01T00:00:00.000Z",
+			},
+			{
+				id: "def456",
+				title: "Test Post 2",
+				slug: "test-post-2",
+				content: "Test content 2",
+				excerpt: "Test excerpt 2",
+				category: "building",
+				published_at: null,
+				featured_image: null,
+				created_at: "2024-01-02T00:00:00.000Z",
+				updated_at: "2024-01-02T00:00:00.000Z",
+			},
+		]
+
+		render(<PostsTable posts={mockPosts} />)
+
+		// Verify edit links use correct URL structure
+		const editLinks = screen
+			.getAllByRole("link")
+			.filter(
+				(link) =>
+					link.getAttribute("href")?.includes("/admin/posts/") &&
+					!link.getAttribute("href")?.includes("/blog/")
+			)
+
+		expect(editLinks).toHaveLength(2)
+		expect(editLinks[0]).toHaveAttribute("href", "/admin/posts/abc123")
+		expect(editLinks[1]).toHaveAttribute("href", "/admin/posts/def456")
+
+		// Ensure no edit links include /edit/ path
+		editLinks.forEach((link) => {
+			expect(link.getAttribute("href")).not.toContain("/edit/")
+		})
+	})
+
+	it("includes screen reader accessible edit button labels", () => {
+		const mockPosts: Post[] = [
+			{
+				id: "1",
+				title: "Test Post",
+				slug: "test-post",
+				content: "Test content",
+				excerpt: "Test excerpt",
+				category: "testing",
+				published_at: "2024-01-01T00:00:00.000Z",
+				featured_image: null,
+				created_at: "2024-01-01T00:00:00.000Z",
+				updated_at: "2024-01-01T00:00:00.000Z",
+			},
+		]
+
+		render(<PostsTable posts={mockPosts} />)
+
+		expect(screen.getByText("Edit")).toBeInTheDocument()
+	})
 })

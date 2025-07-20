@@ -239,6 +239,11 @@
    - "Refresh page" button for recovery
    - Prevents users from being stuck on loading screen
 
+4. **Test Suite Fix**: Fixed failing LoginForm test after security changes ✅
+   - Removed obsolete `isAdmin` client-side property references
+   - Updated test to match new security model (server-side admin verification)
+   - All 164 tests now passing
+
 **🔍 DEBUGGING STRATEGY**:
 - Added emoji-prefixed console logs for easy identification
 - Detailed authentication flow tracking
@@ -252,10 +257,31 @@
 
 **NEXT STEPS**: 
 1. ✅ **Debug authentication issue** - Fixes implemented, enhanced logging added
-2. Test the cache invalidation in development by editing a blog post
-3. Verify changes appear immediately on blog pages
-4. Deploy to production and validate live environment
-5. Move to Phase 2 (PostHog Analytics) once caching is confirmed working
+2. ✅ **Fix failing tests** - LoginForm test updated, all tests passing
+3. ✅ **FIX 404 BUG** - Critical edit post URL mismatch resolved, comprehensive tests added
+4. 🔄 **TEST CACHE INVALIDATION** - Ready to test blog post edit workflow  
+5. Verify changes appear immediately on blog pages
+6. Deploy to production and validate live environment
+7. Move to Phase 2 (PostHog Analytics) once caching is confirmed working
+
+**🚨 CRITICAL 404 BUG FIXED**:
+
+**ISSUE**: PostsTable was generating incorrect edit URLs (`/admin/posts/edit/${id}`) but the actual route was `/admin/posts/${id}`, causing 404 errors when users tried to edit posts.
+
+**SOLUTION IMPLEMENTED**:
+1. **Fixed URL Generation**: Updated PostsTable to generate correct URLs (`/admin/posts/${id}`)
+2. **Added Comprehensive Tests**: Created `EditPostPage.test.tsx` with 8 test scenarios:
+   - ✅ Renders edit page with post data
+   - ✅ Redirects when user not authenticated  
+   - ✅ Redirects when user not admin
+   - ✅ Redirects when post ID missing
+   - ✅ **Handles 404 scenario when post not found**
+   - ✅ Renders error message for unexpected errors
+   - ✅ Verifies correct API calls
+   - ✅ Handles database errors gracefully
+3. **Enhanced PostsTable Tests**: Added URL validation tests to prevent future regressions
+
+**IMPACT**: ✅ Post editing workflow now functional, protected by automated tests
 
 **DEBUG LOGS TO WATCH**: Look for emoji-prefixed logs in console:
 - 🔧 API endpoint access
