@@ -8,10 +8,16 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { useEventTracking } from "@/lib/analytics"
 
+interface PostViewProps {
+	post: Post
+	isDraft?: boolean
+}
+
 /**
  * Component to display an individual blog post
+ * Supports both public viewing and admin draft preview
  */
-export const PostView: FC<{ post: Post }> = ({ post }) => {
+export const PostView: FC<PostViewProps> = ({ post, isDraft = false }) => {
 	const { trackBlogPostView, trackBlogExternalLinkClick } = useEventTracking()
 
 	const formattedDate = new Date(
@@ -70,6 +76,20 @@ export const PostView: FC<{ post: Post }> = ({ post }) => {
 
 	return (
 		<div className="max-w-3xl mx-auto p-6">
+			{/* Draft Banner - Only shown in admin preview */}
+			{isDraft && (
+				<div className="mb-6 p-4 bg-yellow-900/30 border border-yellow-600/50 rounded-lg">
+					<div className="flex items-center gap-2">
+						<div className="h-2 w-2 rounded-full bg-yellow-500" />
+						<span className="text-yellow-400 font-medium">DRAFT PREVIEW</span>
+					</div>
+					<p className="text-yellow-300/80 text-sm mt-1">
+						This is an unpublished draft. Only administrators can view this
+						content.
+					</p>
+				</div>
+			)}
+
 			<header className="mb-8">
 				<h1 className="text-4xl font-bold mb-4">{post.title}</h1>
 				<div className="flex items-center text-gray-500 mb-4">

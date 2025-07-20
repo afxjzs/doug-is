@@ -9,6 +9,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { format } from "date-fns"
 import { Post } from "@/lib/supabase/serverClient"
+import PublishButton from "./PublishButton"
 
 interface PostsTableProps {
 	posts: Post[]
@@ -180,10 +181,29 @@ export default function PostsTable({ posts }: PostsTableProps) {
 													<span className="sr-only">Edit</span>
 												</Link>
 
+												{/* Publish Now Button - Only shown for unpublished posts */}
+												{!post.published_at && (
+													<PublishButton
+														postId={post.id}
+														postTitle={post.title}
+														redirectUrl="/admin/posts"
+													/>
+												)}
+
+												{/* Single View Button - Routes to draft preview for drafts, live post for published */}
 												<Link
-													href={`/blog/${post.slug}`}
-													target="_blank"
+													href={
+														post.published_at
+															? `/thinking/${post.category.toLowerCase()}/${
+																	post.slug
+															  }`
+															: `/admin/posts/${post.id}/preview`
+													}
+													target={post.published_at ? "_blank" : undefined}
 													className="p-2 rounded-md text-[rgba(var(--color-cyan),1)] hover:bg-[rgba(var(--color-cyan),0.1)]"
+													title={
+														post.published_at ? "View Live Post" : "View Draft"
+													}
 												>
 													<svg
 														xmlns="http://www.w3.org/2000/svg"
@@ -199,7 +219,11 @@ export default function PostsTable({ posts }: PostsTableProps) {
 															clipRule="evenodd"
 														/>
 													</svg>
-													<span className="sr-only">View</span>
+													<span className="sr-only">
+														{post.published_at
+															? "View Live Post"
+															: "View Draft"}
+													</span>
 												</Link>
 
 												<button

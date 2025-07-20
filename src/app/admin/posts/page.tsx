@@ -7,6 +7,7 @@
 
 import { Metadata } from "next"
 import { redirect } from "next/navigation"
+import Link from "next/link"
 import {
 	getCurrentUser,
 	isCurrentUserAdmin,
@@ -66,7 +67,27 @@ export default async function AdminPostsPage() {
 
 		return (
 			<div>
-				<h1 className="text-3xl font-bold mb-6">Manage Posts</h1>
+				<div className="flex justify-between items-center mb-6">
+					<h1 className="text-3xl font-bold">Manage Posts</h1>
+					<Link
+						href="/admin/posts/new"
+						className="bg-[rgba(var(--color-green),0.9)] hover:bg-[rgba(var(--color-green),1)] text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							className="h-5 w-5"
+							viewBox="0 0 20 20"
+							fill="currentColor"
+						>
+							<path
+								fillRule="evenodd"
+								d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+								clipRule="evenodd"
+							/>
+						</svg>
+						Create Post
+					</Link>
+				</div>
 				<PostsTable posts={posts} />
 			</div>
 		)

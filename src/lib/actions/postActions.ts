@@ -2,6 +2,7 @@
 
 import { createServerComponentClient, Post } from "@/lib/supabase/serverClient"
 import { normalizeCategory } from "@/lib/supabase/publicClient"
+import { createAdminClient } from "@/lib/supabase/serverClient"
 
 /**
  * Server action to fetch all posts with optional filtering
@@ -126,5 +127,41 @@ export async function fetchPostsByCategory(category: string): Promise<Post[]> {
 	} catch (error) {
 		console.error("Exception fetching posts by category:", error)
 		return []
+	}
+}
+
+/**
+ * Server action to publish a draft post
+ * This uses the admin client to bypass RLS and update the post
+ */
+export async function publishPost(
+	postId: string
+): Promise<{ success: boolean; error?: string }> {
+	try {
+		const supabase = createAdminClient()
+
+		const { data, error } = await supabase
+			.from("posts")
+			.update({
+				published_at: new Date().toISOString(),
+			})
+			.eq("id", postId)
+			.select()
+			.single()
+
+		if (error) {
+			console.error("Error publishing post:", error)
+			return { success: false, error: error.message }
+		}
+
+		if (!data) {
+			return { success: false, error: "Post not found" }
+		}
+
+		console.log(`Successfully published post: ${data.title}`)
+		return { success: true }
+	} catch (error) {
+		console.error("Exception publishing post:", error)
+		return { success: false, error: "Failed to publish post" }
 	}
 }

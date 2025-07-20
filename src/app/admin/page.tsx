@@ -12,6 +12,7 @@ import {
 	createAdminSupabaseClient,
 } from "@/lib/auth/unified-auth"
 import Link from "next/link"
+import DraftOverviewWidget from "@/components/admin/DraftOverviewWidget"
 
 // Force dynamic rendering to ensure fresh data
 export const dynamic = "force-dynamic"
@@ -83,6 +84,10 @@ export default async function AdminPage() {
 			adminGetContactSubmissions(),
 		])
 
+		// Separate drafts from published posts
+		const drafts = posts.filter((p) => !p.published_at)
+		const publishedPosts = posts.filter((p) => p.published_at)
+
 		return (
 			<div className="space-y-8">
 				<div>
@@ -108,11 +113,11 @@ export default async function AdminPage() {
 						<div className="space-y-2">
 							<div className="flex justify-between text-sm">
 								<span>Published:</span>
-								<span>{posts.filter((p) => p.published_at).length}</span>
+								<span>{publishedPosts.length}</span>
 							</div>
 							<div className="flex justify-between text-sm">
 								<span>Drafts:</span>
-								<span>{posts.filter((p) => !p.published_at).length}</span>
+								<span>{drafts.length}</span>
 							</div>
 						</div>
 						<Link
@@ -157,13 +162,16 @@ export default async function AdminPage() {
 					</div>
 				</div>
 
+				{/* Draft Overview Widget */}
+				<DraftOverviewWidget drafts={drafts} />
+
 				{/* Recent Posts */}
 				<div className="admin-card">
 					<div className="p-6 border-b border-[rgba(var(--color-foreground),0.1)]">
 						<h2 className="text-xl font-semibold">Recent Posts</h2>
 					</div>
 					<div className="divide-y divide-[rgba(var(--color-foreground),0.1)]">
-						{posts.slice(0, 5).map((post) => (
+						{publishedPosts.slice(0, 5).map((post) => (
 							<div
 								key={post.id}
 								className="p-6 flex justify-between items-center"
@@ -183,9 +191,9 @@ export default async function AdminPage() {
 								</Link>
 							</div>
 						))}
-						{posts.length === 0 && (
+						{publishedPosts.length === 0 && (
 							<div className="p-6 text-center text-[rgba(var(--color-foreground),0.7)]">
-								No posts yet.{" "}
+								No published posts yet.{" "}
 								<Link
 									href="/admin/posts/new"
 									className="text-[rgba(var(--color-violet),0.9)] hover:text-[rgba(var(--color-violet),1)]"

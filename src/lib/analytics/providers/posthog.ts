@@ -65,6 +65,8 @@ export class PostHogProvider implements AnalyticsProvider {
 				respect_dnt: true, // Respect Do Not Track headers
 				opt_out_capturing_by_default: false,
 				enable_recording_console_log: false, // Privacy compliance
+				autocapture: false, // Disable autocapture to prevent web vitals issues
+				capture_performance: false, // Disable automatic performance tracking
 				// Let PostHog auto-generate distinct_id for anonymous users
 			})
 

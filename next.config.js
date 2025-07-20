@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	// Stable features (formerly experimental)
-	bundlePagesRouterDependencies: true,
 	serverExternalPackages: ["sharp"], // Add packages that should be bundled separately
 
 	// Router cache configuration

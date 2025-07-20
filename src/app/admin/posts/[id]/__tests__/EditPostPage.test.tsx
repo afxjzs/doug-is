@@ -40,6 +40,7 @@ describe("EditPostPage", () => {
 		content: "Test content",
 		slug: "test-post",
 		category: "testing",
+		published_at: null, // Add this to prevent null access
 	}
 
 	const mockSupabaseClient = {

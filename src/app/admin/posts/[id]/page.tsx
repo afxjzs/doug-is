@@ -7,6 +7,7 @@
 
 import { Metadata } from "next"
 import { redirect } from "next/navigation"
+import Link from "next/link"
 import {
 	getCurrentUser,
 	isCurrentUserAdmin,
@@ -84,7 +85,43 @@ export default async function EditPostPage({
 
 		return (
 			<div>
-				<h1 className="text-3xl font-bold mb-6">Edit Post</h1>
+				{/* Header with navigation and actions */}
+				<div className="flex items-center justify-between mb-6">
+					<div className="flex items-center gap-4">
+						<Link
+							href="/admin/posts"
+							className="text-cyan-400 hover:text-cyan-300 transition-colors"
+						>
+							← Back to Posts
+						</Link>
+						<div className="h-4 w-px bg-gray-700" />
+						<h1 className="text-3xl font-bold">Edit Post</h1>
+					</div>
+
+					{/* View Draft Button - Only shown for unpublished posts */}
+					{!post.published_at && (
+						<Link
+							href={`/admin/posts/${post.id}/preview`}
+							className="px-4 py-2 bg-yellow-600 hover:bg-yellow-500 text-white rounded-lg transition-colors flex items-center gap-2"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className="h-4 w-4"
+								viewBox="0 0 20 20"
+								fill="currentColor"
+							>
+								<path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+								<path
+									fillRule="evenodd"
+									d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+									clipRule="evenodd"
+								/>
+							</svg>
+							View Draft
+						</Link>
+					)}
+				</div>
+
 				<PostEditor post={post} mode="edit" />
 			</div>
 		)

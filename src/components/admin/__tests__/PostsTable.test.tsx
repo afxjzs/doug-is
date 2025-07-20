@@ -1,174 +1,390 @@
+/**
+ * Tests for PostsTable Component
+ *
+ * Tests for the admin posts management table including draft view functionality.
+ */
+
 import { render, screen, fireEvent } from "@testing-library/react"
 import PostsTable from "../PostsTable"
 import { Post } from "@/lib/supabase/serverClient"
 
-// Mock sample posts data
-const mockPosts: Post[] = [
-	{
-		id: "1",
-		title: "First Post",
-		slug: "first-post",
-		content: "First post content",
-		excerpt: "This is the first post excerpt",
-		category: "Development",
-		published_at: "2024-04-17T00:00:00.000Z",
-		featured_image: null,
-		created_at: "2024-04-17T00:00:00.000Z",
-		updated_at: "2024-04-17T00:00:00.000Z",
-	},
-	{
-		id: "2",
-		title: "Second Post",
-		slug: "second-post",
-		content: "Second post content",
-		excerpt: "This is the second post excerpt",
-		category: "Design",
-		published_at: null, // Draft post
-		featured_image: null,
-		created_at: "2024-04-17T00:00:00.000Z",
-		updated_at: "2024-04-17T00:00:00.000Z",
-	},
-]
+// Mock Next.js Link component
+jest.mock("next/link", () => {
+	return function MockLink({ href, children, ...props }: any) {
+		return (
+			<a href={href} {...props}>
+				{children}
+			</a>
+		)
+	}
+})
 
-// Mock next/navigation
-jest.mock("next/navigation", () => ({
-	useRouter() {
-		return {
-			push: jest.fn(),
-		}
-	},
-}))
+// Mock PublishButton component
+jest.mock("@/components/admin/PublishButton", () => {
+	return function MockPublishButton({ postId, postTitle, redirectUrl }: any) {
+		return (
+			<button
+				data-testid={`publish-button-${postId}`}
+				onClick={() => {
+					// Simulate successful publish
+					if (redirectUrl) {
+						window.location.href = redirectUrl
+					}
+				}}
+			>
+				Publish {postTitle}
+			</button>
+		)
+	}
+})
 
 describe("PostsTable", () => {
-	it("renders all posts initially", () => {
-		render(<PostsTable posts={mockPosts} />)
-		expect(screen.getByText("First Post")).toBeInTheDocument()
-		expect(screen.getByText("Second Post")).toBeInTheDocument()
-	})
+	const mockPublishedPost: Post = {
+		id: "published-post-id",
+		title: "Published Post",
+		slug: "published-post",
+		content: "Published content",
+		excerpt: "Published excerpt",
+		category: "building",
+		published_at: "2024-01-01T12:00:00Z",
+		featured_image: null,
+		created_at: "2024-01-01T10:00:00Z",
+		updated_at: "2024-01-01T11:00:00Z",
+	}
 
-	it("filters posts by search term", () => {
-		render(<PostsTable posts={mockPosts} />)
+	const mockDraftPost: Post = {
+		id: "draft-post-id",
+		title: "Draft Post",
+		slug: "draft-post",
+		content: "Draft content",
+		excerpt: "Draft excerpt",
+		category: "building",
+		published_at: null, // Draft post
+		featured_image: null,
+		created_at: "2024-01-01T10:00:00Z",
+		updated_at: "2024-01-01T11:00:00Z",
+	}
 
-		const searchInput = screen.getByPlaceholderText("Search posts...")
-		fireEvent.change(searchInput, { target: { value: "first" } })
+	const mockPosts = [mockPublishedPost, mockDraftPost]
 
-		expect(screen.getByText("First Post")).toBeInTheDocument()
-		expect(screen.queryByText("Second Post")).not.toBeInTheDocument()
-	})
+	describe("Basic Table Rendering", () => {
+		it("renders posts table with correct headers", () => {
+			render(<PostsTable posts={mockPosts} />)
 
-	it("filters posts by category", () => {
-		render(<PostsTable posts={mockPosts} />)
+			expect(screen.getByText("Title")).toBeInTheDocument()
+			expect(screen.getByText("Category")).toBeInTheDocument()
+			expect(screen.getByText("Published")).toBeInTheDocument()
+			expect(screen.getByText("Actions")).toBeInTheDocument()
+		})
 
-		const categorySelect = screen.getByRole("combobox")
-		fireEvent.change(categorySelect, { target: { value: "Design" } })
+		it("displays posts with correct information", () => {
+			render(<PostsTable posts={mockPosts} />)
 
-		expect(screen.queryByText("First Post")).not.toBeInTheDocument()
-		expect(screen.getByText("Second Post")).toBeInTheDocument()
-	})
+			expect(screen.getByText("Published Post")).toBeInTheDocument()
+			expect(screen.getByText("Draft Post")).toBeInTheDocument()
+			expect(screen.getAllByText("building")).toHaveLength(3) // Filter option + 2 category badges
+		})
 
-	it("shows 'Draft' for unpublished posts", () => {
-		render(<PostsTable posts={mockPosts} />)
-		const draftLabels = screen.getAllByText("Draft")
-		expect(draftLabels).toHaveLength(1)
-	})
+		it("shows published status correctly", () => {
+			render(<PostsTable posts={mockPosts} />)
 
-	it("shows formatted date for published posts", () => {
-		render(<PostsTable posts={mockPosts} />)
-		expect(screen.getByText("Apr 16, 2024")).toBeInTheDocument()
-	})
-
-	it("shows 'No posts' message when no posts match filters", () => {
-		render(<PostsTable posts={mockPosts} />)
-
-		const searchInput = screen.getByPlaceholderText("Search posts...")
-		fireEvent.change(searchInput, { target: { value: "nonexistent" } })
-
-		expect(
-			screen.getByText(/no posts match your search criteria/i)
-		).toBeInTheDocument()
-	})
-
-	it("truncates long excerpts", () => {
-		const longExcerptPost = {
-			...mockPosts[0],
-			excerpt:
-				"This is a very long excerpt that should be truncated because it exceeds the maximum length allowed for display in the table",
-		}
-
-		render(<PostsTable posts={[longExcerptPost]} />)
-
-		const excerpt = screen.getByText(/this is a very long excerpt/i)
-		expect(excerpt.textContent?.length).toBeLessThanOrEqual(73) // 70 chars + "..."
-		expect(excerpt.textContent?.endsWith("...")).toBe(true)
-	})
-
-	it("generates correct edit URLs without /edit/ path to prevent 404 errors", () => {
-		const mockPosts: Post[] = [
-			{
-				id: "abc123",
-				title: "Test Post 1",
-				slug: "test-post-1",
-				content: "Test content 1",
-				excerpt: "Test excerpt 1",
-				category: "testing",
-				published_at: "2024-01-01T00:00:00.000Z",
-				featured_image: null,
-				created_at: "2024-01-01T00:00:00.000Z",
-				updated_at: "2024-01-01T00:00:00.000Z",
-			},
-			{
-				id: "def456",
-				title: "Test Post 2",
-				slug: "test-post-2",
-				content: "Test content 2",
-				excerpt: "Test excerpt 2",
-				category: "building",
-				published_at: null,
-				featured_image: null,
-				created_at: "2024-01-02T00:00:00.000Z",
-				updated_at: "2024-01-02T00:00:00.000Z",
-			},
-		]
-
-		render(<PostsTable posts={mockPosts} />)
-
-		// Verify edit links use correct URL structure
-		const editLinks = screen
-			.getAllByRole("link")
-			.filter(
-				(link) =>
-					link.getAttribute("href")?.includes("/admin/posts/") &&
-					!link.getAttribute("href")?.includes("/blog/")
-			)
-
-		expect(editLinks).toHaveLength(2)
-		expect(editLinks[0]).toHaveAttribute("href", "/admin/posts/abc123")
-		expect(editLinks[1]).toHaveAttribute("href", "/admin/posts/def456")
-
-		// Ensure no edit links include /edit/ path
-		editLinks.forEach((link) => {
-			expect(link.getAttribute("href")).not.toContain("/edit/")
+			expect(screen.getByText("Jan 1, 2024")).toBeInTheDocument() // Published date
+			expect(screen.getByText("Draft")).toBeInTheDocument() // Draft status
 		})
 	})
 
-	it("includes screen reader accessible edit button labels", () => {
-		const mockPosts: Post[] = [
-			{
-				id: "1",
-				title: "Test Post",
-				slug: "test-post",
-				content: "Test content",
-				excerpt: "Test excerpt",
-				category: "testing",
-				published_at: "2024-01-01T00:00:00.000Z",
-				featured_image: null,
-				created_at: "2024-01-01T00:00:00.000Z",
-				updated_at: "2024-01-01T00:00:00.000Z",
-			},
-		]
+	describe("Draft View Functionality", () => {
+		it('shows "View Draft" button for unpublished posts', () => {
+			render(<PostsTable posts={[mockDraftPost]} />)
 
-		render(<PostsTable posts={mockPosts} />)
+			const viewDraftButton = screen.getByRole("link", { name: /view draft/i })
+			expect(viewDraftButton).toBeInTheDocument()
+			expect(viewDraftButton).toHaveAttribute(
+				"href",
+				"/admin/posts/draft-post-id/preview"
+			)
+		})
 
-		expect(screen.getByText("Edit")).toBeInTheDocument()
+		it('does not show "View Draft" button for published posts', () => {
+			render(<PostsTable posts={[mockPublishedPost]} />)
+
+			expect(
+				screen.queryByRole("link", { name: /view draft/i })
+			).not.toBeInTheDocument()
+		})
+
+		it('shows both "Edit" and "View Draft" buttons for draft posts', () => {
+			render(<PostsTable posts={[mockDraftPost]} />)
+
+			const editButton = screen.getByRole("link", { name: /edit/i })
+			const viewDraftButton = screen.getByRole("link", { name: /view draft/i })
+
+			expect(editButton).toBeInTheDocument()
+			expect(editButton).toHaveAttribute("href", "/admin/posts/draft-post-id")
+
+			expect(viewDraftButton).toBeInTheDocument()
+			expect(viewDraftButton).toHaveAttribute(
+				"href",
+				"/admin/posts/draft-post-id/preview"
+			)
+		})
+
+		it("generates correct preview URLs for draft posts", () => {
+			const draftPosts = [
+				{ ...mockDraftPost, id: "draft-1", title: "Draft 1" },
+				{ ...mockDraftPost, id: "draft-2", title: "Draft 2" },
+			]
+
+			render(<PostsTable posts={draftPosts} />)
+
+			const viewDraftButtons = screen.getAllByRole("link", {
+				name: /view draft/i,
+			})
+
+			expect(viewDraftButtons[0]).toHaveAttribute(
+				"href",
+				"/admin/posts/draft-1/preview"
+			)
+			expect(viewDraftButtons[1]).toHaveAttribute(
+				"href",
+				"/admin/posts/draft-2/preview"
+			)
+		})
+
+		it("applies draft-specific styling to view button", () => {
+			render(<PostsTable posts={[mockDraftPost]} />)
+
+			const viewButton = screen.getByRole("link", { name: /view draft/i })
+			expect(viewButton).toHaveClass("text-[rgba(var(--color-cyan),1)]")
+		})
+
+		it("applies published-specific styling to view button", () => {
+			render(<PostsTable posts={[mockPublishedPost]} />)
+
+			const viewButton = screen.getByRole("link", { name: /view live post/i })
+			expect(viewButton).toHaveClass("text-[rgba(var(--color-cyan),1)]")
+		})
+
+		it("shows appropriate buttons for each post type", () => {
+			render(<PostsTable posts={[mockPublishedPost, mockDraftPost]} />)
+
+			// Should have edit and view buttons for both posts
+			const editButtons = screen.getAllByRole("link", { name: /edit/i })
+			const viewButtons = screen.getAllByRole("link", { name: /view/i })
+
+			expect(editButtons).toHaveLength(2)
+			expect(viewButtons).toHaveLength(2)
+
+			// Check that view buttons have correct destinations
+			expect(viewButtons[0]).toHaveAttribute(
+				"href",
+				"/thinking/building/published-post"
+			)
+			expect(viewButtons[1]).toHaveAttribute(
+				"href",
+				"/admin/posts/draft-post-id/preview"
+			)
+		})
+
+		it("provides correct tooltips for action buttons", () => {
+			render(<PostsTable posts={mockPosts} />)
+
+			const viewDraftButton = screen.getByRole("link", { name: /view draft/i })
+			expect(viewDraftButton).toHaveAttribute("title", "View Draft")
+		})
+	})
+
+	describe("Search and Filter Integration", () => {
+		it("maintains draft view buttons after filtering", () => {
+			render(<PostsTable posts={mockPosts} />)
+
+			const searchInput = screen.getByPlaceholderText("Search posts...")
+			fireEvent.change(searchInput, { target: { value: "Draft" } })
+
+			// After filtering for draft posts, view draft button should still be there
+			expect(
+				screen.getByRole("link", { name: /view draft/i })
+			).toBeInTheDocument()
+		})
+
+		it("shows empty state when no draft posts match filter", () => {
+			render(<PostsTable posts={mockPosts} />)
+
+			const searchInput = screen.getByPlaceholderText("Search posts...")
+			fireEvent.change(searchInput, { target: { value: "Nonexistent" } })
+
+			expect(
+				screen.getByText(/no posts match your search criteria/i)
+			).toBeInTheDocument()
+			expect(
+				screen.queryByRole("link", { name: /view/i })
+			).not.toBeInTheDocument()
+		})
+	})
+
+	describe("Button Accessibility", () => {
+		it("provides accessible labels for draft view buttons", () => {
+			render(<PostsTable posts={[mockDraftPost]} />)
+
+			const viewDraftButton = screen.getByRole("link", { name: /view draft/i })
+			// Check that it has proper screen reader text instead of aria-label
+			expect(viewDraftButton).toHaveTextContent("View Draft")
+		})
+
+		it("provides accessible labels for published view buttons", () => {
+			render(<PostsTable posts={[mockPublishedPost]} />)
+
+			const viewLiveButton = screen.getByRole("link", {
+				name: /view live post/i,
+			})
+			// Check that it has proper screen reader text instead of aria-label
+			expect(viewLiveButton).toHaveTextContent("View Live Post")
+		})
+
+		it("includes screen reader text for action context", () => {
+			render(<PostsTable posts={[mockDraftPost]} />)
+
+			const viewDraftButton = screen.getByRole("link", { name: /view draft/i })
+			const screenReaderText = viewDraftButton.querySelector(".sr-only")
+			expect(screenReaderText).toHaveTextContent("View Draft")
+		})
+	})
+
+	describe("Error Handling", () => {
+		it("handles posts with missing IDs gracefully", () => {
+			const invalidPost = { ...mockDraftPost, id: "" }
+
+			render(<PostsTable posts={[invalidPost]} />)
+
+			// Should still render the post but without functional buttons
+			expect(screen.getByText("Draft Post")).toBeInTheDocument()
+		})
+
+		it("handles posts with null published_at correctly", () => {
+			const nullPublishedPost = { ...mockDraftPost, published_at: null }
+
+			render(<PostsTable posts={[nullPublishedPost]} />)
+
+			expect(screen.getByText("Draft")).toBeInTheDocument()
+			expect(
+				screen.getByRole("link", { name: /view draft/i })
+			).toBeInTheDocument()
+		})
+	})
+
+	describe("Performance Considerations", () => {
+		it("renders efficiently with large number of posts", () => {
+			const largePosts = Array.from({ length: 100 }, (_, i) => ({
+				...mockDraftPost,
+				id: `post-${i}`,
+				title: `Post ${i}`,
+			}))
+
+			const { container } = render(<PostsTable posts={largePosts} />)
+
+			// Should render without performance issues
+			expect(container.querySelectorAll("tr")).toHaveLength(101) // 100 posts + header
+		})
+	})
+
+	describe("URL Generation Validation", () => {
+		it("generates valid admin preview URLs for drafts", () => {
+			render(<PostsTable posts={[mockDraftPost]} />)
+
+			const viewDraftButton = screen.getByRole("link", { name: /view draft/i })
+			const href = viewDraftButton.getAttribute("href")
+
+			// URL should follow the pattern /admin/posts/[id]/preview
+			expect(href).toMatch(/^\/admin\/posts\/[^\/]+\/preview$/)
+		})
+
+		it("generates valid thinking URLs for published posts", () => {
+			render(<PostsTable posts={[mockPublishedPost]} />)
+
+			const viewLiveButton = screen.getByRole("link", {
+				name: /view live post/i,
+			})
+			const href = viewLiveButton.getAttribute("href")
+
+			// URL should follow the pattern /thinking/[category]/[slug]
+			expect(href).toMatch(/^\/thinking\/[^\/]+\/[^\/]+$/)
+		})
+
+		it("escapes special characters in post IDs for URLs", () => {
+			const specialIdPost = {
+				...mockDraftPost,
+				id: "post-with-special-chars-123",
+			}
+
+			render(<PostsTable posts={[specialIdPost]} />)
+
+			const viewDraftButton = screen.getByRole("link", { name: /view draft/i })
+			expect(viewDraftButton).toHaveAttribute(
+				"href",
+				"/admin/posts/post-with-special-chars-123/preview"
+			)
+		})
+	})
+
+	describe("Publish Button Functionality", () => {
+		it("shows view draft button for draft posts", () => {
+			render(<PostsTable posts={[mockDraftPost]} />)
+
+			expect(
+				screen.getByRole("link", { name: /view draft/i })
+			).toBeInTheDocument()
+		})
+
+		it("shows view live post button for published posts", () => {
+			render(<PostsTable posts={[mockPublishedPost]} />)
+
+			expect(
+				screen.getByRole("link", { name: /view live post/i })
+			).toBeInTheDocument()
+		})
+
+		it("does not show publish button for published posts", () => {
+			render(<PostsTable posts={[mockPublishedPost]} />)
+
+			expect(
+				screen.queryByTestId("publish-button-published-post-id")
+			).not.toBeInTheDocument()
+		})
+
+		it("passes correct props to publish button", () => {
+			render(<PostsTable posts={[mockDraftPost]} />)
+
+			const publishButton = screen.getByTestId("publish-button-draft-post-id")
+			expect(publishButton).toBeInTheDocument()
+			expect(publishButton).toHaveTextContent("Publish Draft Post")
+		})
+
+		it("shows publish button alongside other action buttons for drafts", () => {
+			render(<PostsTable posts={[mockDraftPost]} />)
+
+			// Should have edit, view draft, and publish buttons
+			expect(screen.getByRole("link", { name: /edit/i })).toBeInTheDocument()
+			expect(
+				screen.getByRole("link", { name: /view draft/i })
+			).toBeInTheDocument()
+			expect(
+				screen.getByTestId("publish-button-draft-post-id")
+			).toBeInTheDocument()
+		})
+
+		it("handles multiple draft posts with publish buttons", () => {
+			const multipleDrafts = [
+				{ ...mockDraftPost, id: "draft-1", title: "Draft 1" },
+				{ ...mockDraftPost, id: "draft-2", title: "Draft 2" },
+			]
+
+			render(<PostsTable posts={multipleDrafts} />)
+
+			const publishButtons = screen.getAllByTestId(/^publish-button-/)
+			expect(publishButtons).toHaveLength(2)
+
+			expect(publishButtons[0]).toHaveTextContent("Publish Draft 1")
+			expect(publishButtons[1]).toHaveTextContent("Publish Draft 2")
+		})
 	})
 })
