@@ -28,6 +28,7 @@ describe("PublishButton", () => {
 				href: "",
 			},
 			writable: true,
+			configurable: true,
 		})
 	})
 
@@ -148,13 +149,8 @@ describe("PublishButton", () => {
 			).toBeInTheDocument()
 		})
 
-		// Wait for the async operation to complete and ensure no redirect
-		await waitFor(
-			() => {
-				expect(window.location.href).toBe("")
-			},
-			{ timeout: 2000 }
-		)
+		// Ensure no redirect happened
+		expect(window.location.href).toBe("")
 	})
 
 	it("handles missing error message gracefully", async () => {

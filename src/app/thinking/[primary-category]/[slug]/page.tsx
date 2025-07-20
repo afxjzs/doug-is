@@ -42,9 +42,7 @@ export async function generateMetadata({
 		const postUrl = `https://doug.is/thinking/${post.category.toLowerCase()}/${
 			post.slug
 		}`
-		const socialImage =
-			post.featured_image ||
-			"https://doug.is/images/doug-2024-cropped-compr.png"
+		const socialImage = post.featured_image
 
 		return {
 			title: `${post.title} | Doug.is`,
@@ -60,21 +58,23 @@ export async function generateMetadata({
 				publishedTime: post.published_at,
 				authors: ["Douglas Rogers"],
 				section: post.category,
-				images: [
-					{
-						url: socialImage,
-						width: 1200,
-						height: 630,
-						alt: post.title,
-					},
-				],
+				...(socialImage && {
+					images: [
+						{
+							url: socialImage,
+							width: 1200,
+							height: 630,
+							alt: post.title,
+						},
+					],
+				}),
 			},
 			twitter: {
 				card: "summary_large_image",
 				title: post.title,
 				description:
 					post.excerpt || `A blog post about ${post.title} by Douglas Rogers`,
-				images: [socialImage],
+				...(socialImage && { images: [socialImage] }),
 				creator: "@afxjzs",
 			},
 			alternates: {
@@ -84,28 +84,19 @@ export async function generateMetadata({
 	} catch (error) {
 		console.error("Error generating metadata for post:", error)
 		return {
-			title: "Blog Post | Doug.is",
-			description: "A blog post by Douglas Rogers",
+			title: "Post Not Found | Doug.is",
+			description: "The requested blog post could not be found.",
 			openGraph: {
-				title: "Blog Post | Doug.is",
-				description: "A blog post by Douglas Rogers",
-				url: "https://doug.is/thinking",
+				title: "Post Not Found | Doug.is",
+				description: "The requested blog post could not be found.",
+				url: `https://doug.is/thinking/${params.slug}`,
 				siteName: "Doug.is",
 				type: "article",
-				images: [
-					{
-						url: "https://doug.is/images/doug-2024-cropped-compr.png",
-						width: 1200,
-						height: 630,
-						alt: "Doug.is Blog",
-					},
-				],
 			},
 			twitter: {
 				card: "summary_large_image",
-				title: "Blog Post | Doug.is",
-				description: "A blog post by Douglas Rogers",
-				images: ["https://doug.is/images/doug-2024-cropped-compr.png"],
+				title: "Post Not Found | Doug.is",
+				description: "The requested blog post could not be found.",
 				creator: "@afxjzs",
 			},
 		}

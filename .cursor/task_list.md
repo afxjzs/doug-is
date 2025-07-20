@@ -86,6 +86,7 @@ The user requested to add a "create post" button to the admin dashboard and post
   - [x] **Subtask 5.2.4**: Implement dynamic social image generation
   - [x] **Subtask 5.2.5**: Test social sharing across platforms (Twitter, Facebook, LinkedIn)
   - [x] **Subtask 5.2.6**: Ensure proper fallbacks for missing images/metadata
+  - [x] **Subtask 5.2.7**: Fix Twitter meta images to use blog post featured images instead of Doug's profile image
 
 **Success Criteria**: ✅ Blog posts display with consistent site layout and proper social sharing cards
 
@@ -378,7 +379,7 @@ The user requested to add a "create post" button to the admin dashboard and post
 - **Existing Implementation**: Discovered that blog posts already have comprehensive social sharing implementation
 - **OpenGraph Metadata**: Complete implementation with title, description, URL, site name, type, published time, authors, section, and images
 - **Twitter Card Metadata**: Complete implementation with card type, title, description, images, and creator
-- **Dynamic Image Generation**: Uses `post.featured_image` or fallback to Doug's profile image with proper dimensions (1200x630)
+- **Dynamic Image Generation**: Uses `post.featured_image` with proper dimensions (1200x630) - no fallback to Doug's profile image
 - **Fallback Handling**: Comprehensive error handling for missing posts and database errors
 - **Test Coverage**: MetadataValidation tests confirm comprehensive social sharing implementation
 

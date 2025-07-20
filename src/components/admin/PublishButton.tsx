@@ -32,13 +32,9 @@ export default function PublishButton({
 				// Show success message
 				alert(`Successfully published "${postTitle}"!`)
 
-				// Redirect if URL is provided
-				if (redirectUrl) {
-					window.location.href = redirectUrl
-				} else {
-					// Default redirect to admin posts page
-					window.location.href = "/admin/posts"
-				}
+				// Redirect to custom URL if provided, otherwise default to admin posts page
+				const redirectTo = redirectUrl || "/admin/posts"
+				window.location.href = redirectTo
 			} else {
 				setError(result.error || "Failed to publish post")
 			}
