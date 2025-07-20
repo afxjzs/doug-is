@@ -57,7 +57,7 @@ export default async function RegisterPage(props: {
 					)}
 
 					{/* Registration form component */}
-					<RegisterForm redirectTo={redirectTo} />
+					<RegisterForm />
 
 					<div className="mt-6 text-center text-sm text-[rgba(var(--color-foreground),0.6)]">
 						<p>Already have an account?</p>

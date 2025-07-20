@@ -76,9 +76,7 @@ export async function middleware(request: NextRequest) {
 	)
 
 	// Log authentication validation method for debugging
-	if (user) {
-		console.log("✅ User validated securely via getUser()")
-	} else if (error) {
+	if (error) {
 		console.log("⚠️ User validation failed:", error.message)
 	}
 

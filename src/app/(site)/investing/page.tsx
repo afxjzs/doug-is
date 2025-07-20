@@ -1,4 +1,7 @@
+"use client"
+
 import Image from "next/image"
+import { useEffect, useState } from "react"
 import { quotes } from "./quotes"
 
 // Function to get a random quote from the quotes array
@@ -13,9 +16,17 @@ function getRandomColorTheme() {
 }
 
 export default function InvestingPage() {
-	// Get a random quote and color theme
-	const randomQuote = getRandomQuote()
-	const colorTheme = getRandomColorTheme()
+	// State for random quote and color theme
+	const [randomQuote, setRandomQuote] = useState(quotes[0]) // Default to first quote to avoid hydration mismatch
+	const [colorTheme, setColorTheme] = useState("violet") // Default color theme
+	const [isClient, setIsClient] = useState(false)
+
+	// Randomize quote and theme on client side
+	useEffect(() => {
+		setIsClient(true)
+		setRandomQuote(getRandomQuote())
+		setColorTheme(getRandomColorTheme())
+	}, [])
 
 	return (
 		<div className="max-w-4xl mx-auto">

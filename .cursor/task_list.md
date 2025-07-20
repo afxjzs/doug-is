@@ -27,7 +27,7 @@
 
 ## Background and Motivation
 
-**ACTIVE ISSUES IDENTIFIED**: Two critical user experience and analytics issues have been identified that impact content management and data collection effectiveness:
+**ACTIVE ISSUES IDENTIFIED**: Three critical user experience and analytics issues have been identified that impact content management, dynamic content display, and data collection effectiveness:
 
 **1. BLOG POST CACHING ISSUE**:
 - **Problem**: When blog posts are edited via the admin interface, changes do not appear on the live site
@@ -35,7 +35,13 @@
 - **Impact**: Content updates are not visible to users, breaking the content management workflow
 - **Risk Level**: HIGH - Affects content freshness and user experience
 
-**2. POSTHOG ANALYTICS CONFIGURATION**:
+**2. INVESTING QUOTES STATIC GENERATION ISSUE**:
+- **Problem**: Random quotes on `/investing` page don't change when users refresh the page
+- **Root Cause**: Static generation at build time - `Math.random()` executes once during build, not per visit
+- **Impact**: Users see the same quote/theme every time, breaking expected randomization behavior
+- **Risk Level**: MEDIUM - Affects user engagement and dynamic content experience
+
+**3. POSTHOG ANALYTICS CONFIGURATION**:
 - **Problem**: Uncertainty about PostHog tracking effectiveness
 - **Missing Data**: Page visits, blog views, user interactions (especially feedback form engagement)
 - **Impact**: Lack of user behavior insights for product and content optimization
@@ -56,6 +62,19 @@
 - Add cache-busting mechanisms for admin updates
 - Implement on-demand ISR (Incremental Static Regeneration)
 
+### Investing Quotes Static Generation Analysis
+**TECHNICAL ROOT CAUSE**:
+- **Static Build Process**: Page is statically generated at build time using Next.js SSG
+- **Build-Time Randomization**: `getRandomQuote()` and `getRandomColorTheme()` execute once during build
+- **Cached Random Values**: Random selection gets "baked in" to static HTML and served to all users
+- **No Runtime Randomization**: No mechanism to regenerate quotes on each page visit
+
+**POTENTIAL SOLUTIONS**:
+- **Force Dynamic Rendering**: Add `export const dynamic = 'force-dynamic'` to make page server-rendered
+- **Client-Side Randomization**: Move randomization to `useEffect` for client-side execution
+- **Hybrid Approach**: Keep static generation but add client-side re-randomization
+- **Time-Based ISR**: Use ISR with short revalidation periods for periodic quote changes
+
 ### PostHog Analytics Analysis
 **INTEGRATION POINTS TO VERIFY**:
 - **Page View Tracking**: Automatic route change detection
@@ -70,8 +89,8 @@
 
 ## High-level Task Breakdown
 
-### Phase 1: Blog Post Caching Resolution
-**Objective**: Ensure blog post updates appear immediately on live site
+### Phase 1: Caching & Static Generation Issues Resolution
+**Objective**: Fix all caching and static generation issues affecting dynamic content
 
 - [ ] **Task 1.1: Investigate Current Caching Architecture**
   - **Action**: Analyze current Next.js configuration and caching strategy
@@ -105,6 +124,19 @@
     - [ ] Production content updates work reliably
     - [ ] Cache performance remains optimal
     - [ ] Clear documentation for future content updates
+
+- [ ] **Task 1.4: Fix Investing Page Quote Randomization**
+  - **Action**: Implement proper randomization for investing page quotes and color themes
+    - [ ] Analyze current static generation behavior on `/investing` page
+    - [ ] Choose optimal solution (force-dynamic vs client-side vs hybrid approach)
+    - [ ] Implement quote randomization that works per page visit
+    - [ ] Test randomization behavior in development and production
+    - [ ] Ensure no performance impact from dynamic rendering
+  - **Success Criteria**: 
+    - [ ] Quotes change on each page visit/refresh
+    - [ ] Color themes randomize properly with quotes
+    - [ ] Page performance remains optimal
+    - [ ] No layout shift or loading issues
 
 ### Phase 2: PostHog Analytics Configuration
 **Objective**: Establish comprehensive user behavior tracking
@@ -145,15 +177,16 @@
 
 ## Current Status / Progress Tracking
 
-**OVERALL STATUS**: 🔄 IMPLEMENTATION PHASE
-**Progress**: 30% Complete (Root cause identified, implementing cache invalidation)
+**OVERALL STATUS**: 🔄 IMPLEMENTATION PHASE  
+**Progress**: 25% Complete (Blog cache fixed, homepage cache added, new quote randomization issue identified)
 
 ### 📋 **PROJECT STATUS BOARD**:
 
-**🔄 PHASE 1: Blog Post Caching Resolution**
+**🔄 PHASE 1: Caching & Static Generation Issues Resolution**
 - [x] Task 1.1: Investigate Current Caching Architecture - ✅ COMPLETED 
 - [x] Task 1.2: Implement Cache Invalidation Strategy - ✅ COMPLETED  
 - [ ] Task 1.3: Production Cache Validation - 🔄 READY FOR TESTING
+- [ ] Task 1.4: Fix Investing Page Quote Randomization - 📋 NEWLY IDENTIFIED
 
 **🔄 PHASE 2: PostHog Analytics Configuration**
 - [ ] Task 2.1: Audit Current PostHog Implementation
@@ -162,6 +195,7 @@
 
 ### 🎯 **SUCCESS METRICS**:
 - [ ] Blog post edits appear immediately on live site
+- [ ] Investing page quotes randomize on each visit/refresh
 - [ ] All key user interactions tracked in PostHog
 - [ ] Dashboard provides actionable user behavior insights
 - [ ] No performance impact from caching or analytics changes
@@ -318,3 +352,24 @@
 - 🔒 Admin verification
 - ✅ Success states
 - ❌ Error states
+
+### 📋 NEW ISSUE IDENTIFIED - INVESTING QUOTES RANDOMIZATION
+
+**USER FEEDBACK**: "the quotes on /investing don't update when i refresh. i think there's a caching issue there."
+
+**🔍 ANALYSIS COMPLETE**:
+**ROOT CAUSE**: Static Generation with Build-Time Randomization
+- **Issue**: `/investing` page uses `getRandomQuote()` and `getRandomColorTheme()` functions
+- **Problem**: These execute at **build time** during static generation, not per visit
+- **Result**: Same quote and color theme served to all users until next deployment
+- **User Expectation**: Quotes should randomize on each page visit/refresh
+
+**💡 SOLUTION OPTIONS**:
+1. **Force Dynamic Rendering**: Add `export const dynamic = 'force-dynamic'` 
+2. **Client-Side Randomization**: Move to `useEffect` for browser-side execution
+3. **Hybrid Approach**: Static generation + client-side re-randomization
+4. **Time-Based ISR**: Short revalidation periods for periodic updates
+
+**🎯 IMPACT**: Medium priority - affects user engagement and dynamic content experience
+
+**NEXT STEPS**: Add Task 1.4 to Phase 1 for immediate resolution after blog cache testing completes.
