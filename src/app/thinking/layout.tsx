@@ -1,8 +1,5 @@
-import { metadata } from "./metadata"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-
-export { metadata }
 
 export default function ThinkingLayout({
 	children,
