@@ -368,17 +368,19 @@ The user requested to add a "create post" button to the admin dashboard and post
 
 **✅ SOCIAL SHARING METADATA FIXED SUCCESSFULLY:**
 
-**Problem Identified**: The social sharing metadata was showing Doug's profile image and generic descriptions instead of the blog post's featured image and specific content. The issue was that the metadata generation was not properly using the blog post's data.
+**Problem Identified**: The social sharing metadata was showing Doug's profile image and generic descriptions instead of the blog post's featured image and specific content. The issue was that the URL structure was incorrect, causing the wrong metadata to be generated.
 
-**Root Cause**: The `generateMetadata` function was not properly using both the `primary-category` and `slug` parameters to fetch the correct post, and the post fetching was not precise enough.
+**Root Cause**: The thinking index page was generating links with `/thinking/about/technology/ai-slop-will-eat-itself` (with an extra `about` segment), but the route structure is `/thinking/[primary-category]/[slug]`. This caused the `about` segment to be treated as the `primary-category`, and `technology` to be treated as the `slug`.
 
 **Solution Applied**:
-1. **Fixed Metadata Generation**: Updated `generateMetadata` to properly use both `primary-category` and `slug` parameters
-2. **Enhanced Post Fetching**: Created `getPostBySlugAndCategory` function for more precise post matching
-3. **Cache-Busting Parameter**: Added `?v=${Date.now()}` to social image URLs to force fresh metadata
-4. **Platform Validation**: Confirmed that Twitter Card Validator, Facebook Sharing Debugger, and LinkedIn Post Inspector can force cache refresh
+1. **Fixed URL Structure**: Updated the thinking index page to generate correct URLs without the `about` segment
+2. **Fixed Metadata Generation**: Updated `generateMetadata` to properly use both `primary-category` and `slug` parameters
+3. **Enhanced Post Fetching**: Created `getPostBySlugAndCategory` function for more precise post matching
+4. **Cache-Busting Parameter**: Added `?v=${Date.now()}` to social image URLs to force fresh metadata
+5. **Platform Validation**: Confirmed that Twitter Card Validator, Facebook Sharing Debugger, and LinkedIn Post Inspector can force cache refresh
 
 **Key Improvements**:
+- ✅ Fixed URL structure in thinking index page to match route structure
 - ✅ Fixed metadata generation to use correct blog post data (title, description, featured image)
 - ✅ Enhanced post fetching with category-based matching for precision
 - ✅ Added cache-busting parameter to social image URLs
