@@ -3,7 +3,7 @@
  */
 
 import { Metadata } from "next"
-import { getPostBySlug, getPosts } from "@/lib/supabase/publicClient"
+import { getPostBySlugAndCategory, getPosts } from "@/lib/supabase/publicClient"
 import { notFound } from "next/navigation"
 import { PostView } from "@/components/PostView"
 
@@ -14,10 +14,14 @@ export const revalidate = 3600 // 1 hour
 export async function generateMetadata({
 	params,
 }: {
-	params: { slug: string }
+	params: { slug: string; "primary-category": string }
 }): Promise<Metadata> {
 	try {
-		const post = await getPostBySlug(params.slug)
+		// Use both category and slug to ensure we get the correct post
+		const post = await getPostBySlugAndCategory(
+			params.slug,
+			params["primary-category"]
+		)
 
 		if (!post) {
 			return {
@@ -26,7 +30,7 @@ export async function generateMetadata({
 				openGraph: {
 					title: "Post Not Found | Doug.is",
 					description: "The requested blog post could not be found.",
-					url: `https://doug.is/thinking/${params.slug}`,
+					url: `https://doug.is/thinking/${params["primary-category"]}/${params.slug}`,
 					siteName: "Doug.is",
 					type: "article",
 				},
@@ -43,6 +47,8 @@ export async function generateMetadata({
 			post.slug
 		}`
 		const socialImage = post.featured_image
+			? `${post.featured_image}?v=${Date.now()}`
+			: null
 
 		return {
 			title: `${post.title} | Doug.is`,
@@ -89,7 +95,7 @@ export async function generateMetadata({
 			openGraph: {
 				title: "Post Not Found | Doug.is",
 				description: "The requested blog post could not be found.",
-				url: `https://doug.is/thinking/${params.slug}`,
+				url: `https://doug.is/thinking/${params["primary-category"]}/${params.slug}`,
 				siteName: "Doug.is",
 				type: "article",
 			},
@@ -131,7 +137,10 @@ export default async function BlogPostPage({
 	params: { slug: string; "primary-category": string }
 }) {
 	try {
-		const post = await getPostBySlug(params.slug)
+		const post = await getPostBySlugAndCategory(
+			params.slug,
+			params["primary-category"]
+		)
 
 		if (!post) {
 			notFound()

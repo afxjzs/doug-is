@@ -111,6 +111,37 @@ export const getPostBySlug = async (slug: string): Promise<Post | null> => {
 }
 
 /**
+ * Fetches a single post by slug and category for more precise matching
+ * @param slug The post slug to fetch
+ * @param category The post category to match
+ * @returns The post or null if not found
+ */
+export const getPostBySlugAndCategory = async (
+	slug: string,
+	category: string
+): Promise<Post | null> => {
+	try {
+		const normalizedCategory = normalizeCategory(category)
+		const { data, error } = await supabase
+			.from("posts")
+			.select("*")
+			.eq("slug", slug)
+			.eq("category", normalizedCategory)
+			.single()
+
+		if (error) {
+			console.error("Error fetching post by slug and category:", error)
+			return null
+		}
+
+		return data as Post
+	} catch (error) {
+		console.error("Exception fetching post by slug and category:", error)
+		return null
+	}
+}
+
+/**
  * Normalizes a category string for consistent comparison
  */
 export function normalizeCategory(category: string): string {
