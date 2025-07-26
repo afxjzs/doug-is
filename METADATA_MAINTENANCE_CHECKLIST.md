@@ -6,7 +6,7 @@
 
 **Required Steps:**
 - [ ] Create `metadata.ts` file in route directory (not route group)
-- [ ] Follow title pattern: "Doug.is / PageName"
+- [ ] Follow title pattern: "doug.is / PageName"
 - [ ] Write description (150-160 characters)
 - [ ] Create social sharing image (1200x630px)
 - [ ] Add OpenGraph metadata with all required fields
@@ -18,19 +18,19 @@
 **Metadata Template:**
 ```typescript
 export const metadata: Metadata = {
-  title: 'Doug.is / PageName',
+  title: 'doug.is / PageName',
   description: 'Compelling description (150-160 chars)',
   openGraph: {
-    title: 'PageName | Doug.is',
+    title: 'PageName | doug.is',
     description: 'Same compelling description',
     url: 'https://doug.is/pagename',
-    siteName: 'Doug.is',
+    siteName: 'doug.is',
     images: [{ url: 'https://doug.is/images/pagename.jpg', width: 1200, height: 630 }],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PageName | Doug.is',
+    title: 'PageName | doug.is',
     description: 'Same compelling description',
     images: ['https://doug.is/images/pagename.jpg'],
   },

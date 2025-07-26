@@ -103,7 +103,7 @@ export async function GET() {
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Signing Out | Doug.is</title>
+		<title>Signing Out | doug.is</title>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -184,7 +184,7 @@ export async function GET() {
 			<div class="card">
 				<div class="loader"></div>
 				<h1>Signing Out</h1>
-				<p>You are being signed out of Doug.is admin...</p>
+				<p>You are being signed out of doug.is admin...</p>
 			</div>
 		</div>
 		

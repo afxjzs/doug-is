@@ -4,7 +4,7 @@ import { Metadata } from "next"
 import IconWithGradient from "./IconWithGradient"
 
 export const metadata: Metadata = {
-	title: "Attributions | Doug.is",
+	title: "Attributions | doug.is",
 	description: "Attribution for resources used on this site",
 }
 

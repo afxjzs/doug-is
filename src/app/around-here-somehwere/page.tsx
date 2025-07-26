@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-	title: "Contact | Doug.is",
+	title: "Contact | doug.is",
 	description:
 		"Get in touch with Doug for inquiries, collaborations, or just to say hello.",
 }

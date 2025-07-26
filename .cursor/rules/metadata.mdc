@@ -13,7 +13,7 @@ This project implements comprehensive metadata and social media sharing function
 - **Complete Coverage**: All page types have proper metadata (static, dynamic, admin)
 - **Social Media Optimization**: OpenGraph and Twitter Card support for all major platforms
 - **Dynamic Generation**: Content-driven metadata for blog posts and projects
-- **Brand Consistency**: Unified "Doug.is" branding across all social sharing
+- **Brand Consistency**: Unified "doug.is" branding across all social sharing
 - **Security**: Admin pages protected with noindex metadata
 - **Performance**: Zero impact on page load times using Next.js 15 Metadata API
 
@@ -48,10 +48,10 @@ src/app/
 ### Metadata Standards
 
 **Title Patterns:**
-- **Section Pages**: "Doug.is / SectionName" (e.g., "Doug.is / Building")
-- **Project Pages**: "ProjectName | Building | Doug.is" (e.g., "Oil Price Ticker | Building | Doug.is")
-- **Blog Posts**: "PostTitle | Thinking | Doug.is"
-- **Homepage**: "Doug.is - Building, Advising, and Investing"
+- **Section Pages**: "doug.is / SectionName" (e.g., "doug.is / Building")
+- **Project Pages**: "ProjectName | Building | doug.is" (e.g., "Oil Price Ticker | Building | doug.is")
+- **Blog Posts**: "PostTitle | Thinking | doug.is"
+- **Homepage**: "doug.is - Building, Advising, and Investing"
 
 **Description Standards:**
 - **Length**: 150-160 characters optimal for SEO and social sharing
@@ -74,19 +74,19 @@ src/app/
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Doug.is / Building',
+  title: 'doug.is / Building',
   description: 'Explore my software development projects, from iOS apps to web applications. Discover the tools and technologies I use to build innovative solutions.',
   openGraph: {
-    title: 'Building Projects | Doug.is',
+    title: 'Building Projects | doug.is',
     description: 'Explore my software development projects, from iOS apps to web applications. Discover the tools and technologies I use to build innovative solutions.',
     url: 'https://doug.is/building',
-    siteName: 'Doug.is',
+    siteName: 'doug.is',
     images: [
       {
         url: 'https://doug.is/images/building.jpg',
         width: 1200,
         height: 630,
-        alt: 'Doug.is Building Projects',
+        alt: 'doug.is Building Projects',
       }
     ],
     locale: 'en_US',
@@ -94,7 +94,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Building Projects | Doug.is',
+    title: 'Building Projects | doug.is',
     description: 'Explore my software development projects, from iOS apps to web applications.',
     images: ['https://doug.is/images/building.jpg'],
   },
@@ -121,12 +121,12 @@ export async function generateMetadata({
   
   if (!post) {
     return {
-      title: 'Post Not Found | Doug.is',
+      title: 'Post Not Found | doug.is',
       description: 'The requested blog post could not be found.',
     }
   }
 
-  const title = `${post.title} | Thinking | Doug.is`
+  const title = `${post.title} | Thinking | doug.is`
   const description = post.excerpt || post.content.substring(0, 155) + '...'
   const publishedTime = post.published_at
   const featuredImage = post.featured_image || 'https://doug.is/images/thinking.jpg'
@@ -136,10 +136,10 @@ export async function generateMetadata({
     title,
     description,
     openGraph: {
-      title: `${post.title} | Doug.is`,
+      title: `${post.title} | doug.is`,
       description,
       url: canonicalUrl,
-      siteName: 'Doug.is',
+      siteName: 'doug.is',
       images: [
         {
           url: featuredImage,
@@ -155,7 +155,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${post.title} | Doug.is`,
+      title: `${post.title} | doug.is`,
       description,
       images: [featuredImage],
     },
@@ -171,7 +171,7 @@ export async function generateMetadata({
 **Admin Pages** (`src/app/admin/layout.tsx`):
 ```typescript
 export const metadata: Metadata = {
-  title: 'Admin Dashboard | Doug.is',
+  title: 'Admin Dashboard | doug.is',
   description: 'Administrative dashboard for managing website content and settings.',
   robots: {
     index: false,
@@ -198,11 +198,11 @@ export const metadata: Metadata = {
 - **Format**: PNG for graphics with text, JPG for photos
 - **Quality**: High quality but web-optimized (under 1MB)
 - **Text**: Large, readable fonts (minimum 48px for body text)
-- **Branding**: Consistent Doug.is visual identity
+- **Branding**: Consistent doug.is visual identity
 
 **Design Guidelines:**
 - **Background**: Brand-consistent backgrounds or gradients
-- **Logo**: Doug.is logo or branding element
+- **Logo**: doug.is logo or branding element
 - **Typography**: Clear, professional fonts that match website
 - **Colors**: Consistent with website color palette
 - **Content**: Page-specific content when relevant
@@ -230,7 +230,7 @@ images: [
     url: 'https://doug.is/images/social/building.jpg',
     width: 1200,
     height: 630,
-    alt: 'Doug.is Building Projects',
+    alt: 'doug.is Building Projects',
   }
 ]
 ```
@@ -254,13 +254,13 @@ describe('Metadata Validation', () => {
   describe('Page Metadata', () => {
     it('should have proper OpenGraph metadata structure', () => {
       const metadata = {
-        title: 'Test Page | Doug.is',
+        title: 'Test Page | doug.is',
         description: 'Test description',
         openGraph: {
-          title: 'Test Page | Doug.is',
+          title: 'Test Page | doug.is',
           description: 'Test description',
           url: 'https://doug.is/test',
-          siteName: 'Doug.is',
+          siteName: 'doug.is',
           images: [{ url: 'https://doug.is/images/test.jpg', width: 1200, height: 630 }],
           type: 'website',
         },
@@ -314,7 +314,7 @@ npm test src/components/__tests__/MetadataValidation.test.tsx
 
 **Checklist for New Static Pages:**
 1. **Create metadata.ts** in route directory (not route group)
-2. **Follow title pattern**: "Doug.is / PageName" for sections
+2. **Follow title pattern**: "doug.is / PageName" for sections
 3. **Write compelling description** (150-160 characters)
 4. **Create social sharing image** (1200x630px)
 5. **Add OpenGraph metadata** with all required fields

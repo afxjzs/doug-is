@@ -66,7 +66,7 @@ export function getSocialImageUrl(imagePath: string): string {
  * @returns The site name (currently hardcoded, could be made configurable)
  */
 export function getSiteName(): string {
-	return "Doug.is"
+	return "doug.is"
 }
 
 /**

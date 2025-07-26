@@ -1,4 +1,4 @@
-# Doug.is - Personal Website
+# doug.is - Personal Website
 
 A modern personal website built with Next.js, React, TypeScript, and Tailwind CSS.
 
@@ -108,15 +108,15 @@ This project implements comprehensive metadata and social media sharing function
 - **Social Platform Support**: Optimized for Twitter/X, LinkedIn, Facebook, Discord, Slack, and messaging apps
 - **Dynamic Generation**: Content-driven metadata for blog posts and projects
 - **SEO Optimization**: Proper meta descriptions and canonical URLs for search engines
-- **Brand Consistency**: Unified "Doug.is" branding across all social sharing
+- **Brand Consistency**: Unified "doug.is" branding across all social sharing
 - **Security**: Admin pages protected with noindex metadata
 
 ### Implementation Details
 
 **Metadata Patterns:**
-- Section pages: "Doug.is / SectionName"
-- Project pages: "ProjectName | Building | Doug.is"
-- Blog posts: "PostTitle | Thinking | Doug.is"
+- Section pages: "doug.is / SectionName"
+- Project pages: "ProjectName | Building | doug.is"
+- Blog posts: "PostTitle | Thinking | doug.is"
 
 **Social Sharing Images:**
 - Dimensions: 1200x630px for optimal platform compatibility

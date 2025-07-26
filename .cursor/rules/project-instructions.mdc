@@ -3,7 +3,7 @@ description:
 globs: 
 alwaysApply: true
 ---
-# Doug.is Project-Specific Instructions
+# doug.is Project-Specific Instructions
 
 This document provides instructions and best practices tailored specifically to the `doug.is` personal website project.
 

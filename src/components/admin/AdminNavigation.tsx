@@ -73,7 +73,7 @@ export default function AdminNavigation() {
 			>
 				{/* Admin Logo/Title */}
 				<div className="p-6 border-b border-[rgba(var(--color-foreground),0.1)] flex-shrink-0">
-					<h1 className="text-xl font-bold gradient-heading">Doug.is Admin</h1>
+					<h1 className="text-xl font-bold gradient-heading">doug.is Admin</h1>
 				</div>
 
 				{/* Navigation Links */}

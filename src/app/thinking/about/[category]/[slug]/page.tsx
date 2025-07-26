@@ -30,7 +30,7 @@ export async function generateMetadata({
 
 		if (!post) {
 			return {
-				title: "Post Not Found | Doug.is",
+				title: "Post Not Found | doug.is",
 				description: "The requested blog post could not be found.",
 			}
 		}

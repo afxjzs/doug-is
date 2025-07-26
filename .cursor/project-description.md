@@ -1,4 +1,4 @@
-# Doug.is - Personal Website Project
+# doug.is - Personal Website Project
 
 ## Project Overview
 

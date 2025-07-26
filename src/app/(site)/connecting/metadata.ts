@@ -1,15 +1,15 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-	title: "Doug.is / Connecting",
+	title: "doug.is / Connecting",
 	description:
 		"Let's connect! Find me on social media, send me an email, or schedule a meeting.",
 	openGraph: {
-		title: "Doug.is / Connecting",
+		title: "doug.is / Connecting",
 		description:
 			"Let's connect! Find me on social media, send me an email, or schedule a meeting.",
 		url: "https://doug.is/connecting",
-		siteName: "Doug.is",
+		siteName: "doug.is",
 		type: "website",
 		images: [
 			{
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "Doug.is / Connecting",
+		title: "doug.is / Connecting",
 		description:
 			"Let's connect! Find me on social media, send me an email, or schedule a meeting.",
 		images: ["https://doug.is/images/doug-2024-cropped-compr.png"],

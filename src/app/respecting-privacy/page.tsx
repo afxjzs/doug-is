@@ -1,15 +1,15 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-	title: "Privacy Policy | Doug.is",
-	description: "Privacy policy for Doug.is website",
+	title: "Privacy Policy | doug.is",
+	description: "Privacy policy for doug.is website",
 }
 
 export default function PrivacyPolicyPage() {
 	return (
 		<div className="max-w-4xl mx-auto py-12 px-4">
 			<h1 className="gradient-heading text-4xl md:text-5xl mb-8 text-center">
-				Doug.is Privacy Policy
+				doug.is Privacy Policy
 			</h1>
 
 			<div className="mb-12">

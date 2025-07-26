@@ -4,7 +4,7 @@ import { generateMetadata } from "../page"
 jest.mock("@/lib/utils/domain-detection", () => ({
 	getCanonicalUrl: jest.fn((path: string) => `https://doug.is${path}`),
 	getSocialImageUrl: jest.fn((path: string) => `https://doug.is${path}`),
-	getSiteName: jest.fn(() => "Doug.is"),
+	getSiteName: jest.fn(() => "doug.is"),
 }))
 
 // Mock the database functions
@@ -44,7 +44,7 @@ describe("Blog Post Metadata", () => {
 			params: { slug: "test-blog-post" },
 		})
 
-		expect(metadata.title).toBe("Test Blog Post | Doug.is")
+		expect(metadata.title).toBe("Test Blog Post | doug.is")
 		expect(metadata.description).toBe("This is a test blog post excerpt")
 		expect(metadata.openGraph?.title).toBe("Test Blog Post")
 		expect(metadata.openGraph?.description).toBe(
@@ -54,7 +54,7 @@ describe("Blog Post Metadata", () => {
 		expect(metadata.openGraph?.url).toBe(
 			"https://doug.is/thinking/about/technology/test-blog-post"
 		)
-		expect(metadata.openGraph?.siteName).toBe("Doug.is")
+		expect(metadata.openGraph?.siteName).toBe("doug.is")
 		expect(metadata.openGraph?.locale).toBe("en_US")
 		expect(metadata.openGraph?.images).toHaveLength(1)
 		expect(metadata.openGraph?.images?.[0]?.url).toBe(
@@ -215,7 +215,7 @@ describe("Blog Post Metadata", () => {
 			params: { slug: "non-existent-post" },
 		})
 
-		expect(metadata.title).toBe("Post Not Found | Doug.is")
+		expect(metadata.title).toBe("Post Not Found | doug.is")
 		expect(metadata.description).toBe(
 			"The requested blog post could not be found."
 		)
@@ -228,7 +228,7 @@ describe("Blog Post Metadata", () => {
 			params: { slug: "test-blog-post" },
 		})
 
-		expect(metadata.title).toBe("Blog Post | Doug.is")
+		expect(metadata.title).toBe("Blog Post | doug.is")
 		expect(metadata.description).toBe("A blog post by Douglas Rogers")
 	})
 })

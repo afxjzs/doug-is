@@ -60,7 +60,7 @@ describe("Structured Data Generation", () => {
 			})
 			expect(structuredData.publisher).toEqual({
 				"@type": "Organization",
-				name: "Doug.is",
+				name: "doug.is",
 				url: "https://doug.is",
 			})
 			expect(structuredData.datePublished).toBe("2024-01-15T10:00:00Z")

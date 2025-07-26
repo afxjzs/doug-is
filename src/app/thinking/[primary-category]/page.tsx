@@ -18,7 +18,7 @@ export async function generateMetadata({
 		.join(" ")
 
 	return {
-		title: `${formattedCategory} | Doug.is Thinking`,
+		title: `${formattedCategory} | doug.is Thinking`,
 		description: `Thoughts, ideas, and insights on ${formattedCategory.toLowerCase()}.`,
 	}
 }

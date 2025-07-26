@@ -67,7 +67,7 @@ export function generateBlogPostStructuredData(post: BlogPost) {
 		},
 		publisher: {
 			"@type": "Organization",
-			name: "Doug.is",
+			name: "doug.is",
 			url: "https://doug.is",
 		},
 		datePublished: post.published_at,
@@ -138,7 +138,7 @@ export function generateSiteStructuredData() {
 	return {
 		"@context": "https://schema.org",
 		"@type": "Organization",
-		name: "Doug.is",
+		name: "doug.is",
 		url: "https://doug.is",
 		description: "Developer, Investor, Entrepreneur",
 		sameAs: [

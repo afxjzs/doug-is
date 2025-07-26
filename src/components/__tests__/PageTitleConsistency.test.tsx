@@ -150,13 +150,13 @@ describe("Page Title Consistency", () => {
 			)
 			const hustlingMetadata = await import("@/app/(site)/hustling/metadata")
 
-			// Check that all metadata follows the "Doug.is / SectionName" pattern
-			expect(buildingMetadata.metadata.title).toBe("Doug.is / Building")
-			expect(investingMetadata.metadata.title).toBe("Doug.is / Investing")
-			expect(advisingMetadata.metadata.title).toBe("Doug.is / Advising")
-			expect(thinkingMetadata.metadata.title).toBe("Doug.is / Thinking")
-			expect(connectingMetadata.metadata.title).toBe("Doug.is / Connecting")
-			expect(hustlingMetadata.metadata.title).toBe("Doug.is / Hustling")
+			// Check that all metadata follows the "doug.is / SectionName" pattern
+			expect(buildingMetadata.metadata.title).toBe("doug.is / Building")
+			expect(investingMetadata.metadata.title).toBe("doug.is / Investing")
+			expect(advisingMetadata.metadata.title).toBe("doug.is / Advising")
+			expect(thinkingMetadata.metadata.title).toBe("doug.is / Thinking")
+			expect(connectingMetadata.metadata.title).toBe("doug.is / Connecting")
+			expect(hustlingMetadata.metadata.title).toBe("doug.is / Hustling")
 		})
 	})
 })

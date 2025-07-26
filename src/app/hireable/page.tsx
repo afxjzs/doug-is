@@ -3,7 +3,7 @@ import Image from "next/image"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-	title: "Hire Me | Doug.is",
+	title: "Hire Me | doug.is",
 	description: "Professional experience, skills, and resume of Doug.",
 }
 

@@ -70,28 +70,28 @@ describe("Metadata Validation Framework", () => {
 		test("should have complete metadata for social sharing", () => {
 			// This test will fail until we implement proper homepage metadata
 			const homepageMetadata: Metadata = {
-				title: "Doug.is | Developer, Investor, Entrepreneur",
+				title: "doug.is | Developer, Investor, Entrepreneur",
 				description:
 					"Personal website of Douglas E. Rogers - Developer, Investor, and Entrepreneur",
 				openGraph: {
-					title: "Doug.is | Developer, Investor, Entrepreneur",
+					title: "doug.is | Developer, Investor, Entrepreneur",
 					description:
 						"Personal website of Douglas E. Rogers - Developer, Investor, and Entrepreneur",
 					url: "https://doug.is",
-					siteName: "Doug.is",
+					siteName: "doug.is",
 					type: "website",
 					images: [
 						{
 							url: "https://doug.is/images/social/homepage-social.jpg",
 							width: 1200,
 							height: 630,
-							alt: "Doug.is - Developer, Investor, Entrepreneur",
+							alt: "doug.is - Developer, Investor, Entrepreneur",
 						},
 					],
 				},
 				twitter: {
 					card: "summary_large_image",
-					title: "Doug.is | Developer, Investor, Entrepreneur",
+					title: "doug.is | Developer, Investor, Entrepreneur",
 					description:
 						"Personal website of Douglas E. Rogers - Developer, Investor, and Entrepreneur",
 					images: ["https://doug.is/images/social/homepage-social.jpg"],
@@ -113,13 +113,13 @@ describe("Metadata Validation Framework", () => {
 		test("should have project-specific metadata with screenshots", () => {
 			// This test will fail for most project pages until we implement proper metadata
 			const projectMetadata: Metadata = {
-				title: "Project Name | Building | Doug.is",
+				title: "Project Name | Building | doug.is",
 				description: "Detailed description of the project and its features",
 				openGraph: {
 					title: "Project Name - Brief compelling description",
 					description: "Detailed description of the project and its features",
 					url: "https://doug.is/building/project-name",
-					siteName: "Doug.is",
+					siteName: "doug.is",
 					type: "website",
 					images: [
 						{
@@ -155,13 +155,13 @@ describe("Metadata Validation Framework", () => {
 		test("should generate complete metadata from post content", () => {
 			// This test will fail until we implement proper dynamic metadata
 			const blogPostMetadata: Metadata = {
-				title: "Blog Post Title | Doug.is",
+				title: "Blog Post Title | doug.is",
 				description: "Post excerpt or first paragraph as description",
 				openGraph: {
 					title: "Blog Post Title",
 					description: "Post excerpt or first paragraph as description",
 					url: "https://doug.is/thinking/category/post-slug",
-					siteName: "Doug.is",
+					siteName: "doug.is",
 					type: "article",
 					images: [
 						{
@@ -229,7 +229,7 @@ describe("Metadata Validation Framework", () => {
 	describe("Admin Page Metadata Requirements", () => {
 		test("should have noindex metadata for admin pages", () => {
 			const adminMetadata: Metadata = {
-				title: "Admin Dashboard | Doug.is",
+				title: "Admin Dashboard | doug.is",
 				description: "Admin interface for managing site content",
 				robots: "noindex, nofollow",
 			}

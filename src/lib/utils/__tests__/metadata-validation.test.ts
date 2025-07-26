@@ -14,7 +14,7 @@ import {
 jest.mock("../domain-detection", () => ({
 	getCanonicalUrl: jest.fn((path: string) => `https://doug.is${path}`),
 	getSocialImageUrl: jest.fn((path: string) => `https://doug.is${path}`),
-	getSiteName: jest.fn(() => "Doug.is"),
+	getSiteName: jest.fn(() => "doug.is"),
 }))
 
 describe("Metadata Validation", () => {
@@ -32,7 +32,7 @@ describe("Metadata Validation", () => {
 					title: "Test Page",
 					description: "Test description",
 					url: "https://doug.is/test",
-					siteName: "Doug.is",
+					siteName: "doug.is",
 					images: [
 						{
 							url: "https://doug.is/images/test.jpg",
@@ -90,7 +90,7 @@ describe("Metadata Validation", () => {
 					description: "Test blog post description",
 					type: "article",
 					url: "https://doug.is/thinking/about/building/test-post",
-					siteName: "Doug.is",
+					siteName: "doug.is",
 					images: [
 						{
 							url: "https://doug.is/images/test-featured.jpg",
@@ -130,14 +130,14 @@ describe("Metadata Validation", () => {
 
 		it("should validate that project pages have proper structured data", () => {
 			const mockProjectMetadata = {
-				title: "Test Project | Building | Doug.is",
+				title: "Test Project | Building | doug.is",
 				description: "Test project description",
 				openGraph: {
 					title: "Test Project",
 					description: "Test project description",
 					type: "website",
 					url: "https://doug.is/building/test-project",
-					siteName: "Doug.is",
+					siteName: "doug.is",
 					images: [
 						{
 							url: "https://doug.is/images/projects/test-project.png",

@@ -259,8 +259,23 @@ describe("PublishButton", () => {
 	it("redirects to custom URL when redirectUrl is provided", async () => {
 		mockPublishPost.mockResolvedValue({ success: true })
 
-		// Spy on window.location.href assignment
-		const hrefSpy = jest.spyOn(window.location, "href", "set")
+		// Create a mock location object that we can track
+		let currentHref = "/admin/posts"
+		const mockLocation = {
+			get href() {
+				return currentHref
+			},
+			set href(value: string) {
+				currentHref = value
+			},
+		}
+
+		// Save original and replace
+		const originalLocation = window.location
+		Object.defineProperty(window, "location", {
+			value: mockLocation,
+			writable: true,
+		})
 
 		render(
 			<PublishButton
@@ -276,11 +291,15 @@ describe("PublishButton", () => {
 		// Wait for the redirect to happen
 		await waitFor(
 			() => {
-				expect(hrefSpy).toHaveBeenCalledWith("/custom/url")
+				expect(currentHref).toBe("/custom/url")
 			},
 			{ timeout: 2000 }
 		)
 
-		hrefSpy.mockRestore()
+		// Restore original location
+		Object.defineProperty(window, "location", {
+			value: originalLocation,
+			writable: true,
+		})
 	})
 })

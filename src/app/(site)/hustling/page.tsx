@@ -5,7 +5,7 @@ import SocialIcons from "@/components/SocialIcons"
 import ConnectCta from "@/components/ConnectCta"
 
 export const metadata: Metadata = {
-	title: "Doug.is / Hustling",
+	title: "doug.is / Hustling",
 	description: "About me and how to get in touch",
 }
 

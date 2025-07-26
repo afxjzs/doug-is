@@ -1,5 +1,5 @@
 
-# 🔍 SEO Audit Report: [Doug.is](https://www.doug.is)
+# 🔍 SEO Audit Report: [doug.is](https://www.doug.is)
 
 ---
 

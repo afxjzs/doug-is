@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 				url: getSocialImageUrl("/images/projects/doug-is.png"),
 				width: 1200,
 				height: 630,
-				alt: "Building Projects - Doug.is",
+				alt: "Building Projects - doug.is",
 			},
 		],
 		locale: "en_US",

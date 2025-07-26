@@ -3,7 +3,7 @@ import Link from "next/link"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-	title: "Shopping List App | Doug.is",
+	title: "Shopping List App | doug.is",
 	description:
 		"Download my shopping list app to help organize your shopping experience.",
 }

@@ -3,7 +3,7 @@ import Link from "next/link"
 import SafeImage from "@/components/SafeImage"
 
 export const metadata: Metadata = {
-	title: "Professional | Doug.is",
+	title: "Professional | doug.is",
 	description: "Professional experience and resume of Doug Rogers",
 }
 

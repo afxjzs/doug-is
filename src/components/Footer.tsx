@@ -180,7 +180,7 @@ export default function Footer() {
 
 				<div className="pt-8 border-t border-[rgba(var(--color-foreground),0.1)] flex flex-col md:flex-row justify-between items-center">
 					<p className="text-[rgba(var(--color-foreground),0.6)] text-sm mb-4 md:mb-0">
-						© {new Date().getFullYear()} Doug.is. All rights reserved.
+						© {new Date().getFullYear()} doug.is. All rights reserved.
 					</p>
 
 					<div className="text-[rgba(var(--color-foreground),0.6)] text-sm">

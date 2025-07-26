@@ -111,7 +111,7 @@ export default async function Home() {
 					</div>
 				</div>
 
-				{/* Doug.is Section */}
+				{/* doug.is Section */}
 				<div className="mb-16">
 					<h2 className="text-3xl md:text-4xl font-semibold gradient-heading mb-8 text-center leading-[1.2]">
 						doug.is...

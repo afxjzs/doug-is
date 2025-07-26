@@ -3,7 +3,7 @@ import Link from "next/link"
 import ContactForm from "@/components/ContactForm"
 
 export const metadata: Metadata = {
-	title: "Hopping List Feedback | Building | Doug.is",
+	title: "Hopping List Feedback | Building | doug.is",
 	description:
 		"Share your feedback, report bugs, or request features for the Hopping List shopping app. Help us improve your multi-store shopping experience.",
 	openGraph: {
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 		description:
 			"Share your feedback about the Hopping List app - report bugs, request features, or tell us about your experience",
 		url: "https://www.doug.is/building/hopping-list/feedback",
-		siteName: "Doug.is",
+		siteName: "doug.is",
 		images: [
 			{
 				url: "https://www.doug.is/images/projects/hopping-list-logo.png",

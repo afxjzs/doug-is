@@ -47,7 +47,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-	title: "Doug.is...",
+	title: "doug.is...",
 	description:
 		"Personal website of Doug Rogers - Developer, Investor, and Entrepreneur",
 	metadataBase: new URL("https://doug.is"),
@@ -74,8 +74,8 @@ export const metadata: Metadata = {
 		type: "website",
 		locale: "en_US",
 		url: "https://doug.is",
-		siteName: "Doug.is",
-		title: "Doug.is - Developer, Investor, Entrepreneur",
+		siteName: "doug.is",
+		title: "doug.is - Developer, Investor, Entrepreneur",
 		description:
 			"Personal website of Doug Rogers - Developer, Investor, and Entrepreneur",
 		images: [
@@ -83,13 +83,13 @@ export const metadata: Metadata = {
 				url: "/android-chrome-512x512.png",
 				width: 512,
 				height: 512,
-				alt: "Doug.is",
+				alt: "doug.is",
 			},
 		],
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "Doug.is - Developer, Investor, Entrepreneur",
+		title: "doug.is - Developer, Investor, Entrepreneur",
 		description:
 			"Personal website of Doug Rogers - Developer, Investor, and Entrepreneur",
 		images: ["/android-chrome-512x512.png"],
