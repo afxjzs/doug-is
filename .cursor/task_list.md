@@ -8,7 +8,7 @@ The user identified several critical reliability and UX issues that needed to be
 2. **Implement the minimal code** to make the test pass.
 3. **Refactor and add regression tests** to ensure the issue does not recur.
 
-**ALL ISSUES COMPLETED ✅** - All major reliability issues have been successfully resolved with comprehensive testing and documentation.
+**NEW CRITICAL ISSUE:** Authentication system has a token refresh loop causing 429 rate limiting errors on live site. Users cannot log in due to continuous failed refresh attempts.
 
 ## Completed Issues Summary
 
@@ -51,34 +51,103 @@ The user identified several critical reliability and UX issues that needed to be
 - [x] **Success Criteria Met:** All blog posts have comprehensive social sharing metadata; tests pass; real posts show proper metadata in HTML
 - [x] **Verification:** Confirmed working with cURL test showing all required metadata tags present
 
-### **Success Criteria:**
-- All blog posts have complete OpenGraph and Twitter card metadata
-- All project pages have proper social sharing previews
-- Structured data implemented for rich snippets
-- Social sharing works correctly on all major platforms
-- Tests fail if metadata is missing or incomplete
+### **Issue 8: Authentication Token Refresh Loop (CRITICAL PRIORITY)**
+**Problem:** Live site has authentication loop causing 429 rate limiting errors. Users cannot log in due to continuous failed token refresh attempts.
 
-#### **CRITICAL SUBTASK: Fix Blog Post Image Metadata**
-**Specific Issue:** Blog posts are using generic fallback image instead of post-specific images
-**Current Problem:** 
-- Line 35 in `/thinking/about/[category]/[slug]/page.tsx` hardcodes: `const socialImageUrl = "https://doug.is/images/doug-2024-cropped.png"`
-- Should use `post.featured_image` if available, with fallback to generic image
-- Database has `featured_image: string | null` field available
+**Root Cause Analysis:**
+1. **Token Refresh Loop**: Continuous POST requests to `/auth/v1/token?grant_type=refresh_token` failing with 429
+2. **Missing Error Handling**: No proper handling of failed token refreshes
+3. **No Rate Limiting Protection**: No backoff strategy when refresh fails
+4. **Infinite Retry Loop**: Failed refreshes trigger immediate retry attempts
+5. **Insufficient Test Coverage**: Current tests don't cover token refresh scenarios
 
-**Required Fix:**
-```typescript
-// Replace hardcoded image with dynamic post image
-const socialImageUrl = post.featured_image 
-  ? `https://doug.is${post.featured_image}`
-  : "https://doug.is/images/doug-2024-cropped.png"
-```
+**TDD Implementation Plan:**
 
-**Test Case:** 
-- Blog post `/thinking/about/technology/ai-slop-will-eat-itself` should use its specific featured image
-- If no featured image, fall back to generic image
-- Verify with browser MCP and social media debugging tools
+#### **Phase 1: Token Refresh Error Handling (RED-GREEN-REFACTOR)**
+- [x] **RED: Write failing tests** for token refresh error scenarios:
+  - [x] Test token refresh failure handling
+  - [x] Test rate limiting backoff strategy
+  - [x] Test network connectivity issues during auth
+  - [x] Test expired token detection
+- [x] **GREEN: Implement token refresh error handling**:
+  - [x] Add exponential backoff for failed refreshes
+  - [x] Add token expiration validation
+  - [x] Add network error handling
+  - [x] Add rate limiting protection
+- [x] **REFACTOR: Add comprehensive error boundaries** and cleanup
+
+#### **Phase 2: Authentication Hook Improvements (RED-GREEN-REFACTOR)**
+- [ ] **RED: Write failing tests** for auth hook improvements:
+  - [ ] Test auth state management during errors
+  - [ ] Test proper cleanup on unmount
+  - [ ] Test timeout handling for auth operations
+  - [ ] Test concurrent auth operations
+- [ ] **GREEN: Implement improved auth hook**:
+  - [ ] Add proper cleanup on component unmount
+  - [ ] Add timeout handling for auth operations
+  - [ ] Add concurrent operation protection
+  - [ ] Add better error state management
+- [ ] **REFACTOR: Optimize performance** and add regression tests
+
+#### **Phase 3: Integration Test Coverage (RED-GREEN-REFACTOR)**
+- [ ] **RED: Write failing integration tests**:
+  - [ ] Test complete login/logout flow with token refresh
+  - [ ] Test admin route protection with auth failures
+  - [ ] Test middleware auth validation with errors
+  - [ ] Test auth state persistence across page loads
+- [ ] **GREEN: Implement missing integration tests**:
+  - [ ] Add end-to-end auth flow tests
+  - [ ] Add middleware auth validation tests
+  - [ ] Add auth state persistence tests
+  - [ ] Add error scenario tests
+- [ ] **REFACTOR: Ensure 100% test coverage** for all auth scenarios
+
+#### **Phase 4: Production Deployment Testing**
+- [ ] **RED: Write failing production tests**:
+  - [ ] Test auth behavior with real Supabase instance
+  - [ ] Test rate limiting scenarios
+  - [ ] Test network failure scenarios
+- [ ] **GREEN: Deploy and test on live site**:
+  - [ ] Deploy authentication fixes
+  - [ ] Test login/logout functionality
+  - [ ] Verify no more token refresh loops
+  - [ ] Monitor for rate limiting issues
+- [ ] **REFACTOR: Document lessons learned** and add monitoring
+
+**Success Criteria:**
+- ✅ No more 429 rate limiting errors on live site
+- ✅ Users can log in and log out successfully
+- ✅ Token refresh works properly with error handling
+- ✅ 100% test coverage for all authentication scenarios
+- ✅ Comprehensive error handling for all auth failure modes
+- ✅ Production deployment verified working
+
+**Critical Requirements:**
+- Must fix the live site authentication loop
+- Must have 100% test coverage including integration tests
+- Must handle all error scenarios gracefully
+- Must deploy to live site and verify working before marking complete
 
 ## Project Status Board
+
+### 🔴 CURRENT CRITICAL ISSUE: Authentication Token Refresh Loop
+
+**Status:** Phase 1 COMPLETED ✅ - Phase 2 IN PROGRESS
+**Priority:** CRITICAL - Live site authentication broken
+**Next Steps:** Begin Phase 2 implementation (Authentication Hook Improvements)
+
+**Phase 1 COMPLETED ✅:**
+- ✅ **Token Refresh Error Handling**: Implemented comprehensive error handling with exponential backoff
+- ✅ **Rate Limiting Protection**: Added proper backoff strategy for 429 errors
+- ✅ **Network Error Handling**: Added timeout and retry logic for network issues
+- ✅ **Token Expiration Detection**: Added proper handling for expired tokens
+- ✅ **Test Coverage**: All 8 token refresh error tests passing
+- ✅ **LoginForm Integration**: Updated to handle new error states and retry counts
+
+**Phase 2 IN PROGRESS:**
+- 🔄 **Auth Hook Improvements**: Ready to implement concurrent operation protection
+- 🔄 **Cleanup and Performance**: Ready to optimize auth hook performance
+- 🔄 **Integration Tests**: Ready to add comprehensive integration test coverage
 
 ### ✅ COMPLETED TASKS
 
@@ -173,3 +242,11 @@ All 7 major reliability issues have been successfully resolved following strict 
 - Create reusable metadata utilities for consistency
 - **Always test metadata implementation with real social sharing tools**
 - **Write comprehensive tests to verify metadata completeness across all page types**
+
+**Authentication Best Practices:**
+- **Always handle token refresh errors gracefully**
+- **Implement exponential backoff for failed auth operations**
+- **Add comprehensive error boundaries for auth failures**
+- **Test all authentication scenarios including network failures**
+- **Monitor for rate limiting and implement proper backoff strategies**
+- **Ensure 100% test coverage for all auth flows including integration tests**

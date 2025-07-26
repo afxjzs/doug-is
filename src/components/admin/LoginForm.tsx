@@ -6,6 +6,7 @@
  *
  * Uses UNIFIED AUTHENTICATION SYSTEM for consistency
  * SECURITY FIX: Removed client-side admin checks - admin verification happens server-side only
+ * ERROR HANDLING: Comprehensive error handling with retry logic and user feedback
  */
 
 import { useState, useEffect } from "react"
@@ -26,6 +27,9 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 		user,
 		// SECURITY FIX: Removed isAdmin to prevent client-side admin state exposure
 		logout,
+		error: authError,
+		retryCount,
+		clearError,
 	} = useAuth()
 	const router = useRouter()
 
@@ -51,6 +55,24 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 		return () => clearTimeout(timer)
 	}, [authLoading])
 
+	// Handle auth errors from the hook
+	useEffect(() => {
+		if (authError) {
+			setErrorMessage(authError)
+			// Clear form errors when auth error is resolved
+			if (
+				!authError.includes("Rate limited") &&
+				!authError.includes("Network error")
+			) {
+				setTimeout(() => {
+					clearError()
+				}, 5000) // Auto-clear non-critical errors after 5 seconds
+			}
+		} else {
+			setErrorMessage(null)
+		}
+	}, [authError, clearError])
+
 	// SECURITY FIX: Removed client-side admin check logic
 	// Admin verification now happens server-side only
 	// After successful login, server-side middleware will handle admin route protection
@@ -68,6 +90,7 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault()
 		setErrorMessage(null)
+		setSuccessMessage(null)
 		setIsSubmitting(true)
 
 		try {
@@ -126,6 +149,11 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 				<div className="space-y-4">
 					<div className="text-[rgba(var(--color-foreground),0.7)]">
 						<p>Authentication system taking longer than expected...</p>
+						{retryCount > 0 && (
+							<p className="text-sm text-[rgba(var(--color-foreground),0.6)]">
+								Retry attempt {retryCount}/3
+							</p>
+						)}
 						<button
 							onClick={() => window.location.reload()}
 							className="mt-2 text-[rgba(var(--color-violet),0.9)] hover:text-[rgba(var(--color-violet),1)] underline"
@@ -141,6 +169,11 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 			<div className="space-y-4">
 				<div className="text-[rgba(var(--color-foreground),0.7)]">
 					<p>Initializing unified authentication system...</p>
+					{retryCount > 0 && (
+						<p className="text-sm text-[rgba(var(--color-foreground),0.6)]">
+							Retry attempt {retryCount}/3
+						</p>
+					)}
 				</div>
 			</div>
 		)
@@ -160,7 +193,25 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 		<form onSubmit={handleLogin} className="space-y-4">
 			{errorMessage && (
 				<div className="text-red-600 text-sm bg-red-50 p-4 rounded border border-red-200">
-					{errorMessage}
+					<p className="font-medium">Authentication Error:</p>
+					<p>{errorMessage}</p>
+					{retryCount > 0 && (
+						<p className="text-xs mt-2">
+							Retry attempt {retryCount}/3 - Please wait before trying again
+						</p>
+					)}
+					{errorMessage.includes("Rate limited") && (
+						<p className="text-xs mt-2">
+							Too many login attempts. Please wait a few minutes before trying
+							again.
+						</p>
+					)}
+					{errorMessage.includes("Network error") && (
+						<p className="text-xs mt-2">
+							Network connectivity issue. Please check your connection and try
+							again.
+						</p>
+					)}
 				</div>
 			)}
 
