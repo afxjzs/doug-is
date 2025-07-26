@@ -26,28 +26,19 @@ export default function AdminError({
 		<div className="container mx-auto px-4 py-12">
 			<div className="max-w-2xl mx-auto">
 				<div className="bg-white shadow-sm border border-gray-200 rounded-lg p-8">
-					<h1 className="text-2xl font-bold text-red-600 mb-4">
-						Something went wrong
+					<h1 className="text-2xl font-bold text-red-200 mb-4">
+						Something went wrong!
 					</h1>
-
-					<p className="mb-4 text-gray-700">
-						There was an error loading the admin section. This could be due to:
+					<p className="text-[rgba(var(--color-foreground),0.8)] mb-6">
+						An error occurred while loading this page. Please try refreshing or
+						contact support if the problem persists.
 					</p>
-
-					<ul className="list-disc pl-5 mb-6 text-gray-700 space-y-1">
-						<li>Authentication issues - please try logging in again</li>
-						<li>Database connection problems</li>
-						<li>Permission errors - make sure you have admin access</li>
-					</ul>
-
-					{error?.message && (
-						<div className="p-3 bg-gray-100 rounded mb-6 overflow-auto text-sm">
-							<p className="font-mono text-red-600">{error.message}</p>
-							{error.digest && (
-								<p className="font-mono text-gray-500 text-xs mt-2">
-									Error ID: {error.digest}
-								</p>
-							)}
+					{error && (
+						<div className="bg-red-900/30 border border-red-700/50 rounded-md p-4 mb-4">
+							<h2 className="text-lg font-semibold text-red-100 mb-2">
+								Error Details:
+							</h2>
+							<p className="font-mono text-red-200">{error.message}</p>
 						</div>
 					)}
 

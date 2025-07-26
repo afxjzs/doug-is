@@ -137,8 +137,9 @@ export default function RegisterForm() {
 	return (
 		<form onSubmit={handleSubmit} className="space-y-4">
 			{errors.general && (
-				<div className="text-red-600 text-sm bg-red-50 p-4 rounded border border-red-200">
-					{errors.general}
+				<div className="text-red-200 text-sm bg-red-900/30 p-4 rounded border border-red-700/50">
+					<p className="font-medium text-red-100">Registration Error:</p>
+					<p className="text-red-200">{errors.general}</p>
 				</div>
 			)}
 
@@ -163,7 +164,7 @@ export default function RegisterForm() {
 					disabled={isSubmitting}
 				/>
 				{errors.email && (
-					<p className="text-red-600 text-sm mt-1">{errors.email}</p>
+					<p className="text-red-300 text-sm mt-1">{errors.email}</p>
 				)}
 			</div>
 
@@ -188,7 +189,7 @@ export default function RegisterForm() {
 					disabled={isSubmitting}
 				/>
 				{errors.password && (
-					<p className="text-red-600 text-sm mt-1">{errors.password}</p>
+					<p className="text-red-300 text-sm mt-1">{errors.password}</p>
 				)}
 			</div>
 
@@ -213,7 +214,7 @@ export default function RegisterForm() {
 					disabled={isSubmitting}
 				/>
 				{errors.confirmPassword && (
-					<p className="text-red-600 text-sm mt-1">{errors.confirmPassword}</p>
+					<p className="text-red-300 text-sm mt-1">{errors.confirmPassword}</p>
 				)}
 			</div>
 

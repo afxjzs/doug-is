@@ -120,7 +120,7 @@ export default function SimpleImageUploader({
 			)}
 
 			{uploadError && (
-				<div className="mb-4 text-sm text-red-600 bg-red-50 p-2 rounded">
+				<div className="mb-4 text-sm text-red-200 bg-red-900/30 p-2 rounded border border-red-700/50">
 					<p className="font-medium">Upload failed</p>
 					<p className="mt-1 font-normal">{uploadError}</p>
 				</div>

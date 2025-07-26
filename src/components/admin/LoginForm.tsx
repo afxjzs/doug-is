@@ -192,22 +192,22 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
 	return (
 		<form onSubmit={handleLogin} className="space-y-4">
 			{errorMessage && (
-				<div className="text-red-600 text-sm bg-red-50 p-4 rounded border border-red-200">
-					<p className="font-medium">Authentication Error:</p>
-					<p>{errorMessage}</p>
+				<div className="text-red-200 text-sm bg-red-900/30 p-4 rounded border border-red-700/50">
+					<p className="font-medium text-red-100">Authentication Error:</p>
+					<p className="text-red-200">{errorMessage}</p>
 					{retryCount > 0 && (
-						<p className="text-xs mt-2">
+						<p className="text-xs mt-2 text-red-300">
 							Retry attempt {retryCount}/3 - Please wait before trying again
 						</p>
 					)}
 					{errorMessage.includes("Rate limited") && (
-						<p className="text-xs mt-2">
+						<p className="text-xs mt-2 text-red-300">
 							Too many login attempts. Please wait a few minutes before trying
 							again.
 						</p>
 					)}
 					{errorMessage.includes("Network error") && (
-						<p className="text-xs mt-2">
+						<p className="text-xs mt-2 text-red-300">
 							Network connectivity issue. Please check your connection and try
 							again.
 						</p>
