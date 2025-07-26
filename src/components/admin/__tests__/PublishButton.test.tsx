@@ -1,13 +1,34 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import PublishButton from "../PublishButton"
+import { publishPost } from "@/lib/actions/postActions"
 
-// Mock the publishPost server action
-jest.mock("@/lib/actions/postActions", () => ({
-	publishPost: jest.fn(),
-}))
+// Mock the postActions module
+jest.mock("@/lib/actions/postActions")
+const mockPublishPost = publishPost as jest.MockedFunction<typeof publishPost>
 
-const mockPublishPost = require("@/lib/actions/postActions").publishPost
+// Mock browser APIs
+const mockConfirm = jest.fn()
+const mockAlert = jest.fn()
+
+beforeEach(() => {
+	// Mock window.confirm to return true (user confirms)
+	Object.defineProperty(window, "confirm", {
+		writable: true,
+		value: mockConfirm.mockReturnValue(true),
+	})
+
+	// Mock window.alert
+	Object.defineProperty(window, "alert", {
+		writable: true,
+		value: mockAlert,
+	})
+
+	// Reset mocks
+	mockPublishPost.mockReset()
+	mockConfirm.mockClear()
+	mockAlert.mockClear()
+})
 
 describe("PublishButton", () => {
 	const defaultProps = {
@@ -138,6 +159,11 @@ describe("PublishButton", () => {
 	it("shows generic error when publish throws exception", async () => {
 		mockPublishPost.mockRejectedValue(new Error("Network error"))
 
+		// Mock window.location.href
+		const originalLocation = window.location
+		delete (window as any).location
+		window.location = { ...originalLocation, href: "/admin/posts" } as any
+
 		render(<PublishButton {...defaultProps} />)
 
 		const button = screen.getByRole("button", { name: /publish now/i })
@@ -149,8 +175,11 @@ describe("PublishButton", () => {
 			).toBeInTheDocument()
 		})
 
-		// Ensure no redirect happened
-		expect(window.location.href).toBe("")
+		// Ensure no redirect happened - location should remain the same
+		expect(window.location.href).toBe("/admin/posts")
+
+		// Restore original location
+		window.location = originalLocation as any
 	})
 
 	it("handles missing error message gracefully", async () => {

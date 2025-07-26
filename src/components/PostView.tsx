@@ -110,9 +110,9 @@ export const PostView: FC<PostViewProps> = ({ post, isDraft = false }) => {
 						<Image
 							src={post.featured_image}
 							alt={post.title}
-							fill
+							fill={true}
 							className="object-cover"
-							priority
+							priority={true}
 						/>
 					</div>
 				)}

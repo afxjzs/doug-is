@@ -1,5 +1,5 @@
 import { metadata } from "./metadata"
-import VisualLayout from "@/components/VisualLayout"
+import LayoutWrapper from "@/components/LayoutWrapper"
 
 export { metadata }
 
@@ -8,5 +8,5 @@ export default function BuildingLayout({
 }: {
 	children: React.ReactNode
 }) {
-	return <VisualLayout>{children}</VisualLayout>
+	return <LayoutWrapper>{children}</LayoutWrapper>
 }

@@ -84,7 +84,7 @@ src/app/
 - **Regular Folders** `/advising`: Contain layouts and metadata for URL paths
 - **Content comes from route groups**, **configuration from regular folders**
 ### Content Management Patterns
--   **Blog Content Structure**: All blog content is centralized under `/thinking` route with URL structure: `/thinking/[primary-category]/[slug]`
+-   **Blog Content Structure**: All blog content is centralized under `/thinking` route with URL structure: `/thinking/about/[category]/[slug]`
 -   **Database Integration**: Posts stored in Supabase with proper RLS policies for public/admin access
 -   **Content Categories**: Use consistent categorization (building, investing, hustling, advising, thinking)
 

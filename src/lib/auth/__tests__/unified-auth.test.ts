@@ -256,9 +256,13 @@ describe("Unified Auth Security Tests", () => {
 
 	describe("createAdminSupabaseClient", () => {
 		it("throws error when service role key is missing", () => {
-			// Temporarily remove service role key
+			// Mock the environment variable before the module is loaded
 			const originalKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 			delete process.env.SUPABASE_SERVICE_ROLE_KEY
+
+			// Re-import the module to get the updated environment variable
+			jest.resetModules()
+			const { createAdminSupabaseClient } = require("../unified-auth")
 
 			expect(() => createAdminSupabaseClient()).toThrow(
 				"Service role key required for admin operations"

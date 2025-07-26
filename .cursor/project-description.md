@@ -21,43 +21,168 @@ This is a personal website for Douglas Rogers built with Next.js 15.2.4, React 1
 ```
 src/
 ├── app/                  # Next.js App Router pages and layouts
-│   ├── [category]/       # Dynamic category pages
 │   ├── (migraine-free)/  # Route Group for migraine-free pages
+│   │   ├── layout.tsx    # Migraine-free layout
 │   │   └── migraine-free/ # Migraine-free content section
-│   ├── about/            # About page
-│   ├── admin/            # Admin dashboard
-│   ├── advising/         # Advisory services page
+│   │       ├── feedback/  # Feedback pages
+│   │       ├── layout.tsx # Migraine-free section layout
+│   │       ├── metadata.ts # Section metadata
+│   │       └── page.tsx   # Main migraine-free page
+│   ├── (site)/           # Route Group for main site content (doesn't affect URLs)
+│   │   ├── layout.tsx    # Shared layout for all site pages
+│   │   ├── advising/     # Advisory services content
+│   │   │   └── page.tsx  # Page content: /advising
+│   │   ├── building/     # Building/projects content
+│   │   │   └── page.tsx  # Page content: /building
+│   │   ├── connecting/   # Connecting content
+│   │   │   └── page.tsx  # Page content: /connecting
+│   │   ├── hustling/     # Hustling/entrepreneurship content
+│   │   │   └── page.tsx  # Page content: /hustling
+│   │   ├── investing/    # Investing content
+│   │   │   └── page.tsx  # Page content: /investing
+│   │   └── thinking/     # Blog/thoughts content
+│   │       └── page.tsx  # Page content: /thinking
+│   ├── admin/            # Admin dashboard (protected routes)
+│   │   ├── admin.css     # Admin-specific styles
+│   │   ├── layout.tsx    # Admin layout
+│   │   ├── page.tsx      # Admin dashboard
+│   │   ├── contacts/     # Contact management
+│   │   ├── posts/        # Post management
+│   │   ├── login/        # Admin login
+│   │   └── register/     # Admin registration
+│   ├── advising/         # Advisory services layout and metadata
+│   │   ├── layout.tsx    # Section-specific layout
+│   │   └── metadata.ts   # Section-specific metadata
 │   ├── api/              # API routes for data fetching and testing
+│   │   ├── auth/         # Authentication API routes
+│   │   ├── contact/      # Contact form API
+│   │   ├── posts/        # Posts API
+│   │   ├── upload/       # File upload API
+│   │   └── debug-*/      # Debug and testing APIs
 │   ├── attributing/      # Attribution page
-│   ├── building/         # Building/projects page
-│   ├── contact/          # Contact page with form
-│   ├── hustling/         # Hustling/entrepreneurship page
-│   ├── investing/        # Investing page
+│   ├── building/         # Building/projects section
+│   │   ├── layout.tsx    # Building section layout
+│   │   ├── metadata.ts   # Building section metadata
+│   │   ├── __tests__/    # Building section tests
+│   │   ├── hopping-list/ # Hopping List project
+│   │   ├── oil-price-ticker/ # Oil Price Ticker project
+│   │   ├── inn/          # Inn project
+│   │   ├── just-ate/     # Just Ate project
+│   │   ├── occupado/     # Occupado project
+│   │   └── bolt-form/    # Bolt Form project
+│   ├── debugging/        # Debugging page
+│   ├── hireable/         # Hireable page
+│   ├── investing/        # Investing section layout and metadata
+│   │   ├── layout.tsx    # Section-specific layout
+│   │   └── metadata.ts   # Section-specific metadata
+│   ├── professional/     # Professional page
 │   ├── respecting-privacy/ # Privacy policy page
-│   ├── thinking/         # Blog/thoughts main page
+│   ├── shopping/         # Shopping page
+│   ├── supatest/         # Supabase testing page
+│   ├── thinking/         # Blog/thoughts main section
+│   │   ├── layout.tsx    # Thinking section layout
+│   │   ├── metadata.ts   # Thinking section metadata
 │   │   ├── [primary-category]/ # Category-specific blog pages
 │   │   │   └── [slug]/   # Individual blog post pages
+│   │   └── about/        # About blog section
+│   │       ├── [category]/ # Category-specific pages
+│   │       │   ├── [slug]/ # Individual post pages
+│   │       │   └── page.tsx # Category listing page
+│   │       └── page.tsx  # About section main page
+│   ├── around-here-somehwere/ # Test page
+│   ├── force-logout/     # Force logout route
+│   ├── logout/           # Logout route
 │   ├── globals.css       # Global CSS styles with Tailwind v4 imports
 │   ├── layout.tsx        # Root layout component
 │   └── page.tsx          # Homepage
 ├── components/           # Reusable UI components
+│   ├── __tests__/        # Component tests
+│   ├── admin/            # Admin-specific components
+│   │   ├── __tests__/    # Admin component tests
+│   │   ├── AdminHeader.tsx # Admin header component
+│   │   ├── AdminNavigation.tsx # Admin navigation
+│   │   ├── ContactsList.tsx # Contact list component
+│   │   ├── DraftOverviewWidget.tsx # Draft overview widget
+│   │   ├── ImageUploader.tsx # Image upload component
+│   │   ├── LoginForm.tsx # Login form component
+│   │   ├── PostEditor.tsx # Post editor component
+│   │   ├── PostsTable.tsx # Posts table component
+│   │   ├── PublishButton.tsx # Publish button component
+│   │   ├── RegisterForm.tsx # Register form component
+│   │   ├── SimpleImageUploader.tsx # Simple image uploader
+│   │   ├── TestUploaderWrapper.tsx # Test uploader wrapper
+│   │   └── TiptapEditor.tsx # Tiptap editor component
+│   ├── icons/            # Icon components
+│   │   ├── AdvisingIcon.tsx # Advising icon
+│   │   ├── BuildingIcon.tsx # Building icon
+│   │   └── InvestingIcon.tsx # Investing icon
+│   ├── ui/               # UI components
+│   │   ├── input.tsx     # Input component
+│   │   └── tooltip.tsx   # Tooltip component
+│   ├── ClientAnalytics.tsx # Client-side analytics
+│   ├── ClientAnalyticsWrapper.tsx # Analytics wrapper
+│   ├── ConnectCta.tsx    # Connect CTA component
 │   ├── ContactForm.tsx   # Contact form component
 │   ├── Footer.tsx        # Site footer
 │   ├── Header.tsx        # Site header with navigation and mobile menu
-│   ├── Navigation.tsx    # Navigation component
-│   └── SafeImage.tsx     # Optimized image component with error handling
-├── content/              # Static content and markdown files
-│   └── posts/            # Markdown blog posts
+│   ├── LayoutWrapper.tsx # Layout wrapper component
+│   ├── MainSiteLayout.tsx # Main site layout component
+│   ├── PostHogDebugger.tsx # PostHog debugger component
+│   ├── PostView.tsx      # Post view component
+│   ├── ProjectPageAnalytics.tsx # Project page analytics
+│   ├── SafeImage.tsx     # Optimized image component with error handling
+│   ├── SocialIcons.tsx   # Social icons component
+│   ├── StatusMessage.tsx # Status message component
+│   └── VisualLayout.tsx  # Visual layout component
 ├── lib/                  # Utility functions and services
+│   ├── actions/          # Server actions
+│   │   ├── __tests__/    # Action tests
+│   │   ├── contactActions.ts # Contact form actions
+│   │   └── postActions.ts # Post management actions
+│   ├── analytics/        # Analytics configuration
+│   │   ├── context.tsx   # Analytics context
+│   │   ├── index.ts      # Analytics exports
+│   │   ├── providers/    # Analytics providers
+│   │   │   └── posthog.ts # PostHog provider
+│   │   └── types.ts      # Analytics types
+│   ├── auth/             # Authentication utilities
+│   │   ├── __tests__/    # Auth tests
+│   │   ├── supabase-server.ts # Supabase server auth
+│   │   ├── supabase.ts   # Supabase client auth
+│   │   ├── unified-auth-hook.tsx # Unified auth hook
+│   │   └── unified-auth.ts # Unified auth utilities
+│   ├── constants/        # Constants
+│   │   └── colors.ts     # Color constants
 │   ├── supabase/         # Supabase client configuration and database functions
+│   │   ├── auth.ts       # Supabase auth utilities
+│   │   ├── client.ts     # Supabase client setup
+│   │   ├── publicClient.ts # Public Supabase client
+│   │   ├── server.ts     # Supabase server utilities
+│   │   └── serverClient.ts # Server Supabase client
 │   ├── types/            # TypeScript type definitions
-│   └── utils/            # Helper functions
+│   │   └── supabase.ts   # Supabase type definitions
+│   ├── utils/            # Helper functions
+│   │   ├── index.ts      # Utility exports
+│   │   └── markdown.ts   # Markdown utilities
+│   └── test-utils.tsx    # Test utilities
+├── middleware.ts         # Next.js middleware for auth and routing
 ├── supabase/             # Supabase configuration and migrations
+│   ├── config.toml       # Supabase configuration
+│   ├── down_migrations/  # Down migration files
+│   ├── functions/        # Supabase Edge Functions
+│   │   └── get_service_role_access_test/ # Service role test function
 │   ├── migrations/       # SQL migration files for database schema changes
-│   └── config.toml       # Supabase configuration
+│   └── migrations_backup/ # Backup migration files
 └── scripts/              # Utility scripts for development and database management
     ├── create-migration.sh # Script to create new migrations with timestamps
-    └── run-migrations.sh # Script to run migrations up/down
+    ├── create-posts-table.sql # Posts table creation script
+    ├── fix-css.sh        # CSS fix script
+    ├── run-migrations.sh # Script to run migrations up/down
+    ├── setup-supabase.js # Supabase setup script
+    ├── test-supabase.js  # Supabase test script
+    ├── update-image-urls.js # Image URL update script
+    ├── update-images.js  # Image update script
+    └── upgrade.sh        # Upgrade script
 ```
 
 ## Key Components
@@ -104,7 +229,15 @@ interface Post {
 ```
 
 All blog content is centralized under the `/thinking` route with the URL structure:
-`/thinking/[primary-category]/[slug]`
+`/thinking/about/[category]/[slug]`
+
+**Blog Structure Details:**
+- **Main Blog Section**: `/thinking` - Main blog landing page
+- **About Blog Section**: `/thinking/about` - About section of the blog
+- **Category Pages**: `/thinking/about/[category]` - Category listing pages
+- **Individual Posts**: `/thinking/about/[category]/[slug]` - Individual blog post pages
+- **Primary Category Pages**: `/thinking/[primary-category]` - Primary category pages (if used)
+- **Primary Category Posts**: `/thinking/[primary-category]/[slug]` - Posts under primary categories (if used)
 
 ### Database Schema
 
