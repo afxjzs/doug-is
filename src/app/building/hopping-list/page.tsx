@@ -2,20 +2,25 @@ import { Metadata } from "next"
 import Link from "next/link"
 import SafeImage from "@/components/SafeImage"
 import Image from "next/image"
+import {
+	getCanonicalUrl,
+	getSocialImageUrl,
+	getSiteName,
+} from "@/lib/utils/domain-detection"
 
 export const metadata: Metadata = {
-	title: "Hopping List | Building | Doug.is",
+	title: `Hopping List | Building | ${getSiteName()}`,
 	description:
 		"A dynamic shopping list app for families and couples that lets you manage items across multiple stores",
 	openGraph: {
-		title: "Hopping List - The Smart Multi-Store Shopping List App",
+		title: `Hopping List - The Smart Multi-Store Shopping List App`,
 		description:
 			"A shopping list app that shows you what you need at each specific store",
-		url: "https://www.doug.is/building/hopping-list",
-		siteName: "Doug.is",
+		url: getCanonicalUrl("/building/hopping-list"),
+		siteName: getSiteName(),
 		images: [
 			{
-				url: "https://www.doug.is/images/projects/hopping-list-logo.png",
+				url: getSocialImageUrl("/images/projects/hopping-list-logo.png"),
 				width: 800,
 				height: 800,
 				alt: "Hopping List App Icon",
@@ -29,7 +34,11 @@ export const metadata: Metadata = {
 		title: "Hopping List - Smart Shopping List",
 		description:
 			"A shopping list app that shows you what you need at each specific store",
-		images: ["https://www.doug.is/images/projects/hopping-list-logo.png"],
+		images: [getSocialImageUrl("/images/projects/hopping-list-logo.png")],
+		creator: "@glowingrec",
+	},
+	alternates: {
+		canonical: getCanonicalUrl("/building/hopping-list"),
 	},
 }
 

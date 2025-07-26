@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 		description:
 			"An ever-growing (somewhat) comprehensive database of foods and ingredients that may trigger migraines, helping sufferers make informed dietary choices.",
 		url: "https://doug.is/migraine-free",
-		siteName: "doug.is",
+		siteName: "Doug.is",
 		type: "website",
 	},
 	twitter: {
@@ -17,6 +17,6 @@ export const metadata: Metadata = {
 		title: "Migraine Trigger Foods Database (MTFDB)",
 		description:
 			"An ever-growing (somewhat) comprehensive database of foods and ingredients that may trigger migraines, helping sufferers make informed dietary choices.",
-		creator: "@afxjzs",
+		creator: "@glowingrec",
 	},
 }

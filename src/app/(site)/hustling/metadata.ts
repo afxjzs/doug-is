@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 		description:
 			"Side projects, gigs, and entrepreneurial ventures I'm working on.",
 		url: "https://doug.is/hustling",
-		siteName: "doug.is",
+		siteName: "Doug.is",
 		type: "website",
 		images: [
 			{
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 		description:
 			"Side projects, gigs, and entrepreneurial ventures I'm working on.",
 		images: ["https://doug.is/images/doug-2024-cropped-compr.png"],
-		creator: "@afxjzs",
+		creator: "@glowingrec",
 	},
 	alternates: {
 		canonical: "https://doug.is/hustling",

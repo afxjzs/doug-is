@@ -3,9 +3,16 @@
  */
 
 import { Metadata } from "next"
-import { getPostBySlug, getPosts } from "@/lib/supabase/publicClient"
 import { notFound } from "next/navigation"
+import { getPostBySlug, getPosts } from "@/lib/supabase/publicClient"
 import { PostView } from "@/components/PostView"
+import {
+	getCanonicalUrl,
+	getSocialImageUrl,
+	getSiteName,
+} from "@/lib/utils/domain-detection"
+import { generateBlogPostStructuredData } from "@/lib/utils/structured-data"
+import Script from "next/script"
 
 // Set a reasonable fallback for cache revalidation
 export const revalidate = 3600 // 1 hour
@@ -28,22 +35,22 @@ export async function generateMetadata({
 			}
 		}
 
-		// Create canonical URL
-		const canonicalUrl = `https://doug.is/thinking/about/${post.category.toLowerCase()}/${
-			post.slug
-		}`
+		// Create canonical URL with dynamic domain
+		const canonicalUrl = getCanonicalUrl(
+			`/thinking/about/${post.category.toLowerCase()}/${post.slug}`
+		)
 
-		// Create social sharing image URL - use post featured image if available
+		// Create social sharing image URL with dynamic domain
 		const socialImageUrl = post.featured_image
-			? `https://doug.is${post.featured_image}`
-			: "https://doug.is/images/doug-2024-cropped.png"
+			? getSocialImageUrl(post.featured_image)
+			: getSocialImageUrl("/images/doug-2024-cropped.png")
 
 		// Format category for display
 		const categoryDisplay =
 			post.category.charAt(0).toUpperCase() + post.category.slice(1)
 
 		return {
-			title: `${post.title} | Doug.is`,
+			title: `${post.title} | ${getSiteName()}`,
 			description: post.excerpt,
 			openGraph: {
 				title: post.title,
@@ -58,7 +65,7 @@ export async function generateMetadata({
 						alt: post.title,
 					},
 				],
-				siteName: "Doug.is",
+				siteName: getSiteName(),
 				locale: "en_US",
 			},
 			twitter: {
@@ -66,7 +73,7 @@ export async function generateMetadata({
 				title: post.title,
 				description: post.excerpt,
 				images: [socialImageUrl],
-				creator: "@douglasrogers",
+				creator: "@glowingrec",
 			},
 			other: {
 				"article:published_time": post.published_at,
@@ -82,7 +89,7 @@ export async function generateMetadata({
 	} catch (error) {
 		console.error("Error generating metadata for post:", error)
 		return {
-			title: "Blog Post | Doug.is",
+			title: `Blog Post | ${getSiteName()}`,
 			description: "A blog post by Douglas Rogers",
 		}
 	}
@@ -138,7 +145,20 @@ export default async function BlogPostPage({
 			notFound()
 		}
 
-		return <PostView post={post} />
+		const structuredData = generateBlogPostStructuredData(post)
+
+		return (
+			<>
+				<Script
+					id="blog-post-structured-data"
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{
+						__html: JSON.stringify(structuredData),
+					}}
+				/>
+				<PostView post={post} />
+			</>
+		)
 	} catch (error) {
 		console.error("Error fetching blog post:", error)
 		notFound()

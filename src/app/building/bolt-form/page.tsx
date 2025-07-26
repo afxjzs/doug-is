@@ -1,21 +1,26 @@
 import { Metadata } from "next"
 import Link from "next/link"
 import SafeImage from "@/components/SafeImage"
+import {
+	getCanonicalUrl,
+	getSocialImageUrl,
+	getSiteName,
+} from "@/lib/utils/domain-detection"
 
 export const metadata: Metadata = {
-	title: "Bolt Form | Building | Doug.is",
+	title: `Bolt Form | Building | ${getSiteName()}`,
 	description:
 		"A JavaScript form builder with validation, conditional logic, and API integration",
 	openGraph: {
 		title: "Bolt Form - Advanced JavaScript Form Builder",
 		description:
 			"A powerful form builder with drag-and-drop interface, validation, conditional logic, and API integration",
-		url: "https://doug.is/building/bolt-form",
-		siteName: "Doug.is",
+		url: getCanonicalUrl("/building/bolt-form"),
+		siteName: getSiteName(),
 		type: "website",
 		images: [
 			{
-				url: "https://doug.is/images/projects/doug-is.png",
+				url: getSocialImageUrl("/images/projects/doug-is.png"),
 				width: 1200,
 				height: 630,
 				alt: "Bolt Form JavaScript Form Builder",
@@ -27,11 +32,11 @@ export const metadata: Metadata = {
 		title: "Bolt Form - Advanced JavaScript Form Builder",
 		description:
 			"A powerful form builder with drag-and-drop interface, validation, conditional logic, and API integration",
-		images: ["https://doug.is/images/projects/doug-is.png"],
-		creator: "@afxjzs",
+		images: [getSocialImageUrl("/images/projects/doug-is.png")],
+		creator: "@glowingrec",
 	},
 	alternates: {
-		canonical: "https://doug.is/building/bolt-form",
+		canonical: getCanonicalUrl("/building/bolt-form"),
 	},
 }
 

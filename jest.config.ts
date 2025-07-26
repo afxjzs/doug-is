@@ -10,9 +10,11 @@ const config: Config = {
 	testEnvironment: "jest-environment-jsdom",
 	moduleNameMapper: {
 		"^@/(.*)$": "<rootDir>/src/$1",
+		"^react-markdown$": "<rootDir>/src/__mocks__/react-markdown.tsx",
+		"^remark-gfm$": "<rootDir>/src/__mocks__/remark-gfm.ts",
 	},
 	transformIgnorePatterns: [
-		"node_modules/(?!(react-markdown|remark-.*|rehype-.*)/)",
+		"node_modules/(?!(react-markdown|remark-.*|rehype-.*|unified|bail|is-plain-obj|trough|vfile|vfile-message|unist-.*|mdast-.*|micromark|decode-named-character-reference|character-entities|property-information|hast-util-whitespace|space-separated-tokens|comma-separated-tokens|pretty-bytes|ccount)/)",
 	],
 	testMatch: ["**/*.test.ts", "**/*.test.tsx"],
 	collectCoverage: true,

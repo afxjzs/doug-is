@@ -1,34 +1,37 @@
 import { Metadata } from "next"
+import {
+	getCanonicalUrl,
+	getSocialImageUrl,
+	getSiteName,
+} from "@/lib/utils/domain-detection"
 
 export const metadata: Metadata = {
-	title: "Doug.is / Building",
-	description:
-		"Projects and applications I'm currently building or have built in the past.",
+	title: `${getSiteName()} / Building`,
+	description: "Projects and applications I've built",
 	openGraph: {
-		title: "Doug.is / Building",
-		description:
-			"Projects and applications I'm currently building or have built in the past.",
-		url: "https://doug.is/building",
-		siteName: "doug.is",
-		type: "website",
+		title: `${getSiteName()} / Building`,
+		description: "Projects and applications I've built",
+		url: getCanonicalUrl("/building"),
+		siteName: getSiteName(),
 		images: [
 			{
-				url: "https://doug.is/images/projects/doug-is.png",
+				url: getSocialImageUrl("/images/projects/doug-is.png"),
 				width: 1200,
 				height: 630,
 				alt: "Building Projects - Doug.is",
 			},
 		],
+		locale: "en_US",
+		type: "website",
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "Doug.is / Building",
-		description:
-			"Projects and applications I'm currently building or have built in the past.",
-		images: ["https://doug.is/images/projects/doug-is.png"],
-		creator: "@afxjzs",
+		title: `${getSiteName()} / Building`,
+		description: "Projects and applications I've built",
+		images: [getSocialImageUrl("/images/projects/doug-is.png")],
+		creator: "@glowingrec",
 	},
 	alternates: {
-		canonical: "https://doug.is/building",
+		canonical: getCanonicalUrl("/building"),
 	},
 }

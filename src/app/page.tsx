@@ -9,6 +9,12 @@ import { AdvisingIcon } from "@/components/icons/AdvisingIcon"
 import { BuildingIcon } from "@/components/icons/BuildingIcon"
 import { InvestingIcon } from "@/components/icons/InvestingIcon"
 import MainSiteLayout from "@/components/MainSiteLayout"
+import {
+	getCanonicalUrl,
+	getSocialImageUrl,
+	getSiteName,
+	getSiteDescription,
+} from "@/lib/utils/domain-detection"
 
 interface Post {
 	title: string
@@ -27,35 +33,33 @@ interface CategoryCardProps {
 }
 
 export const metadata: Metadata = {
-	title: "Doug.is | Developer, Investor, Entrepreneur",
-	description:
-		"Personal website of Douglas E. Rogers - Developer, Investor, and Entrepreneur",
+	title: `${getSiteName()} | Developer, Investor, Entrepreneur`,
+	description: getSiteDescription(),
 	openGraph: {
-		title: "Doug.is | Developer, Investor, Entrepreneur",
-		description:
-			"Personal website of Douglas E. Rogers - Developer, Investor, and Entrepreneur",
-		url: "https://doug.is",
-		siteName: "Doug.is",
-		type: "website",
+		title: `${getSiteName()} | Developer, Investor, Entrepreneur`,
+		description: getSiteDescription(),
+		url: getCanonicalUrl("/"),
+		siteName: getSiteName(),
 		images: [
 			{
-				url: "https://doug.is/images/doug-2024-cropped-compr.png",
+				url: getSocialImageUrl("/images/doug-2024-cropped.png"),
 				width: 1200,
 				height: 630,
-				alt: "Doug.is - Developer, Investor, Entrepreneur",
+				alt: `${getSiteName()} - Developer, Investor, Entrepreneur`,
 			},
 		],
+		locale: "en_US",
+		type: "website",
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "Doug.is | Developer, Investor, Entrepreneur",
-		description:
-			"Personal website of Douglas E. Rogers - Developer, Investor, and Entrepreneur",
-		images: ["https://doug.is/images/doug-2024-cropped-compr.png"],
-		creator: "@afxjzs",
+		title: `${getSiteName()} | Developer, Investor, Entrepreneur`,
+		description: getSiteDescription(),
+		images: [getSocialImageUrl("/images/doug-2024-cropped.png")],
+		creator: "@glowingrec",
 	},
 	alternates: {
-		canonical: "https://doug.is",
+		canonical: getCanonicalUrl("/"),
 	},
 }
 

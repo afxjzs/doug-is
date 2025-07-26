@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 		description:
 			"Thoughts, ideas, and musings on technology, business, and life.",
 		url: "https://doug.is/thinking",
-		siteName: "doug.is",
+		siteName: "Doug.is",
 		type: "website",
 		images: [
 			{
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 		description:
 			"Thoughts, ideas, and musings on technology, business, and life.",
 		images: ["https://doug.is/images/doug-2024-cropped-compr.png"],
-		creator: "@afxjzs",
+		creator: "@glowingrec",
 	},
 	alternates: {
 		canonical: "https://doug.is/thinking",

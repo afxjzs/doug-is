@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 		description:
 			"Investment thesis, portfolio companies, and investment opportunities I'm exploring.",
 		url: "https://doug.is/investing",
-		siteName: "doug.is",
+		siteName: "Doug.is",
 		type: "website",
 		images: [
 			{
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 		description:
 			"Investment thesis, portfolio companies, and investment opportunities I'm exploring.",
 		images: ["https://doug.is/images/investing.jpg"],
-		creator: "@afxjzs",
+		creator: "@glowingrec",
 	},
 	alternates: {
 		canonical: "https://doug.is/investing",

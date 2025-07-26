@@ -3,108 +3,95 @@
  */
 
 import { Metadata } from "next"
-import { getPostBySlugAndCategory, getPosts } from "@/lib/supabase/publicClient"
 import { notFound } from "next/navigation"
+import { getPostBySlugAndCategory, getPosts } from "@/lib/supabase/publicClient"
 import { PostView } from "@/components/PostView"
+import {
+	getCanonicalUrl,
+	getSocialImageUrl,
+	getSiteName,
+} from "@/lib/utils/domain-detection"
 
 // Set a reasonable fallback for cache revalidation
 export const revalidate = 3600 // 1 hour
 
-// Generate metadata for the post
 export async function generateMetadata({
 	params,
 }: {
 	params: { slug: string; "primary-category": string }
 }): Promise<Metadata> {
 	try {
+		// Await params before accessing properties
+		const paramsData = await params
 		// Use both category and slug to ensure we get the correct post
 		const post = await getPostBySlugAndCategory(
-			params.slug,
-			params["primary-category"]
+			paramsData.slug,
+			paramsData["primary-category"]
 		)
 
 		if (!post) {
 			return {
 				title: "Post Not Found | Doug.is",
 				description: "The requested blog post could not be found.",
-				openGraph: {
-					title: "Post Not Found | Doug.is",
-					description: "The requested blog post could not be found.",
-					url: `https://doug.is/thinking/about/${params["primary-category"]}/${params.slug}`,
-					siteName: "Doug.is",
-					type: "article",
-				},
-				twitter: {
-					card: "summary_large_image",
-					title: "Post Not Found | Doug.is",
-					description: "The requested blog post could not be found.",
-					creator: "@afxjzs",
-				},
 			}
 		}
 
-		const postUrl = `https://doug.is/thinking/about/${post.category.toLowerCase()}/${
-			post.slug
-		}`
-		const socialImage = post.featured_image
-			? `${post.featured_image}?v=${Date.now()}`
-			: null
+		// Create canonical URL with dynamic domain
+		const canonicalUrl = getCanonicalUrl(
+			`/thinking/about/${post.category.toLowerCase()}/${post.slug}`
+		)
+
+		// Create social sharing image URL with dynamic domain
+		const socialImageUrl = post.featured_image
+			? getSocialImageUrl(post.featured_image)
+			: getSocialImageUrl("/images/doug-2024-cropped.png")
+
+		// Format category for display
+		const categoryDisplay =
+			post.category.charAt(0).toUpperCase() + post.category.slice(1)
 
 		return {
-			title: `${post.title} | Doug.is`,
-			description:
-				post.excerpt || `A blog post about ${post.title} by Douglas Rogers`,
+			title: `${post.title} | ${getSiteName()}`,
+			description: post.excerpt,
 			openGraph: {
 				title: post.title,
-				description:
-					post.excerpt || `A blog post about ${post.title} by Douglas Rogers`,
-				url: postUrl,
-				siteName: "Doug.is",
+				description: post.excerpt,
 				type: "article",
-				publishedTime: post.published_at,
-				authors: ["Douglas Rogers"],
-				section: post.category,
-				...(socialImage && {
-					images: [
-						{
-							url: socialImage,
-							width: 1200,
-							height: 630,
-							alt: post.title,
-						},
-					],
-				}),
+				url: canonicalUrl,
+				images: [
+					{
+						url: socialImageUrl,
+						width: 1200,
+						height: 630,
+						alt: post.title,
+					},
+				],
+				siteName: getSiteName(),
+				locale: "en_US",
 			},
 			twitter: {
 				card: "summary_large_image",
 				title: post.title,
-				description:
-					post.excerpt || `A blog post about ${post.title} by Douglas Rogers`,
-				...(socialImage && { images: [socialImage] }),
-				creator: "@afxjzs",
+				description: post.excerpt,
+				images: [socialImageUrl],
+				creator: "@glowingrec",
+			},
+			other: {
+				"article:published_time": post.published_at,
+				"article:modified_time": post.updated_at || post.published_at,
+				"article:author": "Douglas Rogers",
+				"article:section": categoryDisplay,
+				"article:tag": post.category,
 			},
 			alternates: {
-				canonical: postUrl,
+				canonical: canonicalUrl,
 			},
 		}
 	} catch (error) {
 		console.error("Error generating metadata for post:", error)
 		return {
-			title: "Post Not Found | Doug.is",
-			description: "The requested blog post could not be found.",
-			openGraph: {
-				title: "Post Not Found | Doug.is",
-				description: "The requested blog post could not be found.",
-				url: `https://doug.is/thinking/about/${params["primary-category"]}/${params.slug}`,
-				siteName: "Doug.is",
-				type: "article",
-			},
-			twitter: {
-				card: "summary_large_image",
-				title: "Post Not Found | Doug.is",
-				description: "The requested blog post could not be found.",
-				creator: "@afxjzs",
-			},
+			title: `Blog Post | ${getSiteName()}`,
+			description: "A blog post by Douglas Rogers",
 		}
 	}
 }

@@ -1,21 +1,26 @@
 import { Metadata } from "next"
 import Link from "next/link"
 import SafeImage from "@/components/SafeImage"
+import {
+	getCanonicalUrl,
+	getSocialImageUrl,
+	getSiteName,
+} from "@/lib/utils/domain-detection"
 
 export const metadata: Metadata = {
-	title: "Occupado | Building | Doug.is",
+	title: `Occupado | Building | ${getSiteName()}`,
 	description:
 		"A calendar combining app that helps you manage multiple calendars in one place",
 	openGraph: {
 		title: "Occupado - Calendar Combining App",
 		description:
 			"A smart calendar app that helps you manage multiple calendars in one unified view",
-		url: "https://doug.is/building/occupado",
-		siteName: "Doug.is",
+		url: getCanonicalUrl("/building/occupado"),
+		siteName: getSiteName(),
 		type: "website",
 		images: [
 			{
-				url: "https://doug.is/images/projects/doug-is.png",
+				url: getSocialImageUrl("/images/projects/doug-is.png"),
 				width: 1200,
 				height: 630,
 				alt: "Occupado Calendar App",
@@ -27,11 +32,11 @@ export const metadata: Metadata = {
 		title: "Occupado - Calendar Combining App",
 		description:
 			"A smart calendar app that helps you manage multiple calendars in one unified view",
-		images: ["https://doug.is/images/projects/doug-is.png"],
-		creator: "@afxjzs",
+		images: [getSocialImageUrl("/images/projects/doug-is.png")],
+		creator: "@glowingrec",
 	},
 	alternates: {
-		canonical: "https://doug.is/building/occupado",
+		canonical: getCanonicalUrl("/building/occupado"),
 	},
 }
 

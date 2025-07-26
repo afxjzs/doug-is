@@ -10,6 +10,9 @@ jest.mock("@/lib/supabase/publicClient", () => ({
 	getPostBySlug: jest.fn(),
 }))
 
+// Set environment variable for tests to get production URLs
+process.env.NEXT_PUBLIC_SITE_URL = "https://doug.is"
+
 // Import metadata functions from various pages
 const { metadata: homeMetadata } = require("../page")
 const { metadata: buildingMetadata } = require("../building/metadata")
@@ -31,14 +34,14 @@ describe("Comprehensive Metadata Testing", () => {
 			expect(homeMetadata.description).toContain("Douglas E. Rogers")
 			expect(homeMetadata.openGraph).toBeDefined()
 			expect(homeMetadata.twitter).toBeDefined()
-			expect(homeMetadata.alternates?.canonical).toBe("https://doug.is")
+			expect(homeMetadata.alternates?.canonical).toBe("https://doug.is/")
 		})
 
 		it("should have proper OpenGraph metadata", () => {
 			const og = homeMetadata.openGraph
 			expect(og?.title).toBe("Doug.is | Developer, Investor, Entrepreneur")
 			expect(og?.description).toContain("Douglas E. Rogers")
-			expect(og?.url).toBe("https://doug.is")
+			expect(og?.url).toBe("https://doug.is/")
 			expect(og?.siteName).toBe("Doug.is")
 			expect(og?.type).toBe("website")
 			expect(og?.images).toBeDefined()
@@ -51,7 +54,7 @@ describe("Comprehensive Metadata Testing", () => {
 			expect(twitter?.title).toBe("Doug.is | Developer, Investor, Entrepreneur")
 			expect(twitter?.description).toContain("Douglas E. Rogers")
 			expect(twitter?.images).toBeDefined()
-			expect(twitter?.creator).toBe("@afxjzs")
+			expect(twitter?.creator).toBe("@glowingrec")
 		})
 	})
 
@@ -79,7 +82,7 @@ describe("Comprehensive Metadata Testing", () => {
 					expect(og?.title).toContain(`Doug.is / ${name}`)
 					expect(og?.description).toBeDefined()
 					expect(og?.url).toBe(`https://doug.is/${name.toLowerCase()}`)
-					expect(og?.siteName).toBe("doug.is")
+					expect(og?.siteName).toBe("Doug.is")
 					expect(og?.type).toBe("website")
 					expect(og?.images).toBeDefined()
 				})
@@ -90,7 +93,7 @@ describe("Comprehensive Metadata Testing", () => {
 					expect(twitter?.title).toContain(`Doug.is / ${name}`)
 					expect(twitter?.description).toBeDefined()
 					expect(twitter?.images).toBeDefined()
-					expect(twitter?.creator).toBe("@afxjzs")
+					expect(twitter?.creator).toBe("@glowingrec")
 				})
 			})
 		})
@@ -118,7 +121,7 @@ describe("Comprehensive Metadata Testing", () => {
 					expect(og?.title).toContain(`Doug.is / ${name}`)
 					expect(og?.description).toBeDefined()
 					expect(og?.url).toBe(`https://doug.is/${name.toLowerCase()}`)
-					expect(og?.siteName).toBe("doug.is")
+					expect(og?.siteName).toBe("Doug.is")
 					expect(og?.type).toBe("website")
 					expect(og?.images).toBeDefined()
 				})
@@ -129,7 +132,7 @@ describe("Comprehensive Metadata Testing", () => {
 					expect(twitter?.title).toContain(`Doug.is / ${name}`)
 					expect(twitter?.description).toBeDefined()
 					expect(twitter?.images).toBeDefined()
-					expect(twitter?.creator).toBe("@afxjzs")
+					expect(twitter?.creator).toBe("@glowingrec")
 				})
 			})
 		})

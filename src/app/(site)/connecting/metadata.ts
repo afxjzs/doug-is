@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 		description:
 			"Let's connect! Find me on social media, send me an email, or schedule a meeting.",
 		url: "https://doug.is/connecting",
-		siteName: "doug.is",
+		siteName: "Doug.is",
 		type: "website",
 		images: [
 			{
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 		description:
 			"Let's connect! Find me on social media, send me an email, or schedule a meeting.",
 		images: ["https://doug.is/images/doug-2024-cropped-compr.png"],
-		creator: "@afxjzs",
+		creator: "@glowingrec",
 	},
 	alternates: {
 		canonical: "https://doug.is/connecting",
