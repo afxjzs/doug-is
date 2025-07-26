@@ -28,9 +28,56 @@ export async function generateMetadata({
 			}
 		}
 
+		// Create canonical URL
+		const canonicalUrl = `https://doug.is/thinking/about/${post.category.toLowerCase()}/${
+			post.slug
+		}`
+
+		// Create social sharing image URL - use post featured image if available
+		const socialImageUrl = post.featured_image
+			? `https://doug.is${post.featured_image}`
+			: "https://doug.is/images/doug-2024-cropped.png"
+
+		// Format category for display
+		const categoryDisplay =
+			post.category.charAt(0).toUpperCase() + post.category.slice(1)
+
 		return {
 			title: `${post.title} | Doug.is`,
 			description: post.excerpt,
+			openGraph: {
+				title: post.title,
+				description: post.excerpt,
+				type: "article",
+				url: canonicalUrl,
+				images: [
+					{
+						url: socialImageUrl,
+						width: 1200,
+						height: 630,
+						alt: post.title,
+					},
+				],
+				siteName: "Doug.is",
+				locale: "en_US",
+			},
+			twitter: {
+				card: "summary_large_image",
+				title: post.title,
+				description: post.excerpt,
+				images: [socialImageUrl],
+				creator: "@douglasrogers",
+			},
+			other: {
+				"article:published_time": post.published_at,
+				"article:modified_time": post.updated_at || post.published_at,
+				"article:author": "Douglas Rogers",
+				"article:section": categoryDisplay,
+				"article:tag": post.category,
+			},
+			alternates: {
+				canonical: canonicalUrl,
+			},
 		}
 	} catch (error) {
 		console.error("Error generating metadata for post:", error)

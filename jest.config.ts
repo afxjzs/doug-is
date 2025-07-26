@@ -11,6 +11,9 @@ const config: Config = {
 	moduleNameMapper: {
 		"^@/(.*)$": "<rootDir>/src/$1",
 	},
+	transformIgnorePatterns: [
+		"node_modules/(?!(react-markdown|remark-.*|rehype-.*)/)",
+	],
 	testMatch: ["**/*.test.ts", "**/*.test.tsx"],
 	collectCoverage: true,
 	collectCoverageFrom: [

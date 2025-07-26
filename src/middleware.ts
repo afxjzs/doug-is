@@ -80,6 +80,29 @@ export async function middleware(request: NextRequest) {
 		console.log("⚠️ User validation failed:", error.message)
 	}
 
+	// Handle blog post URL canonicalization
+	// Redirect old blog URLs (/thinking/[category]/[slug]) to canonical URLs (/thinking/about/[category]/[slug])
+	if (
+		pathname.startsWith("/thinking/") &&
+		!pathname.startsWith("/thinking/about/")
+	) {
+		// Extract the category and slug from the old URL pattern
+		const pathParts = pathname.split("/")
+		if (pathParts.length === 4 && pathParts[1] === "thinking") {
+			const category = pathParts[2]
+			const slug = pathParts[3]
+
+			// Only redirect if this looks like a blog post URL (not /thinking/about/...)
+			if (category && slug && category !== "about") {
+				const canonicalUrl = `/thinking/about/${category}/${slug}`
+				console.log(
+					`Redirecting old blog URL ${pathname} to canonical URL ${canonicalUrl}`
+				)
+				return NextResponse.redirect(new URL(canonicalUrl, request.url), 301)
+			}
+		}
+	}
+
 	// Handle admin routes
 	if (pathname.startsWith("/admin")) {
 		// Special handling for root admin page - needs to redirect to login if not authenticated
