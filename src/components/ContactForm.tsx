@@ -5,7 +5,7 @@ import {
 	submitContactForm,
 	ContactFormData,
 } from "@/lib/actions/contactActions"
-import { useEventTracking } from "@/lib/analytics"
+import { useClientEventTracking } from "@/lib/analytics"
 
 type FormState = ContactFormData
 
@@ -31,13 +31,14 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 	const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
 	const [isVisible, setIsVisible] = useState(false)
 
-	// Analytics tracking
+	// Analytics tracking - client-only
 	const {
 		trackContactFormView,
 		trackContactFormSubmit,
 		trackContactFormSuccess,
 		trackContactFormError,
-	} = useEventTracking()
+		trackCustomEvent,
+	} = useClientEventTracking()
 
 	// Determine form type based on subjects
 	const formType =
@@ -74,7 +75,6 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 
 	const handleFieldFocus = (fieldName: string) => {
 		// Track field focus events using the generic event tracker
-		const { trackCustomEvent } = useEventTracking()
 		trackCustomEvent({
 			event: "contact_form_field_focus",
 			properties: {

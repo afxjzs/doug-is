@@ -25,4 +25,5 @@ export {
 	useAnalytics,
 	usePageViewTracking,
 	useEventTracking,
+	useClientEventTracking,
 } from "./context"

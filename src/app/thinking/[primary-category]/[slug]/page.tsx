@@ -30,7 +30,7 @@ export async function generateMetadata({
 				openGraph: {
 					title: "Post Not Found | Doug.is",
 					description: "The requested blog post could not be found.",
-					url: `https://doug.is/thinking/${params["primary-category"]}/${params.slug}`,
+					url: `https://doug.is/thinking/about/${params["primary-category"]}/${params.slug}`,
 					siteName: "Doug.is",
 					type: "article",
 				},
@@ -43,7 +43,7 @@ export async function generateMetadata({
 			}
 		}
 
-		const postUrl = `https://doug.is/thinking/${post.category.toLowerCase()}/${
+		const postUrl = `https://doug.is/thinking/about/${post.category.toLowerCase()}/${
 			post.slug
 		}`
 		const socialImage = post.featured_image
@@ -95,7 +95,7 @@ export async function generateMetadata({
 			openGraph: {
 				title: "Post Not Found | Doug.is",
 				description: "The requested blog post could not be found.",
-				url: `https://doug.is/thinking/${params["primary-category"]}/${params.slug}`,
+				url: `https://doug.is/thinking/about/${params["primary-category"]}/${params.slug}`,
 				siteName: "Doug.is",
 				type: "article",
 			},

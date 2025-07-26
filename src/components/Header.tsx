@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils/index"
-import { useEventTracking } from "@/lib/analytics"
+import { useClientEventTracking } from "@/lib/analytics"
 
 // Updated navigation items to remove the contact link
 const navItems = [
@@ -18,28 +18,29 @@ export default function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 	const [scrolled, setScrolled] = useState(false)
 	const pathname = usePathname()
-	const { trackSectionNavigation, trackMobileMenuToggle, trackCustomEvent } =
-		useEventTracking()
+
+	const analytics = useClientEventTracking()
 
 	const handleNavClick = (toSection: string) => {
 		const fromSection = pathname.split("/")[1] || "home"
 		if (fromSection !== toSection.substring(1)) {
 			// Remove leading slash for comparison
-			trackSectionNavigation(fromSection, toSection.substring(1))
+			analytics.trackSectionNavigation(fromSection, toSection.substring(1))
 		}
 	}
 
 	const handleConnectClick = () => {
 		const currentSection = pathname.split("/")[1] || "home"
 		// Track as section navigation to connecting page
-		trackSectionNavigation(currentSection, "connecting")
+		analytics.trackSectionNavigation(currentSection, "connecting")
 	}
 
 	const handleMobileMenuToggle = () => {
 		const newState = !isMenuOpen
 		setIsMenuOpen(newState)
+
 		// Track mobile menu usage
-		trackMobileMenuToggle(newState ? "open" : "close")
+		analytics.trackMobileMenuToggle(newState ? "open" : "close")
 	}
 
 	// Add scroll effect

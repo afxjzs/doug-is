@@ -103,15 +103,13 @@ export default function RootLayout({
 	children: React.ReactNode
 }) {
 	return (
-		<html
-			lang="en"
-			className={`scroll-smooth ${inter.variable} ${interLocal.variable}`}
-		>
-			<head />
-			<body>
-				<ClientAnalyticsWrapper>
-					<TooltipProvider delayDuration={100}>{children}</TooltipProvider>
-				</ClientAnalyticsWrapper>
+		<html lang="en" className="scroll-smooth">
+			<body className={`${inter.variable} ${interLocal.variable}`}>
+				<TooltipProvider>
+					<ClientAnalyticsWrapper>
+						<LayoutWrapper>{children}</LayoutWrapper>
+					</ClientAnalyticsWrapper>
+				</TooltipProvider>
 			</body>
 		</html>
 	)

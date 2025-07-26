@@ -178,7 +178,7 @@ describe("PostsTable", () => {
 			// Check that view buttons have correct destinations
 			expect(viewButtons[0]).toHaveAttribute(
 				"href",
-				"/thinking/building/published-post"
+				"/thinking/about/building/published-post"
 			)
 			expect(viewButtons[1]).toHaveAttribute(
 				"href",
@@ -298,7 +298,7 @@ describe("PostsTable", () => {
 			expect(href).toMatch(/^\/admin\/posts\/[^\/]+\/preview$/)
 		})
 
-		it("generates valid thinking URLs for published posts", () => {
+		it("generates valid thinking URLs for published posts with /about/ segment", () => {
 			render(<PostsTable posts={[mockPublishedPost]} />)
 
 			const viewLiveButton = screen.getByRole("link", {
@@ -306,8 +306,8 @@ describe("PostsTable", () => {
 			})
 			const href = viewLiveButton.getAttribute("href")
 
-			// URL should follow the pattern /thinking/[category]/[slug]
-			expect(href).toMatch(/^\/thinking\/[^\/]+\/[^\/]+$/)
+			// URL should follow the pattern /thinking/about/[category]/[slug]
+			expect(href).toMatch(/^\/thinking\/about\/[^\/]+\/[^\/]+$/)
 		})
 
 		it("escapes special characters in post IDs for URLs", () => {
@@ -323,6 +323,66 @@ describe("PostsTable", () => {
 				"href",
 				"/admin/posts/post-with-special-chars-123/preview"
 			)
+		})
+
+		it("generates correct URLs for different post categories", () => {
+			const technologyPost = {
+				...mockPublishedPost,
+				category: "Technology",
+				slug: "ai-slop-will-eat-itself",
+			}
+			const buildingPost = {
+				...mockPublishedPost,
+				category: "Building",
+				slug: "startup-lessons",
+			}
+
+			render(<PostsTable posts={[technologyPost, buildingPost]} />)
+
+			const viewButtons = screen.getAllByRole("link", {
+				name: /view live post/i,
+			})
+
+			expect(viewButtons[0]).toHaveAttribute(
+				"href",
+				"/thinking/about/technology/ai-slop-will-eat-itself"
+			)
+			expect(viewButtons[1]).toHaveAttribute(
+				"href",
+				"/thinking/about/building/startup-lessons"
+			)
+		})
+
+		it("handles lowercase category conversion correctly", () => {
+			const mixedCasePost = {
+				...mockPublishedPost,
+				category: "Technology",
+				slug: "test-post",
+			}
+
+			render(<PostsTable posts={[mixedCasePost]} />)
+
+			const viewButton = screen.getByRole("link", { name: /view live post/i })
+			expect(viewButton).toHaveAttribute(
+				"href",
+				"/thinking/about/technology/test-post"
+			)
+		})
+
+		it("generates URLs that match the expected blog post structure", () => {
+			const testPost = {
+				...mockPublishedPost,
+				category: "Technology",
+				slug: "ai-slop-will-eat-itself",
+			}
+
+			render(<PostsTable posts={[testPost]} />)
+
+			const viewButton = screen.getByRole("link", { name: /view live post/i })
+			const href = viewButton.getAttribute("href")
+
+			// Should match the required format: /thinking/about/[category]/[slug]
+			expect(href).toBe("/thinking/about/technology/ai-slop-will-eat-itself")
 		})
 	})
 

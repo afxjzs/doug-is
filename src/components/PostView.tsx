@@ -6,7 +6,7 @@ import Link from "next/link"
 import { Post } from "@/lib/supabase/publicClient"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import { useEventTracking } from "@/lib/analytics"
+import { useClientEventTracking } from "@/lib/analytics"
 
 interface PostViewProps {
 	post: Post
@@ -18,7 +18,8 @@ interface PostViewProps {
  * Supports both public viewing and admin draft preview
  */
 export const PostView: FC<PostViewProps> = ({ post, isDraft = false }) => {
-	const { trackBlogPostView, trackBlogExternalLinkClick } = useEventTracking()
+	const { trackBlogPostView, trackBlogExternalLinkClick } =
+		useClientEventTracking()
 
 	const formattedDate = new Date(
 		post.published_at || post.created_at || ""

@@ -93,7 +93,7 @@ export default function ThinkingPage() {
 							<div className="group">
 								{post.featured_image ? (
 									<Link
-										href={`/thinking/${post.category.toLowerCase()}/${
+										href={`/thinking/about/${post.category.toLowerCase()}/${
 											post.slug
 										}`}
 										className="block relative w-full h-64 overflow-hidden"
@@ -114,7 +114,7 @@ export default function ThinkingPage() {
 								<div className="p-6">
 									<div className="flex items-center mb-3">
 										<Link
-											href={`/thinking/${post.category.toLowerCase()}`}
+											href={`/thinking/about/${post.category.toLowerCase()}`}
 											className="text-xs font-medium px-2.5 py-1 rounded-full bg-[rgba(var(--color-violet),0.1)] text-[rgba(var(--color-violet),0.8)] hover:bg-[rgba(var(--color-violet),0.2)] transition-colors"
 										>
 											{post.category}
@@ -127,7 +127,7 @@ export default function ThinkingPage() {
 										</time>
 									</div>
 									<Link
-										href={`/thinking/${post.category.toLowerCase()}/${
+										href={`/thinking/about/${post.category.toLowerCase()}/${
 											post.slug
 										}`}
 										className="block"

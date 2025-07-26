@@ -2,23 +2,17 @@
 
 import { useEffect } from "react"
 import { usePathname } from "next/navigation"
-import { Analytics } from "@vercel/analytics/react"
-import {
-	AnalyticsProviderComponent,
-	usePageViewTracking,
-} from "@/lib/analytics"
-import { PostHogDebugger } from "./PostHogDebugger"
 
 function PageViewTracker() {
 	const pathname = usePathname()
-	const { trackPageView } = usePageViewTracking()
 
 	useEffect(() => {
-		// Track page view when pathname changes
+		// Only track page view on client side
 		if (typeof window !== "undefined") {
-			trackPageView(window.location.href, document.title)
+			// Simple page view tracking without analytics dependency
+			console.log("Page view:", window.location.href)
 		}
-	}, [pathname, trackPageView])
+	}, [pathname])
 
 	return null
 }
@@ -30,12 +24,8 @@ interface ClientAnalyticsProps {
 export function ClientAnalytics({ children }: ClientAnalyticsProps) {
 	return (
 		<>
-			<Analytics />
-			<AnalyticsProviderComponent>
-				<PageViewTracker />
-				{process.env.NODE_ENV === "development" && <PostHogDebugger />}
-				{children}
-			</AnalyticsProviderComponent>
+			<PageViewTracker />
+			{children}
 		</>
 	)
 }

@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import SafeImage from "@/components/SafeImage"
-import { useEventTracking } from "@/lib/analytics"
+import { useClientEventTracking } from "@/lib/analytics"
 
 // Companies I'm currently building
 const companies = [
@@ -121,7 +121,7 @@ export default function BuildingPage() {
 		trackPortfolioCompanyClick,
 		trackPortfolioProjectClick,
 		trackPortfolioExternalLink,
-	} = useEventTracking()
+	} = useClientEventTracking()
 
 	const handleCompanyClick = (
 		companyId: string,

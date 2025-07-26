@@ -7,12 +7,12 @@
 
 import { render, screen } from "@testing-library/react"
 import { PostView } from "../PostView"
-import { useEventTracking } from "@/lib/analytics"
+import { useClientEventTracking } from "@/lib/analytics"
 import { Post } from "@/lib/supabase/publicClient"
 
 // Mock the analytics hook
 jest.mock("@/lib/analytics", () => ({
-	useEventTracking: jest.fn(() => ({
+	useClientEventTracking: jest.fn(() => ({
 		trackBlogPostView: jest.fn(),
 		trackBlogExternalLinkClick: jest.fn(),
 	})),
@@ -64,7 +64,7 @@ describe("PostView Component", () => {
 
 	beforeEach(() => {
 		jest.clearAllMocks()
-		;(useEventTracking as jest.Mock).mockReturnValue({
+		;(useClientEventTracking as jest.Mock).mockReturnValue({
 			trackBlogPostView: mockTrackBlogPostView,
 			trackBlogExternalLinkClick: mockTrackBlogExternalLinkClick,
 		})

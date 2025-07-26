@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { useEventTracking } from "@/lib/analytics"
+import { useClientEventTracking } from "@/lib/analytics"
 
 interface ProjectPageAnalyticsProps {
 	projectName: string
@@ -17,7 +17,7 @@ export function ProjectPageAnalytics({
 	projectName,
 	projectType,
 }: ProjectPageAnalyticsProps) {
-	const { trackProjectView } = useEventTracking()
+	const { trackProjectView } = useClientEventTracking()
 
 	useEffect(() => {
 		trackProjectView(projectName, projectType)
@@ -53,7 +53,7 @@ export function ProjectExternalLink({
 	download,
 	...props
 }: ProjectExternalLinkProps) {
-	const { trackPortfolioExternalLink } = useEventTracking()
+	const { trackPortfolioExternalLink } = useClientEventTracking()
 
 	const handleClick = () => {
 		// Map linkType to portfolio tracking types
