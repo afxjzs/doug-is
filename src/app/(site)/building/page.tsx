@@ -43,16 +43,16 @@ const projects = [
 	// 	link: "/building/just-ate",
 	// 	appStore: "https://apps.apple.com/us/app/justateapp",
 	// },
-	{
-		id: "doug-is",
-		title: "This Website (doug.is)",
-		description:
-			"My own personal website, built with Next.js, Tailwind CSS, and TypeScript. Vibe-coding experiment.",
-		image: "/images/projects/doug-is.png",
-		tags: ["Next.js", "Tailwind CSS", "TypeScript", "Vercel"],
-		link: "/building/doug-is",
-		github: "https://github.com/afxjzs/doug-is",
-	},
+	// {
+	// 	id: "doug-is",
+	// 	title: "This Website (doug.is)",
+	// 	description:
+	// 		"My own personal website, built with Next.js, Tailwind CSS, and TypeScript. Vibe-coding experiment.",
+	// 	image: "/images/projects/doug-is.png",
+	// 	tags: ["Next.js", "Tailwind CSS", "TypeScript", "Vercel"],
+	// 	link: "/building/doug-is",
+	// 	github: "https://github.com/afxjzs/doug-is",
+	// },
 	{
 		id: "migraine-free",
 		title: "Migraine Trigger Database",

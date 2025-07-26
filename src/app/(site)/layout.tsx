@@ -1,4 +1,4 @@
-import MainSiteLayout from "@/components/MainSiteLayout"
+import VisualLayout from "@/components/VisualLayout"
 
 export default function SiteLayout({
 	children,
@@ -7,7 +7,7 @@ export default function SiteLayout({
 }) {
 	return (
 		<main className="flex-1">
-			<MainSiteLayout>{children}</MainSiteLayout>
+			<VisualLayout>{children}</VisualLayout>
 		</main>
 	)
 }
