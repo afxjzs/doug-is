@@ -30,6 +30,16 @@ export async function updateSession(request: NextRequest) {
 		request,
 	})
 
+	// Skip auth operations for auth-related pages to prevent infinite loops
+	const isAuthPage =
+		request.nextUrl.pathname.startsWith("/admin/login") ||
+		request.nextUrl.pathname.startsWith("/admin/register") ||
+		request.nextUrl.pathname.includes("/auth/")
+
+	if (isAuthPage) {
+		return supabaseResponse
+	}
+
 	const supabase = createServerClient<Database>(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
 		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
