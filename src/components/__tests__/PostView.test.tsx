@@ -8,7 +8,7 @@
 import { render, screen } from "@testing-library/react"
 import { PostView } from "../PostView"
 import { useClientEventTracking } from "@/lib/analytics"
-import { Post } from "@/lib/supabase/publicClient"
+import { Post } from "@/lib/supabase/data"
 
 // Mock the analytics hook
 jest.mock("@/lib/analytics", () => ({

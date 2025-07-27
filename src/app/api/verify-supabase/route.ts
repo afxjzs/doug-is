@@ -1,4 +1,4 @@
-import { getPublicSupabaseClient } from "@/lib/supabase/publicClient"
+import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
 
 // Configure the route to be dynamic to ensure it's not cached
@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic"
 export async function GET() {
 	try {
 		// Get the Supabase client and check if it's connected
-		const supabase = getPublicSupabaseClient()
+		const supabase = await createClient()
 		const isConnected = !!supabase
 
 		// If connected, try to make a simple query to verify

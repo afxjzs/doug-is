@@ -1,7 +1,7 @@
 "use server"
 
 import { createServerComponentClient, Post } from "@/lib/supabase/serverClient"
-import { normalizeCategory } from "@/lib/supabase/publicClient"
+import { normalizeCategory } from "@/lib/supabase/data"
 import { createAdminClient } from "@/lib/supabase/serverClient"
 
 /**
@@ -24,7 +24,7 @@ export async function fetchPosts(
 		// Apply optional filters
 		if (category) {
 			const normalizedCategory = normalizeCategory(category)
-			query = query.eq("category", normalizedCategory)
+			query = query.ilike("category", normalizedCategory)
 		}
 
 		if (limit) {
@@ -115,7 +115,7 @@ export async function fetchPostsByCategory(category: string): Promise<Post[]> {
 		const { data, error } = await supabase
 			.from("posts")
 			.select("*")
-			.eq("category", normalizedCategory)
+			.ilike("category", normalizedCategory)
 			.order("published_at", { ascending: false })
 
 		if (error) {

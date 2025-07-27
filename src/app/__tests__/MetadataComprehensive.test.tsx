@@ -5,7 +5,7 @@ jest.mock("next/navigation", () => ({
 	notFound: jest.fn(),
 }))
 
-jest.mock("@/lib/supabase/publicClient", () => ({
+jest.mock("@/lib/supabase/data", () => ({
 	getPosts: jest.fn(),
 	getPostBySlug: jest.fn(),
 }))

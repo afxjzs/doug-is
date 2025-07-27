@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
 import { createAdminClient } from "@/lib/supabase/serverClient"
-import { getPublicSupabaseClient } from "@/lib/supabase/publicClient"
+import { createClient } from "@/lib/supabase/server"
 import { nanoid } from "nanoid"
 import { isCurrentUserAdmin } from "@/lib/supabase/auth"
 
@@ -12,8 +12,8 @@ export async function GET(request: Request) {
 	try {
 		console.log("Fetching public posts...")
 
-		// Use the public client for GET requests so anonymous users can access posts
-		const supabase = getPublicSupabaseClient()
+		// Use the server client for GET requests so anonymous users can access posts
+		const supabase = await createClient()
 
 		if (!supabase) {
 			console.error("Could not create Supabase client")

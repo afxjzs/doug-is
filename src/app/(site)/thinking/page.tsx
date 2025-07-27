@@ -3,10 +3,10 @@
 import Link from "next/link"
 import { formatDate } from "@/lib/utils"
 import SafeImage from "@/components/SafeImage"
-import { Post } from "@/lib/supabase/publicClient"
+import { Post } from "@/lib/supabase/data"
 import { useState, useEffect } from "react"
 import { Metadata } from "next"
-import { getPosts } from "@/lib/supabase/publicClient"
+import { getPosts } from "@/lib/supabase/data"
 import Image from "next/image"
 import StatusMessage from "@/components/StatusMessage"
 

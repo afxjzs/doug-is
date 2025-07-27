@@ -3,7 +3,7 @@
 import { FC, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Post } from "@/lib/supabase/publicClient"
+import { Post } from "@/lib/supabase/data"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { useClientEventTracking } from "@/lib/analytics"

@@ -4,7 +4,7 @@
 
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { getPostBySlug, getPosts } from "@/lib/supabase/publicClient"
+import { getPostBySlug, getPosts } from "@/lib/supabase/data"
 import { PostView } from "@/components/PostView"
 import {
 	getCanonicalUrl,

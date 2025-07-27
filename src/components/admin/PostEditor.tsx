@@ -2,8 +2,8 @@
 
 import { useState, useEffect, FormEvent } from "react"
 import { useRouter } from "next/navigation"
-import { Post } from "@/lib/supabase/serverClient"
-import { normalizeCategory } from "@/lib/supabase/publicClient"
+import { Post } from "@/lib/supabase/clientData"
+import { normalizeCategory } from "@/lib/supabase/clientData"
 import ImageUploader from "@/components/admin/ImageUploader"
 import TiptapEditor from "@/components/admin/TiptapEditor"
 import { nanoid } from "nanoid"

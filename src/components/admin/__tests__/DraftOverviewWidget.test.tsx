@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import DraftOverviewWidget from "../DraftOverviewWidget"
-import { Post } from "@/lib/supabase/serverClient"
+import { Post } from "@/lib/supabase/clientData"
 
 // Mock Next.js Link component
 jest.mock("next/link", () => {

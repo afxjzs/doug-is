@@ -6,7 +6,7 @@
 
 import { render, screen, fireEvent } from "@testing-library/react"
 import PostsTable from "../PostsTable"
-import { Post } from "@/lib/supabase/serverClient"
+import { Post } from "@/lib/supabase/clientData"
 
 // Mock Next.js Link component
 jest.mock("next/link", () => {

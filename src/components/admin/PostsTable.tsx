@@ -8,7 +8,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { format } from "date-fns"
-import { Post } from "@/lib/supabase/serverClient"
+import { Post } from "@/lib/supabase/clientData"
 import PublishButton from "./PublishButton"
 
 interface PostsTableProps {

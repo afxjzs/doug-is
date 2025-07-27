@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
-import { getPublicSupabaseClient } from "@/lib/supabase/publicClient"
-import { createClient } from "@supabase/supabase-js"
+import { createClient } from "@/lib/supabase/server"
 
 export async function GET() {
 	try {
@@ -10,24 +9,17 @@ export async function GET() {
 		const hasAnonKey = !!supabaseAnonKey
 
 		// Get the Supabase client
-		const supabase = getPublicSupabaseClient()
+		const supabase = await createClient()
 		const isConnected = !!supabase
 
-		// Create a local Supabase client to ensure it's not null
-		const localSupabase = createClient(supabaseUrl, supabaseAnonKey)
+		// Use the server client for testing
+		const localSupabase = supabase
 
 		// Try to query the posts table directly
 		const { data: postsData, error: postsError } = await localSupabase
 			.from("posts")
 			.select("count")
 			.limit(1)
-
-		// Check if the table exists by querying the information schema
-		const { data: tableData, error: tableError } = await localSupabase
-			.from("information_schema.tables")
-			.select("table_name")
-			.eq("table_schema", "public")
-			.eq("table_name", "posts")
 
 		return NextResponse.json({
 			success: true,
@@ -44,18 +36,6 @@ export async function GET() {
 							code: postsError.code,
 							details: postsError.details,
 							hint: postsError.hint,
-					  }
-					: null,
-			},
-			table: {
-				exists: tableData && tableData.length > 0,
-				data: tableData,
-				error: tableError
-					? {
-							message: tableError.message,
-							code: tableError.code,
-							details: tableError.details,
-							hint: tableError.hint,
 					  }
 					: null,
 			},

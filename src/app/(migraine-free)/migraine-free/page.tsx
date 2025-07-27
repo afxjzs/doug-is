@@ -1,6 +1,6 @@
 "use client"
 
-import { supabase } from "@/lib/supabase/publicClient"
+import { createClient } from "@/lib/supabase/client"
 import { useEffect, useState, ChangeEvent } from "react"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
@@ -74,6 +74,7 @@ export default function MigrainePage() {
 	useEffect(() => {
 		async function fetchTriggers() {
 			try {
+				const supabase = createClient()
 				const { data, error } = await supabase
 					.from("migraine_triggers")
 					.select("*")

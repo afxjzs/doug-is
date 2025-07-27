@@ -1,7 +1,7 @@
 import { render, screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import ContactsList from "../ContactsList"
-import { ContactMessage } from "@/lib/supabase/serverClient"
+import { ContactMessage } from "@/lib/supabase/clientData"
 
 // Mock contact data for testing
 const mockContacts: ContactMessage[] = [

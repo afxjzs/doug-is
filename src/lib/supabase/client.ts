@@ -10,6 +10,7 @@ import type { Database } from "../types/supabase"
 
 /**
  * Create a Supabase client for browser components
+ * Following official Next.js Supabase patterns
  */
 export function createClient() {
 	return createBrowserClient<Database>(

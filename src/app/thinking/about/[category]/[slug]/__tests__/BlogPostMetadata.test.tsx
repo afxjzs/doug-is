@@ -8,12 +8,12 @@ jest.mock("@/lib/utils/domain-detection", () => ({
 }))
 
 // Mock the database functions
-jest.mock("@/lib/supabase/publicClient", () => ({
+jest.mock("@/lib/supabase/data", () => ({
 	getPostBySlug: jest.fn(),
 }))
 
 describe("Blog Post Metadata", () => {
-	const mockGetPostBySlug = require("@/lib/supabase/publicClient").getPostBySlug
+	const mockGetPostBySlug = require("@/lib/supabase/data").getPostBySlug
 
 	beforeEach(() => {
 		jest.clearAllMocks()

@@ -6,7 +6,7 @@
  */
 
 import { useState } from "react"
-import { ContactMessage } from "@/lib/supabase/serverClient"
+import { ContactMessage } from "@/lib/supabase/clientData"
 
 interface ContactsListProps {
 	initialContacts: ContactMessage[]

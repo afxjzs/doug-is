@@ -1,34 +1,13 @@
-// src/lib/supabase/publicClient.ts
-import { createClient } from "@supabase/supabase-js"
+/**
+ * Server-side data access layer
+ *
+ * This file provides server-side functions for data access using the official
+ * Next.js Supabase SSR patterns. All functions use the server client for
+ * proper authentication and security.
+ */
+
+import { createClient } from "./server"
 import type { Database } from "../types/supabase"
-
-// This client should ONLY be used for public read-only operations
-// It uses the anon key which is safe to expose to the client
-// Any data mutations should use server actions instead
-
-if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-	throw new Error("Missing env.NEXT_PUBLIC_SUPABASE_URL")
-}
-if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-	throw new Error("Missing env.NEXT_PUBLIC_SUPABASE_ANON_KEY")
-}
-
-// Create a singleton instance for client-side usage
-export const supabase = createClient<Database>(
-	process.env.NEXT_PUBLIC_SUPABASE_URL,
-	process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-	{
-		auth: {
-			persistSession: false,
-			autoRefreshToken: false,
-		},
-	}
-)
-
-// Export a function to get the public client
-export function getPublicSupabaseClient() {
-	return supabase
-}
 
 // Type definitions
 export interface Post {
@@ -45,7 +24,14 @@ export interface Post {
 }
 
 /**
- * Fetches posts from Supabase
+ * Normalizes a category string for consistent comparison
+ */
+export function normalizeCategory(category: string): string {
+	return category.toLowerCase().trim()
+}
+
+/**
+ * Fetches posts from Supabase using server client
  * @param limit Optional number of posts to fetch
  * @param category Optional category to filter by
  * @returns Array of posts
@@ -55,6 +41,8 @@ export const getPosts = async (
 	category?: string
 ): Promise<Post[]> => {
 	try {
+		const supabase = await createClient()
+
 		// Build query with proper type safety
 		let query = supabase
 			.from("posts")
@@ -86,12 +74,14 @@ export const getPosts = async (
 }
 
 /**
- * Fetches a single post by slug
+ * Fetches a single post by slug using server client
  * @param slug The post slug to fetch
  * @returns The post or null if not found
  */
 export const getPostBySlug = async (slug: string): Promise<Post | null> => {
 	try {
+		const supabase = await createClient()
+
 		const { data, error } = await supabase
 			.from("posts")
 			.select("*")
@@ -121,12 +111,14 @@ export const getPostBySlugAndCategory = async (
 	category: string
 ): Promise<Post | null> => {
 	try {
+		const supabase = await createClient()
 		const normalizedCategory = normalizeCategory(category)
+
 		const { data, error } = await supabase
 			.from("posts")
 			.select("*")
 			.eq("slug", slug)
-			.eq("category", normalizedCategory)
+			.ilike("category", normalizedCategory)
 			.single()
 
 		if (error) {
@@ -142,22 +134,17 @@ export const getPostBySlugAndCategory = async (
 }
 
 /**
- * Normalizes a category string for consistent comparison
- */
-export function normalizeCategory(category: string): string {
-	return category.toLowerCase().trim()
-}
-
-/**
  * Fetches all posts in a specific category
  */
 export async function getPostsByCategory(category: string): Promise<Post[]> {
 	try {
+		const supabase = await createClient()
 		const normalizedCategory = normalizeCategory(category)
+
 		const { data, error } = await supabase
 			.from("posts")
 			.select("*")
-			.eq("category", normalizedCategory)
+			.ilike("category", normalizedCategory)
 			.order("published_at", { ascending: false })
 
 		if (error) {
