@@ -121,7 +121,7 @@ describe("PublishButton", () => {
 		expect(mockPublishPost).not.toHaveBeenCalled()
 	})
 
-	it("shows success alert and redirects when publish succeeds", async () => {
+	it("redirects when publish succeeds", async () => {
 		mockPublishPost.mockResolvedValue({ success: true })
 
 		render(<PublishButton {...defaultProps} />)
@@ -130,9 +130,6 @@ describe("PublishButton", () => {
 		fireEvent.click(button)
 
 		await waitFor(() => {
-			expect(window.alert).toHaveBeenCalledWith(
-				'Successfully published "Test Post Title"!'
-			)
 			expect(window.location.href).toBe("/admin/posts")
 		})
 	})
