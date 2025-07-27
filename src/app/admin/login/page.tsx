@@ -5,6 +5,7 @@
  */
 
 import SimpleLoginForm from "@/components/admin/SimpleLoginForm"
+import HydrationErrorBoundary from "@/components/HydrationErrorBoundary"
 
 export default function AdminLoginPage() {
 	return (
@@ -40,7 +41,9 @@ export default function AdminLoginPage() {
 
 					{/* Form container */}
 					<div className="relative border border-[rgba(var(--color-foreground),0.1)] rounded-lg bg-[rgba(var(--color-background),0.8)] backdrop-blur-sm shadow-[0_0_20px_rgba(var(--color-cyan),0.1)]">
-						<SimpleLoginForm />
+						<HydrationErrorBoundary componentName="SimpleLoginForm">
+							<SimpleLoginForm />
+						</HydrationErrorBoundary>
 					</div>
 				</div>
 

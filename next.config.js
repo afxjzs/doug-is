@@ -87,20 +87,20 @@ const nextConfig = {
 
 	// Handle TypeScript and ESLint errors
 	typescript: {
-		// Ignore TypeScript errors during builds to prevent failures
-		ignoreBuildErrors: true,
+		// Enable TypeScript errors to catch hydration issues
+		ignoreBuildErrors: false,
 	},
 
 	eslint: {
-		// Ignore ESLint errors during builds to prevent failures
-		ignoreDuringBuilds: true,
+		// Enable ESLint errors to catch hydration issues
+		ignoreDuringBuilds: false,
 	},
 
 	// Enable output file tracing for serverless functions
 	output: "standalone",
 
-	// Improve development performance by disabling React strict mode in development
-	reactStrictMode: process.env.NODE_ENV !== "development",
+	// Enable React strict mode to catch hydration issues
+	reactStrictMode: true,
 
 	// Reduce the amount of information logged during development
 	logging: {

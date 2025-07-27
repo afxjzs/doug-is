@@ -124,13 +124,7 @@ jest.mock("next/image", () => ({
 	},
 }))
 
-// Mock next/font
-jest.mock("next/font/google", () => ({
-	Inter: () => ({
-		className: "inter-font",
-		style: { fontFamily: "Inter" },
-	}),
-}))
+// Next/font mocks are now at the top of the file
 
 // Mock window.location
 Object.defineProperty(window, "location", {

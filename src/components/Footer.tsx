@@ -187,7 +187,7 @@ export default function Footer() {
 						<span className="inline-block relative px-2">
 							<span className="absolute inset-0 bg-gradient-to-r from-[rgba(var(--color-cyan),0.2)] to-[rgba(var(--color-magenta),0.2)] opacity-50 rounded-md"></span>
 							<span className="relative">
-								this site was vibe coded by doug in like two hours using{" "}
+								this site was vibe coded by doug over a couple weekends using{" "}
 								<Link
 									href="https://cursor.sh"
 									className="text-[rgba(var(--color-cyan),0.9)] hover:text-[rgba(var(--color-cyan),1)]"

@@ -1,13 +1,8 @@
 "use client"
 
 import { usePathname } from "next/navigation"
-import Header from "./Header"
-import Footer from "./Footer"
+import ServerLayoutWrapper from "./ServerLayoutWrapper"
 
-/**
- * Client component wrapper to conditionally render Header and Footer
- * Only shows header and footer for main site pages
- */
 export default function LayoutWrapper({
 	children,
 }: {
@@ -15,25 +10,15 @@ export default function LayoutWrapper({
 }) {
 	const pathname = usePathname()
 
-	// Check if the current page should skip the main layout
-	const skipMainLayout =
-		pathname?.startsWith("/admin") ||
-		pathname?.startsWith("/migraine-free") ||
-		pathname?.startsWith("/test")
+	// Routes that should NOT have the site layout
+	const isSpecialRoute =
+		pathname.startsWith("/migraine-free") || pathname.startsWith("/admin")
 
-	// If it's a page that should skip the main layout, just render the content
-	if (skipMainLayout) {
-		return <main className="flex-grow relative z-10">{children}</main>
+	if (isSpecialRoute) {
+		// Special routes get no wrapper - they handle their own layout
+		return <>{children}</>
 	}
 
-	// For regular pages, show the header and footer
-	return (
-		<>
-			<Header />
-			<main className="flex-grow container mx-auto px-4 pt-28 pb-12 relative z-10">
-				{children}
-			</main>
-			<Footer />
-		</>
-	)
+	// Regular routes get the site layout
+	return <ServerLayoutWrapper>{children}</ServerLayoutWrapper>
 }

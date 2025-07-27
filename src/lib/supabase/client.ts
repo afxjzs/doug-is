@@ -19,18 +19,39 @@ export function createClient() {
 		{
 			cookies: {
 				get(name: string) {
-					return document.cookie
-						.split("; ")
-						.find((row) => row.startsWith(`${name}=`))
-						?.split("=")[1]
+					if (typeof document === "undefined") {
+						return undefined
+					}
+					try {
+						return document.cookie
+							.split("; ")
+							.find((row) => row.startsWith(`${name}=`))
+							?.split("=")[1]
+					} catch (error) {
+						return undefined
+					}
 				},
 				set(name: string, value: string, options: any) {
-					document.cookie = `${name}=${value}; path=/; max-age=${
-						options?.maxAge || 31536000
-					}`
+					if (typeof document === "undefined") {
+						return
+					}
+					try {
+						document.cookie = `${name}=${value}; path=/; max-age=${
+							options?.maxAge || 31536000
+						}`
+					} catch (error) {
+						// Ignore cookie setting errors
+					}
 				},
 				remove(name: string, options: any) {
-					document.cookie = `${name}=; path=/; max-age=0`
+					if (typeof document === "undefined") {
+						return
+					}
+					try {
+						document.cookie = `${name}=; path=/; max-age=0`
+					} catch (error) {
+						// Ignore cookie removal errors
+					}
 				},
 			},
 		}

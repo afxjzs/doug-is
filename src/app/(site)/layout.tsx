@@ -5,9 +5,5 @@ export default function SiteLayout({
 }: {
 	children: React.ReactNode
 }) {
-	return (
-		<main className="flex-1">
-			<VisualLayout>{children}</VisualLayout>
-		</main>
-	)
+	return <VisualLayout>{children}</VisualLayout>
 }

@@ -3,10 +3,18 @@
  *
  * Basic tests for the SimpleLoginForm component to ensure
  * it works correctly and catches any login issues.
+ *
+ * Uses test credentials from .env.test for consistent testing.
  */
 
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import SimpleLoginForm from "../SimpleLoginForm"
+
+// Load test environment variables
+require("dotenv").config({ path: ".env.test" })
+
+const TEST_EMAIL = process.env.TEST_ADMIN_EMAIL || "test@testing.com"
+const TEST_PASSWORD = process.env.TEST_ADMIN_PASSWORD || "Password!"
 
 // Mock the Supabase client
 jest.mock("@/lib/supabase/client", () => ({
@@ -68,12 +76,12 @@ describe("SimpleLoginForm", () => {
 
 			render(<SimpleLoginForm />)
 
-			// Fill in form
+			// Fill in form with test credentials
 			fireEvent.change(screen.getByLabelText(/email address/i), {
-				target: { value: "test@example.com" },
+				target: { value: TEST_EMAIL },
 			})
 			fireEvent.change(screen.getByLabelText(/password/i), {
-				target: { value: "password123" },
+				target: { value: TEST_PASSWORD },
 			})
 
 			// Submit form
@@ -92,9 +100,9 @@ describe("SimpleLoginForm", () => {
 
 			render(<SimpleLoginForm />)
 
-			// Fill in form
+			// Fill in form with test credentials but wrong password
 			fireEvent.change(screen.getByLabelText(/email address/i), {
-				target: { value: "test@example.com" },
+				target: { value: TEST_EMAIL },
 			})
 			fireEvent.change(screen.getByLabelText(/password/i), {
 				target: { value: "wrongpassword" },
@@ -118,12 +126,12 @@ describe("SimpleLoginForm", () => {
 
 			render(<SimpleLoginForm />)
 
-			// Fill in form
+			// Fill in form with test credentials
 			fireEvent.change(screen.getByLabelText(/email address/i), {
-				target: { value: "admin@doug.is" },
+				target: { value: TEST_EMAIL },
 			})
 			fireEvent.change(screen.getByLabelText(/password/i), {
-				target: { value: "correctpassword" },
+				target: { value: TEST_PASSWORD },
 			})
 
 			// Submit form
@@ -132,8 +140,8 @@ describe("SimpleLoginForm", () => {
 			// Should call signInWithPassword with correct parameters
 			await waitFor(() => {
 				expect(mockSignInWithPassword).toHaveBeenCalledWith({
-					email: "admin@doug.is",
-					password: "correctpassword",
+					email: TEST_EMAIL,
+					password: TEST_PASSWORD,
 				})
 			})
 
@@ -149,12 +157,12 @@ describe("SimpleLoginForm", () => {
 
 			render(<SimpleLoginForm />)
 
-			// Fill in form
+			// Fill in form with test credentials
 			fireEvent.change(screen.getByLabelText(/email address/i), {
-				target: { value: "test@example.com" },
+				target: { value: TEST_EMAIL },
 			})
 			fireEvent.change(screen.getByLabelText(/password/i), {
-				target: { value: "password123" },
+				target: { value: TEST_PASSWORD },
 			})
 
 			// Submit form
@@ -165,6 +173,31 @@ describe("SimpleLoginForm", () => {
 				expect(
 					screen.getByText("An unexpected error occurred")
 				).toBeInTheDocument()
+			})
+		})
+
+		it("should validate login with correct test credentials", async () => {
+			mockSignInWithPassword.mockResolvedValue({
+				error: null,
+			})
+
+			render(<SimpleLoginForm />)
+
+			// Test with the exact credentials from .env.test
+			fireEvent.change(screen.getByLabelText(/email address/i), {
+				target: { value: TEST_EMAIL },
+			})
+			fireEvent.change(screen.getByLabelText(/password/i), {
+				target: { value: TEST_PASSWORD },
+			})
+
+			fireEvent.click(screen.getByText("Sign In"))
+
+			await waitFor(() => {
+				expect(mockSignInWithPassword).toHaveBeenCalledWith({
+					email: TEST_EMAIL,
+					password: TEST_PASSWORD,
+				})
 			})
 		})
 	})
@@ -188,6 +221,24 @@ describe("SimpleLoginForm", () => {
 
 			expect(emailInput).toHaveAttribute("type", "email")
 			expect(passwordInput).toHaveAttribute("type", "password")
+		})
+
+		it("should accept test credentials format", () => {
+			render(<SimpleLoginForm />)
+
+			const emailInput = screen.getByLabelText(/email address/i)
+			const passwordInput = screen.getByLabelText(/password/i)
+
+			// Verify test credentials are in expected format
+			expect(TEST_EMAIL).toMatch(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) // Valid email format
+			expect(TEST_PASSWORD).toHaveLength(9) // Password! has 9 characters
+
+			// Test filling with our test credentials
+			fireEvent.change(emailInput, { target: { value: TEST_EMAIL } })
+			fireEvent.change(passwordInput, { target: { value: TEST_PASSWORD } })
+
+			expect(emailInput).toHaveValue(TEST_EMAIL)
+			expect(passwordInput).toHaveValue(TEST_PASSWORD)
 		})
 	})
 })

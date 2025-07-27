@@ -2,35 +2,26 @@
  * Admin Dashboard - Main Admin Page
  *
  * This page provides an overview of the admin area with quick access
- * to posts and contact messages. Uses official Supabase SSR patterns.
+ * to posts and contact messages. Uses UNIFIED AUTHENTICATION SYSTEM.
  */
 
 import { redirect } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
+import { createServiceRoleClient } from "@/lib/supabase/server"
+import {
+	getCurrentUser,
+	isCurrentUserAdmin,
+} from "@/lib/auth/simple-auth-server"
 import Link from "next/link"
 import DraftOverviewWidget from "@/components/admin/DraftOverviewWidget"
 
 // Force dynamic rendering to ensure fresh data
 export const dynamic = "force-dynamic"
 
-// Admin emails
-const ADMIN_EMAILS = ["douglas.rogers@gmail.com", "test@testing.com"] as const
-
-/**
- * Check if user is admin
- */
-function isAdmin(email?: string): boolean {
-	if (!email) return false
-	return ADMIN_EMAILS.includes(
-		email.toLowerCase() as (typeof ADMIN_EMAILS)[number]
-	)
-}
-
 // Helper function to get posts using Supabase SSR
 async function adminGetPosts() {
 	try {
 		console.log("Getting posts...")
-		const supabase = await createClient()
+		const supabase = createServiceRoleClient()
 
 		const { data, error } = await supabase
 			.from("posts")
@@ -54,7 +45,7 @@ async function adminGetPosts() {
 async function adminGetContactSubmissions() {
 	try {
 		console.log("Getting contact submissions...")
-		const supabase = await createClient()
+		const supabase = createServiceRoleClient()
 
 		const { data, error } = await supabase
 			.from("contact_messages")
@@ -76,13 +67,11 @@ async function adminGetContactSubmissions() {
 
 export default async function AdminPage() {
 	try {
-		// Verify user is authenticated and has admin privileges
-		const supabase = await createClient()
-		const {
-			data: { user },
-		} = await supabase.auth.getUser()
+		// Verify user is authenticated and has admin privileges using UNIFIED AUTH
+		const user = await getCurrentUser()
+		const isAdmin = await isCurrentUserAdmin()
 
-		if (!user || !isAdmin(user.email)) {
+		if (!user || !isAdmin) {
 			console.log("Not authenticated as admin, redirecting to login")
 			redirect("/admin/login")
 		}
@@ -99,39 +88,24 @@ export default async function AdminPage() {
 
 		return (
 			<div className="space-y-8">
-				<div>
+				{/* Header */}
+				<div className="admin-card">
 					<h1 className="text-3xl font-bold mb-4">Admin Dashboard</h1>
-					<p className="text-[rgba(var(--color-foreground),0.7)]">
+					<p className="text-gray-300">
 						Welcome back, {user.email}! Here's an overview of your content.
 					</p>
 				</div>
 
-				{/* Quick Stats */}
+				{/* Quick Stats Cards */}
 				<div className="grid md:grid-cols-2 gap-6">
-					<div className="admin-card p-6">
-						<h2 className="text-xl font-semibold mb-4">Posts</h2>
+					<div className="admin-card">
 						<div className="flex items-center justify-between mb-4">
-							<span className="text-2xl font-bold">{posts.length}</span>
-							<Link
-								href="/admin/posts/new"
-								className="bg-[rgba(var(--color-green),0.9)] hover:bg-[rgba(var(--color-green),1)] text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
-							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									className="h-4 w-4"
-									viewBox="0 0 20 20"
-									fill="currentColor"
-								>
-									<path
-										fillRule="evenodd"
-										d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-										clipRule="evenodd"
-									/>
-								</svg>
-								New Post
-							</Link>
+							<h2 className="text-xl font-semibold">Posts</h2>
+							<span className="text-3xl font-bold text-purple-400">
+								{posts.length}
+							</span>
 						</div>
-						<div className="space-y-2">
+						<div className="space-y-2 mb-4">
 							<div className="flex justify-between text-sm">
 								<span>Published:</span>
 								<span>{publishedPosts.length}</span>
@@ -141,22 +115,37 @@ export default async function AdminPage() {
 								<span>{drafts.length}</span>
 							</div>
 						</div>
+						<Link href="/admin/posts/new" className="neon-button-violet mb-4">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className="h-4 w-4"
+								viewBox="0 0 20 20"
+								fill="currentColor"
+							>
+								<path
+									fillRule="evenodd"
+									d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+									clipRule="evenodd"
+								/>
+							</svg>
+							Create New Post
+						</Link>
 						<Link
 							href="/admin/posts"
-							className="block mt-4 text-[rgba(var(--color-violet),0.9)] hover:text-[rgba(var(--color-violet),1)] text-sm"
+							className="text-purple-400 hover:text-purple-300 text-sm"
 						>
 							Manage all posts →
 						</Link>
 					</div>
 
-					<div className="admin-card p-6">
-						<h2 className="text-xl font-semibold mb-4">Contact Messages</h2>
+					<div className="admin-card">
 						<div className="flex items-center justify-between mb-4">
-							<span className="text-2xl font-bold">
+							<h2 className="text-xl font-semibold">Contact Messages</h2>
+							<span className="text-3xl font-bold text-purple-400">
 								{contactSubmissions.length}
 							</span>
 						</div>
-						<div className="space-y-2">
+						<div className="space-y-2 mb-4">
 							<div className="flex justify-between text-sm">
 								<span>Total messages:</span>
 								<span>{contactSubmissions.length}</span>
@@ -176,7 +165,7 @@ export default async function AdminPage() {
 						</div>
 						<Link
 							href="/admin/contacts"
-							className="block mt-4 text-[rgba(var(--color-violet),0.9)] hover:text-[rgba(var(--color-violet),1)] text-sm"
+							className="text-purple-400 hover:text-purple-300 text-sm"
 						>
 							View all messages →
 						</Link>
@@ -188,36 +177,36 @@ export default async function AdminPage() {
 
 				{/* Recent Posts */}
 				<div className="admin-card">
-					<div className="p-6 border-b border-[rgba(var(--color-foreground),0.1)]">
+					<div className="border-b border-gray-600 pb-4 mb-4">
 						<h2 className="text-xl font-semibold">Recent Posts</h2>
 					</div>
-					<div className="divide-y divide-[rgba(var(--color-foreground),0.1)]">
+					<div className="space-y-4">
 						{publishedPosts.slice(0, 5).map((post) => (
 							<div
 								key={post.id}
-								className="p-6 flex justify-between items-center"
+								className="flex justify-between items-center py-3 border-b border-gray-600 last:border-b-0"
 							>
 								<div>
 									<h3 className="font-medium">{post.title}</h3>
-									<p className="text-sm text-[rgba(var(--color-foreground),0.7)] mt-1">
+									<p className="text-sm text-gray-400 mt-1">
 										{post.category} •{" "}
 										{post.published_at ? "Published" : "Draft"}
 									</p>
 								</div>
 								<Link
 									href={`/admin/posts/${post.id}`}
-									className="text-[rgba(var(--color-violet),0.9)] hover:text-[rgba(var(--color-violet),1)] text-sm"
+									className="text-purple-400 hover:text-purple-300 text-sm"
 								>
 									Edit
 								</Link>
 							</div>
 						))}
 						{publishedPosts.length === 0 && (
-							<div className="p-6 text-center text-[rgba(var(--color-foreground),0.7)]">
+							<div className="text-center text-gray-400 py-8">
 								No published posts yet.{" "}
 								<Link
 									href="/admin/posts/new"
-									className="text-[rgba(var(--color-violet),0.9)] hover:text-[rgba(var(--color-violet),1)]"
+									className="text-purple-400 hover:text-purple-300"
 								>
 									Create your first post
 								</Link>
@@ -228,29 +217,30 @@ export default async function AdminPage() {
 
 				{/* Recent Contact Messages */}
 				<div className="admin-card">
-					<div className="p-6 border-b border-[rgba(var(--color-foreground),0.1)]">
+					<div className="border-b border-gray-600 pb-4 mb-4">
 						<h2 className="text-xl font-semibold">Recent Contact Messages</h2>
 					</div>
-					<div className="divide-y divide-[rgba(var(--color-foreground),0.1)]">
+					<div className="space-y-4">
 						{contactSubmissions.slice(0, 5).map((msg) => (
-							<div key={msg.id} className="p-6">
-								<div className="flex justify-between items-start">
+							<div
+								key={msg.id}
+								className="py-3 border-b border-gray-600 last:border-b-0"
+							>
+								<div className="flex justify-between items-start mb-2">
 									<div>
 										<h3 className="font-medium">{msg.name}</h3>
-										<p className="text-sm text-[rgba(var(--color-foreground),0.7)] mt-1">
-											{msg.email}
-										</p>
+										<p className="text-sm text-gray-400 mt-1">{msg.email}</p>
 										{msg.subject && (
-											<p className="text-sm text-[rgba(var(--color-foreground),0.8)] mt-1">
+											<p className="text-sm text-gray-300 mt-1">
 												Subject: {msg.subject}
 											</p>
 										)}
 									</div>
-									<span className="text-xs text-[rgba(var(--color-foreground),0.6)]">
+									<span className="text-xs text-gray-500">
 										{new Date(msg.created_at).toLocaleDateString()}
 									</span>
 								</div>
-								<p className="text-sm mt-2 text-[rgba(var(--color-foreground),0.8)]">
+								<p className="text-sm text-gray-300">
 									{msg.message.length > 100
 										? `${msg.message.substring(0, 100)}...`
 										: msg.message}
@@ -258,7 +248,7 @@ export default async function AdminPage() {
 							</div>
 						))}
 						{contactSubmissions.length === 0 && (
-							<div className="p-6 text-center text-[rgba(var(--color-foreground),0.7)]">
+							<div className="text-center text-gray-400 py-8">
 								No contact messages yet.
 							</div>
 						)}

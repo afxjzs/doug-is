@@ -69,10 +69,7 @@ export default async function AdminPostsPage() {
 			<div>
 				<div className="flex justify-between items-center mb-6">
 					<h1 className="text-3xl font-bold">Manage Posts</h1>
-					<Link
-						href="/admin/posts/new"
-						className="bg-[rgba(var(--color-green),0.9)] hover:bg-[rgba(var(--color-green),1)] text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
-					>
+					<Link href="/admin/posts/new" className="neon-button-violet">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							className="h-5 w-5"
@@ -95,13 +92,11 @@ export default async function AdminPostsPage() {
 		console.error("Error in AdminPostsPage:", error)
 		return (
 			<div className="admin-card p-6">
-				<h1 className="text-3xl font-bold text-[rgba(var(--color-red),0.9)] mb-6">
-					Error
-				</h1>
+				<h1 className="text-3xl font-bold text-red-400 mb-6">Error</h1>
 				<p className="mb-4">
 					An error occurred while loading the posts management page.
 				</p>
-				<p className="text-sm text-[rgba(var(--color-foreground),0.7)]">
+				<p className="text-sm text-gray-400">
 					Please try refreshing the page or contact the administrator.
 				</p>
 			</div>

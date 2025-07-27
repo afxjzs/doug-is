@@ -1,6 +1,5 @@
 "use client"
 
-import { createClient } from "@/lib/supabase/client"
 import { useEffect, useState, ChangeEvent } from "react"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
@@ -74,24 +73,28 @@ export default function MigrainePage() {
 	useEffect(() => {
 		async function fetchTriggers() {
 			try {
-				const supabase = createClient()
-				const { data, error } = await supabase
-					.from("migraine_triggers")
-					.select("*")
-					.order("food", { ascending: true })
+				// Use the API route instead of direct Supabase client
+				const response = await fetch("/api/migraine-triggers")
+				const result = await response.json()
 
-				if (error) {
+				if (!response.ok) {
 					setError("Failed to load trigger data")
-					console.error("Error fetching triggers:", error)
+					console.error("Error fetching triggers:", result)
 					return
 				}
 
 				// Debug: Check if we have any notes
-				console.log("Triggers with notes:", data?.filter((t) => t.notes).length)
-				console.log("Sample note:", data?.find((t) => t.notes)?.notes)
+				console.log(
+					"Triggers with notes:",
+					result.data?.filter((t: any) => t.notes).length
+				)
+				console.log(
+					"Sample note:",
+					result.data?.find((t: any) => t.notes)?.notes
+				)
 
-				setTriggers(data || [])
-				setFilteredTriggers(data || [])
+				setTriggers(result.data || [])
+				setFilteredTriggers(result.data || [])
 			} catch (err) {
 				setError("An unexpected error occurred")
 				console.error("Error:", err)

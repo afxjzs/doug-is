@@ -1,59 +1,52 @@
-"use client"
-
 /**
- * This layout applies to all pages under /admin.
- * It provides the admin dashboard UI with navigation and header.
- * Authentication is handled by middleware, not in this layout.
+ * Admin route group layout that provides admin-specific layout
+ * without main site header and footer
  */
 
+import { headers } from "next/headers"
 import AdminNavigation from "@/components/admin/AdminNavigation"
-import { usePathname, useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-import Link from "next/link"
 import "./admin.css"
 
-/**
- * Admin layout component that provides the structure for admin pages
- * Authentication is handled by middleware
- * This layout does not include the site header or footer, which are only for the public site
- */
-export default function AdminLayout({
+export default async function AdminRouteLayout({
 	children,
 }: {
 	children: React.ReactNode
 }) {
-	const pathname = usePathname()
-	const router = useRouter()
+	// Check if we're on the login page
+	const headersList = await headers()
+	const isLoginPage = headersList.get("x-is-login-page") === "true"
 
-	// Check if the current path is an auth page
-	const isAuthPage =
-		pathname === "/admin/login" ||
-		pathname === "/admin/register" ||
-		pathname?.startsWith("/admin/login?") ||
-		pathname?.startsWith("/admin/register?")
-
-	// For auth pages, render just the content without the admin navigation
-	if (isAuthPage) {
-		return (
-			<div className="admin-layout">
-				<div style={{ maxWidth: "28rem", margin: "0 auto", padding: "2rem" }}>
-					{children}
-				</div>
-			</div>
-		)
+	// Route group layout - provides complete isolated admin layout
+	if (isLoginPage) {
+		// Login page: Just the content, no navigation
+		return <>{children}</>
 	}
 
-	// For regular admin pages, render with the navigation
+	// Admin pages: Complete admin layout with navigation
 	return (
-		<div className="admin-layout flex">
-			{/* Admin sidebar navigation */}
-			<div className="admin-sidebar">
-				<AdminNavigation />
-			</div>
-
-			{/* Main content area */}
-			<main className="admin-main">
-				<div className="max-w-4xl mx-auto">{children}</div>
+		<div
+			className="admin-layout"
+			style={{
+				display: "flex",
+				height: "100vh",
+				backgroundColor: "#0f0d14",
+				color: "rgba(255, 255, 255, 0.9)",
+				fontFamily:
+					'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+			}}
+		>
+			<AdminNavigation />
+			<main
+				className="admin-main"
+				style={{
+					flex: 1,
+					padding: "2rem",
+					overflow: "auto",
+					backgroundColor: "#0f0d14",
+					marginLeft: "16rem",
+				}}
+			>
+				{children}
 			</main>
 		</div>
 	)

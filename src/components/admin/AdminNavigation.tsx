@@ -34,7 +34,7 @@ export default function AdminNavigation() {
 		<>
 			{/* Mobile hamburger menu button */}
 			<button
-				className="fixed top-4 left-4 z-50 p-2 rounded-md md:hidden bg-[rgba(var(--color-background),0.8)] border border-[rgba(var(--color-foreground),0.1)]"
+				className="fixed top-4 left-4 z-50 p-2 rounded-md md:hidden bg-gray-800 border border-gray-600"
 				onClick={toggleSidebar}
 				aria-label="Toggle menu"
 			>
@@ -48,7 +48,7 @@ export default function AdminNavigation() {
 					strokeWidth="2"
 					strokeLinecap="round"
 					strokeLinejoin="round"
-					className="text-[rgba(var(--color-foreground),0.8)]"
+					className="text-gray-300"
 				>
 					{isOpen ? (
 						<>
@@ -69,11 +69,11 @@ export default function AdminNavigation() {
 			<aside
 				className={`${
 					isOpen ? "translate-x-0" : "-translate-x-full"
-				} fixed inset-y-0 left-0 z-40 w-64 transition-transform duration-300 ease-in-out md:translate-x-0 bg-[rgba(var(--color-background-dark),0.97)] border-r border-[rgba(var(--color-foreground),0.1)] flex flex-col`}
+				} fixed inset-y-0 left-0 z-40 w-64 transition-transform duration-300 ease-in-out md:translate-x-0 admin-navigation`}
 			>
 				{/* Admin Logo/Title */}
-				<div className="p-6 border-b border-[rgba(var(--color-foreground),0.1)] flex-shrink-0">
-					<h1 className="text-xl font-bold gradient-heading">doug.is Admin</h1>
+				<div className="admin-header">
+					<h1 className="text-xl font-bold">doug.is Admin</h1>
 				</div>
 
 				{/* Navigation Links */}
@@ -83,22 +83,20 @@ export default function AdminNavigation() {
 							<li key={item.id}>
 								<Link
 									href={item.href}
-									className={`flex items-center px-4 py-3 rounded-md transition-colors ${
-										pathname === item.href
-											? "bg-[rgba(var(--color-violet),0.15)] text-[rgba(var(--color-violet),1)]"
-											: "text-[rgba(var(--color-foreground),0.8)] hover:bg-[rgba(var(--color-foreground),0.05)] hover:text-[rgba(var(--color-foreground),1)]"
+									className={`nav-item ${
+										pathname === item.href ? "active" : ""
 									}`}
 									onClick={() => setIsOpen(false)}
 								>
-									<span className="mr-3">
+									<span>
 										{/* Simple icon representation */}
 										<span className="w-5 h-5 inline-block">
 											{item.icon === "dashboard" && "📊"}
 											{item.icon === "posts" && "📝"}
 											{item.icon === "contacts" && "✉️"}
 										</span>
+										<span>{item.name}</span>
 									</span>
-									<span>{item.name}</span>
 								</Link>
 							</li>
 						))}
@@ -106,32 +104,32 @@ export default function AdminNavigation() {
 				</nav>
 
 				{/* Bottom Actions Section */}
-				<div className="flex-shrink-0">
-					{/* Admin Actions */}
-					<div className="p-4 border-t border-[rgba(var(--color-foreground),0.1)]">
-						<a
-							href="/logout"
-							className="w-full py-2 px-4 flex items-center justify-center text-[rgba(var(--color-red),0.8)] bg-[rgba(var(--color-red),0.05)] rounded-md hover:bg-[rgba(var(--color-red),0.1)] transition-colors"
-							onClick={(e) => {
-								console.log("🚪 AdminNavigation logout clicked")
-								// Let the default navigation happen
-							}}
-						>
-							<span className="mr-2">🚪</span>
-							Sign Out
-						</a>
-					</div>
-
-					{/* View Website Link */}
-					<div className="p-4 pt-0">
-						<Link
-							href="/"
-							className="w-full py-2 px-4 flex items-center justify-center text-[rgba(var(--color-foreground),0.8)] bg-[rgba(var(--color-foreground),0.05)] rounded-md hover:bg-[rgba(var(--color-foreground),0.1)] transition-colors"
-						>
-							<span className="mr-2">🏠</span>
-							View Website
-						</Link>
-					</div>
+				<div className="admin-actions">
+					<ul className="space-y-2 p-4">
+						<li>
+							<a
+								href="/logout"
+								className="nav-item"
+								onClick={(e) => {
+									console.log("🚪 AdminNavigation logout clicked")
+									// Let the default navigation happen
+								}}
+							>
+								<span>
+									<span className="w-5 h-5 inline-block">🚪</span>
+									<span>Sign Out</span>
+								</span>
+							</a>
+						</li>
+						<li>
+							<Link href="/" className="nav-item">
+								<span>
+									<span className="w-5 h-5 inline-block">🏠</span>
+									<span>View Website</span>
+								</span>
+							</Link>
+						</li>
+					</ul>
 				</div>
 			</aside>
 

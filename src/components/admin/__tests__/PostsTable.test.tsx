@@ -155,14 +155,14 @@ describe("PostsTable", () => {
 			render(<PostsTable posts={[mockDraftPost]} />)
 
 			const viewButton = screen.getByRole("link", { name: /view draft/i })
-			expect(viewButton).toHaveClass("text-[rgba(var(--color-cyan),1)]")
+			expect(viewButton).toHaveClass("text-cyan-400")
 		})
 
 		it("applies published-specific styling to view button", () => {
 			render(<PostsTable posts={[mockPublishedPost]} />)
 
 			const viewButton = screen.getByRole("link", { name: /view live post/i })
-			expect(viewButton).toHaveClass("text-[rgba(var(--color-cyan),1)]")
+			expect(viewButton).toHaveClass("text-cyan-400")
 		})
 
 		it("shows appropriate buttons for each post type", () => {

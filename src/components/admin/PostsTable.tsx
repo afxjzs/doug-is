@@ -58,18 +58,18 @@ export default function PostsTable({ posts }: PostsTableProps) {
 	return (
 		<div className="space-y-4">
 			{/* Search and filter controls */}
-			<div className="flex flex-col sm:flex-row gap-4">
+			<div className="search-controls">
 				<div className="relative flex-1">
 					<input
 						type="text"
 						placeholder="Search posts..."
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
-						className="w-full px-4 py-2 rounded-md border border-[rgba(var(--color-foreground),0.1)] focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.4)]"
+						className="w-full"
 					/>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[rgba(var(--color-foreground),0.4)]"
+						className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
 						fill="none"
 						viewBox="0 0 24 24"
 						stroke="currentColor"
@@ -87,7 +87,7 @@ export default function PostsTable({ posts }: PostsTableProps) {
 					<select
 						value={categoryFilter}
 						onChange={(e) => setCategoryFilter(e.target.value)}
-						className="w-full px-4 py-2 rounded-md border border-[rgba(var(--color-foreground),0.1)] focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.4)]"
+						className="w-full"
 					>
 						{categories.map((category) => (
 							<option key={category} value={category}>
@@ -99,31 +99,23 @@ export default function PostsTable({ posts }: PostsTableProps) {
 			</div>
 
 			{/* Posts table */}
-			<div className="bg-white rounded-lg shadow-sm border border-[rgba(var(--color-foreground),0.1)] overflow-hidden">
+			<div className="posts-table">
 				<div className="overflow-x-auto">
 					<table className="w-full">
 						<thead>
-							<tr className="bg-[rgba(var(--color-foreground),0.02)] border-b border-[rgba(var(--color-foreground),0.1)]">
-								<th className="px-6 py-3 text-left text-sm font-medium text-[rgba(var(--color-foreground),0.6)]">
-									Title
-								</th>
-								<th className="px-6 py-3 text-left text-sm font-medium text-[rgba(var(--color-foreground),0.6)]">
-									Category
-								</th>
-								<th className="px-6 py-3 text-left text-sm font-medium text-[rgba(var(--color-foreground),0.6)]">
-									Published
-								</th>
-								<th className="px-6 py-3 text-right text-sm font-medium text-[rgba(var(--color-foreground),0.6)]">
-									Actions
-								</th>
+							<tr>
+								<th>Title</th>
+								<th>Category</th>
+								<th>Published</th>
+								<th className="text-right">Actions</th>
 							</tr>
 						</thead>
-						<tbody className="divide-y divide-[rgba(var(--color-foreground),0.1)]">
+						<tbody>
 							{filteredPosts.length === 0 ? (
 								<tr>
 									<td
 										colSpan={4}
-										className="px-6 py-8 text-center text-[rgba(var(--color-foreground),0.6)]"
+										className="px-6 py-8 text-center text-gray-400"
 									>
 										No posts match your search criteria. Try adjusting your
 										filters.
@@ -131,43 +123,34 @@ export default function PostsTable({ posts }: PostsTableProps) {
 								</tr>
 							) : (
 								filteredPosts.map((post) => (
-									<tr
-										key={post.id}
-										className="hover:bg-[rgba(var(--color-foreground),0.01)]"
-									>
-										<td className="px-6 py-4">
+									<tr key={post.id}>
+										<td>
 											<div className="flex flex-col">
-												<span className="font-medium text-[rgba(var(--color-foreground),0.9)]">
-													{post.title}
-												</span>
+												<span className="post-title">{post.title}</span>
 												{post.excerpt && (
-													<span className="text-sm text-[rgba(var(--color-foreground),0.6)] mt-1">
+													<span className="post-excerpt">
 														{truncateText(post.excerpt, 70)}
 													</span>
 												)}
 											</div>
 										</td>
-										<td className="px-6 py-4">
-											<span className="px-2.5 py-1 text-xs font-medium rounded-full bg-[rgba(var(--color-foreground),0.05)]">
-												{post.category}
-											</span>
+										<td>
+											<span className="post-category">{post.category}</span>
 										</td>
-										<td className="px-6 py-4 text-sm">
+										<td>
 											{post.published_at ? (
-												<span className="text-[rgba(var(--color-green),1)]">
+												<span className="text-green-400">
 													{formatDate(post.published_at)}
 												</span>
 											) : (
-												<span className="text-[rgba(var(--color-amber),1)]">
-													Draft
-												</span>
+												<span className="text-yellow-400">Draft</span>
 											)}
 										</td>
-										<td className="px-6 py-4 text-right whitespace-nowrap">
+										<td className="text-right whitespace-nowrap">
 											<div className="flex items-center justify-end gap-2">
 												<Link
 													href={`/admin/posts/${post.id}`}
-													className="p-2 rounded-md text-[rgba(var(--color-violet),1)] hover:bg-[rgba(var(--color-violet),0.1)]"
+													className="p-2 rounded-md text-violet-400 hover:bg-violet-100 hover:bg-opacity-10"
 												>
 													<svg
 														xmlns="http://www.w3.org/2000/svg"
@@ -200,7 +183,7 @@ export default function PostsTable({ posts }: PostsTableProps) {
 															: `/admin/posts/${post.id}/preview`
 													}
 													target={post.published_at ? "_blank" : undefined}
-													className="p-2 rounded-md text-[rgba(var(--color-cyan),1)] hover:bg-[rgba(var(--color-cyan),0.1)]"
+													className="p-2 rounded-md text-cyan-400 hover:bg-cyan-100 hover:bg-opacity-10"
 													title={
 														post.published_at ? "View Live Post" : "View Draft"
 													}
@@ -227,7 +210,7 @@ export default function PostsTable({ posts }: PostsTableProps) {
 												</Link>
 
 												<button
-													className="p-2 rounded-md text-[rgba(var(--color-red),1)] hover:bg-[rgba(var(--color-red),0.1)]"
+													className="p-2 rounded-md text-red-400 hover:bg-red-100 hover:bg-opacity-10"
 													onClick={() => {
 														// In a real app, this would show a confirmation dialog
 														alert(`Delete post: ${post.title}`)

@@ -175,7 +175,7 @@ describe("DraftOverviewWidget", () => {
 		it("renders preview button for each draft", () => {
 			render(<DraftOverviewWidget drafts={[mockDrafts[0]]} />)
 
-			const previewButton = screen.getByTitle("Preview Draft")
+			const previewButton = screen.getByText("Preview Draft")
 			expect(previewButton).toBeInTheDocument()
 			expect(previewButton).toHaveAttribute(
 				"href",
@@ -186,7 +186,7 @@ describe("DraftOverviewWidget", () => {
 		it("renders edit button for each draft", () => {
 			render(<DraftOverviewWidget drafts={[mockDrafts[0]]} />)
 
-			const editButton = screen.getByTitle("Edit Draft")
+			const editButton = screen.getByText("Edit Draft")
 			expect(editButton).toBeInTheDocument()
 			expect(editButton).toHaveAttribute("href", "/admin/posts/draft-1")
 		})

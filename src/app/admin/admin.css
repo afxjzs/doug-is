@@ -1,105 +1,632 @@
 /* Admin UI specific styles */
 
+/* Base admin layout */
 .admin-layout {
-	--admin-bg-color: #131118;
-	--admin-sidebar-bg: #0f0d14;
+	--admin-bg-color: #0f0d14;
+	--admin-sidebar-bg: #131118;
+	--admin-card-bg: #1a1620;
 	--admin-border-color: rgba(255, 255, 255, 0.1);
-	--admin-card-bg: rgba(30, 25, 40, 0.6);
-	--admin-highlight: rgba(139, 92, 246, 0.2);
 	--admin-text-primary: rgba(255, 255, 255, 0.9);
 	--admin-text-secondary: rgba(255, 255, 255, 0.6);
+	--admin-accent: #8b5cf6;
+	--admin-accent-hover: #a855f7;
+	--admin-success: #10b981;
+	--admin-success-hover: #059669;
+	--admin-warning: #f59e0b;
+	--admin-danger: #ef4444;
+	--admin-info: #06b6d4;
+
+	/* Site color variables for neon buttons */
+	--color-violet: 139, 92, 246;
+	--color-cyan: 34, 211, 238;
+	--color-magenta: 226, 43, 138;
+	--color-emerald: 16, 185, 129;
+	--color-pink: 236, 72, 153;
+	--color-orange: 249, 115, 22;
 
 	background-color: var(--admin-bg-color);
 	color: var(--admin-text-primary);
 	min-height: 100vh;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-.admin-sidebar {
+/* Admin sidebar */
+.admin-navigation {
 	background-color: var(--admin-sidebar-bg);
 	border-right: 1px solid var(--admin-border-color);
 	width: 16rem;
 	flex-shrink: 0;
+	height: 100vh;
+	overflow-y: auto;
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 40;
 }
 
-.admin-main {
-	background-color: var(--admin-bg-color);
-	flex: 1;
+/* Admin header in sidebar */
+.admin-header {
 	padding: 1.5rem;
-	overflow: auto;
+	border-bottom: 1px solid var(--admin-border-color);
+	background-color: var(--admin-sidebar-bg);
 }
 
+.admin-header h1 {
+	color: var(--admin-text-primary);
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin: 0;
+}
+
+/* Navigation items - FIXED ALIGNMENT */
+.admin-navigation .nav-item {
+	display: flex;
+	align-items: center;
+	padding: 0.75rem 1rem;
+	color: var(--admin-text-secondary);
+	text-decoration: none;
+	transition: all 0.2s ease;
+	border-radius: 0.375rem;
+	margin: 0.25rem 0.75rem;
+	text-align: left;
+	justify-content: flex-start;
+}
+
+.admin-navigation .nav-item:hover {
+	background-color: rgba(139, 92, 246, 0.1);
+	color: var(--admin-text-primary);
+}
+
+.admin-navigation .nav-item.active {
+	background-color: rgba(139, 92, 246, 0.15);
+	color: var(--admin-accent);
+	border-left: 3px solid var(--admin-accent);
+}
+
+/* Fix for two-line navigation items */
+.admin-navigation .nav-item span {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	width: 100%;
+}
+
+/* Admin actions section */
+.admin-actions {
+	background-color: var(--admin-sidebar-bg);
+}
+
+.admin-actions a {
+	display: block;
+	padding: 0.75rem 1rem;
+	color: var(--admin-text-secondary);
+	text-decoration: none;
+	border-radius: 0.375rem;
+	transition: all 0.2s ease;
+	margin-bottom: 0.5rem;
+	text-align: left;
+}
+
+.admin-actions a:hover {
+	background-color: rgba(255, 255, 255, 0.05);
+	color: var(--admin-text-primary);
+}
+
+.admin-actions a.sign-out {
+	color: #ef4444;
+}
+
+.admin-actions a.sign-out:hover {
+	background-color: rgba(239, 68, 68, 0.1);
+	color: #f87171;
+}
+
+/* Admin main content area */
+.admin-main {
+	flex: 1;
+	padding: 2rem;
+	overflow: auto;
+	background-color: var(--admin-bg-color);
+	margin-left: 16rem;
+}
+
+/* Admin cards */
 .admin-card {
 	background-color: var(--admin-card-bg);
 	border: 1px solid var(--admin-border-color);
-	border-radius: 0.5rem;
+	border-radius: 0.75rem;
 	padding: 1.5rem;
 	margin-bottom: 1.5rem;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.admin-card-highlight {
-	border-left: 3px solid rgba(139, 92, 246, 0.6);
-}
-
-.admin-table {
-	width: 100%;
-	border-collapse: separate;
-	border-spacing: 0;
-}
-
-.admin-table th {
-	text-align: left;
-	padding: 0.75rem 1rem;
-	border-bottom: 1px solid var(--admin-border-color);
-	color: var(--admin-text-secondary);
+/* Admin buttons - FIXED STYLING */
+.admin-layout .bg-green-600 {
+	background-color: var(--admin-accent) !important;
+	border: none;
+	padding: 0.75rem 1.5rem;
+	border-radius: 0.5rem;
 	font-weight: 500;
+	transition: all 0.2s ease;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: white !important;
+	text-decoration: none;
 }
 
-.admin-table td {
-	padding: 0.75rem 1rem;
-	border-bottom: 1px solid var(--admin-border-color);
+.admin-layout .bg-green-600:hover {
+	background-color: var(--admin-accent-hover) !important;
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
 }
 
-.admin-table tr:hover {
-	background-color: var(--admin-highlight);
+/* Admin button variants - MATCHING SITE DESIGN */
+.admin-layout .btn-primary {
+	background-color: rgba(var(--color-violet), 0.1);
+	border: 1px solid rgba(var(--color-violet), 0.3);
+	border-radius: 0.5rem;
+	color: white;
+	padding: 0.75rem 1.5rem;
+	font-weight: 500;
+	transition: all 300ms;
+	position: relative;
+	overflow: hidden;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	cursor: pointer;
+	text-decoration: none;
 }
 
-/* Override any white backgrounds with dark backgrounds */
-.admin-layout div[class*="bg-white"] {
-	background-color: var(--admin-card-bg) !important;
-	color: var(--admin-text-primary) !important;
-	border-color: var(--admin-border-color) !important;
+.admin-layout .btn-primary:hover {
+	background-color: rgba(var(--color-violet), 0.15);
+	border-color: rgba(var(--color-violet), 0.5);
+	box-shadow: 0 0 15px rgba(var(--color-violet), 0.3);
 }
 
-/* Fix text colors in admin layout */
+.admin-layout .btn-secondary {
+	background-color: rgba(255, 255, 255, 0.1);
+	color: var(--admin-text-primary);
+	padding: 0.5rem 1rem;
+	border-radius: 0.375rem;
+	font-weight: 500;
+	transition: all 0.2s ease;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	border: 1px solid var(--admin-border-color);
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.admin-layout .btn-secondary:hover {
+	background-color: rgba(255, 255, 255, 0.15);
+	border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Admin neon button variants to match site design */
+.admin-layout .neon-button-violet {
+	padding: 0.75rem 1.5rem;
+	background-color: rgba(var(--color-violet), 0.1);
+	border: 1px solid rgba(var(--color-violet), 0.3);
+	border-radius: 0.5rem;
+	color: white;
+	font-weight: 500;
+	transition: all 300ms;
+	position: relative;
+	overflow: hidden;
+	min-width: 160px;
+	white-space: nowrap;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex-shrink: 0;
+	margin-right: 1rem;
+}
+
+.admin-layout .neon-button-violet:hover {
+	background-color: rgba(var(--color-violet), 0.15);
+	border-color: rgba(var(--color-violet), 0.5);
+	box-shadow: 0 0 15px rgba(var(--color-violet), 0.3);
+}
+
+.admin-layout .neon-button-cyan {
+	padding: 0.75rem 1.5rem;
+	background-color: rgba(var(--color-cyan), 0.1);
+	border: 1px solid rgba(var(--color-cyan), 0.3);
+	border-radius: 0.5rem;
+	color: white;
+	font-weight: 500;
+	transition: all 300ms;
+	position: relative;
+	overflow: hidden;
+	min-width: 160px;
+	white-space: nowrap;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex-shrink: 0;
+	margin-right: 1rem;
+}
+
+.admin-layout .neon-button-cyan:hover {
+	background-color: rgba(var(--color-cyan), 0.15);
+	border-color: rgba(var(--color-cyan), 0.5);
+	box-shadow: 0 0 15px rgba(var(--color-cyan), 0.3);
+}
+
+.admin-layout .neon-button-magenta {
+	padding: 0.75rem 1.5rem;
+	background-color: rgba(var(--color-magenta), 0.1);
+	border: 1px solid rgba(var(--color-magenta), 0.3);
+	border-radius: 0.5rem;
+	color: white;
+	font-weight: 500;
+	transition: all 300ms;
+	position: relative;
+	overflow: hidden;
+	min-width: 160px;
+	white-space: nowrap;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex-shrink: 0;
+	margin-right: 1rem;
+}
+
+.admin-layout .neon-button-magenta:hover {
+	background-color: rgba(var(--color-magenta), 0.15);
+	border-color: rgba(var(--color-magenta), 0.5);
+	box-shadow: 0 0 15px rgba(var(--color-magenta), 0.3);
+}
+
+/* Admin links */
+.admin-layout a {
+	color: var(--admin-accent);
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.admin-layout a:hover {
+	color: var(--admin-accent-hover);
+}
+
+/* Admin text colors */
 .admin-layout h1,
 .admin-layout h2,
 .admin-layout h3,
 .admin-layout h4,
-.admin-layout p,
-.admin-layout span:not([class*="text-"]) {
+.admin-layout h5,
+.admin-layout h6 {
 	color: var(--admin-text-primary);
+	margin-bottom: 0.5rem;
 }
 
-.admin-layout
-	div[class*="text-[rgba(var(--color-foreground)"]:not([class*="hover"]) {
-	color: var(--admin-text-primary) !important;
-}
-
-/* Fix divider colors */
-.admin-layout div[class*="divide-y"] {
-	--tw-divide-opacity: 0.1;
-	border-color: rgba(255, 255, 255, var(--tw-divide-opacity));
-}
-
-/* Fix table styles */
-.admin-layout table {
-	color: var(--admin-text-primary);
-}
-
-.admin-layout tbody tr {
-	border-bottom-color: var(--admin-border-color);
-}
-
-.admin-layout th {
+.admin-layout p {
 	color: var(--admin-text-secondary);
+	line-height: 1.6;
+}
+
+.admin-layout .text-gray-300 {
+	color: var(--admin-text-secondary) !important;
+}
+
+.admin-layout .text-gray-400 {
+	color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.admin-layout .text-gray-500 {
+	color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Admin grid layout */
+.admin-layout .grid {
+	display: grid;
+	gap: 1.5rem;
+}
+
+.admin-layout .md\:grid-cols-2 {
+	grid-template-columns: repeat(2, 1fr);
+}
+
+/* Admin spacing */
+.admin-layout .space-y-8 > * + * {
+	margin-top: 2rem;
+}
+
+.admin-layout .space-y-2 > * + * {
+	margin-top: 0.5rem;
+}
+
+/* Admin dividers */
+.admin-layout .divide-y > * + * {
+	border-top: 1px solid var(--admin-border-color);
+}
+
+.admin-layout .border-b {
+	border-bottom: 1px solid var(--admin-border-color);
+}
+
+.admin-layout .border-gray-600 {
+	border-color: var(--admin-border-color) !important;
+}
+
+/* Admin flexbox */
+.admin-layout .flex {
+	display: flex;
+}
+
+.admin-layout .flex-1 {
+	flex: 1;
+}
+
+.admin-layout .items-center {
+	align-items: center;
+}
+
+.admin-layout .justify-between {
+	justify-content: space-between;
+}
+
+/* POSTS TABLE SPECIFIC STYLES */
+.admin-layout .posts-table {
+	background-color: var(--admin-card-bg);
+	border: 1px solid var(--admin-border-color);
+	border-radius: 0.75rem;
+	overflow: hidden;
+}
+
+.admin-layout .posts-table table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.admin-layout .posts-table thead {
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+.admin-layout .posts-table th {
+	padding: 1rem 1.5rem;
+	text-align: left;
+	font-weight: 600;
+	color: var(--admin-text-primary);
+	border-bottom: 1px solid var(--admin-border-color);
+}
+
+.admin-layout .posts-table td {
+	padding: 1rem 1.5rem;
+	border-bottom: 1px solid var(--admin-border-color);
+	color: var(--admin-text-secondary);
+}
+
+.admin-layout .posts-table tr:hover {
+	background-color: rgba(255, 255, 255, 0.02);
+}
+
+.admin-layout .posts-table tr:last-child td {
+	border-bottom: none;
+}
+
+/* Posts table specific text colors */
+.admin-layout .posts-table .post-title {
+	color: var(--admin-text-primary);
+	font-weight: 500;
+}
+
+.admin-layout .posts-table .post-excerpt {
+	color: var(--admin-text-secondary);
+	font-size: 0.875rem;
+	margin-top: 0.25rem;
+}
+
+.admin-layout .posts-table .post-category {
+	background-color: rgba(139, 92, 246, 0.1);
+	color: var(--admin-accent);
+	padding: 0.25rem 0.75rem;
+	border-radius: 1rem;
+	font-size: 0.75rem;
+	font-weight: 500;
+}
+
+/* CONTACTS LIST SPECIFIC STYLES */
+.admin-layout .contacts-list {
+	background-color: var(--admin-card-bg);
+	border: 1px solid var(--admin-border-color);
+	border-radius: 0.75rem;
+	overflow: hidden;
+}
+
+.admin-layout .contacts-list .contact-card:not(:last-child) {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-layout .contacts-list .contact-card {
+	background-color: var(--admin-card-bg);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 0.5rem;
+	margin-bottom: 0;
+	transition: all 0.2s ease;
+}
+
+.admin-layout .contacts-list .contact-card:hover {
+	border-color: rgba(255, 255, 255, 0.2);
+	box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+}
+
+.admin-layout .contacts-list .contact-card.unread {
+	border-color: rgba(6, 182, 212, 0.3);
+	background-color: rgba(6, 182, 212, 0.02);
+}
+
+.admin-layout .contacts-list .contact-header {
+	padding: 1rem 1.5rem;
+	cursor: pointer;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.admin-layout .contacts-list .contact-title {
+	color: var(--admin-text-primary);
+	font-weight: 500;
+	font-size: 1.125rem;
+}
+
+.admin-layout .contacts-list .contact-meta {
+	color: var(--admin-text-secondary);
+	font-size: 0.875rem;
+	margin-top: 0.25rem;
+}
+
+.admin-layout .contacts-list .contact-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+/* Contact buttons */
+.admin-layout .contacts-list .btn-mark-read {
+	background-color: var(--admin-info);
+	color: white;
+	padding: 0.5rem 1rem;
+	border-radius: 0.375rem;
+	font-size: 0.875rem;
+	font-weight: 500;
+	border: none;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.admin-layout .contacts-list .btn-mark-read:hover {
+	background-color: #0891b2;
+	transform: translateY(-1px);
+}
+
+.admin-layout .contacts-list .btn-mark-read.read {
+	background-color: rgba(255, 255, 255, 0.1);
+	color: var(--admin-text-secondary);
+}
+
+.admin-layout .contacts-list .btn-mark-read.read:hover {
+	background-color: rgba(255, 255, 255, 0.15);
+	color: var(--admin-text-primary);
+}
+
+/* Contact message content */
+.admin-layout .contacts-list .contact-content {
+	padding: 1rem 1.5rem;
+	border-top: 1px solid var(--admin-border-color);
+	background-color: rgba(255, 255, 255, 0.02);
+}
+
+.admin-layout .contacts-list .contact-message {
+	color: var(--admin-text-secondary);
+	line-height: 1.6;
+	white-space: pre-wrap;
+}
+
+/* Filter tabs */
+.admin-layout .filter-tabs {
+	display: flex;
+	border-bottom: 1px solid var(--admin-border-color);
+	margin-bottom: 1.5rem;
+}
+
+.admin-layout .filter-tabs button {
+	padding: 0.75rem 1.5rem;
+	border: none;
+	background: none;
+	color: var(--admin-text-secondary);
+	cursor: pointer;
+	transition: all 0.2s ease;
+	border-bottom: 2px solid transparent;
+	font-weight: 500;
+}
+
+.admin-layout .filter-tabs button:hover {
+	color: var(--admin-text-primary);
+}
+
+.admin-layout .filter-tabs button.active {
+	color: var(--admin-accent);
+	border-bottom-color: var(--admin-accent);
+}
+
+/* Search and filter controls */
+.admin-layout .search-controls {
+	display: flex;
+	gap: 1rem;
+	margin-bottom: 1.5rem;
+}
+
+.admin-layout .search-controls input,
+.admin-layout .search-controls select {
+	background-color: var(--admin-card-bg);
+	border: 1px solid var(--admin-border-color);
+	color: var(--admin-text-primary);
+	padding: 0.75rem 1rem;
+	border-radius: 0.5rem;
+	font-size: 0.875rem;
+	transition: all 0.2s ease;
+}
+
+.admin-layout .search-controls input:focus,
+.admin-layout .search-controls select:focus {
+	outline: none;
+	border-color: var(--admin-accent);
+	box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.admin-layout .search-controls input::placeholder {
+	color: var(--admin-text-secondary);
+}
+
+/* Admin responsive */
+@media (max-width: 768px) {
+	.admin-navigation {
+		transform: translateX(-100%);
+		transition: transform 0.3s ease;
+	}
+
+	.admin-navigation.open {
+		transform: translateX(0);
+	}
+
+	.admin-main {
+		margin-left: 0;
+		padding: 1rem;
+	}
+}
+
+/* Fix for any remaining visual issues */
+.admin-layout * {
+	box-sizing: border-box;
+}
+
+.admin-layout {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure proper z-index stacking */
+.admin-navigation {
+	z-index: 40;
+}
+
+.admin-main {
+	z-index: 10;
+}
+
+/* Fix for any remaining layout issues */
+.admin-layout .overflow-auto {
+	overflow: auto;
+}
+
+.admin-layout .h-screen {
+	height: 100vh;
+}
+
+.admin-layout .bg-gray-900 {
+	background-color: var(--admin-bg-color) !important;
 }

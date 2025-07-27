@@ -1,10 +1,10 @@
-import "./globals.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import localFont from "next/font/local"
-import LayoutWrapper from "@/components/LayoutWrapper"
+import "./globals.css"
 import { ClientAnalyticsWrapper } from "@/components/ClientAnalyticsWrapper"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import LayoutWrapper from "@/components/LayoutWrapper"
 
 // Local font fallback
 const interLocal = localFont({
@@ -97,11 +97,12 @@ export const metadata: Metadata = {
 	},
 }
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: {
 	children: React.ReactNode
 }) {
+	// Use client-side LayoutWrapper to handle conditional layout application
 	return (
 		<html lang="en" className="scroll-smooth">
 			<body className={`${inter.variable} ${interLocal.variable}`}>

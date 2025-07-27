@@ -1,8 +1,18 @@
 import { updateSession } from "@/lib/supabase/middleware"
-import { type NextRequest } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 
 export async function middleware(request: NextRequest) {
-	return await updateSession(request)
+	// Handle Supabase auth session updates
+	const response = await updateSession(request)
+
+	// Set headers for admin login page detection (still needed for admin layout logic)
+	if (request.nextUrl.pathname === "/admin/login") {
+		response.headers.set("x-is-login-page", "true")
+	} else {
+		response.headers.set("x-is-login-page", "false")
+	}
+
+	return response
 }
 
 export const config = {
