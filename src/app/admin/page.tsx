@@ -2,27 +2,35 @@
  * Admin Dashboard - Main Admin Page
  *
  * This page provides an overview of the admin area with quick access
- * to posts and contact messages. Uses UNIFIED AUTHENTICATION SYSTEM.
+ * to posts and contact messages. Uses official Supabase SSR patterns.
  */
 
 import { redirect } from "next/navigation"
-import {
-	getCurrentUser,
-	isCurrentUserAdmin,
-	createAuthServerClient,
-} from "@/lib/auth/simple-auth-server"
+import { createClient } from "@/lib/supabase/server"
 import Link from "next/link"
 import DraftOverviewWidget from "@/components/admin/DraftOverviewWidget"
 
 // Force dynamic rendering to ensure fresh data
 export const dynamic = "force-dynamic"
 
-// Helper function to get posts using unified auth
+// Admin emails
+const ADMIN_EMAILS = ["douglas.rogers@gmail.com", "test@testing.com"] as const
+
+/**
+ * Check if user is admin
+ */
+function isAdmin(email?: string): boolean {
+	if (!email) return false
+	return ADMIN_EMAILS.includes(
+		email.toLowerCase() as (typeof ADMIN_EMAILS)[number]
+	)
+}
+
+// Helper function to get posts using Supabase SSR
 async function adminGetPosts() {
 	try {
 		console.log("Getting posts...")
-		const supabase = await createAuthServerClient()
-		console.log("Creating auth server client")
+		const supabase = await createClient()
 
 		const { data, error } = await supabase
 			.from("posts")
@@ -42,12 +50,11 @@ async function adminGetPosts() {
 	}
 }
 
-// Helper function to get contact messages using simple auth
+// Helper function to get contact messages using Supabase SSR
 async function adminGetContactSubmissions() {
 	try {
 		console.log("Getting contact submissions...")
-		const supabase = await createAuthServerClient()
-		console.log("Creating auth server client")
+		const supabase = await createClient()
 
 		const { data, error } = await supabase
 			.from("contact_messages")
@@ -69,16 +76,18 @@ async function adminGetContactSubmissions() {
 
 export default async function AdminPage() {
 	try {
-		// Verify user is authenticated and has admin privileges using UNIFIED AUTH
-		const user = await getCurrentUser()
-		const isAdmin = await isCurrentUserAdmin()
+		// Verify user is authenticated and has admin privileges
+		const supabase = await createClient()
+		const {
+			data: { user },
+		} = await supabase.auth.getUser()
 
-		if (!user || !isAdmin) {
+		if (!user || !isAdmin(user.email)) {
 			console.log("Not authenticated as admin, redirecting to login")
 			redirect("/admin/login")
 		}
 
-		// Get data using unified auth functions
+		// Get data using Supabase SSR functions
 		const [posts, contactSubmissions] = await Promise.all([
 			adminGetPosts(),
 			adminGetContactSubmissions(),

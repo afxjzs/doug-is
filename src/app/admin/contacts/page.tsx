@@ -2,16 +2,12 @@
  * Admin Contacts Page
  *
  * This page displays contact form submissions for admin review.
- * Uses UNIFIED AUTHENTICATION SYSTEM.
+ * Uses official Supabase SSR patterns.
  */
 
 import { Metadata } from "next"
 import { redirect } from "next/navigation"
-import {
-	getCurrentUser,
-	isCurrentUserAdmin,
-	createAuthServerClient,
-} from "@/lib/auth/simple-auth-server"
+import { createClient } from "@/lib/supabase/server"
 import ContactsList from "@/components/admin/ContactsList"
 
 // Force dynamic rendering
@@ -26,11 +22,24 @@ export const metadata: Metadata = {
 	},
 }
 
-// Helper function to get all contact messages using new simple server auth
+// Admin emails
+const ADMIN_EMAILS = ["douglas.rogers@gmail.com", "test@testing.com"] as const
+
+/**
+ * Check if user is admin
+ */
+function isAdmin(email?: string): boolean {
+	if (!email) return false
+	return ADMIN_EMAILS.includes(
+		email.toLowerCase() as (typeof ADMIN_EMAILS)[number]
+	)
+}
+
+// Helper function to get all contact messages using Supabase SSR
 async function adminGetContactMessages() {
 	try {
 		console.log("Getting all contact messages for admin...")
-		const supabase = await createAuthServerClient()
+		const supabase = await createClient()
 
 		const { data, error } = await supabase
 			.from("contact_messages")
@@ -52,16 +61,18 @@ async function adminGetContactMessages() {
 
 export default async function AdminContactsPage() {
 	try {
-		// Verify user is authenticated and has admin privileges using UNIFIED AUTH
-		const user = await getCurrentUser()
-		const isAdmin = await isCurrentUserAdmin()
+		// Verify user is authenticated and has admin privileges
+		const supabase = await createClient()
+		const {
+			data: { user },
+		} = await supabase.auth.getUser()
 
-		if (!user || !isAdmin) {
+		if (!user || !isAdmin(user.email)) {
 			console.log("Not authenticated as admin, redirecting to login")
 			redirect("/admin/login?redirect=/admin/contacts")
 		}
 
-		// Fetch all contact messages using unified auth
+		// Fetch all contact messages using Supabase SSR
 		const contacts = await adminGetContactMessages()
 
 		return (

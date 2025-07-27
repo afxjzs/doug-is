@@ -1,44 +1,28 @@
 /**
- * Supabase client for client-side components
- * This file contains only client-side functionality - no server imports
+ * Supabase Browser Client
+ *
+ * Creates a Supabase client for use in browser components.
+ * Uses the official @supabase/ssr package for proper SSR support.
  */
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createBrowserClient } from "@supabase/ssr"
 import type { Database } from "../types/supabase"
 
-// Environment variables
-const getSupabaseConfig = () => {
-	// Use test environment variables in test environment
-	if (process.env.NODE_ENV === "test") {
-		return {
-			supabaseUrl: process.env.TEST_SUPABASE_URL || "",
-			supabaseKey: process.env.TEST_SUPABASE_ANON_KEY || "",
-		}
-	}
-
-	// Use production/development environment variables
-	return {
-		supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-		supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
-	}
-}
-
 /**
- * Creates a Supabase client for client-side components
+ * Create a Supabase client for browser components
  */
-export function createClientClient() {
-	const { supabaseUrl, supabaseKey } = getSupabaseConfig()
-	return createClientComponentClient<Database>({
-		supabaseUrl,
-		supabaseKey,
-	})
+export function createClient() {
+	return createBrowserClient<Database>(
+		process.env.NEXT_PUBLIC_SUPABASE_URL!,
+		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+	)
 }
 
 /**
  * Gets the current user from the client
  */
 export async function getClientUser() {
-	const supabase = createClientClient()
+	const supabase = createClient()
 	const { data } = await supabase.auth.getUser()
 	return data?.user || null
 }
@@ -47,7 +31,7 @@ export async function getClientUser() {
  * Signs out the current user
  */
 export async function signOut() {
-	const supabase = createClientClient()
+	const supabase = createClient()
 	return await supabase.auth.signOut()
 }
 
@@ -55,7 +39,7 @@ export async function signOut() {
  * Uploads an image to Supabase Storage
  */
 export async function uploadImage(file: File, bucket: string, path: string) {
-	const supabase = createClientClient()
+	const supabase = createClient()
 
 	const { data, error } = await supabase.storage
 		.from(bucket)
@@ -76,6 +60,6 @@ export async function uploadImage(file: File, bucket: string, path: string) {
  * Gets a public URL for an image from Supabase Storage
  */
 export function getImageUrl(bucket: string, path: string) {
-	const supabase = createClientClient()
+	const supabase = createClient()
 	return supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl
 }

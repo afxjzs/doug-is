@@ -1,214 +1,159 @@
-"use client"
-
 /**
- * Simple Login Form Component
+ * Cyberpunk Login Form Component
  *
- * A clean, simple login form using the new simple auth hook.
- * Removes all complex error handling and retry logic that was causing issues.
- *
- * Features:
- * - Simple, clean UI
- * - Standard Supabase auth patterns
- * - Clear error messages
- * - Magic link support
- * - No complex retry logic
+ * Uses standard Supabase authentication with cyberpunk styling.
  */
 
-import { useState, useEffect } from "react"
-import { useSimpleAuth } from "@/lib/auth/simple-auth-hook"
+"use client"
+
+import { useState } from "react"
+import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 
-interface SimpleLoginFormProps {
-	redirectTo?: string | undefined
-}
-
-export default function SimpleLoginForm({ redirectTo }: SimpleLoginFormProps) {
-	const {
-		loginWithEmail,
-		sendMagicLink,
-		loading: authLoading,
-		user,
-		error: authError,
-		clearError,
-	} = useSimpleAuth()
-	const router = useRouter()
-
-	// Form state
+export default function SimpleLoginForm() {
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
-	const [authMethod, setAuthMethod] = useState<"password" | "magic">("password")
-	const [isSubmitting, setIsSubmitting] = useState(false)
-	const [successMessage, setSuccessMessage] = useState<string | null>(null)
+	const [loading, setLoading] = useState(false)
+	const [error, setError] = useState<string | null>(null)
+	const router = useRouter()
 
-	// Handle auth errors
-	useEffect(() => {
-		if (authError) {
-			// Clear form errors after 5 seconds
-			const timer = setTimeout(() => {
-				clearError()
-			}, 5000)
-			return () => clearTimeout(timer)
-		}
-	}, [authError, clearError])
-
-	// Redirect after successful login
-	useEffect(() => {
-		if (user && !authLoading) {
-			if (redirectTo) {
-				router.push(redirectTo)
-			} else {
-				router.push("/admin")
-			}
-		}
-	}, [user, authLoading, redirectTo, router])
-
-	const handleLogin = async (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
-		setIsSubmitting(true)
-		clearError()
+		setLoading(true)
+		setError(null)
 
 		try {
-			if (authMethod === "password") {
-				if (!email || !password) {
-					return
-				}
+			const supabase = createClient()
+			const { error } = await supabase.auth.signInWithPassword({
+				email,
+				password,
+			})
 
-				const result = await loginWithEmail(email, password)
-
-				if (result.success) {
-					// Redirect will be handled by useEffect
-					return
-				}
+			if (error) {
+				setError(error.message)
 			} else {
-				if (!email) {
-					return
-				}
-
-				const result = await sendMagicLink(email)
-
-				if (result.success) {
-					setSuccessMessage(
-						"Check your email for a magic link to sign in. You can close this page."
-					)
-				}
+				// Redirect to admin dashboard on successful login
+				router.push("/admin")
+				router.refresh()
 			}
-		} catch (error) {
-			console.error("Login error:", error)
+		} catch (err) {
+			setError("An unexpected error occurred")
 		} finally {
-			setIsSubmitting(false)
+			setLoading(false)
 		}
 	}
 
-	const toggleAuthMethod = () => {
-		clearError()
-		setSuccessMessage(null)
-		setAuthMethod(authMethod === "password" ? "magic" : "password")
-	}
-
-	const isFormDisabled = authLoading || isSubmitting
-
-	// Render loading state
-	if (authLoading) {
-		return (
-			<div className="space-y-4">
-				<div className="text-[rgba(var(--color-foreground),0.7)]">
-					<p>Initializing authentication...</p>
-				</div>
-			</div>
-		)
-	}
-
-	// Render success message
-	if (successMessage) {
-		return (
-			<div className="rounded-md bg-[rgba(var(--color-green),0.1)] p-4 text-[rgba(var(--color-green),0.9)] border border-[rgba(var(--color-green),0.3)]">
-				<p>{successMessage}</p>
-			</div>
-		)
-	}
-
-	// Render form
 	return (
-		<form onSubmit={handleLogin} className="space-y-4">
-			{authError && (
-				<div className="text-red-200 text-sm bg-red-900/30 p-4 rounded border border-red-700/50">
-					<p className="font-medium text-red-100">Authentication Error:</p>
-					<p className="text-red-200">{authError}</p>
-					{authError.includes("Invalid login credentials") && (
-						<div className="mt-3 pt-3 border-t border-red-700/50">
-							<p className="text-red-200 text-xs mb-2">
-								If you haven't set up a password yet, try using a magic link
-								instead.
-							</p>
-							<p className="text-red-200 text-xs">
-								For setup instructions, visit{" "}
-								<a
-									href="/admin/setup"
-									className="text-[rgba(var(--color-violet),0.9)] hover:underline"
-								>
-									/admin/setup
-								</a>
-							</p>
-						</div>
-					)}
+		<div className="p-8">
+			{/* Error message */}
+			{error && (
+				<div className="mb-6 p-4 bg-[rgba(var(--color-pink),0.1)] border border-[rgba(var(--color-pink),0.3)] text-[rgba(var(--color-pink),0.9)] rounded-lg">
+					<div className="flex items-center">
+						<svg
+							className="w-5 h-5 mr-2"
+							fill="currentColor"
+							viewBox="0 0 20 20"
+						>
+							<path
+								fillRule="evenodd"
+								d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+								clipRule="evenodd"
+							/>
+						</svg>
+						{error}
+					</div>
 				</div>
 			)}
 
-			<div>
-				<label
-					htmlFor="email"
-					className="block text-[rgba(var(--color-foreground),0.9)] mb-2"
-				>
-					Email
-				</label>
-				<input
-					id="email"
-					type="email"
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
-					className="w-full p-2 border border-[rgba(var(--color-foreground),0.2)] rounded-md bg-[rgba(var(--color-background),0.8)] text-[rgba(var(--color-foreground),0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.6)]"
-					disabled={isFormDisabled}
-					required
-				/>
-			</div>
+			{/* Login form */}
+			<form onSubmit={handleSubmit} className="space-y-6">
+				{/* Email field */}
+				<div>
+					<label
+						htmlFor="email"
+						className="block text-sm font-medium text-[rgba(var(--color-foreground),0.8)] mb-2"
+					>
+						Email Address
+					</label>
+					<div className="relative">
+						<input
+							id="email"
+							type="email"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							required
+							className="w-full px-4 py-3 bg-[rgba(var(--color-foreground),0.05)] border border-[rgba(var(--color-foreground),0.1)] rounded-lg text-[rgba(var(--color-foreground),0.9)] placeholder-[rgba(var(--color-foreground),0.4)] focus:outline-none focus:border-[rgba(var(--color-cyan),0.5)] focus:ring-2 focus:ring-[rgba(var(--color-cyan),0.2)] transition-all duration-200"
+							placeholder="admin@doug.is"
+						/>
+						<div className="absolute inset-0 rounded-lg pointer-events-none border border-transparent focus-within:border-[rgba(var(--color-cyan),0.3)] transition-colors duration-200"></div>
+					</div>
+				</div>
 
-			{authMethod === "password" && (
+				{/* Password field */}
 				<div>
 					<label
 						htmlFor="password"
-						className="block text-[rgba(var(--color-foreground),0.9)] mb-2"
+						className="block text-sm font-medium text-[rgba(var(--color-foreground),0.8)] mb-2"
 					>
 						Password
 					</label>
-					<input
-						id="password"
-						type="password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						className="w-full p-2 border border-[rgba(var(--color-foreground),0.2)] rounded-md bg-[rgba(var(--color-background),0.8)] text-[rgba(var(--color-foreground),0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.6)]"
-						disabled={isFormDisabled}
-						required
-					/>
+					<div className="relative">
+						<input
+							id="password"
+							type="password"
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+							required
+							className="w-full px-4 py-3 bg-[rgba(var(--color-foreground),0.05)] border border-[rgba(var(--color-foreground),0.1)] rounded-lg text-[rgba(var(--color-foreground),0.9)] placeholder-[rgba(var(--color-foreground),0.4)] focus:outline-none focus:border-[rgba(var(--color-cyan),0.5)] focus:ring-2 focus:ring-[rgba(var(--color-cyan),0.2)] transition-all duration-200"
+							placeholder="Enter your password"
+						/>
+						<div className="absolute inset-0 rounded-lg pointer-events-none border border-transparent focus-within:border-[rgba(var(--color-cyan),0.3)] transition-colors duration-200"></div>
+					</div>
 				</div>
-			)}
 
-			<button
-				type="submit"
-				disabled={isFormDisabled}
-				className="w-full py-2 px-4 bg-[rgba(var(--color-violet),0.9)] hover:bg-[rgba(var(--color-violet),1)] text-white font-semibold rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgba(var(--color-violet),0.6)] disabled:opacity-50"
-			>
-				{isSubmitting ? "Signing in..." : "Sign in"}
-			</button>
+				{/* Submit button */}
+				<button
+					type="submit"
+					disabled={loading}
+					className="w-full neon-button-cyan py-3 px-6 text-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+				>
+					{loading ? (
+						<div className="flex items-center justify-center">
+							<svg
+								className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+							>
+								<circle
+									className="opacity-25"
+									cx="12"
+									cy="12"
+									r="10"
+									stroke="currentColor"
+									strokeWidth="4"
+								></circle>
+								<path
+									className="opacity-75"
+									fill="currentColor"
+									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+								></path>
+							</svg>
+							Signing in...
+						</div>
+					) : (
+						"Sign In"
+					)}
+				</button>
+			</form>
 
-			<button
-				type="button"
-				onClick={toggleAuthMethod}
-				className="w-full text-[rgba(var(--color-violet),0.9)] hover:text-[rgba(var(--color-violet),1)] text-sm"
-			>
-				{authMethod === "password"
-					? "Sign in with a magic link instead"
-					: "Sign in with password instead"}
-			</button>
-		</form>
+			{/* Form footer */}
+			<div className="mt-8 text-center">
+				<div className="w-16 h-px bg-gradient-to-r from-transparent via-[rgba(var(--color-foreground),0.2)] to-transparent mx-auto mb-4"></div>
+				<p className="text-xs text-[rgba(var(--color-foreground),0.5)]">
+					Secure authentication powered by Supabase
+				</p>
+			</div>
+		</div>
 	)
 }
