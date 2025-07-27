@@ -29,9 +29,6 @@ export default function PublishButton({
 			const result = await publishPost(postId)
 
 			if (result.success) {
-				// Show success message
-				alert(`Successfully published "${postTitle}"!`)
-
 				// Redirect to custom URL if provided, otherwise default to admin posts page
 				const redirectTo = redirectUrl || "/admin/posts"
 				window.location.href = redirectTo
