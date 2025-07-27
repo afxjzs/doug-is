@@ -3,8 +3,8 @@ import { revalidatePath } from "next/cache"
 import {
 	getCurrentUser,
 	isCurrentUserAdmin,
-	createAdminSupabaseClient,
-} from "@/lib/auth/unified-auth"
+	createAuthServerClient,
+} from "@/lib/auth/simple-auth-server"
 import { getPublicSupabaseClient } from "@/lib/supabase/publicClient"
 
 export async function GET(
@@ -135,8 +135,8 @@ export async function PATCH(
 			}
 		}
 
-		// Create Supabase client with admin privileges using UNIFIED AUTH
-		const supabase = createAdminSupabaseClient()
+		// Create Supabase client with admin privileges using new simple server auth
+		const supabase = await createAuthServerClient()
 		console.log("📊 Created admin client for PATCH endpoint")
 
 		// Check if the post exists and get current values for cache invalidation
@@ -276,8 +276,8 @@ export async function DELETE(
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 		}
 
-		// Create Supabase client with admin privileges
-		const supabase = createAdminSupabaseClient()
+		// Create Supabase client with admin privileges using new simple server auth
+		const supabase = await createAuthServerClient()
 
 		// Check if the post exists and get values for cache invalidation
 		const { data: existingPost, error: fetchError } = await supabase

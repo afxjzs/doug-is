@@ -7,7 +7,10 @@
 
 import { Metadata } from "next"
 import { redirect } from "next/navigation"
-import { getCurrentUser, isCurrentUserAdmin } from "@/lib/auth/unified-auth"
+import {
+	getCurrentUser,
+	isCurrentUserAdmin,
+} from "@/lib/auth/simple-auth-server"
 import PostEditor from "@/components/admin/PostEditor"
 
 // Mark as dynamic to ensure we always get fresh data

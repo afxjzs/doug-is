@@ -11,8 +11,8 @@ import Link from "next/link"
 import {
 	getCurrentUser,
 	isCurrentUserAdmin,
-	createAdminSupabaseClient,
-} from "@/lib/auth/unified-auth"
+	createAuthServerClient,
+} from "@/lib/auth/simple-auth-server"
 import { PostView } from "@/components/PostView"
 import PublishButton from "@/components/admin/PublishButton"
 
@@ -63,7 +63,7 @@ export default async function DraftPreviewPage({
 		}
 
 		// Get admin client to fetch the post (including unpublished)
-		const supabase = createAdminSupabaseClient()
+		const supabase = await createAuthServerClient()
 
 		const { data: adminPost, error } = await supabase
 			.from("posts")

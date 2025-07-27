@@ -11,8 +11,8 @@ import Link from "next/link"
 import {
 	getCurrentUser,
 	isCurrentUserAdmin,
-	createAdminSupabaseClient,
-} from "@/lib/auth/unified-auth"
+	createAuthServerClient,
+} from "@/lib/auth/simple-auth-server"
 import PostEditor from "@/components/admin/PostEditor"
 
 // Mark as dynamic to ensure we always get fresh data
@@ -27,11 +27,11 @@ export const metadata: Metadata = {
 	},
 }
 
-// Admin function to get post by ID using unified auth
+// Admin function to get post by ID using new simple server auth
 async function adminGetPostById(id: string) {
 	try {
 		console.log("Getting post by ID:", id)
-		const supabase = createAdminSupabaseClient()
+		const supabase = await createAuthServerClient()
 
 		const { data, error } = await supabase
 			.from("posts")

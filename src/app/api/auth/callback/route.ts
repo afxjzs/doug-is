@@ -1,31 +1,32 @@
 /**
- * This handler manages the exchange of an auth code for a session
- * It's the callback endpoint for Supabase auth redirects (magic links, OAuth, etc.)
+ * Auth Callback Handler
+ *
+ * Simple, standard Supabase auth callback implementation.
+ * Handles magic link and OAuth redirects.
  */
 
 import { NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import type { NextRequest } from "next/server"
-import { COOKIE_OPTIONS } from "@/lib/auth/supabase"
+
+// Cookie options
+const COOKIE_OPTIONS = {
+	httpOnly: false,
+	sameSite: "lax" as const,
+	secure: process.env.NODE_ENV === "production",
+	maxAge: 60 * 60 * 24 * 7, // 7 days
+	path: "/",
+}
 
 /**
  * Handle Supabase auth callback
- * This route is called by Supabase after a user signs in with OAuth or magic link
  */
 export async function GET(request: NextRequest) {
 	const requestUrl = new URL(request.url)
 	const code = requestUrl.searchParams.get("code")
 
-	// Debug logging
-	console.log("Auth callback received:", {
-		url: requestUrl.toString(),
-		code: !!code,
-		params: Object.fromEntries(requestUrl.searchParams.entries()),
-	})
-
 	// If code is missing, redirect with error
 	if (!code) {
-		console.error("No code in auth callback request")
 		return NextResponse.redirect(
 			new URL("/admin/login?error=Missing+code", request.url)
 		)
@@ -45,11 +46,6 @@ export async function GET(request: NextRequest) {
 					return request.cookies.getAll()
 				},
 				setAll(cookiesToSet) {
-					cookiesToSet.forEach(({ name, value }) =>
-						request.cookies.set(name, value)
-					)
-					// We need to create a new response with the updated request object
-					// This ensures we're not modifying the original response
 					cookiesToSet.forEach(({ name, value, options }) => {
 						// Apply centralized cookie options
 						const cookieOptions = {
@@ -65,18 +61,12 @@ export async function GET(request: NextRequest) {
 
 	try {
 		// Exchange the code for a session
-		console.log("Exchanging code for session...")
 		const { error } = await supabase.auth.exchangeCodeForSession(code)
 
 		if (error) {
-			console.error("Error exchanging code for session:", error)
 			throw error
 		}
 
-		console.log(
-			"Successfully exchanged code for session, redirecting to:",
-			redirectTo
-		)
 		return response
 	} catch (error) {
 		console.error("Authentication error:", error)
@@ -84,14 +74,4 @@ export async function GET(request: NextRequest) {
 			new URL("/admin/login?error=Could+not+authenticate+user", request.url)
 		)
 	}
-}
-
-// Helper function to get a parameter with a default value
-function requestParams(
-	params: URLSearchParams,
-	name: string,
-	defaultValue: string
-): string {
-	const value = params.get(name)
-	return value || defaultValue
 }

@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { createServerClient } from "@supabase/ssr"
-import { ADMIN_EMAILS } from "@/lib/auth/unified-auth"
+import { ADMIN_EMAILS } from "@/lib/auth/simple-auth-server"
 
-// Centralized cookie configuration
+// Cookie options
 const COOKIE_OPTIONS = {
 	httpOnly: false,
 	sameSite: "lax" as const,
@@ -22,10 +22,9 @@ function isAdmin(email?: string): boolean {
 
 /**
  * Middleware to handle authentication and authorization
- * Uses SECURE authentication validation
  */
 export async function middleware(request: NextRequest) {
-	// Create a response object that we'll modify
+	// Create a response object
 	let response = NextResponse.next({
 		request: {
 			headers: request.headers,
@@ -50,7 +49,6 @@ export async function middleware(request: NextRequest) {
 						},
 					})
 					cookiesToSet.forEach(({ name, value, options }) => {
-						// Apply centralized cookie options
 						const cookieOptions = {
 							...options,
 							...COOKIE_OPTIONS,
@@ -62,23 +60,12 @@ export async function middleware(request: NextRequest) {
 		}
 	)
 
-	// Use SECURE authentication validation - getUser() instead of getSession()
+	// Get user from session
 	const {
 		data: { user },
-		error,
 	} = await supabase.auth.getUser()
 
 	const { pathname } = request.nextUrl
-	console.log(
-		`Middleware path: ${pathname}, Session: ${!!user}, User: ${
-			user?.email || "none"
-		}`
-	)
-
-	// Log authentication validation method for debugging
-	if (error) {
-		console.log("⚠️ User validation failed:", error.message)
-	}
 
 	// Handle blog post URL canonicalization
 	// Redirect old blog URLs (/thinking/[category]/[slug]) to canonical URLs (/thinking/about/[category]/[slug])
@@ -95,12 +82,17 @@ export async function middleware(request: NextRequest) {
 			// Only redirect if this looks like a blog post URL (not /thinking/about/...)
 			if (category && slug && category !== "about") {
 				const canonicalUrl = `/thinking/about/${category}/${slug}`
-				console.log(
-					`Redirecting old blog URL ${pathname} to canonical URL ${canonicalUrl}`
-				)
 				return NextResponse.redirect(new URL(canonicalUrl, request.url), 301)
 			}
 		}
+	}
+
+	// Allow access to auth callback and setup pages
+	if (
+		request.nextUrl.pathname.startsWith("/api/auth/callback") ||
+		request.nextUrl.pathname === "/admin/setup"
+	) {
+		return response
 	}
 
 	// Handle admin routes
@@ -108,7 +100,6 @@ export async function middleware(request: NextRequest) {
 		// Special handling for root admin page - needs to redirect to login if not authenticated
 		if (pathname === "/admin" || pathname === "/admin/") {
 			if (!user || !isAdmin(user.email)) {
-				console.log("Root admin access denied - redirecting to login")
 				return NextResponse.redirect(new URL("/admin/login", request.url))
 			}
 		}
@@ -116,10 +107,8 @@ export async function middleware(request: NextRequest) {
 		// If at login page and already authenticated as admin, redirect to admin dashboard
 		if (pathname === "/admin/login" && user) {
 			if (isAdmin(user.email)) {
-				console.log("Admin already authenticated, redirecting to dashboard")
 				return NextResponse.redirect(new URL("/admin", request.url))
 			} else {
-				console.log("User authenticated but not an admin")
 				return NextResponse.redirect(
 					new URL("/admin/login?error=Not+authorized+as+admin", request.url)
 				)
@@ -128,7 +117,6 @@ export async function middleware(request: NextRequest) {
 
 		// For other admin routes, require authentication
 		if (pathname !== "/admin/login" && (!user || !isAdmin(user.email))) {
-			console.log("Access denied - redirecting to login")
 			return NextResponse.redirect(new URL("/admin/login", request.url))
 		}
 	}

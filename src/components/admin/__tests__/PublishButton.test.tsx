@@ -143,6 +143,11 @@ describe("PublishButton", () => {
 			error: "Database error",
 		})
 
+		// Mock window.location.href
+		const originalLocation = window.location
+		delete (window as any).location
+		window.location = { ...originalLocation, href: "/admin/posts" } as any
+
 		render(<PublishButton {...defaultProps} />)
 
 		const button = screen.getByRole("button", { name: /publish now/i })
@@ -152,8 +157,11 @@ describe("PublishButton", () => {
 			expect(screen.getByText("Database error")).toBeInTheDocument()
 		})
 
-		// Should not redirect on error
-		expect(window.location.href).toBe("")
+		// Should not redirect on error - location should remain the same
+		expect(window.location.href).toBe("/admin/posts")
+
+		// Restore original location
+		window.location = originalLocation as any
 	})
 
 	it("shows generic error when publish throws exception", async () => {
@@ -259,6 +267,10 @@ describe("PublishButton", () => {
 	it("redirects to custom URL when redirectUrl is provided", async () => {
 		mockPublishPost.mockResolvedValue({ success: true })
 
+		// Mock confirm dialog to return true
+		const originalConfirm = window.confirm
+		window.confirm = jest.fn(() => true)
+
 		// Create a mock location object that we can track
 		let currentHref = "/admin/posts"
 		const mockLocation = {
@@ -296,10 +308,11 @@ describe("PublishButton", () => {
 			{ timeout: 2000 }
 		)
 
-		// Restore original location
+		// Restore original location and confirm
 		Object.defineProperty(window, "location", {
 			value: originalLocation,
 			writable: true,
 		})
+		window.confirm = originalConfirm
 	})
 })

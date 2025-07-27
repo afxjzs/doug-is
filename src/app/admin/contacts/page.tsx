@@ -10,8 +10,8 @@ import { redirect } from "next/navigation"
 import {
 	getCurrentUser,
 	isCurrentUserAdmin,
-	createAdminSupabaseClient,
-} from "@/lib/auth/unified-auth"
+	createAuthServerClient,
+} from "@/lib/auth/simple-auth-server"
 import ContactsList from "@/components/admin/ContactsList"
 
 // Force dynamic rendering
@@ -26,11 +26,11 @@ export const metadata: Metadata = {
 	},
 }
 
-// Helper function to get all contact messages using unified auth
+// Helper function to get all contact messages using new simple server auth
 async function adminGetContactMessages() {
 	try {
 		console.log("Getting all contact messages for admin...")
-		const supabase = createAdminSupabaseClient()
+		const supabase = await createAuthServerClient()
 
 		const { data, error } = await supabase
 			.from("contact_messages")

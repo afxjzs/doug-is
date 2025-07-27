@@ -9,8 +9,8 @@ import { redirect } from "next/navigation"
 import {
 	getCurrentUser,
 	isCurrentUserAdmin,
-	createAdminSupabaseClient,
-} from "@/lib/auth/unified-auth"
+	createAuthServerClient,
+} from "@/lib/auth/simple-auth-server"
 import Link from "next/link"
 import DraftOverviewWidget from "@/components/admin/DraftOverviewWidget"
 
@@ -21,8 +21,8 @@ export const dynamic = "force-dynamic"
 async function adminGetPosts() {
 	try {
 		console.log("Getting posts...")
-		const supabase = createAdminSupabaseClient()
-		console.log("Creating admin client with service role")
+		const supabase = await createAuthServerClient()
+		console.log("Creating auth server client")
 
 		const { data, error } = await supabase
 			.from("posts")
@@ -42,12 +42,12 @@ async function adminGetPosts() {
 	}
 }
 
-// Helper function to get contact messages using unified auth
+// Helper function to get contact messages using simple auth
 async function adminGetContactSubmissions() {
 	try {
 		console.log("Getting contact submissions...")
-		const supabase = createAdminSupabaseClient()
-		console.log("Creating admin client with service role")
+		const supabase = await createAuthServerClient()
+		console.log("Creating auth server client")
 
 		const { data, error } = await supabase
 			.from("contact_messages")

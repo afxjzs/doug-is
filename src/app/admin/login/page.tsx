@@ -1,5 +1,5 @@
 import { Metadata } from "next"
-import LoginForm from "@/components/admin/LoginForm"
+import SimpleLoginForm from "@/components/admin/SimpleLoginForm"
 
 export const metadata: Metadata = {
 	title: "Login | Admin",
@@ -30,7 +30,7 @@ export default async function AdminLoginPage({
 					<h1 className="text-2xl font-bold text-center mb-8 text-white">
 						Admin Login
 					</h1>
-					<LoginForm redirectTo={redirectTo} />
+					<SimpleLoginForm redirectTo={redirectTo} />
 				</div>
 			</div>
 		</div>

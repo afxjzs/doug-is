@@ -11,8 +11,8 @@ import Link from "next/link"
 import {
 	getCurrentUser,
 	isCurrentUserAdmin,
-	createAdminSupabaseClient,
-} from "@/lib/auth/unified-auth"
+	createAuthServerClient,
+} from "@/lib/auth/simple-auth-server"
 import PostsTable from "@/components/admin/PostsTable"
 
 // Force dynamic rendering
@@ -27,11 +27,11 @@ export const metadata: Metadata = {
 	},
 }
 
-// Helper function to get all posts using unified auth
+// Helper function to get all posts using new simple server auth
 async function adminGetAllPosts() {
 	try {
 		console.log("Getting all posts for admin...")
-		const supabase = createAdminSupabaseClient()
+		const supabase = await createAuthServerClient()
 
 		const { data, error } = await supabase
 			.from("posts")
