@@ -8,7 +8,7 @@
  */
 
 import { useState } from "react"
-import { createClientClient } from "@/lib/supabase/client"
+import { createClient } from "@/lib/supabase/client"
 
 interface FormData {
 	email: string
@@ -34,7 +34,7 @@ export default function RegisterForm() {
 	const [successMessage, setSuccessMessage] = useState("")
 
 	// Create Supabase client using unified system
-	const supabase = createClientClient()
+	const supabase = createClient()
 
 	const validateForm = (): ValidationErrors => {
 		const newErrors: ValidationErrors = {}

@@ -7,11 +7,14 @@
 
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import SimpleLoginForm from "../SimpleLoginForm"
-import { useSimpleAuth } from "@/lib/auth/simple-auth-hook"
 
-// Mock the simple auth hook
-jest.mock("@/lib/auth/simple-auth-hook", () => ({
-	useSimpleAuth: jest.fn(),
+// Mock the Supabase client
+jest.mock("@/lib/supabase/client", () => ({
+	createClient: jest.fn(() => ({
+		auth: {
+			signInWithPassword: jest.fn(),
+		},
+	})),
 }))
 
 // Mock Next.js router
@@ -24,96 +27,49 @@ jest.mock("next/navigation", () => ({
 }))
 
 describe("SimpleLoginForm", () => {
-	const mockUseSimpleAuth = useSimpleAuth as jest.MockedFunction<
-		typeof useSimpleAuth
-	>
+	const mockCreateClient = require("@/lib/supabase/client")
+		.createClient as jest.Mock
+	const mockSignInWithPassword = jest.fn()
+	const mockRouter = {
+		push: jest.fn(),
+		replace: jest.fn(),
+		refresh: jest.fn(),
+	}
 
 	beforeEach(() => {
 		jest.clearAllMocks()
+		mockCreateClient.mockReturnValue({
+			auth: {
+				signInWithPassword: mockSignInWithPassword,
+			},
+		})
+		require("next/navigation").useRouter.mockReturnValue(mockRouter)
 	})
 
 	describe("Initial State", () => {
 		it("should render login form with correct fields", () => {
-			mockUseSimpleAuth.mockReturnValue({
-				user: null,
-				loading: false,
-				error: null,
-				loginWithEmail: jest.fn(),
-				sendMagicLink: jest.fn(),
-				logout: jest.fn(),
-				clearError: jest.fn(),
-			})
-
 			render(<SimpleLoginForm />)
 
 			// Should have email and password fields
-			expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
+			expect(screen.getByLabelText(/email address/i)).toBeInTheDocument()
 			expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
 
 			// Should have submit button
-			expect(screen.getByText("Sign in")).toBeInTheDocument()
-
-			// Should have toggle button for magic link
-			expect(
-				screen.getByText("Sign in with a magic link instead")
-			).toBeInTheDocument()
+			expect(screen.getByText("Sign In")).toBeInTheDocument()
 		})
 
-		it("should show loading state when auth is loading", () => {
-			mockUseSimpleAuth.mockReturnValue({
-				user: null,
-				loading: true,
-				error: null,
-				loginWithEmail: jest.fn(),
-				sendMagicLink: jest.fn(),
-				logout: jest.fn(),
-				clearError: jest.fn(),
-			})
-
-			render(<SimpleLoginForm />)
-
-			// Should show loading indicator
-			expect(
-				screen.getByText(/initializing authentication/i)
-			).toBeInTheDocument()
-		})
-
-		it("should show error message when auth has error", () => {
-			mockUseSimpleAuth.mockReturnValue({
-				user: null,
-				loading: false,
-				error: "Invalid credentials",
-				loginWithEmail: jest.fn(),
-				sendMagicLink: jest.fn(),
-				logout: jest.fn(),
-				clearError: jest.fn(),
-			})
-
-			render(<SimpleLoginForm />)
-
-			// Should show error message
-			expect(screen.getByText("Invalid credentials")).toBeInTheDocument()
-		})
-	})
-
-	describe("Login Functionality", () => {
-		it("should handle email/password login correctly", async () => {
-			const mockLoginWithEmail = jest.fn().mockResolvedValue({ success: true })
-
-			mockUseSimpleAuth.mockReturnValue({
-				user: null,
-				loading: false,
-				error: null,
-				loginWithEmail: mockLoginWithEmail,
-				sendMagicLink: jest.fn(),
-				logout: jest.fn(),
-				clearError: jest.fn(),
-			})
+		it("should show loading state during form submission", async () => {
+			mockSignInWithPassword.mockImplementation(
+				() =>
+					new Promise((resolve) =>
+						setTimeout(() => resolve({ error: null }), 100)
+					)
+			)
 
 			render(<SimpleLoginForm />)
 
 			// Fill in form
-			fireEvent.change(screen.getByLabelText(/email/i), {
+			fireEvent.change(screen.getByLabelText(/email address/i), {
 				target: { value: "test@example.com" },
 			})
 			fireEvent.change(screen.getByLabelText(/password/i), {
@@ -121,110 +77,117 @@ describe("SimpleLoginForm", () => {
 			})
 
 			// Submit form
-			fireEvent.click(screen.getByText("Sign in"))
+			fireEvent.click(screen.getByText("Sign In"))
 
-			// Should call loginWithEmail with correct parameters
+			// Should show loading state
 			await waitFor(() => {
-				expect(mockLoginWithEmail).toHaveBeenCalledWith(
-					"test@example.com",
-					"password123"
-				)
+				expect(screen.getByText("Signing in...")).toBeInTheDocument()
+			})
+		})
+
+		it("should show error message when login fails", async () => {
+			mockSignInWithPassword.mockResolvedValue({
+				error: { message: "Invalid credentials" },
+			})
+
+			render(<SimpleLoginForm />)
+
+			// Fill in form
+			fireEvent.change(screen.getByLabelText(/email address/i), {
+				target: { value: "test@example.com" },
+			})
+			fireEvent.change(screen.getByLabelText(/password/i), {
+				target: { value: "wrongpassword" },
+			})
+
+			// Submit form
+			fireEvent.click(screen.getByText("Sign In"))
+
+			// Should show error message
+			await waitFor(() => {
+				expect(screen.getByText("Invalid credentials")).toBeInTheDocument()
 			})
 		})
 	})
 
-	describe("Magic Link Functionality", () => {
-		it("should toggle to magic link mode", () => {
-			mockUseSimpleAuth.mockReturnValue({
-				user: null,
-				loading: false,
+	describe("Login Functionality", () => {
+		it("should handle successful login correctly", async () => {
+			mockSignInWithPassword.mockResolvedValue({
 				error: null,
-				loginWithEmail: jest.fn(),
-				sendMagicLink: jest.fn(),
-				logout: jest.fn(),
-				clearError: jest.fn(),
 			})
 
 			render(<SimpleLoginForm />)
 
-			// Click magic link toggle button
-			fireEvent.click(screen.getByText("Sign in with a magic link instead"))
-
-			// Should show magic link mode (password field should be hidden)
-			expect(screen.queryByLabelText(/password/i)).not.toBeInTheDocument()
-
-			// Should show different toggle button text
-			expect(
-				screen.getByText("Sign in with password instead")
-			).toBeInTheDocument()
-		})
-
-		it("should handle magic link requests", async () => {
-			const mockSendMagicLink = jest.fn().mockResolvedValue({ success: true })
-
-			mockUseSimpleAuth.mockReturnValue({
-				user: null,
-				loading: false,
-				error: null,
-				loginWithEmail: jest.fn(),
-				sendMagicLink: mockSendMagicLink,
-				logout: jest.fn(),
-				clearError: jest.fn(),
+			// Fill in form
+			fireEvent.change(screen.getByLabelText(/email address/i), {
+				target: { value: "admin@doug.is" },
 			})
-
-			render(<SimpleLoginForm />)
-
-			// Switch to magic link mode
-			fireEvent.click(screen.getByText("Sign in with a magic link instead"))
-
-			// Fill in email
-			fireEvent.change(screen.getByLabelText(/email/i), {
-				target: { value: "test@example.com" },
+			fireEvent.change(screen.getByLabelText(/password/i), {
+				target: { value: "correctpassword" },
 			})
 
 			// Submit form
-			fireEvent.click(screen.getByText("Sign in"))
+			fireEvent.click(screen.getByText("Sign In"))
 
-			// Should call sendMagicLink with correct email
+			// Should call signInWithPassword with correct parameters
 			await waitFor(() => {
-				expect(mockSendMagicLink).toHaveBeenCalledWith("test@example.com")
+				expect(mockSignInWithPassword).toHaveBeenCalledWith({
+					email: "admin@doug.is",
+					password: "correctpassword",
+				})
+			})
+
+			// Should redirect to admin page
+			await waitFor(() => {
+				expect(mockRouter.push).toHaveBeenCalledWith("/admin")
+				expect(mockRouter.refresh).toHaveBeenCalled()
 			})
 		})
-	})
 
-	describe("Success Scenarios", () => {
-		it("should show success message for magic link", async () => {
-			const mockSendMagicLink = jest.fn().mockResolvedValue({ success: true })
-
-			mockUseSimpleAuth.mockReturnValue({
-				user: null,
-				loading: false,
-				error: null,
-				loginWithEmail: jest.fn(),
-				sendMagicLink: mockSendMagicLink,
-				logout: jest.fn(),
-				clearError: jest.fn(),
-			})
+		it("should handle unexpected errors gracefully", async () => {
+			mockSignInWithPassword.mockRejectedValue(new Error("Network error"))
 
 			render(<SimpleLoginForm />)
 
-			// Switch to magic link mode
-			fireEvent.click(screen.getByText("Sign in with a magic link instead"))
-
-			// Fill in email
-			fireEvent.change(screen.getByLabelText(/email/i), {
+			// Fill in form
+			fireEvent.change(screen.getByLabelText(/email address/i), {
 				target: { value: "test@example.com" },
+			})
+			fireEvent.change(screen.getByLabelText(/password/i), {
+				target: { value: "password123" },
 			})
 
 			// Submit form
-			fireEvent.click(screen.getByText("Sign in"))
+			fireEvent.click(screen.getByText("Sign In"))
 
-			// Should show success message
+			// Should show generic error message
 			await waitFor(() => {
 				expect(
-					screen.getByText(/check your email for a magic link/i)
+					screen.getByText("An unexpected error occurred")
 				).toBeInTheDocument()
 			})
+		})
+	})
+
+	describe("Form Validation", () => {
+		it("should require email and password fields", () => {
+			render(<SimpleLoginForm />)
+
+			const emailInput = screen.getByLabelText(/email address/i)
+			const passwordInput = screen.getByLabelText(/password/i)
+
+			expect(emailInput).toHaveAttribute("required")
+			expect(passwordInput).toHaveAttribute("required")
+		})
+
+		it("should have correct input types", () => {
+			render(<SimpleLoginForm />)
+
+			const emailInput = screen.getByLabelText(/email address/i)
+			const passwordInput = screen.getByLabelText(/password/i)
+
+			expect(emailInput).toHaveAttribute("type", "email")
+			expect(passwordInput).toHaveAttribute("type", "password")
 		})
 	})
 })
