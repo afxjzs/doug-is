@@ -38,3 +38,46 @@ export async function createClient() {
 		}
 	)
 }
+
+/**
+ * Create a Supabase client for static generation (no cookies)
+ * Use this for generateStaticParams and other build-time operations
+ */
+export async function createStaticClient() {
+	return createServerClient<Database>(
+		process.env.NEXT_PUBLIC_SUPABASE_URL!,
+		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+		{
+			cookies: {
+				getAll() {
+					return []
+				},
+				setAll() {
+					// No-op for static generation
+				},
+			},
+		}
+	)
+}
+
+/**
+ * Create a Supabase client with service role privileges.
+ * Use this for admin operations that require bypassing RLS.
+ * WARNING: This should only be used in trusted server-side code.
+ */
+export function createServiceRoleClient() {
+	return createServerClient<Database>(
+		process.env.NEXT_PUBLIC_SUPABASE_URL!,
+		process.env.SUPABASE_SERVICE_ROLE_KEY!,
+		{
+			cookies: {
+				getAll() {
+					return []
+				},
+				setAll() {
+					// No-op
+				},
+			},
+		}
+	)
+}

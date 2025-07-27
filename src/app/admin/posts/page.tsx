@@ -11,8 +11,8 @@ import Link from "next/link"
 import {
 	getCurrentUser,
 	isCurrentUserAdmin,
-	createAuthServerClient,
 } from "@/lib/auth/simple-auth-server"
+import { createServiceRoleClient } from "@/lib/supabase/server"
 import PostsTable from "@/components/admin/PostsTable"
 
 // Force dynamic rendering
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 async function adminGetAllPosts() {
 	try {
 		console.log("Getting all posts for admin...")
-		const supabase = await createAuthServerClient()
+		const supabase = createServiceRoleClient()
 
 		const { data, error } = await supabase
 			.from("posts")

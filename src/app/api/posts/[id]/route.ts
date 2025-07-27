@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
+import { getCurrentUser, isCurrentUserAdmin } from "@/lib/supabase/auth"
+import { createAuthServerClient } from "@/lib/auth/simple-auth-server"
 
 export async function GET(
 	request: NextRequest,

@@ -129,7 +129,10 @@ export default function DraftOverviewWidget({
 												d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
 											/>
 										</svg>
-										{format(new Date(draft.created_at), "MMM d, yyyy")}
+										{format(
+											new Date(draft.created_at || new Date()),
+											"MMM d, yyyy"
+										)}
 									</span>
 								</div>
 								{draft.excerpt && (

@@ -4,7 +4,11 @@
 
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { getPostBySlugAndCategory, getPosts } from "@/lib/supabase/data"
+import {
+	getPostBySlugAndCategory,
+	getPostBySlugAndCategoryStatic,
+	getPostsStatic,
+} from "@/lib/supabase/data"
 import { PostView } from "@/components/PostView"
 import {
 	getCanonicalUrl,
@@ -12,8 +16,8 @@ import {
 	getSiteName,
 } from "@/lib/utils/domain-detection"
 
-// Set a reasonable fallback for cache revalidation
-export const revalidate = 3600 // 1 hour
+// Force dynamic rendering to avoid cookies issues during build
+export const dynamic = "force-dynamic"
 
 export async function generateMetadata({
 	params,
@@ -24,7 +28,7 @@ export async function generateMetadata({
 		// Await params before accessing properties
 		const paramsData = await params
 		// Use both category and slug to ensure we get the correct post
-		const post = await getPostBySlugAndCategory(
+		const post = await getPostBySlugAndCategoryStatic(
 			paramsData.slug,
 			paramsData["primary-category"]
 		)
@@ -99,7 +103,7 @@ export async function generateMetadata({
 // Generate static paths for all posts
 export async function generateStaticParams() {
 	try {
-		const posts = await getPosts()
+		const posts = await getPostsStatic()
 
 		// Handle case where posts can't be fetched
 		if (!posts || !Array.isArray(posts)) {

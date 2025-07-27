@@ -5,21 +5,21 @@
  * Provides functions for user authentication and admin role checking.
  */
 
-import { createClient } from "./supabase-server"
+import { createClient } from "@/lib/auth/supabase-server"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 
 /**
  * Create a Supabase client for server-side operations
  */
-export async function createAuthServerClient() {
+const createAuthServerClient = async () => {
 	return await createClient()
 }
 
 /**
  * Get the current authenticated user
  */
-export async function getCurrentUser() {
+const getCurrentUser = async () => {
 	try {
 		const supabase = await createAuthServerClient()
 		const {
@@ -42,7 +42,7 @@ export async function getCurrentUser() {
 /**
  * Check if the current user has admin privileges
  */
-export async function isCurrentUserAdmin() {
+const isCurrentUserAdmin = async () => {
 	try {
 		const user = await getCurrentUser()
 
@@ -68,3 +68,5 @@ export async function isCurrentUserAdmin() {
 		return false
 	}
 }
+
+export { createAuthServerClient, getCurrentUser, isCurrentUserAdmin }

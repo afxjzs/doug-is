@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
-import { getPosts } from "@/lib/supabase/data"
+import { getPostsStatic } from "@/lib/supabase/data"
 import { formatDate } from "@/lib/utils/index"
 import SafeImage from "@/components/SafeImage"
 import ConnectCta from "@/components/ConnectCta"
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
 	// Fetch the latest blog post
-	const latestPosts = await getPosts(1)
+	const latestPosts = await getPostsStatic(1)
 	const latestPost =
 		latestPosts && latestPosts.length > 0 ? latestPosts[0] : null
 

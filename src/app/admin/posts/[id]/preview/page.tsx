@@ -31,14 +31,15 @@ type AdminPost = {
 }
 
 interface DraftPreviewPageProps {
-	params: {
+	params: Promise<{
 		id: string
-	}
+	}>
 }
 
 export async function generateMetadata({
 	params,
 }: DraftPreviewPageProps): Promise<Metadata> {
+	await params // Resolve params for Next.js 15 compatibility
 	return {
 		title: "Draft Preview - Admin",
 		description: "Preview unpublished post draft",
@@ -53,6 +54,8 @@ export default async function DraftPreviewPage({
 	params,
 }: DraftPreviewPageProps) {
 	try {
+		const resolvedParams = await params
+
 		// Verify user is authenticated and has admin privileges using UNIFIED AUTH
 		const user = await getCurrentUser()
 		const isAdmin = await isCurrentUserAdmin()
@@ -68,7 +71,7 @@ export default async function DraftPreviewPage({
 		const { data: adminPost, error } = await supabase
 			.from("posts")
 			.select("*")
-			.eq("id", params.id)
+			.eq("id", resolvedParams.id)
 			.single()
 
 		if (error) {
