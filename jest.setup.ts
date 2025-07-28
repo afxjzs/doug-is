@@ -62,13 +62,32 @@ jest.mock("next/navigation", () => ({
 }))
 
 // Mock next/server
-jest.mock("next/server", () => ({
-	NextResponse: {
-		redirect: jest.fn(),
-		json: jest.fn(),
-	},
-	NextRequest: jest.fn(),
-}))
+jest.mock("next/server", () => {
+	// Create a mock constructor for NextResponse
+	function MockNextResponse() {
+		return {
+			headers: new Map(),
+			cookies: {
+				set: jest.fn(),
+				get: jest.fn(),
+				getAll: jest.fn(() => []),
+				setAll: jest.fn(),
+			},
+		}
+	}
+
+	// Add static methods to the constructor
+	MockNextResponse.next = jest.fn((options?: any) => {
+		return new MockNextResponse()
+	})
+	MockNextResponse.redirect = jest.fn()
+	MockNextResponse.json = jest.fn()
+
+	return {
+		NextResponse: MockNextResponse,
+		NextRequest: jest.fn(),
+	}
+})
 
 // Mock Supabase
 jest.mock("@supabase/supabase-js", () => ({

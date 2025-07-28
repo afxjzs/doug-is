@@ -1,9 +1,8 @@
 /**
- * Cyberpunk Login Form Component
+ * Simple Login Form - Official Supabase Pattern
  *
- * Uses standard Supabase authentication with cyberpunk styling.
- * Enhanced with comprehensive hydration logging for debugging.
- * BULLETPROOF AUTH: Handles all auth error scenarios gracefully.
+ * Clean, simple login form following official Supabase Next.js guide.
+ * No complex rate limiting or session manipulation needed.
  */
 
 "use client"
@@ -11,7 +10,6 @@
 import { useState, useEffect } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useHydrationLogger } from "@/lib/utils/hydration-logger"
 
 export default function SimpleLoginForm() {
 	const [email, setEmail] = useState("")
@@ -22,17 +20,12 @@ export default function SimpleLoginForm() {
 	const router = useRouter()
 	const searchParams = useSearchParams()
 
-	// Add hydration logging
-	const { logEvent, logError } = useHydrationLogger("SimpleLoginForm")
-
-	// Handle URL error parameters from middleware redirects
+	// Handle URL error parameters
 	useEffect(() => {
+		setMounted(true)
 		const urlError = searchParams.get("error")
 		if (urlError) {
 			switch (urlError) {
-				case "auth_required":
-					setError("Authentication required. Please sign in to continue.")
-					break
 				case "login_required":
 					setError("Please sign in to access the admin area.")
 					break
@@ -41,216 +34,47 @@ export default function SimpleLoginForm() {
 						"Admin privileges required. Please contact the administrator."
 					)
 					break
-				case "auth_error":
-					setError(
-						"Authentication error occurred. Please try signing in again."
-					)
-					break
-				case "rate_limit":
-					setError("Too many requests. Please wait a moment and try again.")
-					break
 				default:
 					setError("An authentication error occurred. Please try signing in.")
 			}
 
-			// Clear error from URL after displaying it
+			// Clear error from URL
 			const newUrl = new URL(window.location.href)
 			newUrl.searchParams.delete("error")
 			window.history.replaceState({}, "", newUrl.toString())
 		}
 	}, [searchParams])
 
-	// Track mounting and hydration
-	useEffect(() => {
-		try {
-			logEvent("hydration-start", {
-				email: !!email,
-				password: !!password,
-				loading,
-				error: !!error,
-				documentReadyState: document.readyState,
-				windowLocation: window.location.href,
-				urlError: searchParams.get("error"),
-			})
-
-			setMounted(true)
-
-			logEvent("hydration-complete", {
-				mounted: true,
-				documentReadyState: document.readyState,
-				hasRouter: !!router,
-				timestamp: Date.now(),
-			})
-
-			// Test form element access
-			const form = document.querySelector("form")
-			const emailInput = document.querySelector("#email")
-			const passwordInput = document.querySelector("#password")
-			const submitButton = document.querySelector('button[type="submit"]')
-
-			logEvent("dom-elements-check", {
-				hasForm: !!form,
-				hasEmailInput: !!emailInput,
-				hasPasswordInput: !!passwordInput,
-				hasSubmitButton: !!submitButton,
-				formAction: form?.getAttribute("action"),
-				emailValue: (emailInput as HTMLInputElement)?.value,
-				buttonDisabled: (submitButton as HTMLButtonElement)?.disabled,
-			})
-
-			// Test event handler attachment
-			if (submitButton) {
-				const testHandler = () => {
-					logEvent("test-event-handler", {
-						message: "Button click handler working",
-					})
-				}
-				submitButton.addEventListener("click", testHandler, { once: true })
-
-				// Clean up test handler after a brief delay
-				setTimeout(() => {
-					submitButton.removeEventListener("click", testHandler)
-				}, 2000)
-			}
-		} catch (error) {
-			logError(error as Error, {
-				phase: "mount-effect",
-				documentReadyState:
-					typeof document !== "undefined" ? document.readyState : "undefined",
-			})
-		}
-	}, [
-		logEvent,
-		logError,
-		router,
-		email,
-		password,
-		loading,
-		error,
-		searchParams,
-	])
-
-	// Track state changes
-	useEffect(() => {
-		if (mounted) {
-			logEvent("state-change", {
-				email: !!email,
-				emailLength: email.length,
-				password: !!password,
-				passwordLength: password.length,
-				loading,
-				error: !!error,
-			})
-		}
-	}, [email, password, loading, error, mounted, logEvent])
-
 	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault()
+		setLoading(true)
+		setError(null)
+
 		try {
-			logEvent("submit-start", {
-				email: !!email,
-				password: !!password,
-				eventType: e.type,
-				timestamp: Date.now(),
-			})
-
-			e.preventDefault()
-			setLoading(true)
-			setError(null)
-
-			logEvent("submit-prevented-default", {
-				loading: true,
-				error: null,
-			})
-
 			const supabase = createClient()
-
-			logEvent("supabase-client-created", {
-				hasSupabase: !!supabase,
-				supabaseAuth: !!supabase.auth,
-			})
 
 			const { error: authError } = await supabase.auth.signInWithPassword({
 				email,
 				password,
 			})
 
-			logEvent("auth-attempt-complete", {
-				hasError: !!authError,
-				errorMessage: authError?.message,
-			})
-
 			if (authError) {
 				setError(authError.message)
-				logEvent("auth-error", {
-					errorMessage: authError.message,
-					errorName: authError.name,
-				})
 			} else {
-				logEvent("auth-success", {
-					redirecting: true,
-				})
-
-				// Redirect to admin dashboard on successful login
+				// Simple redirect on success
 				router.push("/admin")
 				router.refresh()
-
-				logEvent("redirect-complete", {
-					path: "/admin",
-				})
 			}
 		} catch (err) {
-			const error = err as Error
-			logError(error, {
-				phase: "submit-handler",
-				email: !!email,
-				password: !!password,
-			})
 			setError("An unexpected error occurred")
 		} finally {
 			setLoading(false)
-			logEvent("submit-complete", {
-				loading: false,
-			})
 		}
 	}
 
-	// Track input changes
-	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		try {
-			const newEmail = e.target.value
-			setEmail(newEmail)
-			logEvent("email-change", {
-				hasValue: !!newEmail,
-				length: newEmail.length,
-				isValid: newEmail.includes("@"),
-			})
-		} catch (error) {
-			logError(error as Error, { phase: "email-change" })
-		}
+	if (!mounted) {
+		return <div className="p-8">Loading...</div>
 	}
-
-	const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		try {
-			const newPassword = e.target.value
-			setPassword(newPassword)
-			logEvent("password-change", {
-				hasValue: !!newPassword,
-				length: newPassword.length,
-			})
-		} catch (error) {
-			logError(error as Error, { phase: "password-change" })
-		}
-	}
-
-	// Log render attempts
-	logEvent("render", {
-		mounted,
-		email: !!email,
-		password: !!password,
-		loading,
-		error: !!error,
-		timestamp: Date.now(),
-	})
 
 	return (
 		<div className="p-8">
@@ -274,15 +98,6 @@ export default function SimpleLoginForm() {
 				</div>
 			)}
 
-			{/* Debug info in development */}
-			{process.env.NODE_ENV === "development" && (
-				<div className="mb-4 p-2 border rounded text-xs">
-					<strong>Debug:</strong> Mounted: {mounted ? "Yes" : "No"}, Email:{" "}
-					{email.length} chars, Password: {password.length} chars, Loading:{" "}
-					{loading ? "Yes" : "No"}
-				</div>
-			)}
-
 			{/* Login form */}
 			<form onSubmit={handleSubmit} className="space-y-6">
 				{/* Email field */}
@@ -293,18 +108,15 @@ export default function SimpleLoginForm() {
 					>
 						Email Address
 					</label>
-					<div className="relative">
-						<input
-							id="email"
-							type="email"
-							value={email}
-							onChange={handleEmailChange}
-							required
-							className="w-full px-4 py-3 bg-[rgba(var(--color-foreground),0.05)] border border-[rgba(var(--color-foreground),0.1)] rounded-lg text-[rgba(var(--color-foreground),0.9)] placeholder-[rgba(var(--color-foreground),0.4)] focus:outline-none focus:border-[rgba(var(--color-cyan),0.5)] focus:ring-2 focus:ring-[rgba(var(--color-cyan),0.2)] transition-all duration-200"
-							placeholder="admin@doug.is"
-						/>
-						<div className="absolute inset-0 rounded-lg pointer-events-none border border-transparent focus-within:border-[rgba(var(--color-cyan),0.3)] transition-colors duration-200"></div>
-					</div>
+					<input
+						id="email"
+						type="email"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						required
+						className="w-full px-4 py-3 bg-[rgba(var(--color-foreground),0.05)] border border-[rgba(var(--color-foreground),0.1)] rounded-lg text-[rgba(var(--color-foreground),0.9)] placeholder-[rgba(var(--color-foreground),0.4)] focus:outline-none focus:border-[rgba(var(--color-cyan),0.5)] focus:ring-2 focus:ring-[rgba(var(--color-cyan),0.2)] transition-all duration-200"
+						placeholder="admin@doug.is"
+					/>
 				</div>
 
 				{/* Password field */}
@@ -315,25 +127,21 @@ export default function SimpleLoginForm() {
 					>
 						Password
 					</label>
-					<div className="relative">
-						<input
-							id="password"
-							type="password"
-							value={password}
-							onChange={handlePasswordChange}
-							required
-							className="w-full px-4 py-3 bg-[rgba(var(--color-foreground),0.05)] border border-[rgba(var(--color-foreground),0.1)] rounded-lg text-[rgba(var(--color-foreground),0.9)] placeholder-[rgba(var(--color-foreground),0.4)] focus:outline-none focus:border-[rgba(var(--color-cyan),0.5)] focus:ring-2 focus:ring-[rgba(var(--color-cyan),0.2)] transition-all duration-200"
-							placeholder="Enter your password"
-						/>
-						<div className="absolute inset-0 rounded-lg pointer-events-none border border-transparent focus-within:border-[rgba(var(--color-cyan),0.3)] transition-colors duration-200"></div>
-					</div>
+					<input
+						id="password"
+						type="password"
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+						required
+						className="w-full px-4 py-3 bg-[rgba(var(--color-foreground),0.05)] border border-[rgba(var(--color-foreground),0.1)] rounded-lg text-[rgba(var(--color-foreground),0.9)] placeholder-[rgba(var(--color-foreground),0.4)] focus:outline-none focus:border-[rgba(var(--color-cyan),0.5)] focus:ring-2 focus:ring-[rgba(var(--color-cyan),0.2)] transition-all duration-200"
+						placeholder="Enter your password"
+					/>
 				</div>
 
 				{/* Submit button */}
 				<button
 					type="submit"
 					disabled={loading}
-					onClick={() => logEvent("submit-button-click", { loading, mounted })}
 					className="w-full neon-button-cyan py-3 px-6 text-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
 				>
 					{loading ? (
@@ -365,23 +173,6 @@ export default function SimpleLoginForm() {
 					)}
 				</button>
 			</form>
-
-			{/* Form footer */}
-			<div className="mt-8 text-center">
-				<div className="w-16 h-px bg-gradient-to-r from-transparent via-[rgba(var(--color-foreground),0.2)] to-transparent mx-auto mb-4"></div>
-				{process.env.NODE_ENV === "development" && (
-					<button
-						type="button"
-						onClick={() => {
-							// @ts-ignore
-							window.hydrationLogger?.printDebugReport()
-						}}
-						className="mt-2 text-xs text-blue-500 hover:text-blue-700 underline"
-					>
-						Print Hydration Debug Report
-					</button>
-				)}
-			</div>
 		</div>
 	)
 }

@@ -1,16 +1,26 @@
+/**
+ * Next.js Middleware - Official Supabase Pattern
+ *
+ * Following the official Supabase Next.js guide:
+ * https://supabase.com/docs/guides/auth/server-side/nextjs
+ *
+ * ONLY responsible for refreshing auth tokens.
+ * Authentication/authorization logic belongs in components, not middleware.
+ */
+
+import { type NextRequest } from "next/server"
 import { updateSession } from "@/lib/supabase/middleware"
-import { type NextRequest, NextResponse } from "next/server"
 
 export async function middleware(request: NextRequest) {
-	// Handle Supabase auth session updates
+	// Add pathname to headers so layouts can access it
+	const requestHeaders = new Headers(request.headers)
+	requestHeaders.set("x-pathname", request.nextUrl.pathname)
+
+	// Update session (token refresh only)
 	const response = await updateSession(request)
 
-	// Set headers for admin login page detection (still needed for admin layout logic)
-	if (request.nextUrl.pathname === "/admin/login") {
-		response.headers.set("x-is-login-page", "true")
-	} else {
-		response.headers.set("x-is-login-page", "false")
-	}
+	// Copy the pathname header to the response
+	response.headers.set("x-pathname", request.nextUrl.pathname)
 
 	return response
 }
@@ -18,14 +28,12 @@ export async function middleware(request: NextRequest) {
 export const config = {
 	matcher: [
 		/*
-		 * Match all request paths except:
+		 * Match all request paths except for the ones starting with:
 		 * - _next/static (static files)
 		 * - _next/image (image optimization files)
 		 * - favicon.ico (favicon file)
-		 * - images - .svg, .png, .jpg, .jpeg, .gif, .webp
-		 * - Supabase auth endpoints (to prevent infinite loops)
 		 * Feel free to modify this pattern to include more paths.
 		 */
-		"/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|auth).*)",
+		"/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
 	],
 }

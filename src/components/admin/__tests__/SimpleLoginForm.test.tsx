@@ -32,6 +32,9 @@ jest.mock("next/navigation", () => ({
 		replace: jest.fn(),
 		refresh: jest.fn(),
 	})),
+	useSearchParams: jest.fn(() => ({
+		get: jest.fn(() => null),
+	})),
 }))
 
 describe("SimpleLoginForm", () => {

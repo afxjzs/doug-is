@@ -1,7 +1,10 @@
 /**
- * Supabase Browser Client
+ * Supabase Browser Client - Official Pattern
  *
- * Creates a Supabase client for use in browser components.
+ * Simple browser client following official Supabase Next.js guide:
+ * https://supabase.com/docs/guides/auth/server-side/nextjs
+ *
+ * Creates a Supabase client for use in Client Components.
  * Uses the official @supabase/ssr package for proper SSR support.
  */
 
@@ -9,52 +12,13 @@ import { createBrowserClient } from "@supabase/ssr"
 import type { Database } from "../types/supabase"
 
 /**
- * Create a Supabase client for browser components
+ * Create a Supabase client for Client Components
  * Following official Next.js Supabase patterns
  */
 export function createClient() {
 	return createBrowserClient<Database>(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-		{
-			cookies: {
-				get(name: string) {
-					if (typeof document === "undefined") {
-						return undefined
-					}
-					try {
-						return document.cookie
-							.split("; ")
-							.find((row) => row.startsWith(`${name}=`))
-							?.split("=")[1]
-					} catch (error) {
-						return undefined
-					}
-				},
-				set(name: string, value: string, options: any) {
-					if (typeof document === "undefined") {
-						return
-					}
-					try {
-						document.cookie = `${name}=${value}; path=/; max-age=${
-							options?.maxAge || 31536000
-						}`
-					} catch (error) {
-						// Ignore cookie setting errors
-					}
-				},
-				remove(name: string, options: any) {
-					if (typeof document === "undefined") {
-						return
-					}
-					try {
-						document.cookie = `${name}=; path=/; max-age=0`
-					} catch (error) {
-						// Ignore cookie removal errors
-					}
-				},
-			},
-		}
+		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 	)
 }
 

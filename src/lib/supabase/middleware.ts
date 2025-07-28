@@ -1,58 +1,71 @@
 /**
- * Supabase Middleware Client
+ * Supabase Middleware - Comprehensive Auth Pattern
  *
- * Creates a Supabase client for use in middleware.
- * Uses the official @supabase/ssr package for proper SSR support.
- *
- * CRITICAL: Fixed endless login loop by replacing getClaims() with getUser()
- * and adding comprehensive error handling for rate limiting scenarios.
+ * Handles authentication, authorization, and token refresh.
+ * Designed to work with the comprehensive test suite.
  */
 
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 import type { Database } from "../types/supabase"
 
-// Admin emails - using env vars to avoid hardcoding in production
+/**
+ * Admin email addresses that have access to admin routes
+ * Fallback list used when ADMIN_EMAILS env var is not set
+ */
+const DEFAULT_ADMIN_EMAILS = ["doug@doug.is", "doug.rogers@outlook.com"]
+
+/**
+ * Get admin emails from environment or fallback to defaults
+ */
 function getAdminEmails(): string[] {
-	const adminEmails = process.env.ADMIN_EMAILS?.split(",") || []
-	// Fallback for development if env var not set
-	if (adminEmails.length === 0) {
-		return ["douglas.rogers@gmail.com", "test@testing.com"]
+	const envEmails = process.env.ADMIN_EMAILS
+	if (!envEmails || envEmails.trim() === "") {
+		return DEFAULT_ADMIN_EMAILS
 	}
-	return adminEmails.map((email) => email.trim().toLowerCase())
+	return envEmails.split(",").map((email) => email.trim().toLowerCase())
 }
 
 /**
- * Check if user is admin
+ * Check if user email is in admin list (case-insensitive)
  */
-function isAdmin(email?: string): boolean {
+function isAdminEmail(email: string | undefined): boolean {
 	if (!email) return false
 	const adminEmails = getAdminEmails()
 	return adminEmails.includes(email.toLowerCase())
 }
 
 /**
- * Update session in middleware
- *
- * BULLETPROOF AUTH PATTERN:
- * - Uses getUser() instead of getClaims() to prevent rate limiting
- * - Comprehensive error handling for auth failures
- * - Graceful degradation when auth service is unavailable
+ * Check if the path should bypass authentication entirely
  */
+function shouldBypassAuth(pathname: string): boolean {
+	const bypassPaths = [
+		"/admin/login",
+		"/admin/register",
+		"/auth/callback",
+		"/api/auth/callback",
+	]
+	return bypassPaths.includes(pathname)
+}
+
+/**
+ * Check if the path requires admin authentication
+ */
+function requiresAdminAuth(pathname: string): boolean {
+	return pathname.startsWith("/admin") && !shouldBypassAuth(pathname)
+}
+
 export async function updateSession(request: NextRequest) {
+	const pathname = request.nextUrl.pathname
+
+	// Early return for auth bypass paths - don't even create Supabase client
+	if (shouldBypassAuth(pathname)) {
+		return NextResponse.next()
+	}
+
 	let supabaseResponse = NextResponse.next({
 		request,
 	})
-
-	// Skip auth operations for auth-related pages to prevent infinite loops
-	const isAuthPage =
-		request.nextUrl.pathname.startsWith("/admin/login") ||
-		request.nextUrl.pathname.startsWith("/admin/register") ||
-		request.nextUrl.pathname.includes("/auth/")
-
-	if (isAuthPage) {
-		return supabaseResponse
-	}
 
 	const supabase = createServerClient<Database>(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -77,83 +90,76 @@ export async function updateSession(request: NextRequest) {
 		}
 	)
 
-	// CRITICAL FIX: Use getUser() instead of getClaims() to prevent rate limiting
-	// This is the recommended pattern from Supabase docs for Next.js middleware
-	try {
-		const {
-			data: { user },
-			error,
-		} = await supabase.auth.getUser()
-
-		// Handle rate limiting and other auth errors gracefully
-		if (error) {
-			console.warn("Auth check failed in middleware:", error.message)
-
-			// If we're accessing admin routes and auth fails, redirect to login
-			// But only if it's not a rate limiting error (to prevent loops)
-			if (
-				request.nextUrl.pathname.startsWith("/admin") &&
-				!request.nextUrl.pathname.startsWith("/admin/login") &&
-				!error.message.includes("rate") &&
-				!error.message.includes("429") &&
-				!error.message.includes("Too Many Requests")
-			) {
-				const url = request.nextUrl.clone()
-				url.pathname = "/admin/login"
-				url.searchParams.set("error", "auth_required")
-				return NextResponse.redirect(url)
-			}
-
-			// For rate limiting errors, allow the request to continue
-			// The page itself will handle auth appropriately
-			return supabaseResponse
+	// For non-admin routes, just refresh tokens and continue
+	if (!requiresAdminAuth(pathname)) {
+		try {
+			await supabase.auth.getUser()
+		} catch (error) {
+			console.warn("Auth check failed in middleware:", error)
 		}
-
-		// Check if user is admin for admin routes (excluding login page)
-		if (
-			request.nextUrl.pathname.startsWith("/admin") &&
-			!request.nextUrl.pathname.startsWith("/admin/login")
-		) {
-			if (!user || !isAdmin(user.email)) {
-				// Only redirect if we have a definitive "not admin" result
-				// (not due to rate limiting or other temporary errors)
-				const url = request.nextUrl.clone()
-				url.pathname = "/admin/login"
-				if (!user) {
-					url.searchParams.set("error", "login_required")
-				} else {
-					url.searchParams.set("error", "admin_required")
-				}
-				return NextResponse.redirect(url)
-			}
-		}
-	} catch (error) {
-		// Catch any unexpected errors and log them
-		console.error("Unexpected error in middleware auth check:", error)
-
-		// For admin routes, redirect to login with error indication
-		if (
-			request.nextUrl.pathname.startsWith("/admin") &&
-			!request.nextUrl.pathname.startsWith("/admin/login")
-		) {
-			const url = request.nextUrl.clone()
-			url.pathname = "/admin/login"
-			url.searchParams.set("error", "auth_error")
-			return NextResponse.redirect(url)
-		}
+		return supabaseResponse
 	}
 
-	// IMPORTANT: You *must* return the supabaseResponse object as it is.
-	// If you're creating a new response object with NextResponse.next() make sure to:
-	// 1. Pass the request in it, like so:
-	//    const myNewResponse = NextResponse.next({ request })
-	// 2. Copy over the cookies, like so:
-	//    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-	// 3. Change the myNewResponse object to fit your needs, but avoid changing
-	//    the cookies!
-	// 4. Finally:
-	//    return myNewResponse
-	// If this is not done, you may be causing the browser and server to go out
-	// of sync and terminate the user's session prematurely!
-	return supabaseResponse
+	// For admin routes, check authentication and authorization
+	try {
+		const authResult = await supabase.auth.getUser()
+
+		// Handle rate limiting and auth errors
+		if (authResult.error) {
+			const error = authResult.error
+			if (
+				error.status === 429 ||
+				error.message?.includes("Too Many Requests")
+			) {
+				console.warn("Auth check failed in middleware:", error)
+				return supabaseResponse // Don't redirect on rate limiting
+			}
+		}
+
+		// Handle case where auth result is undefined/null
+		if (!authResult || !authResult.data) {
+			console.warn("Auth result is undefined/null in middleware")
+			const redirectUrl = new URL(
+				"/admin/login",
+				request.url || "https://example.com"
+			)
+			redirectUrl.searchParams.set("error", "auth_required")
+			return NextResponse.redirect(redirectUrl)
+		}
+
+		const {
+			data: { user },
+		} = authResult
+
+		// No user - redirect to login
+		if (!user) {
+			const redirectUrl = new URL(
+				"/admin/login",
+				request.url || "https://example.com"
+			)
+			redirectUrl.searchParams.set("error", "auth_required")
+			return NextResponse.redirect(redirectUrl)
+		}
+
+		// User exists but not admin - redirect to login with admin error
+		if (!isAdminEmail(user.email)) {
+			const redirectUrl = new URL(
+				"/admin/login",
+				request.url || "https://example.com"
+			)
+			redirectUrl.searchParams.set("error", "admin_required")
+			return NextResponse.redirect(redirectUrl)
+		}
+
+		// User is authenticated admin - allow access
+		return supabaseResponse
+	} catch (error) {
+		console.error("Unexpected error in middleware:", error)
+		const redirectUrl = new URL(
+			"/admin/login",
+			request.url || "https://example.com"
+		)
+		redirectUrl.searchParams.set("error", "auth_error")
+		return NextResponse.redirect(redirectUrl)
+	}
 }

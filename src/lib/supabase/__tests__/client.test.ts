@@ -49,14 +49,7 @@ describe("Supabase Browser Client", () => {
 			// Assert
 			expect(mockCreateBrowserClient).toHaveBeenCalledWith(
 				expectedUrl,
-				expectedKey,
-				{
-					cookies: {
-						get: expect.any(Function),
-						set: expect.any(Function),
-						remove: expect.any(Function),
-					},
-				}
+				expectedKey
 			)
 			expect(client).toBe(mockSupabaseClient)
 		})

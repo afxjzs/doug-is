@@ -14,8 +14,8 @@ jest.mock("@/lib/supabase/data", () => ({
 }))
 
 describe("Blog Post Metadata", () => {
-	const mockGetPostBySlugAndCategoryStatic =
-		require("@/lib/supabase/data").getPostBySlugAndCategoryStatic
+	const mockGetPostBySlugAndCategory =
+		require("@/lib/supabase/data").getPostBySlugAndCategory
 
 	beforeEach(() => {
 		jest.clearAllMocks()
@@ -40,10 +40,13 @@ describe("Blog Post Metadata", () => {
 			updated_at: "2024-01-02T00:00:00Z",
 		}
 
-		mockGetPostBySlugAndCategoryStatic.mockResolvedValue(mockPost)
+		mockGetPostBySlugAndCategory.mockResolvedValue(mockPost)
 
 		const metadata = await generateMetadata({
-			params: { slug: "test-blog-post", category: "technology" },
+			params: Promise.resolve({
+				slug: "test-blog-post",
+				category: "technology",
+			}),
 		})
 
 		expect(metadata.title).toBe("Test Blog Post | doug.is")
@@ -75,10 +78,13 @@ describe("Blog Post Metadata", () => {
 			updated_at: "2024-01-02T00:00:00Z",
 		}
 
-		mockGetPostBySlugAndCategoryStatic.mockResolvedValue(mockPost)
+		mockGetPostBySlugAndCategory.mockResolvedValue(mockPost)
 
 		const metadata = await generateMetadata({
-			params: { slug: "test-blog-post", category: "technology" },
+			params: Promise.resolve({
+				slug: "test-blog-post",
+				category: "technology",
+			}),
 		})
 
 		expect(metadata.twitter?.title).toBe("Test Blog Post")
@@ -108,10 +114,13 @@ describe("Blog Post Metadata", () => {
 			updated_at: "2024-01-02T00:00:00Z",
 		}
 
-		mockGetPostBySlugAndCategoryStatic.mockResolvedValue(mockPost)
+		mockGetPostBySlugAndCategory.mockResolvedValue(mockPost)
 
 		const metadata = await generateMetadata({
-			params: { slug: "test-blog-post", category: "technology" },
+			params: Promise.resolve({
+				slug: "test-blog-post",
+				category: "technology",
+			}),
 		})
 
 		// Check if images exist (Next.js 15 structure may vary)
@@ -132,10 +141,13 @@ describe("Blog Post Metadata", () => {
 			updated_at: "2024-01-02T00:00:00Z",
 		}
 
-		mockGetPostBySlugAndCategoryStatic.mockResolvedValue(mockPost)
+		mockGetPostBySlugAndCategory.mockResolvedValue(mockPost)
 
 		const metadata = await generateMetadata({
-			params: { slug: "test-blog-post", category: "technology" },
+			params: Promise.resolve({
+				slug: "test-blog-post",
+				category: "technology",
+			}),
 		})
 
 		// Check if images exist (Next.js 15 structure may vary)
@@ -156,10 +168,13 @@ describe("Blog Post Metadata", () => {
 			updated_at: "2024-01-02T00:00:00Z",
 		}
 
-		mockGetPostBySlugAndCategoryStatic.mockResolvedValue(mockPost)
+		mockGetPostBySlugAndCategory.mockResolvedValue(mockPost)
 
 		const metadata = await generateMetadata({
-			params: { slug: "test-blog-post", category: "technology" },
+			params: Promise.resolve({
+				slug: "test-blog-post",
+				category: "technology",
+			}),
 		})
 
 		expect(metadata.alternates?.canonical).toBe(
@@ -180,10 +195,13 @@ describe("Blog Post Metadata", () => {
 			updated_at: "2024-01-02T00:00:00Z",
 		}
 
-		mockGetPostBySlugAndCategoryStatic.mockResolvedValue(mockPost)
+		mockGetPostBySlugAndCategory.mockResolvedValue(mockPost)
 
 		const metadata = await generateMetadata({
-			params: { slug: "test-blog-post", category: "technology" },
+			params: Promise.resolve({
+				slug: "test-blog-post",
+				category: "technology",
+			}),
 		})
 
 		expect(metadata.other?.["article:published_time"]).toBe(
@@ -198,10 +216,13 @@ describe("Blog Post Metadata", () => {
 	})
 
 	it("should handle missing post gracefully", async () => {
-		mockGetPostBySlugAndCategoryStatic.mockResolvedValue(null)
+		mockGetPostBySlugAndCategory.mockResolvedValue(null)
 
 		const metadata = await generateMetadata({
-			params: { slug: "non-existent-post", category: "technology" },
+			params: Promise.resolve({
+				slug: "non-existent-post",
+				category: "technology",
+			}),
 		})
 
 		expect(metadata.title).toBe("Post Not Found | doug.is")
@@ -211,10 +232,13 @@ describe("Blog Post Metadata", () => {
 	})
 
 	it("should handle database errors gracefully", async () => {
-		mockGetPostBySlugAndCategoryStatic.mockRejectedValue(new Error("Database error"))
+		mockGetPostBySlugAndCategory.mockRejectedValue(new Error("Database error"))
 
 		const metadata = await generateMetadata({
-			params: { slug: "test-blog-post", category: "technology" },
+			params: Promise.resolve({
+				slug: "test-blog-post",
+				category: "technology",
+			}),
 		})
 
 		expect(metadata.title).toBe("Blog Post | doug.is")

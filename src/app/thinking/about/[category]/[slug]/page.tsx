@@ -39,7 +39,11 @@ export async function generateMetadata({
 		}
 
 		const canonicalUrl = getCanonicalUrl(`/thinking/about/${category}/${slug}`)
-		const socialImageUrl = getSocialImageUrl(post.title)
+		const socialImageUrl = post.featured_image
+			? getSocialImageUrl(post.featured_image)
+			: getSocialImageUrl(`/images/posts/default-post-image.jpg`)
+		const capitalizedCategory =
+			category.charAt(0).toUpperCase() + category.slice(1)
 
 		return {
 			title: `${post.title} | ${getSiteName()}`,
@@ -56,7 +60,7 @@ export async function generateMetadata({
 				publishedTime: post.published_at,
 				modifiedTime: post.updated_at || post.published_at,
 				authors: ["Douglas Rogers"],
-				section: category,
+				section: capitalizedCategory,
 				tags: undefined,
 			},
 			twitter: {
@@ -70,7 +74,7 @@ export async function generateMetadata({
 				"article:published_time": post.published_at,
 				"article:modified_time": post.updated_at || post.published_at,
 				"article:author": "Douglas Rogers",
-				"article:section": category,
+				"article:section": capitalizedCategory,
 				"article:tag": post.category,
 			},
 			alternates: {

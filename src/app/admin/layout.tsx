@@ -1,53 +1,57 @@
 /**
- * Admin route group layout that provides admin-specific layout
- * without main site header and footer
+ * Admin Layout - Server-Side Auth Protection
+ *
+ * Following official Supabase patterns for protecting admin routes.
+ * Authentication check happens in the component, not middleware.
  */
 
+import { redirect } from "next/navigation"
 import { headers } from "next/headers"
+import { getUser, isAdmin } from "@/lib/supabase/server"
 import AdminNavigation from "@/components/admin/AdminNavigation"
+import AdminHeader from "@/components/admin/AdminHeader"
 import "./admin.css"
 
-export default async function AdminRouteLayout({
+export default async function AdminLayout({
 	children,
 }: {
 	children: React.ReactNode
 }) {
-	// Check if we're on the login page
+	// Get the current path to check if we should bypass auth
 	const headersList = await headers()
-	const isLoginPage = headersList.get("x-is-login-page") === "true"
+	const pathname = headersList.get("x-pathname") || ""
 
-	// Route group layout - provides complete isolated admin layout
-	if (isLoginPage) {
-		// Login page: Just the content, no navigation
+	// Bypass auth check for login, register, and auth callback pages
+	const authBypassPaths = ["/admin/login", "/admin/register", "/admin/setup"]
+	const shouldBypassAuth = authBypassPaths.some((path) =>
+		pathname.startsWith(path)
+	)
+
+	if (shouldBypassAuth) {
+		// For auth pages, just render the children without admin layout
 		return <>{children}</>
 	}
 
-	// Admin pages: Complete admin layout with navigation
+	// Get user using the official pattern for protected admin pages
+	const user = await getUser()
+	const adminCheck = await isAdmin()
+
+	// Redirect to login if not authenticated or not admin
+	if (!user) {
+		redirect("/admin/login?error=login_required")
+	}
+
+	if (!adminCheck) {
+		redirect("/admin/login?error=admin_required")
+	}
+
 	return (
-		<div
-			className="admin-layout"
-			style={{
-				display: "flex",
-				height: "100vh",
-				backgroundColor: "#0f0d14",
-				color: "rgba(255, 255, 255, 0.9)",
-				fontFamily:
-					'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-			}}
-		>
-			<AdminNavigation />
-			<main
-				className="admin-main"
-				style={{
-					flex: 1,
-					padding: "2rem",
-					overflow: "auto",
-					backgroundColor: "#0f0d14",
-					marginLeft: "16rem",
-				}}
-			>
-				{children}
-			</main>
+		<div className="min-h-screen bg-[rgba(var(--color-background),1)]">
+			<AdminHeader user={user} />
+			<div className="flex">
+				<AdminNavigation />
+				<main className="flex-1 p-8">{children}</main>
+			</div>
 		</div>
 	)
 }
