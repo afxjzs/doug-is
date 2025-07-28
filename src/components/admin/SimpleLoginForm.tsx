@@ -3,13 +3,14 @@
  *
  * Uses standard Supabase authentication with cyberpunk styling.
  * Enhanced with comprehensive hydration logging for debugging.
+ * BULLETPROOF AUTH: Handles all auth error scenarios gracefully.
  */
 
 "use client"
 
 import { useState, useEffect } from "react"
 import { createClient } from "@/lib/supabase/client"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useHydrationLogger } from "@/lib/utils/hydration-logger"
 
 export default function SimpleLoginForm() {
@@ -19,9 +20,45 @@ export default function SimpleLoginForm() {
 	const [error, setError] = useState<string | null>(null)
 	const [mounted, setMounted] = useState(false)
 	const router = useRouter()
+	const searchParams = useSearchParams()
 
 	// Add hydration logging
 	const { logEvent, logError } = useHydrationLogger("SimpleLoginForm")
+
+	// Handle URL error parameters from middleware redirects
+	useEffect(() => {
+		const urlError = searchParams.get("error")
+		if (urlError) {
+			switch (urlError) {
+				case "auth_required":
+					setError("Authentication required. Please sign in to continue.")
+					break
+				case "login_required":
+					setError("Please sign in to access the admin area.")
+					break
+				case "admin_required":
+					setError(
+						"Admin privileges required. Please contact the administrator."
+					)
+					break
+				case "auth_error":
+					setError(
+						"Authentication error occurred. Please try signing in again."
+					)
+					break
+				case "rate_limit":
+					setError("Too many requests. Please wait a moment and try again.")
+					break
+				default:
+					setError("An authentication error occurred. Please try signing in.")
+			}
+
+			// Clear error from URL after displaying it
+			const newUrl = new URL(window.location.href)
+			newUrl.searchParams.delete("error")
+			window.history.replaceState({}, "", newUrl.toString())
+		}
+	}, [searchParams])
 
 	// Track mounting and hydration
 	useEffect(() => {
@@ -33,6 +70,7 @@ export default function SimpleLoginForm() {
 				error: !!error,
 				documentReadyState: document.readyState,
 				windowLocation: window.location.href,
+				urlError: searchParams.get("error"),
 			})
 
 			setMounted(true)
@@ -81,7 +119,16 @@ export default function SimpleLoginForm() {
 					typeof document !== "undefined" ? document.readyState : "undefined",
 			})
 		}
-	}, [logEvent, logError, router, email, password, loading, error])
+	}, [
+		logEvent,
+		logError,
+		router,
+		email,
+		password,
+		loading,
+		error,
+		searchParams,
+	])
 
 	// Track state changes
 	useEffect(() => {

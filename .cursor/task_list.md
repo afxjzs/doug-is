@@ -2,17 +2,42 @@
 
 ## Background and Motivation
 
+🚨 **CRITICAL ISSUE**: Endless loop login on production site (doug.is/admin)
+- **Symptoms**: Login redirects create infinite loop with 429 "Too Many Requests" errors
+- **Impact**: Admin access completely broken on production
+- **Root Cause**: Middleware calling `getClaims()` on every request causing rate limiting
+- **Required**: BULLET PROOF fix with comprehensive test coverage
+
 The user confirmed that functionality is working correctly in the browser EXCEPT for **homepage duplicate footer issue**. However, there are **31 failing tests** that need to be fixed (not nerfed). Critical requirements:
 
-1. **✅ Login works** - Verified working
-2. **✅ Admin loads correctly** - Verified working 
-3. **✅ Every static page loads correctly** - Verified working
-4. **✅ /migraine-free does NOT load the rest of the site layout** - Verified working
-5. **✅ /thinking/about/[category]/* should load correctly** - Verified working
-6. **❌ Homepage has duplicate footer** - Layout nesting issue identified
-7. **❌ 31 failing tests** - Components load but don't render content in test environment
+1. **❌ CRITICAL: Fix endless login loop** - BLOCKING admin access on production
+2. **✅ Login works** - Verified working (but broken by endless loop)
+3. **✅ Admin loads correctly** - Verified working (when accessible)
+4. **✅ Every static page loads correctly** - Verified working
+5. **✅ /migraine-free does NOT load the rest of the site layout** - Verified working
+6. **✅ /thinking/about/[category]/* should load correctly** - Verified working
+7. **❌ Homepage has duplicate footer** - Layout nesting issue identified
+8. **❌ 31 failing tests** - Components load but don't render content in test environment
 
 ## Key Challenges and Analysis
+
+### 🚨 **ENDLESS LOGIN LOOP CRISIS** 
+
+**ROOT CAUSE IDENTIFIED**: 
+- **Middleware** calls `supabase.auth.getClaims()` on EVERY request
+- **Rate Limiting**: Too many auth requests cause 429 errors from Supabase
+- **Loop Mechanism**: 
+  1. User logs in successfully with `signInWithPassword()`
+  2. Client calls `router.push("/admin")` 
+  3. Middleware intercepts, calls `getClaims()` (429 error due to rate limit)
+  4. Auth check fails → redirects to `/admin/login`
+  5. Process repeats infinitely
+
+**CRITICAL FIXES NEEDED**:
+1. **Replace `getClaims()` with proper session validation** in middleware
+2. **Implement request throttling/caching** for auth checks
+3. **Add comprehensive error handling** for rate limiting
+4. **Create bullet-proof test coverage** for auth flow
 
 ### 🚨 **DUPLICATE FOOTER ISSUE IDENTIFIED**
 
@@ -35,6 +60,21 @@ The user confirmed that functionality is working correctly in the browser EXCEPT
 - Component conditional logic preventing render in test mode
 
 ## High-level Task Breakdown
+
+### 🔥 **PHASE 0: CRITICAL EMERGENCY FIXES**
+
+#### **Task 0: Fix Endless Login Loop** 
+**Priority**: CRITICAL EMERGENCY - Production admin completely broken
+**Root Cause**: Middleware `getClaims()` causing rate limiting and endless redirects
+**Solution**: 
+- Replace `getClaims()` with `getUser()` or session-based auth check
+- Add request throttling and error handling
+- Implement proper cookie-based session validation
+**Success Criteria**: 
+- Admin login works without endless loops on production
+- No 429 rate limiting errors
+- Smooth authentication flow end-to-end
+- Comprehensive test coverage for auth scenarios
 
 ### 🔥 **PHASE 1: CRITICAL FIXES**
 
@@ -97,6 +137,7 @@ The user confirmed that functionality is working correctly in the browser EXCEPT
 
 - [x] **CRITICAL**: Fix duplicate footer on homepage (layout nesting issue) ✅
 - [x] **CRITICAL**: Diagnose why components don't render content in tests ✅  
+- [x] **CRITICAL**: Fix endless login loop (production admin access) ✅
 - [x] **HIGH**: Fix layout isolation test failures (16 tests) ✅
 - [x] **HIGH**: Fix admin component test failures (8 tests) ✅
 - [x] **HIGH**: Fix static route test failures (7 tests) ✅
