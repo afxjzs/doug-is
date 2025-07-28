@@ -22,7 +22,7 @@ export const dynamic = "force-dynamic"
 export async function generateMetadata({
 	params,
 }: {
-	params: { slug: string; "primary-category": string }
+	params: Promise<{ slug: string; "primary-category": string }>
 }): Promise<Metadata> {
 	try {
 		// Await params before accessing properties
@@ -125,13 +125,11 @@ export async function generateStaticParams() {
 export default async function BlogPostPage({
 	params,
 }: {
-	params: { slug: string; "primary-category": string }
+	params: Promise<{ slug: string; "primary-category": string }>
 }) {
+	const { slug, "primary-category": primaryCategory } = await params
 	try {
-		const post = await getPostBySlugAndCategory(
-			params.slug,
-			params["primary-category"]
-		)
+		const post = await getPostBySlugAndCategory(slug, primaryCategory)
 
 		if (!post) {
 			notFound()
@@ -140,13 +138,11 @@ export default async function BlogPostPage({
 		// Verify the category in the URL matches the post's category
 		// This prevents duplicate content issues with SEO
 		if (
-			params["primary-category"] !== post.category.toLowerCase() &&
+			primaryCategory !== post.category.toLowerCase() &&
 			process.env.NODE_ENV === "production"
 		) {
 			console.warn(
-				`Category mismatch: URL has ${
-					params["primary-category"]
-				} but post category is ${post.category.toLowerCase()}`
+				`Category mismatch: URL has ${primaryCategory} but post category is ${post.category.toLowerCase()}`
 			)
 			notFound()
 		}

@@ -73,11 +73,11 @@ export async function GET(
 
 export async function PATCH(
 	request: NextRequest,
-	{ params }: { params: { id: string } }
+	{ params }: { params: Promise<{ id: string }> }
 ) {
+	const { id } = await params
 	try {
 		// Properly await the params object to avoid Next.js warning
-		const id = await params.id
 		console.log("🔧 PATCH /api/posts/[id] - Post ID:", id)
 
 		// Debug: Check authentication state with detailed logging
@@ -264,7 +264,6 @@ export async function DELETE(
 	const { id } = await params
 	try {
 		// Properly await the params object to avoid Next.js warning
-		const id = await params.id
 
 		// Check if user is authenticated and has admin privileges
 		const isAdmin = await isCurrentUserAdmin()
