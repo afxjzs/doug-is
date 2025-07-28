@@ -1,76 +1,41 @@
-import { Metadata } from "next"
+/**
+ * Admin Register Page
+ *
+ * Registration page for admin users
+ */
+
 import RegisterForm from "@/components/admin/RegisterForm"
 
-/**
- * Metadata for the registration page
- */
-export const metadata: Metadata = {
-	title: "Register Admin | doug.is",
-	description: "Create your admin account",
-	robots: {
-		index: false,
-		follow: false,
-		noarchive: true,
-		nosnippet: true,
-		noimageindex: true,
-	},
+interface PageProps {
+	searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-/**
- * Server component that handles the admin registration
- * The auth check is handled by middleware, so we don't need to check again here
- * This page should be removed after initial setup
- */
-export default async function RegisterPage(props: {
-	searchParams?: { [key: string]: string | string[] | undefined }
-}) {
-	// In Next.js 15, we MUST await searchParams before accessing properties
-	const searchParams = (await props.searchParams) || {}
-
-	// Get error and redirect params (after awaiting searchParams)
-	const errorValue = searchParams.error
-	const redirectValue = searchParams.redirect
-
-	// Ensure they are strings or undefined
-	const error = typeof errorValue === "string" ? errorValue : undefined
-	const redirectTo =
-		typeof redirectValue === "string" ? redirectValue : undefined
+export default async function AdminRegisterPage({ searchParams }: PageProps) {
+	const params = searchParams ? await searchParams : {}
 
 	return (
-		<div className="flex min-h-screen flex-col items-center justify-center bg-[rgba(var(--color-background),1)]">
-			<div className="w-full max-w-md">
-				<div className="rounded-lg border border-[rgba(var(--color-foreground),0.1)] bg-[rgba(var(--color-background),0.6)] p-8 shadow-lg backdrop-blur-sm">
-					<div className="mb-6 text-center">
-						<h1 className="text-3xl font-bold gradient-heading mb-2">
-							Create Admin Account
-						</h1>
-						<p className="text-[rgba(var(--color-foreground),0.7)]">
-							Create your administrator account
-						</p>
-					</div>
+		<div className="min-h-screen bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+			{/* Background gradient effects */}
+			<div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-cyan-900/5 to-pink-900/10"></div>
+			<div className="absolute inset-0 bg-gradient-to-tl from-violet-900/5 via-emerald-900/5 to-orange-900/5"></div>
 
-					{/* Display any error messages */}
-					{error && (
-						<div className="mb-6 rounded-md bg-[rgba(var(--color-red),0.1)] p-4 text-[rgba(var(--color-red),0.9)] border border-[rgba(var(--color-red),0.3)]">
-							{error}
-						</div>
-					)}
+			{/* Scanlines effect */}
+			<div className="absolute inset-0 scanlines opacity-30"></div>
 
-					{/* Registration form component */}
-					<RegisterForm />
-
-					<div className="mt-6 text-center text-sm text-[rgba(var(--color-foreground),0.6)]">
-						<p>Already have an account?</p>
-						<p className="mt-2">
-							<a
-								href="/admin/login"
-								className="text-[rgba(var(--color-cyan),0.9)] hover:text-[rgba(var(--color-cyan),1)] hover:underline transition-colors"
-							>
-								Sign in instead
-							</a>
-						</p>
-					</div>
+			{/* Main content */}
+			<div className="relative z-10 max-w-md w-full space-y-8">
+				{/* Header section */}
+				<div className="text-center">
+					<h1 className="text-4xl md:text-5xl font-bold gradient-heading mb-2">
+						Create Admin Account
+					</h1>
+					<p className="text-lg text-gray-300">
+						Register a new admin user for the dashboard
+					</p>
 				</div>
+
+				{/* Registration form */}
+				<RegisterForm />
 			</div>
 		</div>
 	)

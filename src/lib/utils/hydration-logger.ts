@@ -299,21 +299,31 @@ if (typeof window !== "undefined") {
 
 // Export hook for React components
 export function useHydrationLogger(componentName: string) {
-	if (typeof window !== "undefined") {
-		// Log mount on first render
-		React.useEffect(() => {
+	// Always call React.useEffect (never conditionally)
+	React.useEffect(() => {
+		// Only perform logging operations if we're in the browser
+		if (typeof window !== "undefined") {
 			hydrationLogger.logComponentMount(componentName)
 			return () => {
 				hydrationLogger.logComponentUnmount(componentName)
 			}
-		}, [componentName])
-	}
+		}
+		// Return empty cleanup if not in browser
+		return () => {}
+	}, [componentName])
 
+	// Return logging functions that are safe to call from both server and client
 	return {
-		logEvent: (event: HydrationEvent["event"], data?: any, error?: Error) =>
-			hydrationLogger.logEvent(componentName, event, data, error),
-		logError: (error: Error, context?: any) =>
-			hydrationLogger.logError(componentName, error, context),
+		logEvent: (event: HydrationEvent["event"], data?: any, error?: Error) => {
+			if (typeof window !== "undefined") {
+				hydrationLogger.logEvent(componentName, event, data, error)
+			}
+		},
+		logError: (error: Error, context?: any) => {
+			if (typeof window !== "undefined") {
+				hydrationLogger.logError(componentName, error, context)
+			}
+		},
 	}
 }
 

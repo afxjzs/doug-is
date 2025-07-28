@@ -6,11 +6,11 @@ import { createAuthServerClient } from "@/lib/auth/simple-auth-server"
 
 export async function GET(
 	request: NextRequest,
-	{ params }: { params: { id: string } }
+	{ params }: { params: Promise<{ id: string }> }
 ) {
+	const { id } = await params
 	try {
 		// Properly await the params object to avoid Next.js warning
-		const id = await params.id
 		console.log("Fetching post:", id)
 
 		// Use the server client for GET requests so anonymous users can access the post
@@ -259,8 +259,9 @@ export async function PATCH(
 
 export async function DELETE(
 	request: NextRequest,
-	{ params }: { params: { id: string } }
+	{ params }: { params: Promise<{ id: string }> }
 ) {
+	const { id } = await params
 	try {
 		// Properly await the params object to avoid Next.js warning
 		const id = await params.id
