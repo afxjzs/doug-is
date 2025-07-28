@@ -11,6 +11,7 @@
  */
 
 import { createServerClient } from "@supabase/ssr"
+import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 import { cookies } from "next/headers"
 import type { Database } from "../types/supabase"
 
@@ -46,21 +47,25 @@ export async function createClient() {
 }
 
 /**
- * Create a Supabase client with Service Role key for admin operations
- * Use only for admin operations that need to bypass RLS
+ * Create a Supabase client with service role key for admin operations
+ * This client bypasses RLS and should only be used in secure server contexts
  */
-export async function createServiceRoleClient() {
-	return createServerClient<Database>(
+export function createServiceRoleClient() {
+	if (typeof window !== "undefined") {
+		throw new Error("Service role client can only be used on the server")
+	}
+
+	if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+		throw new Error("Service role key is missing")
+	}
+
+	return createSupabaseClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
 		process.env.SUPABASE_SERVICE_ROLE_KEY!,
 		{
-			cookies: {
-				getAll() {
-					return []
-				},
-				setAll() {
-					// No-op for service role client
-				},
+			auth: {
+				autoRefreshToken: false,
+				persistSession: false,
 			},
 		}
 	)
@@ -88,34 +93,35 @@ export function createStaticClient() {
 }
 
 /**
- * Get the current user using the official pattern
+ * Get the current user from the server client
  */
 export async function getUser() {
 	const supabase = await createClient()
-	const {
-		data: { user },
-		error,
-	} = await supabase.auth.getUser()
-
-	if (error) {
+	try {
+		const {
+			data: { user },
+		} = await supabase.auth.getUser()
+		return user
+	} catch (error) {
 		console.error("Error getting user:", error)
 		return null
 	}
-
-	return user
 }
 
 /**
  * Check if the current user is an admin
- * Uses simple environment-based admin check for now
  */
 export async function isAdmin() {
 	const user = await getUser()
-	if (!user) return false
+	if (!user?.email) return false
 
-	// Simple admin check - later can be database-based
-	const adminEmails = process.env.ADMIN_EMAILS?.split(",") || []
-	return adminEmails.includes(user.email || "")
+	const adminEmails = (
+		process.env.ADMIN_EMAILS || "doug@doug.is,doug.rogers@outlook.com"
+	)
+		.split(",")
+		.map((email) => email.trim().toLowerCase())
+
+	return adminEmails.includes(user.email.toLowerCase())
 }
 
 /**

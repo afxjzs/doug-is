@@ -2,15 +2,10 @@
  * Admin Dashboard - Main Admin Page
  *
  * This page provides an overview of the admin area with quick access
- * to posts and contact messages. Uses UNIFIED AUTHENTICATION SYSTEM.
+ * to posts and contact messages. Uses OFFICIAL SUPABASE AUTH SYSTEM.
  */
 
-import { redirect } from "next/navigation"
 import { createServiceRoleClient } from "@/lib/supabase/server"
-import {
-	getCurrentUser,
-	isCurrentUserAdmin,
-} from "@/lib/auth/simple-auth-server"
 import Link from "next/link"
 import DraftOverviewWidget from "@/components/admin/DraftOverviewWidget"
 
@@ -67,15 +62,6 @@ async function adminGetContactSubmissions() {
 
 export default async function AdminPage() {
 	try {
-		// Verify user is authenticated and has admin privileges using UNIFIED AUTH
-		const user = await getCurrentUser()
-		const isAdmin = await isCurrentUserAdmin()
-
-		if (!user || !isAdmin) {
-			console.log("Not authenticated as admin, redirecting to login")
-			redirect("/admin/login")
-		}
-
 		// Get data using Supabase SSR functions
 		const [posts, contactSubmissions] = await Promise.all([
 			adminGetPosts(),
@@ -92,7 +78,7 @@ export default async function AdminPage() {
 				<div className="admin-card">
 					<h1 className="text-3xl font-bold mb-4">Admin Dashboard</h1>
 					<p className="text-gray-300">
-						Welcome back, {user.email}! Here's an overview of your content.
+						Welcome back! Here's an overview of your content.
 					</p>
 				</div>
 

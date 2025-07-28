@@ -46,12 +46,9 @@ export default async function AdminLayout({
 	}
 
 	return (
-		<div className="min-h-screen bg-[rgba(var(--color-background),1)]">
-			<AdminHeader user={user} />
-			<div className="flex">
-				<AdminNavigation />
-				<main className="flex-1 p-8">{children}</main>
-			</div>
+		<div className="admin-layout">
+			<AdminNavigation />
+			<div className="admin-main">{children}</div>
 		</div>
 	)
 }

@@ -59,7 +59,7 @@ describe("AdminPostsPage", () => {
 			render(result)
 
 			// Component should render successfully (auth is working correctly)
-			expect(screen.getByText("Manage Posts")).toBeInTheDocument()
+			expect(screen.getByText("Posts Management")).toBeInTheDocument()
 		})
 
 		it("should redirect to login when user is authenticated but not admin", async () => {
@@ -73,7 +73,7 @@ describe("AdminPostsPage", () => {
 			render(result)
 
 			// Component should render successfully (auth is working correctly)
-			expect(screen.getByText("Manage Posts")).toBeInTheDocument()
+			expect(screen.getByText("Posts Management")).toBeInTheDocument()
 		})
 
 		it("should allow access when user is authenticated and is admin", async () => {
@@ -85,7 +85,7 @@ describe("AdminPostsPage", () => {
 			const result = await AdminPostsPage()
 			render(result)
 
-			expect(screen.getByText("Manage Posts")).toBeInTheDocument()
+			expect(screen.getByText("Posts Management")).toBeInTheDocument()
 		})
 
 		it("should handle authentication errors gracefully", async () => {
@@ -110,7 +110,7 @@ describe("AdminPostsPage", () => {
 			const result = await AdminPostsPage()
 			render(result)
 
-			expect(screen.getByText("Manage Posts")).toBeInTheDocument()
+			expect(screen.getByText("Posts Management")).toBeInTheDocument()
 		})
 
 		it("should handle database errors gracefully", async () => {
@@ -121,7 +121,7 @@ describe("AdminPostsPage", () => {
 			render(result)
 
 			// Should still render the posts management page
-			expect(screen.getByText("Manage Posts")).toBeInTheDocument()
+			expect(screen.getByText("Posts Management")).toBeInTheDocument()
 		})
 
 		it("should handle empty posts array", async () => {
@@ -130,7 +130,7 @@ describe("AdminPostsPage", () => {
 			const result = await AdminPostsPage()
 			render(result)
 
-			expect(screen.getByText("Manage Posts")).toBeInTheDocument()
+			expect(screen.getByText("Posts Management")).toBeInTheDocument()
 		})
 
 		it("should handle database connection errors", async () => {
@@ -141,7 +141,7 @@ describe("AdminPostsPage", () => {
 			render(result)
 
 			// Should still render the page structure
-			expect(screen.getByText("Manage Posts")).toBeInTheDocument()
+			expect(screen.getByText("Posts Management")).toBeInTheDocument()
 		})
 	})
 
@@ -150,15 +150,15 @@ describe("AdminPostsPage", () => {
 			const result = await AdminPostsPage()
 			render(result)
 
-			expect(screen.getByText("Manage Posts")).toBeInTheDocument()
-			expect(screen.getByText("Create Post")).toBeInTheDocument()
+			expect(screen.getByText("Posts Management")).toBeInTheDocument()
+			expect(screen.getByText("New Post")).toBeInTheDocument()
 		})
 
 		it("should have proper link to create new post", async () => {
 			const result = await AdminPostsPage()
 			render(result)
 
-			const createLink = screen.getByText("Create Post").closest("a")
+			const createLink = screen.getByText("New Post").closest("a")
 			expect(createLink).toHaveAttribute("href", "/admin/posts/new")
 		})
 
@@ -181,7 +181,7 @@ describe("AdminPostsPage", () => {
 			render(result)
 
 			// Should render page without crashing
-			expect(screen.getByText("Manage Posts")).toBeInTheDocument()
+			expect(screen.getByText("Posts Management")).toBeInTheDocument()
 		})
 
 		it("should provide helpful error message to users", async () => {
@@ -192,7 +192,7 @@ describe("AdminPostsPage", () => {
 			render(result)
 
 			// Page should still be functional
-			expect(screen.getByText("Create Post")).toBeInTheDocument()
+			expect(screen.getByText("New Post")).toBeInTheDocument()
 		})
 	})
 
@@ -206,7 +206,7 @@ describe("AdminPostsPage", () => {
 			const result = await AdminPostsPage()
 			render(result)
 
-			expect(screen.getByText("Manage Posts")).toBeInTheDocument()
+			expect(screen.getByText("Posts Management")).toBeInTheDocument()
 		})
 
 		it("should accept test@testing.com as admin", async () => {
@@ -218,7 +218,7 @@ describe("AdminPostsPage", () => {
 			const result = await AdminPostsPage()
 			render(result)
 
-			expect(screen.getByText("Manage Posts")).toBeInTheDocument()
+			expect(screen.getByText("Posts Management")).toBeInTheDocument()
 		})
 	})
 })

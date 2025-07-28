@@ -1,11 +1,11 @@
 /**
- * Admin Login Page
+ * Admin Login Page - Official Supabase Pattern
  *
- * Cyberpunk-themed login page using standard Supabase authentication.
+ * Simple login page using Server Actions following the official guide:
+ * https://supabase.com/docs/guides/auth/server-side/nextjs
  */
 
-import SimpleLoginForm from "@/components/admin/SimpleLoginForm"
-import HydrationErrorBoundary from "@/components/HydrationErrorBoundary"
+import { login } from "./actions"
 
 export default function AdminLoginPage() {
 	return (
@@ -37,13 +37,58 @@ export default function AdminLoginPage() {
 				{/* Login form container */}
 				<div className="relative">
 					{/* Glow effect behind form */}
-					<div className="absolute inset-0 bg-gradient-to-r from-cyan-900/20 to-violet-900/20 rounded-lg blur-xl -z-10"></div>
+					<div className="absolute inset-0 bg-gradient-to-r from-cyan-900/20 to-violet-900/20 rounded-xl blur-xl -z-10"></div>
 
-					{/* Form container */}
-					<div className="relative border border-[rgba(var(--color-foreground),0.1)] rounded-lg bg-[rgba(var(--color-background),0.8)] backdrop-blur-sm shadow-[0_0_20px_rgba(var(--color-cyan),0.1)]">
-						<HydrationErrorBoundary componentName="SimpleLoginForm">
-							<SimpleLoginForm />
-						</HydrationErrorBoundary>
+					{/* Form container with proper border */}
+					<div className="relative border-2 border-[rgba(var(--color-cyan),0.4)] rounded-xl bg-[rgba(var(--color-background),0.9)] backdrop-blur-sm shadow-[0_0_30px_rgba(var(--color-cyan),0.2)]">
+						<div className="absolute inset-0 bg-gradient-to-br from-[rgba(var(--color-cyan),0.1)] via-transparent to-[rgba(var(--color-violet),0.1)] rounded-xl"></div>
+						<div className="relative p-8">
+							<form className="space-y-6">
+								{/* Email field */}
+								<div>
+									<label
+										htmlFor="email"
+										className="block text-sm font-medium text-[rgba(var(--color-foreground),0.8)] mb-2"
+									>
+										Email Address
+									</label>
+									<input
+										id="email"
+										name="email"
+										type="email"
+										required
+										className="w-full px-4 py-3 bg-[rgba(var(--color-foreground),0.05)] border border-[rgba(var(--color-foreground),0.1)] rounded-lg text-[rgba(var(--color-foreground),0.9)] placeholder-[rgba(var(--color-foreground),0.4)] focus:outline-none focus:border-[rgba(var(--color-cyan),0.5)] focus:ring-2 focus:ring-[rgba(var(--color-cyan),0.2)] transition-all duration-200"
+										placeholder="admin@doug.is"
+									/>
+								</div>
+
+								{/* Password field */}
+								<div>
+									<label
+										htmlFor="password"
+										className="block text-sm font-medium text-[rgba(var(--color-foreground),0.8)] mb-2"
+									>
+										Password
+									</label>
+									<input
+										id="password"
+										name="password"
+										type="password"
+										required
+										className="w-full px-4 py-3 bg-[rgba(var(--color-foreground),0.05)] border border-[rgba(var(--color-foreground),0.1)] rounded-lg text-[rgba(var(--color-foreground),0.9)] placeholder-[rgba(var(--color-foreground),0.4)] focus:outline-none focus:border-[rgba(var(--color-cyan),0.5)] focus:ring-2 focus:ring-[rgba(var(--color-cyan),0.2)] transition-all duration-200"
+										placeholder="Enter your password"
+									/>
+								</div>
+
+								{/* Submit button */}
+								<button
+									formAction={login}
+									className="w-full neon-button-cyan py-3 px-6 text-lg font-medium transition-all duration-200"
+								>
+									Sign In
+								</button>
+							</form>
+						</div>
 					</div>
 				</div>
 

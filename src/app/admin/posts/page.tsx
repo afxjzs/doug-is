@@ -2,16 +2,11 @@
  * Admin Posts Management Page
  *
  * This page displays all blog posts with management options.
- * Uses UNIFIED AUTHENTICATION SYSTEM.
+ * Auth is handled by AdminLayout - no need for duplicate auth checks.
  */
 
 import { Metadata } from "next"
-import { redirect } from "next/navigation"
 import Link from "next/link"
-import {
-	getCurrentUser,
-	isCurrentUserAdmin,
-} from "@/lib/auth/simple-auth-server"
 import { createServiceRoleClient } from "@/lib/supabase/server"
 import PostsTable from "@/components/admin/PostsTable"
 
@@ -27,7 +22,7 @@ export const metadata: Metadata = {
 	},
 }
 
-// Helper function to get all posts using new simple server auth
+// Helper function to get all posts using Supabase service role
 async function adminGetAllPosts() {
 	try {
 		console.log("Getting all posts for admin...")
@@ -52,54 +47,25 @@ async function adminGetAllPosts() {
 }
 
 export default async function AdminPostsPage() {
-	try {
-		// Verify user is authenticated and has admin privileges using UNIFIED AUTH
-		const user = await getCurrentUser()
-		const isAdmin = await isCurrentUserAdmin()
+	// No auth check needed - AdminLayout handles this
+	// Fetch all posts using service role client
+	const posts = await adminGetAllPosts()
 
-		if (!user || !isAdmin) {
-			console.log("Not authenticated as admin, redirecting to login")
-			redirect("/admin/login?redirect=/admin/posts")
-		}
+	return (
+		<div>
+			<div className="flex justify-between items-center mb-6">
+				<h1 className="text-3xl font-bold">Posts Management</h1>
+				<Link
+					href="/admin/posts/new"
+					className="bg-gradient-to-r from-purple-600 to-cyan-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-cyan-700 transition-all duration-200"
+				>
+					New Post
+				</Link>
+			</div>
 
-		// Fetch all posts using unified auth
-		const posts = await adminGetAllPosts()
-
-		return (
-			<div>
-				<div className="flex justify-between items-center mb-6">
-					<h1 className="text-3xl font-bold">Manage Posts</h1>
-					<Link href="/admin/posts/new" className="neon-button-violet">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="h-5 w-5"
-							viewBox="0 0 20 20"
-							fill="currentColor"
-						>
-							<path
-								fillRule="evenodd"
-								d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-								clipRule="evenodd"
-							/>
-						</svg>
-						Create Post
-					</Link>
-				</div>
+			<div className="admin-card">
 				<PostsTable posts={posts} />
 			</div>
-		)
-	} catch (error) {
-		console.error("Error in AdminPostsPage:", error)
-		return (
-			<div className="admin-card p-6">
-				<h1 className="text-3xl font-bold text-red-400 mb-6">Error</h1>
-				<p className="mb-4">
-					An error occurred while loading the posts management page.
-				</p>
-				<p className="text-sm text-gray-400">
-					Please try refreshing the page or contact the administrator.
-				</p>
-			</div>
-		)
-	}
+		</div>
+	)
 }
