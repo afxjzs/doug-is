@@ -2,18 +2,15 @@
 
 import Script from "next/script"
 
-interface GoogleAnalyticsProps {
-	gaId: string
-}
-
 /**
  * Google Analytics Component
  * Single Responsibility: Handles Google Analytics script injection and configuration
  * Uses Next.js Script component for optimal loading and performance
+ * Only loads in production environment
  */
-export function GoogleAnalytics({ gaId }: GoogleAnalyticsProps) {
-	if (!gaId) {
-		console.warn("Google Analytics: No tracking ID provided")
+export function GoogleAnalytics() {
+	// Only load Google Analytics in production
+	if (process.env.NODE_ENV !== "production") {
 		return null
 	}
 
@@ -21,7 +18,7 @@ export function GoogleAnalytics({ gaId }: GoogleAnalyticsProps) {
 		<>
 			{/* Google Analytics gtag.js script */}
 			<Script
-				src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+				src="https://www.googletagmanager.com/gtag/js?id=G-RVQRV9JEND"
 				strategy="afterInteractive"
 				id="google-analytics-script"
 			/>
@@ -35,7 +32,7 @@ export function GoogleAnalytics({ gaId }: GoogleAnalyticsProps) {
 						window.dataLayer = window.dataLayer || [];
 						function gtag(){dataLayer.push(arguments);}
 						gtag('js', new Date());
-						gtag('config', '${gaId}');
+						gtag('config', 'G-RVQRV9JEND');
 					`,
 				}}
 			/>

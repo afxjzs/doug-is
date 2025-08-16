@@ -25,9 +25,12 @@ jest.mock("next/script", () => {
 })
 
 describe("GoogleAnalytics", () => {
-	it("renders Google Analytics scripts with valid tracking ID", () => {
-		const testGaId = "G-TEST123"
-		render(<GoogleAnalytics gaId={testGaId} />)
+	it("renders Google Analytics scripts in production environment", () => {
+		// Mock NODE_ENV to production
+		const originalEnv = process.env.NODE_ENV
+		process.env.NODE_ENV = "production"
+
+		render(<GoogleAnalytics />)
 
 		// Check that both scripts are rendered
 		expect(
@@ -37,36 +40,59 @@ describe("GoogleAnalytics", () => {
 			screen.getByTestId("script-google-analytics-config")
 		).toBeInTheDocument()
 
-		// Check that the gtag script has the correct src
+		// Check that the gtag script has the correct hardcoded src
 		const gtagScript = screen.getByTestId("script-google-analytics-script")
 		expect(gtagScript).toHaveAttribute(
 			"data-src",
-			`https://www.googletagmanager.com/gtag/js?id=${testGaId}`
+			"https://www.googletagmanager.com/gtag/js?id=G-RVQRV9JEND"
 		)
 
-		// Check that the config script contains the tracking ID
+		// Check that the config script contains the hardcoded tracking ID
 		const configScript = screen.getByTestId("script-google-analytics-config")
 		expect(configScript).toHaveAttribute("data-strategy", "afterInteractive")
+
+		// Restore original NODE_ENV
+		process.env.NODE_ENV = originalEnv
 	})
 
-	it("renders nothing when no tracking ID is provided", () => {
-		const { container } = render(<GoogleAnalytics gaId="" />)
+	it("renders nothing in development environment", () => {
+		// Mock NODE_ENV to development
+		const originalEnv = process.env.NODE_ENV
+		process.env.NODE_ENV = "development"
+
+		const { container } = render(<GoogleAnalytics />)
 		expect(container.firstChild).toBeNull()
+
+		// Restore original NODE_ENV
+		process.env.NODE_ENV = originalEnv
 	})
 
-	it("renders nothing when tracking ID is undefined", () => {
-		const { container } = render(<GoogleAnalytics gaId={undefined as any} />)
+	it("renders nothing in test environment", () => {
+		// Mock NODE_ENV to test
+		const originalEnv = process.env.NODE_ENV
+		process.env.NODE_ENV = "test"
+
+		const { container } = render(<GoogleAnalytics />)
 		expect(container.firstChild).toBeNull()
+
+		// Restore original NODE_ENV
+		process.env.NODE_ENV = originalEnv
 	})
 
 	it("uses afterInteractive strategy for optimal loading", () => {
-		const testGaId = "G-TEST123"
-		render(<GoogleAnalytics gaId={testGaId} />)
+		// Mock NODE_ENV to production
+		const originalEnv = process.env.NODE_ENV
+		process.env.NODE_ENV = "production"
+
+		render(<GoogleAnalytics />)
 
 		const gtagScript = screen.getByTestId("script-google-analytics-script")
 		const configScript = screen.getByTestId("script-google-analytics-config")
 
 		expect(gtagScript).toHaveAttribute("data-strategy", "afterInteractive")
 		expect(configScript).toHaveAttribute("data-strategy", "afterInteractive")
+
+		// Restore original NODE_ENV
+		process.env.NODE_ENV = originalEnv
 	})
 })

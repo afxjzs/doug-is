@@ -108,7 +108,7 @@ export default async function RootLayout({
 		<html lang="en" className="scroll-smooth">
 			<body className={`${inter.variable} ${interLocal.variable}`}>
 				{/* Google Analytics - Load early for comprehensive tracking */}
-				<GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA4_ID || ""} />
+				<GoogleAnalytics />
 
 				<TooltipProvider>
 					<ClientAnalyticsWrapper>
