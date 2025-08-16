@@ -271,7 +271,7 @@ describe("LoginForm", () => {
 			target: { value: "test@example.com" },
 		})
 		fireEvent.change(screen.getByLabelText(/password/i), {
-			target: { value: "password123" },
+			target: { value: "***" },
 		})
 
 		fireEvent.click(screen.getByText(/sign in$/i))
@@ -279,7 +279,7 @@ describe("LoginForm", () => {
 		await waitFor(() => {
 			expect(mockAuthHook.loginWithEmail).toHaveBeenCalledWith(
 				"test@example.com",
-				"password123"
+				"[redacted. in .env.test]"
 			)
 			expect(mockRouter.push).toHaveBeenCalledWith("/admin")
 		})
