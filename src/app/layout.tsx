@@ -5,6 +5,7 @@ import "./globals.css"
 import { ClientAnalyticsWrapper } from "@/components/ClientAnalyticsWrapper"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import LayoutWrapper from "@/components/LayoutWrapper"
+import { GoogleAnalytics } from "@/components/GoogleAnalytics"
 
 // Local font fallback
 const interLocal = localFont({
@@ -106,6 +107,9 @@ export default async function RootLayout({
 	return (
 		<html lang="en" className="scroll-smooth">
 			<body className={`${inter.variable} ${interLocal.variable}`}>
+				{/* Google Analytics - Load early for comprehensive tracking */}
+				<GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA4_ID || ""} />
+
 				<TooltipProvider>
 					<ClientAnalyticsWrapper>
 						<LayoutWrapper>{children}</LayoutWrapper>

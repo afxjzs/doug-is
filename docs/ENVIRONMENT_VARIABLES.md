@@ -14,6 +14,15 @@ NEXT_PUBLIC_POSTHOG_KEY=your_posthog_project_api_key
 NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com  # Optional: defaults to US cloud
 ```
 
+### Google Analytics (GA4)
+
+Google Analytics 4 is used for traffic source and goal tracking.
+
+**Required Variables:**
+```bash
+NEXT_PUBLIC_GA4_ID=G-RVQRV9JEND  # Your Google Analytics 4 tracking ID
+```
+
 **Setup Instructions:**
 1. Create a PostHog account at https://posthog.com
 2. Create a new project
