@@ -1,8 +1,3 @@
----
-description: 
-globs: 
-alwaysApply: true
----
 # doug.is Project-Specific Instructions
 
 This document provides instructions and best practices tailored specifically to the `doug.is` personal website project.
@@ -15,6 +10,7 @@ This document provides instructions and best practices tailored specifically to 
 -   All database mutations **must** be performed via server-side clients in Server Actions, as specified in the two-client security model in `.cursor/rules/supabase.mdc`.
 -   Adhere strictly to the established **Route Groups architecture** for adding or modifying pages, as documented in `.cursor/rules/nextjs.mdc`.
 -   There is also a `.cursor/rules/instructions.mdc' file that contains all of the universal rules as well. 
+-   **NEW**: Database separation **must** be implemented with automatic environment detection and local/production database switching.
 
 ## Technology Stack (Verified Versions)
 
@@ -24,12 +20,47 @@ This project is built with a modern web stack. Adherence to the best practices f
 -   **Framework**: Next.js ^15.2.4 (App Router)
 -   **UI Library**: React ^19.0.0
 -   **Styling**: Tailwind CSS ^4.0.0
--   **Database**: Supabase (via @supabase/supabase-js ^2.49.1)
+-   **Database**: Supabase (Local Development + Production)
 -   **Node.js**: >=20.11.1 (required minimum)
 -   **TypeScript**: ^5.3.3
 -   **State Management**: `useActionState`, `useFormStatus`, and URL state via `nuqs`
 -   **AI Integration**: Vercel AI SDK
 -   **UI Components**: Shadcn UI, Radix UI
+
+## Database Architecture
+
+### Environment-Based Database Selection
+
+The project implements a sophisticated database separation strategy that automatically switches between local and production databases:
+
+**Local Development Environment**:
+- **Database**: Local Supabase instance running on Docker
+- **Ports**: API (54321), Database (54322), Studio (54323), Auth (54324)
+- **URLs**: http://127.0.0.1:54321 (API), http://127.0.0.1:54323 (Studio)
+- **Data**: Local copy of production data for development and testing
+
+**Production Environment**:
+- **Database**: Remote Supabase project (tzffjzocrazemvtgqavg.supabase.co)
+- **URLs**: Production Supabase project URLs
+- **Data**: Live production data
+
+**Automatic Environment Detection**:
+- **Local**: Automatically detected when running `npm run dev` or `./start.sh`
+- **Production**: Automatically detected in Vercel deployment environment
+- **Fallback**: Graceful fallback to production database if local instance unavailable
+
+### Data Synchronization
+
+**Local to Production Sync**:
+- **Pull**: Scripts to copy production data to local database
+- **Push**: Mechanisms to deploy local changes to production
+- **Conflict Resolution**: Safe handling of data conflicts during synchronization
+- **Schema Sync**: Automatic schema comparison and migration
+
+**Migration Management**:
+- **Unified Migrations**: Single migration system that works on both environments
+- **Schema Comparison**: Tools to detect and resolve schema differences
+- **Safe Deployment**: Validation before pushing changes to production
 
 ## Workflow and Commands
 
@@ -40,6 +71,19 @@ This project is built with a modern web stack. Adherence to the best practices f
     **Note**: The app runs on port 3000 (Next.js default).
 -   **Turbopack**: The development environment uses Turbopack for faster performance (`--turbopack` flag is in the `dev` script).
 -   **MCP Servers**: This project may use read-only MCP servers for Supabase and browser interactions. If any MCP tool fails to connect or operate correctly, stop immediately and notify the user.
+-   **Local Supabase**: For local development, use the local Supabase instance:
+    ```bash
+    # Start local Supabase services
+    supabase start
+    
+    # Access local services:
+    # - Studio: http://127.0.0.1:54323
+    # - API: http://127.0.0.1:54321
+    # - Database: localhost:54322
+    
+    # Stop local services
+    supabase stop
+    ```
 
 ## Development Methodology
 
@@ -86,6 +130,7 @@ src/app/
 - **Route Groups** `(site)`: Contain actual page content (`page.tsx` files)
 - **Regular Folders** `/advising`: Contain layouts and metadata for URL paths
 - **Content comes from route groups**, **configuration from regular folders**
+
 ### Content Management Patterns
 -   **Blog Content Structure**: All blog content is centralized under `/thinking` route with URL structure: `/thinking/about/[category]/[slug]`
 -   **Database Integration**: Posts stored in Supabase with proper RLS policies for public/admin access
@@ -100,14 +145,43 @@ src/app/
 ## Environment Setup
 
 ### Required Environment Variables
-```bash
-# PUBLIC (Client-side safe)
-NEXT_PUBLIC_SUPABASE_URL=your_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 
-# PRIVATE (Server-side only)
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+**Local Development (.env.local)**:
+```bash
+# Local Supabase (for development)
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_local_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_local_service_role_key
+
+# Production Supabase (for reference and fallback)
+NEXT_PUBLIC_SUPABASE_URL_PROD=https://tzffjzocrazemvtgqavg.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY_PROD=your_production_anon_key
+SUPABASE_SERVICE_ROLE_KEY_PROD=your_production_service_role_key
+
+# Analytics
+NEXT_PUBLIC_POSTHOG_KEY=your_posthog_project_api_key
+NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 ```
+
+**Production (Vercel Environment Variables)**:
+```bash
+# Production Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://tzffjzocrazemvtgqavg.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_production_service_role_key
+
+# Analytics
+NEXT_PUBLIC_POSTHOG_KEY=your_posthog_project_api_key
+NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
+```
+
+### Environment Detection
+
+The application automatically detects the environment and selects the appropriate database:
+
+- **Local Development**: Automatically uses local Supabase instance
+- **Production**: Automatically uses production Supabase project
+- **Fallback**: Gracefully falls back to production if local instance unavailable
 
 ### Development Commands
 ```bash
@@ -121,6 +195,12 @@ npm run build
 npm test
 npm run test:watch
 npm run test:coverage
+
+# Local Supabase management
+supabase start          # Start local services
+supabase stop           # Stop local services
+supabase status         # Check service status
+supabase db reset       # Reset local database (WARNING: deletes all data)
 ```
 
 ## Security Best Practices
@@ -172,7 +252,15 @@ export function middleware(request: NextRequest) {
 -   **Migration System**: Use Supabase CLI for database migrations
 -   **Backup Strategy**: Regular database backups via Supabase dashboard
 -   **Monitoring**: Use Supabase logs and analytics for database monitoring
+-   **Local Development**: Local Supabase instance for isolated development
+-   **Data Sync**: Scripts to synchronize data between environments
 
+## Further Reading
+For in-depth best practices, refer to:
+-   `.cursor/rules/nextjs.mdc` for Next.js 15, App Router, and React 19 patterns.
+-   `.cursor/rules/tailwind4.mdc` for the CSS-first v4 syntax and theme setup.
+-   `.cursor/rules/supabase.mdc` for data access patterns and security architecture.
+-   `.cursor/rules/testing.mdc` for comprehensive testing strategies and workflows. 
 ## Further Reading
 For in-depth best practices, refer to:
 -   `.cursor/rules/nextjs.mdc` for Next.js 15, App Router, and React 19 patterns.

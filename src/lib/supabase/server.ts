@@ -14,82 +14,78 @@ import { createServerClient } from "@supabase/ssr"
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 import { cookies } from "next/headers"
 import type { Database } from "../types/supabase"
+import { getDatabaseConfig } from "./environment"
 
 /**
  * Create a Supabase client for Server Components, Server Actions, and Route Handlers
- * Following official Next.js Supabase patterns
+ * Automatically selects local or production database
  */
 export async function createClient() {
 	const cookieStore = await cookies()
+	const config = getDatabaseConfig()
 
-	return createServerClient<Database>(
-		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-		{
-			cookies: {
-				getAll() {
-					return cookieStore.getAll()
-				},
-				setAll(cookiesToSet) {
-					try {
-						cookiesToSet.forEach(({ name, value, options }) => {
-							cookieStore.set(name, value, options)
-						})
-					} catch (error) {
-						// The `setAll` method was called from a Server Component.
-						// This can be ignored if you have middleware refreshing
-						// user sessions.
-					}
-				},
+	return createServerClient<Database>(config.url, config.anonKey, {
+		cookies: {
+			getAll() {
+				return cookieStore.getAll()
 			},
-		}
-	)
+			setAll(cookiesToSet) {
+				try {
+					cookiesToSet.forEach(({ name, value, options }) => {
+						cookieStore.set(name, value, options)
+					})
+				} catch (error) {
+					// The `setAll` method was called from a Server Component.
+					// This can be ignored if you have middleware refreshing
+					// user sessions.
+				}
+			},
+		},
+	})
 }
 
 /**
  * Create a Supabase client with service role key for admin operations
  * This client bypasses RLS and should only be used in secure server contexts
+ * Automatically selects local or production database
  */
 export function createServiceRoleClient() {
 	if (typeof window !== "undefined") {
 		throw new Error("Service role client can only be used on the server")
 	}
 
-	if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+	const config = getDatabaseConfig()
+
+	if (!config.serviceRoleKey) {
 		throw new Error("Service role key is missing")
 	}
 
-	return createSupabaseClient(
-		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		process.env.SUPABASE_SERVICE_ROLE_KEY!,
-		{
-			auth: {
-				autoRefreshToken: false,
-				persistSession: false,
-			},
-		}
-	)
+	return createSupabaseClient(config.url, config.serviceRoleKey, {
+		auth: {
+			autoRefreshToken: false,
+			persistSession: false,
+		},
+	})
 }
 
 /**
  * Create a static Supabase client (for static generation)
  * Used in data layer for static content
+ * Automatically selects local or production database
  */
 export function createStaticClient() {
-	return createServerClient<Database>(
-		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-		{
-			cookies: {
-				getAll() {
-					return []
-				},
-				setAll() {
-					// No-op for static client
-				},
+	const config = getDatabaseConfig()
+
+	return createServerClient<Database>(config.url, config.anonKey, {
+		cookies: {
+			getAll() {
+				return []
 			},
-		}
-	)
+			setAll() {
+				// No-op for static client
+			},
+		},
+	})
 }
 
 /**

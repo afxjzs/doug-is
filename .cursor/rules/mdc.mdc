@@ -6,7 +6,7 @@ alwaysApply: false
 ---
 description: Guidelines and best practices for creating .mdc (Markdown Configuration) files in Cursor, including structure, metadata annotations, and formatting rules
 globs: ["**/*.mdc"]
----
+---can
 
 # Cursor MDC File Guidelines
 

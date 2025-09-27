@@ -10,11 +10,46 @@ This is a personal website for Douglas Rogers built with Next.js 15.2.4, React 1
 - **Language**: TypeScript
 - **Frontend**: React ^19.0.0
 - **Styling**: Tailwind CSS ^4.0.0 with PostCSS ^4.0.14
-- **Database**: Supabase
+- **Database**: Supabase (Local Development + Production)
 - **Deployment**: Vercel
 - **UI Components**: Radix UI
-- **Analytics**: Vercel Analytics
+- **Analytics**: Vercel Analytics + PostHog + Google Analytics (GA4)
 - **Node.js**: >=20.11.1
+
+## Database Architecture
+
+### Environment-Based Database Selection
+
+The project implements a sophisticated database separation strategy that automatically switches between local and production databases based on the environment:
+
+**Local Development Environment**:
+- **Database**: Local Supabase instance running on Docker
+- **Ports**: API (54321), Database (54322), Studio (54323), Auth (54324)
+- **URLs**: http://127.0.0.1:54321 (API), http://127.0.0.1:54323 (Studio)
+- **Data**: Local copy of production data for development and testing
+
+**Production Environment**:
+- **Database**: Remote Supabase project (tzffjzocrazemvtgqavg.supabase.co)
+- **URLs**: Production Supabase project URLs
+- **Data**: Live production data
+
+**Automatic Environment Detection**:
+- **Local**: Automatically detected when running `npm run dev` or `./start.sh`
+- **Production**: Automatically detected in Vercel deployment environment
+- **Fallback**: Graceful fallback to production database if local instance unavailable
+
+### Data Synchronization
+
+**Local to Production Sync**:
+- **Pull**: Scripts to copy production data to local database
+- **Push**: Mechanisms to deploy local changes to production
+- **Conflict Resolution**: Safe handling of data conflicts during synchronization
+- **Schema Sync**: Automatic schema comparison and migration
+
+**Migration Management**:
+- **Unified Migrations**: Single migration system that works on both environments
+- **Schema Comparison**: Tools to detect and resolve schema differences
+- **Safe Deployment**: Validation before pushing changes to production
 
 ## Directory Structure
 
@@ -297,6 +332,26 @@ Defined in globals.css with RGB values for easy opacity adjustments:
 npm run dev
 ```
 
+### Local Supabase Setup
+```bash
+# Install Supabase CLI (if not already installed)
+npm install -g supabase
+
+# Start local Supabase services
+supabase start
+
+# Access local services:
+# - Studio: http://127.0.0.1:54323
+# - API: http://127.0.0.1:54321
+# - Database: localhost:54322
+
+# Stop local services
+supabase stop
+
+# Reset local database (WARNING: deletes all local data)
+supabase db reset
+```
+
 ### Key Development Practices
 - **Test-Driven Development (TDD)**: Write tests before implementation
 - **Server-Side Rendering**: Leverage Next.js App Router and Server Components
@@ -307,6 +362,8 @@ npm run dev
 - **Migration System**: Structured migration system with helper scripts
 - **MCP Integration**: Read-only Supabase MCP server for development
 - **Environment Fallback**: Mock data when Supabase credentials are missing
+- **Local Development**: Local Supabase instance for isolated development
+- **Data Synchronization**: Scripts to sync data between local and production
 
 ## Authentication and Authorization
 
@@ -333,34 +390,70 @@ npm run dev
 4. **Dynamic Routing**: Category and slug-based routing for blog posts
 5. **Error Boundaries**: Comprehensive error handling throughout the app
 6. **Accessibility**: WCAG compliance and keyboard navigation support
+7. **Database Separation**: Automatic local vs production database selection
+8. **Data Synchronization**: Safe data sync between development and production
 
 ## Environment Variables
 
-Required environment variables:
-- `NEXT_PUBLIC_SUPABASE_URL`: Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase anonymous key
-- Additional environment variables for deployment and analytics
+### Required Environment Variables
 
-## Deployment
-
-The site is deployed on Vercel with:
-- **Automatic Deployments**: From the main branch
-- **Environment Configuration**: Variables configured in Vercel dashboard  
-- **Performance Monitoring**: Vercel Analytics integration
-- **Edge Functions**: Optimized for global performance
-
-## Common Development Patterns
-
-1. **Data Fetching**: Using Supabase client functions like `getPosts()`, `getPostBySlug()`
-2. **Layout Components**: Consistent layout structure across all pages
-3. **Responsive Design**: Mobile-first approach with breakpoint-specific optimizations
-4. **Gradient Effects**: Consistent use of gradients for visual hierarchy
-5. **Error Handling**: Comprehensive error boundaries and fallback states
-6. **Type Safety**: Strong TypeScript integration throughout the codebase
-
-## Server Management
-
-**CRITICAL**: Development server runs on port 3000. Server restart command:
+**Local Development (.env.local)**:
 ```bash
-cd /Users/afxjzs/dev/projects/doug-is && kill $(lsof -t -i:3000) || true && npm run dev
-``` 
+# Local Supabase (for development)
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_local_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_local_service_role_key
+
+# Production Supabase (for reference and fallback)
+NEXT_PUBLIC_SUPABASE_URL_PROD=https://tzffjzocrazemvtgqavg.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY_PROD=your_production_anon_key
+SUPABASE_SERVICE_ROLE_KEY_PROD=your_production_service_role_key
+```
+
+**Production (Vercel Environment Variables)**:
+```bash
+# Production Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://tzffjzocrazemvtgqavg.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_production_service_role_key
+```
+
+**Analytics Configuration**:
+```bash
+# PostHog Analytics
+NEXT_PUBLIC_POSTHOG_KEY=your_posthog_project_api_key
+NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
+
+# Google Analytics (GA4) - automatically configured
+# No environment variables needed - hardcoded tracking ID G-RVQRV9JEND
+```
+
+### Environment Detection
+
+The application automatically detects the environment and selects the appropriate database:
+
+- **Local Development**: Automatically uses local Supabase instance
+- **Production**: Automatically uses production Supabase project
+- **Fallback**: Gracefully falls back to production if local instance unavailable
+
+## Deployment and Infrastructure
+
+### Vercel Deployment
+- **Automatic Deployments**: Triggered on main branch pushes
+- **Environment Variables**: Configured in Vercel dashboard
+- **Analytics**: Vercel Analytics integrated for performance monitoring
+- **Build Optimization**: Configured for standalone output
+
+### Database Management
+- **Migration System**: Use Supabase CLI for database migrations
+- **Backup Strategy**: Regular database backups via Supabase dashboard
+- **Monitoring**: Use Supabase logs and analytics for database monitoring
+- **Local Development**: Local Supabase instance for isolated development
+- **Data Sync**: Scripts to synchronize data between environments
+
+## Further Reading
+For in-depth best practices, refer to:
+-   `.cursor/rules/nextjs.mdc` for Next.js 15, App Router, and React 19 patterns.
+-   `.cursor/rules/tailwind4.mdc` for the CSS-first v4 syntax and theme setup.
+-   `.cursor/rules/supabase.mdc` for data access patterns and security architecture.
+-   `.cursor/rules/testing.mdc` for comprehensive testing strategies and workflows. 

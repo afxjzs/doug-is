@@ -1,25 +1,28 @@
 /**
- * Supabase Browser Client - Official Pattern
+ * Supabase Browser Client - Environment-Aware
  *
- * Simple browser client following official Supabase Next.js guide:
- * https://supabase.com/docs/guides/auth/server-side/nextjs
- *
+ * Automatically selects local or production database based on environment.
  * Creates a Supabase client for use in Client Components.
  * Uses the official @supabase/ssr package for proper SSR support.
  */
 
 import { createBrowserClient } from "@supabase/ssr"
 import type { Database } from "../types/supabase"
+import { getDatabaseConfig, logEnvironmentConfig } from "./environment"
 
 /**
  * Create a Supabase client for Client Components
- * Following official Next.js Supabase patterns
+ * Automatically selects local or production database
  */
 export function createClient() {
-	return createBrowserClient<Database>(
-		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-	)
+	const config = getDatabaseConfig()
+
+	// Log configuration in development
+	if (process.env.NODE_ENV === "development") {
+		logEnvironmentConfig()
+	}
+
+	return createBrowserClient<Database>(config.url, config.anonKey)
 }
 
 /**

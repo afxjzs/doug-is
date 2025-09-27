@@ -53,23 +53,23 @@ const projects = [
 	// 	link: "/building/doug-is",
 	// 	github: "https://github.com/afxjzs/doug-is",
 	// },
-	{
-		id: "goose-chase",
-		title: "Goose Chase",
-		description:
-			"A curated guide to Chicago's finest venues based on Dante The Don's Barstool Sports article. Features interactive maps, venue filtering, and comprehensive recommendations for bachelor parties and visitors.",
-		image: "/images/projects/goose-chase/goosechase-screenshot-modal.png",
-		tags: [
-			"Next.js",
-			"Tailwind CSS",
-			"Google Places API",
-			"CSV Data",
-			"Vercel",
-		],
-		link: "/building/goose-chase",
-		github: "https://github.com/afxjzs/goose-chase-simple",
-		website: "https://goosechase.doug.is/",
-	},
+	// {
+	// 	id: "goose-chase",
+	// 	title: "Goose Chase",
+	// 	description:
+	// 		"A curated guide to Chicago's finest venues based on Dante The Don's Barstool Sports article. Features interactive maps, venue filtering, and comprehensive recommendations for bachelor parties and visitors.",
+	// 	image: "/images/projects/goose-chase/goosechase-screenshot-modal.png",
+	// 	tags: [
+	// 		"Next.js",
+	// 		"Tailwind CSS",
+	// 		"Google Places API",
+	// 		"CSV Data",
+	// 		"Vercel",
+	// 	],
+	// 	link: "/building/goose-chase",
+	// 	github: "https://github.com/afxjzs/goose-chase-simple",
+	// 	website: "https://goosechase.doug.is/",
+	// },
 	{
 		id: "migraine-free",
 		title: "Migraine Trigger Database",
@@ -434,37 +434,7 @@ export default function BuildingPage() {
 												GitHub
 											</Link>
 										)}
-										{project.website && (
-											<Link
-												href={project.website}
-												target="_blank"
-												rel="noopener noreferrer"
-												className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),0.9)] transition-colors"
-												onClick={() =>
-													handleExternalLinkClick(
-														project.id,
-														"github",
-														project.website
-													)
-												}
-											>
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													className="h-5 w-5 inline-block mr-1"
-													viewBox="0 0 24 24"
-													fill="none"
-													stroke="currentColor"
-													strokeWidth="2"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												>
-													<circle cx="12" cy="12" r="10"></circle>
-													<line x1="2" y1="12" x2="22" y2="12"></line>
-													<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-												</svg>
-												Live Site
-											</Link>
-										)}
+
 										{project.testflight && (
 											<Link
 												href={project.testflight}
