@@ -17,8 +17,7 @@ export default function ConnectCta({
 }: ConnectCtaProps) {
 	return (
 		<div className={`relative ${className}`}>
-			<div className="absolute inset-0 bg-gradient-to-r from-violet-900/20 to-pink-900/20 rounded-lg -z-10 blur-xl"></div>
-			<div className="relative z-10 p-8 border border-[rgba(var(--color-foreground),0.05)] rounded-lg bg-[rgba(var(--color-background),0.8)] backdrop-blur-sm">
+			<div className="relative z-10 p-8 border border-[rgba(var(--color-border),0.1)] rounded-lg bg-[rgba(var(--color-foreground),0.03)]">
 				<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
 					<div className="flex-1">
 						<h2 className="text-2xl font-semibold gradient-heading mb-2 md:text-left">
@@ -31,7 +30,7 @@ export default function ConnectCta({
 					<div className="flex md:flex-shrink-0 justify-center md:justify-end">
 						<Link
 							href={buttonHref}
-							className="neon-button-magenta whitespace-nowrap"
+							className="btn-primary whitespace-nowrap"
 						>
 							{buttonText}
 						</Link>

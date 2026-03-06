@@ -5,7 +5,6 @@ import Link from "next/link"
 export default function Footer() {
 	return (
 		<footer className="relative z-10 mt-32">
-			<div className="absolute inset-0 bg-gradient-to-t from-[rgba(var(--color-violet),0.1)] to-transparent -z-10"></div>
 			<div className="container mx-auto px-4 py-12">
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
 					<div>
@@ -21,7 +20,6 @@ export default function Footer() {
 							<SocialLink
 								href="https://bsky.app/profile/dougxyz.bsky.social"
 								aria-label="Bluesky"
-								className="hover-glow-cyan"
 							>
 								<svg
 									fill="none"
@@ -37,7 +35,6 @@ export default function Footer() {
 							<SocialLink
 								href="https://twitter.com/glowingrec"
 								aria-label="Twitter"
-								className="hover-glow-cyan"
 							>
 								<svg
 									fill="currentColor"
@@ -51,7 +48,6 @@ export default function Footer() {
 							<SocialLink
 								href="https://github.com/afxjzs"
 								aria-label="GitHub"
-								className="hover-glow-violet"
 							>
 								<svg
 									className="w-6 h-6 transition-all duration-300 transform hover:scale-110"
@@ -66,7 +62,6 @@ export default function Footer() {
 							<SocialLink
 								href="https://linkedin.com/in/douglasrogers"
 								aria-label="LinkedIn"
-								className="hover-glow-magenta"
 							>
 								<svg
 									className="w-6 h-6 transition-all duration-300 transform hover:scale-110"
@@ -82,22 +77,14 @@ export default function Footer() {
 
 					<div className="grid grid-cols-2 gap-6">
 						<div>
-							<h3 className="text-lg font-semibold gradient-text-cyan mb-4">
+							<h3 className="text-lg font-semibold text-[rgba(var(--color-foreground),0.9)] mb-4">
 								doug.is ...
 							</h3>
 							<ul className="space-y-2">
-								{/* <li>
-									<Link
-										href="/"
-										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),1)] transition-colors"
-									>
-										doug.is ...
-									</Link>
-								</li> */}
 								<li>
 									<Link
 										href="/advising"
-										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),1)] transition-colors"
+										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgb(var(--color-accent))] transition-colors"
 									>
 										Advising
 									</Link>
@@ -105,7 +92,7 @@ export default function Footer() {
 								<li>
 									<Link
 										href="/building"
-										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),1)] transition-colors"
+										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgb(var(--color-accent))] transition-colors"
 									>
 										Building
 									</Link>
@@ -113,7 +100,7 @@ export default function Footer() {
 								<li>
 									<Link
 										href="/investing"
-										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),1)] transition-colors"
+										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgb(var(--color-accent))] transition-colors"
 									>
 										Investing
 									</Link>
@@ -121,7 +108,7 @@ export default function Footer() {
 								<li>
 									<Link
 										href="/thinking"
-										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),1)] transition-colors"
+										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgb(var(--color-accent))] transition-colors"
 									>
 										Writing
 									</Link>
@@ -129,14 +116,14 @@ export default function Footer() {
 							</ul>
 						</div>
 						<div>
-							<h3 className="text-lg font-semibold gradient-text-cyan mb-4">
+							<h3 className="text-lg font-semibold text-[rgba(var(--color-foreground),0.9)] mb-4">
 								Other Links
 							</h3>
 							<ul className="space-y-2">
 								<li>
 									<Link
 										href="/hustling"
-										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),1)] transition-colors"
+										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgb(var(--color-accent))] transition-colors"
 									>
 										About
 									</Link>
@@ -144,7 +131,7 @@ export default function Footer() {
 								<li>
 									<Link
 										href="/attributing"
-										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),1)] transition-colors"
+										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgb(var(--color-accent))] transition-colors"
 									>
 										Attribution
 									</Link>
@@ -152,7 +139,7 @@ export default function Footer() {
 								<li>
 									<Link
 										href="/respecting-privacy"
-										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),1)] transition-colors"
+										className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgb(var(--color-accent))] transition-colors"
 									>
 										Privacy Policy
 									</Link>
@@ -162,7 +149,7 @@ export default function Footer() {
 					</div>
 
 					<div>
-						<h3 className="text-lg font-semibold gradient-text-magenta mb-4">
+						<h3 className="text-lg font-semibold text-[rgba(var(--color-foreground),0.9)] mb-4">
 							Contact
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
@@ -171,43 +158,27 @@ export default function Footer() {
 						</p>
 						<Link
 							href="/connecting"
-							className="neon-button-magenta inline-block"
+							className="btn-primary inline-block"
 						>
 							Let&apos;s Connect
 						</Link>
 					</div>
 				</div>
 
-				<div className="pt-8 border-t border-[rgba(var(--color-foreground),0.1)] flex flex-col md:flex-row justify-between items-center">
-					<p className="text-[rgba(var(--color-foreground),0.6)] text-sm mb-4 md:mb-0">
-						© {new Date().getFullYear()} doug.is. All rights reserved.
+				<div className="pt-8 border-t border-[rgba(var(--color-border),0.1)] flex flex-col md:flex-row justify-between items-center">
+					<p className="text-[rgba(var(--color-muted),1)] text-sm mb-4 md:mb-0">
+						&copy; {new Date().getFullYear()} doug.is. All rights reserved.
 					</p>
 
-					<div className="text-[rgba(var(--color-foreground),0.6)] text-sm">
-						<span className="inline-block relative px-2">
-							<span className="absolute inset-0 bg-gradient-to-r from-[rgba(var(--color-cyan),0.2)] to-[rgba(var(--color-magenta),0.2)] opacity-50 rounded-md"></span>
-							<span className="relative">
-								this site was vibe coded by doug over a couple weekends using{" "}
-								<Link
-									href="https://cursor.sh"
-									className="text-[rgba(var(--color-cyan),0.9)] hover:text-[rgba(var(--color-cyan),1)]"
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									cursor
-								</Link>{" "}
-								and{" "}
-								<Link
-									href="https://claude.ai"
-									className="text-[rgba(var(--color-magenta),0.9)] hover:text-[rgba(var(--color-magenta),1)]"
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									claude-sonnet-3.7
-								</Link>
-							</span>
-						</span>
-					</div>
+					<p className="text-[rgba(var(--color-muted),0.8)] text-sm">
+						This site was built 100% with the latest AI tools and techniques.{" "}
+						<Link
+							href="/connecting"
+							className="text-[rgb(var(--color-accent))] hover:underline"
+						>
+							I can help you do the same.
+						</Link>
+					</p>
 				</div>
 			</div>
 		</footer>
@@ -227,7 +198,7 @@ function SocialLink({ href, children, className, ...props }: SocialLinkProps) {
 			href={href}
 			target="_blank"
 			rel="noopener noreferrer"
-			className={`text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-foreground),1)] transition-colors ${className}`}
+			className={`text-[rgba(var(--color-foreground),0.5)] hover:text-[rgb(var(--color-accent))] transition-colors ${className || ""}`}
 			{...props}
 		>
 			{children}
