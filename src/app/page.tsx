@@ -72,10 +72,10 @@ export default async function Home() {
 		<div className="max-w-4xl mx-auto">
 			{/* Hero Section */}
 			<div className="mb-16 relative">
-				<div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 to-cyan-900/20 rounded-lg -z-10 blur-xl"></div>
+				<div className="absolute inset-0 rounded-lg -z-10"></div>
 				<div className="relative z-10 py-16 px-8 border border-[rgba(var(--color-foreground),0.05)] rounded-lg bg-[rgba(var(--color-background),0.8)] backdrop-blur-sm">
 					<div className="flex flex-col md:flex-row items-center justify-center gap-8 mb-8">
-						<div className="relative w-32 h-32 overflow-hidden rounded-full border-2 border-[rgba(var(--color-violet),0.6)] shadow-[0_0_15px_rgba(var(--color-violet),0.3)]">
+						<div className="relative w-32 h-32 overflow-hidden rounded-full border-2 border-[rgba(var(--color-border),0.2)]">
 							<Image
 								src="/images/doug-2024-cropped-compr.png"
 								alt="Douglas E. Rogers"
@@ -117,11 +117,10 @@ export default async function Home() {
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 					<Link
 						href="/advising"
-						className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-foreground),0.05)] transition-all duration-300 hover:border-cyan-500/30 hover:shadow-[0_0_15px_rgba(0,255,255,0.15)]"
+						className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-border),0.08)] transition-all duration-300 hover:shadow-md hover:border-[rgba(var(--color-border),0.2)]"
 					>
-						<div className="absolute inset-0 bg-gradient-to-br from-cyan-900/20 to-purple-900/10 opacity-50 group-hover:opacity-70 transition-opacity duration-300"></div>
 						<div className="relative p-8 flex flex-col items-center text-center">
-							<div className="w-35 h-35 mb-4 text-cyan-300 group-hover:drop-shadow-[0_0_5px_rgba(0,255,255,0.4)]">
+							<div className="w-35 h-35 mb-4 text-cyan-300">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									viewBox="-5.0 -10.0 110.0 135.0"
@@ -157,11 +156,10 @@ export default async function Home() {
 
 					<Link
 						href="/building"
-						className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-foreground),0.05)] transition-all duration-300 hover:border-violet-500/30 hover:shadow-[0_0_15px_rgba(139,92,246,0.15)]"
+						className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-border),0.08)] transition-all duration-300 hover:shadow-md hover:border-[rgba(var(--color-border),0.2)]"
 					>
-						<div className="absolute inset-0 bg-gradient-to-br from-violet-900/20 to-pink-900/10 opacity-50 group-hover:opacity-70 transition-opacity duration-300"></div>
 						<div className="relative p-8 flex flex-col items-center text-center">
-							<div className="w-35 h-35 mb-4 text-violet-300 group-hover:drop-shadow-[0_0_5px_rgba(139,92,246,0.4)]">
+							<div className="w-35 h-35 mb-4 text-violet-300">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									viewBox="-5.0 -10.0 110.0 135.0"
@@ -196,11 +194,10 @@ export default async function Home() {
 
 					<Link
 						href="/investing"
-						className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-foreground),0.05)] transition-all duration-300 hover:border-emerald-500/30 hover:shadow-[0_0_15px_rgba(80,200,120,0.15)]"
+						className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-border),0.08)] transition-all duration-300 hover:shadow-md hover:border-[rgba(var(--color-border),0.2)]"
 					>
-						<div className="absolute inset-0 bg-gradient-to-br from-emerald-900/10 to-emerald-800/5 opacity-50 group-hover:opacity-70 transition-opacity duration-300"></div>
 						<div className="relative p-8 flex flex-col items-center text-center">
-							<div className="w-35 h-35 mb-4 text-emerald-300 group-hover:drop-shadow-[0_0_5px_rgba(80,200,120,0.4)]">
+							<div className="w-35 h-35 mb-4 text-emerald-300">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									viewBox="-5.0 -10.0 110.0 135.0"
@@ -238,9 +235,8 @@ export default async function Home() {
 				<div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
 					<Link
 						href="/hustling"
-						className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-foreground),0.05)] transition-all duration-300 hover:border-purple-500/30 hover:shadow-[0_0_15px_rgba(168,85,247,0.15)]"
+						className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-border),0.08)] transition-all duration-300 hover:shadow-md hover:border-[rgba(var(--color-border),0.2)]"
 					>
-						<div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 to-purple-800/5 opacity-50 group-hover:opacity-70 transition-opacity duration-300"></div>
 						<div className="relative p-8">
 							<h3 className="text-3xl md:text-4xl font-semibold mb-3 text-purple-300 leading-[1.2]">
 								about me
@@ -271,9 +267,8 @@ export default async function Home() {
 							href={`/thinking/about/${latestPost.category.toLowerCase()}/${
 								latestPost.slug
 							}`}
-							className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-foreground),0.05)] transition-all duration-300 hover:border-pink-500/30 hover:shadow-[0_0_15px_rgba(236,72,153,0.15)]"
+							className="group relative overflow-hidden rounded-lg border border-[rgba(var(--color-border),0.08)] transition-all duration-300 hover:shadow-md hover:border-[rgba(var(--color-border),0.2)]"
 						>
-							<div className="absolute inset-0 bg-gradient-to-br from-pink-900/10 to-pink-800/5 opacity-50 group-hover:opacity-70 transition-opacity duration-300"></div>
 							<div className="relative flex flex-col h-full">
 								{latestPost.featured_image && (
 									<div className="w-full h-48 overflow-hidden">
