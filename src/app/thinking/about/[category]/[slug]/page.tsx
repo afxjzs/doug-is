@@ -14,8 +14,8 @@ import {
 	getSiteName,
 } from "@/lib/utils/domain-detection"
 
-// Force dynamic rendering to ensure fresh data
-export const dynamic = "force-dynamic"
+// Revalidate on-demand when posts are updated via admin
+// (API routes call revalidateTag("posts") and revalidatePath on save)
 
 interface PageProps {
 	params: Promise<{ slug: string; category: string }>

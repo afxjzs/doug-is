@@ -1,61 +1,13 @@
-"use client"
-
 import Link from "next/link"
 import { formatDate } from "@/lib/utils"
-import SafeImage from "@/components/SafeImage"
-import { Post } from "@/lib/supabase/data"
-import { useState, useEffect } from "react"
-import { Metadata } from "next"
-import { getPosts } from "@/lib/supabase/data"
+import { getPublishedPosts } from "@/lib/supabase/data"
 import Image from "next/image"
 import StatusMessage from "@/components/StatusMessage"
 
-async function fetchPosts(): Promise<{ posts: Post[]; error: string | null }> {
-	try {
-		// Simple direct API call
-		const response = await fetch("/api/posts", {
-			cache: "no-store",
-		})
+export { metadata } from "./metadata"
 
-		if (!response.ok) {
-			console.error(`Error fetching posts: ${response.status}`)
-			return { posts: [], error: `API error: ${response.status}` }
-		}
-
-		const data = await response.json()
-		return { posts: data.posts || [], error: null }
-	} catch (err) {
-		console.error("Exception fetching posts:", err)
-		return {
-			posts: [],
-			error:
-				err instanceof Error ? err.message : "Unknown error fetching posts",
-		}
-	}
-}
-
-export default function ThinkingPage() {
-	const [posts, setPosts] = useState<Post[]>([])
-	const [error, setError] = useState<string | null>(null)
-	const [loading, setLoading] = useState(true)
-
-	useEffect(() => {
-		async function loadPosts() {
-			const result = await fetchPosts()
-			setPosts(result.posts)
-			setError(result.error)
-			setLoading(false)
-		}
-
-		loadPosts()
-	}, [])
-
-	// Sort all posts by date
-	const sortedPosts = [...posts].sort(
-		(a, b) =>
-			new Date(b.published_at || "").getTime() -
-			new Date(a.published_at || "").getTime()
-	)
+export default async function ThinkingPage() {
+	const posts = await getPublishedPosts()
 
 	return (
 		<div className="max-w-4xl mx-auto">
@@ -68,24 +20,14 @@ export default function ThinkingPage() {
 				</p>
 			</div>
 
-			{loading && <StatusMessage type="loading" message="Loading posts..." />}
-
-			{error && !loading && (
-				<StatusMessage
-					type="error"
-					message="There was an error loading posts. Please try again later."
-					details={error}
-				/>
-			)}
-
-			{sortedPosts.length === 0 && !error && !loading ? (
+			{posts.length === 0 ? (
 				<StatusMessage
 					type="info"
 					message="No posts found. Check back later for new content."
 				/>
 			) : (
 				<div className="space-y-8">
-					{sortedPosts.map((post) => (
+					{posts.map((post) => (
 						<article
 							key={post.id}
 							className="flex flex-col overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 bg-[rgba(var(--color-background-alt),0.5)] border border-[rgba(var(--color-foreground),0.1)]"
@@ -120,7 +62,7 @@ export default function ThinkingPage() {
 											{post.category}
 										</Link>
 										<span className="mx-2 text-[rgba(var(--color-foreground),0.3)]">
-											•
+											&bull;
 										</span>
 										<time className="text-sm text-[rgba(var(--color-foreground),0.6)]">
 											{post.published_at ? formatDate(post.published_at) : ""}

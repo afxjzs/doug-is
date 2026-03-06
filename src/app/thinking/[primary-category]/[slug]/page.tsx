@@ -16,8 +16,8 @@ import {
 	getSiteName,
 } from "@/lib/utils/domain-detection"
 
-// Force dynamic rendering to avoid cookies issues during build
-export const dynamic = "force-dynamic"
+// Revalidate on-demand when posts are updated via admin
+// (API routes call revalidateTag("posts") and revalidatePath on save)
 
 export async function generateMetadata({
 	params,
