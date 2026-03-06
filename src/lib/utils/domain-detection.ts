@@ -20,8 +20,18 @@ export function getSiteUrl(): string {
 		return envUrl.replace(/\/$/, "")
 	}
 
-	// Fallback for development
-	return "http://localhost:3000"
+	// In Vercel preview deployments, use the auto-provided URL
+	if (process.env.VERCEL_URL) {
+		return `https://${process.env.VERCEL_URL}`
+	}
+
+	// Development fallback
+	if (process.env.NODE_ENV === "development") {
+		return "http://localhost:3000"
+	}
+
+	// Production fallback — never emit localhost in prod
+	return "https://doug.is"
 }
 
 /**

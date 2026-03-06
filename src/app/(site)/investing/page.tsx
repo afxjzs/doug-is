@@ -73,16 +73,7 @@ export default function InvestingPage() {
 					<div className="relative z-10 p-8 border border-[rgba(var(--color-foreground),0.05)] rounded-lg bg-[rgba(var(--color-background),0.8)] backdrop-blur-sm">
 						<div className="flex flex-col md:flex-row items-center">
 							<div className="md:w-1/3 p-2 flex justify-center">
-								<div className="w-48 h-auto relative dark:hidden">
-									<Image
-										src="/images/venture-builder-logo.png"
-										alt="VentureBuilder Logo"
-										width={300}
-										height={150}
-										className="object-contain"
-									/>
-								</div>
-								<div className="w-48 h-auto relative hidden dark:block">
+								<div className="w-48 h-auto relative">
 									<Image
 										src="/images/venture-builder-logo-white.png"
 										alt="VentureBuilder Logo"
