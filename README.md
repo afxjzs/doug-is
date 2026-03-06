@@ -87,6 +87,11 @@ Use local Supabase for development and keep hosted Supabase for production.
    ./start.sh
    ```
 
+Optional one-command local rebuild (containers/volumes + migrations + CSV import):
+```bash
+./scripts/reset-local-supabase.sh
+```
+
 > Safety note: do not run destructive reset commands against the linked hosted project.
 
 ### Database Tables

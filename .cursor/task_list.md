@@ -518,6 +518,15 @@ The login crisis has been completely resolved and all tests are passing. The adm
 4. Run app (`./start.sh`) and verify local data path
 5. Optional: import latest backup CSVs into local DB
 
+### ✅ Local automation added
+- Added `scripts/reset-local-supabase.sh` to automate:
+  - stopping/removing local Supabase containers
+  - removing local Supabase project volumes
+  - clean `supabase start`
+  - `supabase db push --local`
+  - importing latest `posts_*.csv` and `migraine_triggers_*.csv` from `backups/`
+- Script intentionally touches only local Docker resources and local `public` schema data.
+
 ### Lessons
 - Environment-based DB selection must be used consistently in middleware and server auth paths, not only in browser/server helper modules.
 - `local.doug.is` must be treated as local environment in browser hostname detection.
