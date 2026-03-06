@@ -21,6 +21,28 @@ export interface DatabaseConfig {
 	serviceRoleKey?: string
 }
 
+function getLocalSetupInstructions(): string {
+	return [
+		"Local Supabase is required in development.",
+		"1) Ensure Docker Desktop is running.",
+		"2) Run: supabase start",
+		"3) Add local env vars to .env.local:",
+		"   NEXT_PUBLIC_SUPABASE_URL_LOCAL=http://127.0.0.1:54331",
+		"   NEXT_PUBLIC_SUPABASE_ANON_KEY_LOCAL=<local anon key>",
+		"   SUPABASE_SERVICE_ROLE_KEY_LOCAL=<local service role key>",
+		"4) Run: supabase db push",
+		"5) Restart: ./start.sh",
+	].join("\n")
+}
+
+function requireEnvVar(name: string): string {
+	const value = process.env[name]
+	if (!value) {
+		throw new Error(`Missing required environment variable: ${name}\n\n${getLocalSetupInstructions()}`)
+	}
+	return value
+}
+
 /**
  * Detects the current environment
  */
@@ -28,10 +50,11 @@ export function detectEnvironment(): Environment {
 	// Check if we're in a browser environment
 	if (typeof window !== "undefined") {
 		// Browser environment - check if we're on localhost
-		if (
+		const isLocalHost =
 			window.location.hostname === "localhost" ||
-			window.location.hostname === "127.0.0.1"
-		) {
+			window.location.hostname === "127.0.0.1" ||
+			window.location.hostname === "local.doug.is"
+		if (isLocalHost) {
 			return "local"
 		}
 		return "production"
@@ -53,24 +76,17 @@ export function getDatabaseConfig(): DatabaseConfig {
 
 	if (environment === "local") {
 		return {
-			url:
-				process.env.NEXT_PUBLIC_SUPABASE_URL_LOCAL || "http://127.0.0.1:54331",
-			anonKey:
-				process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY_LOCAL ||
-				"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0",
-			serviceRoleKey:
-				process.env.SUPABASE_SERVICE_ROLE_KEY_LOCAL ||
-				"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU",
+			url: requireEnvVar("NEXT_PUBLIC_SUPABASE_URL_LOCAL"),
+			anonKey: requireEnvVar("NEXT_PUBLIC_SUPABASE_ANON_KEY_LOCAL"),
+			serviceRoleKey: requireEnvVar("SUPABASE_SERVICE_ROLE_KEY_LOCAL"),
 		}
 	}
 
 	// Production environment
 	return {
-		url:
-			process.env.NEXT_PUBLIC_SUPABASE_URL ||
-			"https://tzffjzocrazemvtgqavg.supabase.co",
-		anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
-		serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
+		url: requireEnvVar("NEXT_PUBLIC_SUPABASE_URL"),
+		anonKey: requireEnvVar("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
+		serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
 	}
 }
 

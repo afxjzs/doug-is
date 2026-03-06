@@ -4,10 +4,7 @@
 import { createBrowserClient } from "@supabase/ssr"
 import { createServerClient } from "@supabase/ssr"
 import { NextRequest, NextResponse } from "next/server"
-
-// Environment variables
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+import { getDatabaseConfig } from "@/lib/supabase/environment"
 
 // List of admin emails
 export const ALLOWED_ADMIN_EMAILS = ["douglas.rogers@gmail.com"]
@@ -42,9 +39,10 @@ export function isAdmin(email?: string | null): boolean {
  * Create a Supabase client for browser usage
  */
 export function createClient() {
+	const config = getDatabaseConfig()
 	return createBrowserClient(
-		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+		config.url,
+		config.anonKey,
 		{
 			cookieOptions: COOKIE_OPTIONS,
 		}
@@ -55,7 +53,8 @@ export function createClient() {
  * Create a Supabase client for use in middleware
  */
 export function createMiddlewareClient(req: NextRequest, res: NextResponse) {
-	return createServerClient(supabaseUrl, supabaseAnonKey, {
+	const config = getDatabaseConfig()
+	return createServerClient(config.url, config.anonKey, {
 		cookies: {
 			get(name: string) {
 				return req.cookies.get(name)?.value

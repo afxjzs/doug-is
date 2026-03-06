@@ -7,11 +7,7 @@ import { createClient as createServiceClient } from "@supabase/supabase-js"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 import type { Database } from "../types/supabase"
-
-// Environment variables
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+import { getDatabaseConfig } from "./environment"
 
 // Define the Post type
 export interface Post {
@@ -44,8 +40,9 @@ export interface ContactMessage {
  */
 export async function createServerComponentClient() {
 	const cookieStore = await cookies()
+	const config = getDatabaseConfig()
 
-	return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
+	return createServerClient<Database>(config.url, config.anonKey, {
 		cookies: {
 			getAll() {
 				return cookieStore.getAll()
@@ -74,14 +71,15 @@ export function createAdminClient() {
 	if (typeof window !== "undefined") {
 		throw new Error("Admin client can only be used on the server")
 	}
+	const config = getDatabaseConfig()
 
-	if (!serviceRoleKey) {
+	if (!config.serviceRoleKey) {
 		throw new Error("Service role key is missing")
 	}
 
 	console.log("Creating admin client with service role")
 
-	return createServiceClient<Database>(supabaseUrl, serviceRoleKey, {
+	return createServiceClient<Database>(config.url, config.serviceRoleKey, {
 		auth: {
 			autoRefreshToken: false,
 			persistSession: false,

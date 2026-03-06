@@ -1,0 +1,216 @@
+food,trigger,reason,categories,chemical_triggers,source,notes,id,created_at,updated_at
+Walnuts,Yes,Tyramine,"[""Nut/Seed""]","[""Tyramine""]",MigraineC.com,,181,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Saltines,No,Safe snack,"[""Snack""]","[""""]",MigraineDisorders.org,,159,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Life Cereal,No,Safe cereal,"[""Cereal""]","[""""]",MigraineDisorders.org,,104,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Lima Beans,Yes,Tyramine legumes,"[""Legume""]","[""Tyramine""]",MigraineDisorders.org,,105,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Limes,Yes,Citrus group,"[""Fruit""]","[""""]",MigraineDisorders.org,,106,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Monterey Jack Cheese,Yes,High tyramine,"[""Aged"",""Cheeses"",""Dairy""]","[""Tyramine""]",MigraineDisorders.org,,112,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Mountain Dew,Yes,High caffeine,"[""Beverage""]","[""Caffeine""]",MigraineDisorders.org,,113,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Msg / “Natural Flavor”,Yes,Additive trigger,"[""Additive""]","[""""]",MigraineDisorders.org,,114,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Fermented Cultures,Yes,"Fermented or ""Live Cultures"" can raise tyramine","[""Additive""]","[""Tyramine""]",Dizzy Cook,,194,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Carrageenan,Yes,Thickener that can release glutamate,"[""Additive""]","[""Glutamate""]",Dizzy Cook,Common in dairy products,193,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Tomato Sauce (Jarred),Yes,Onion/MSG,"[""Condiment""]","[""MSG""]",MigraineDisorders.org,,178,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Banana (Over-Ripe),Yes,Tyramine,"[""Fruit""]","[""Tyramine""]",MigraineDisorders.org,,18,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Barq’S Root Beer,Yes,Contains caffeine,"[""Beverage""]","[""Caffeine""]",MigraineDisorders.org,,19,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Beef (Fresh Cuts),No,Plain meat,"[""Meat""]","[""""]",MigraineDisorders.org,,20,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Tuna Salad (Safe Tuna),No,Approved meal,"[""Meal""]","[""""]",MigraineDisorders.org,,179,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Vodka,No,Best-tolerated alcohol,"[""Alcohol""]","[""""]",MigraineDisorders.org,,180,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Natural Flavors,Yes,Often hides added MSG or yeast extract,"[""Additive""]","[""MSG"",""Glutamate""]",Dizzy Cook,,203,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Apples,No,Safe fruit,"[""Fruit""]","[""""]",MigraineDisorders.org,,8,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Aspartame Diet Sodas,Yes,Artificial sweetener,"[""Additive""]","[""""]",MigraineDisorders.org,,12,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Avocado,Yes,Tyramine-rich,"[""Fruit""]","[""Tyramine""]",MigraineDisorders.org,,13,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Malted Barley,Yes,Malt in flour can contain free glutamate,"[""Grain"",""Additive""]","[""Glutamate""]",Dizzy Cook,,200,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Malt Extract,Yes,Concentrated malt with glutamate,"[""Additive""]","[""Glutamate""]",Dizzy Cook,,201,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Maltodextrin,Yes,Carrier that may include free glutamate,"[""Additive""]","[""Glutamate""]",Dizzy Cook,,202,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Angel Hair Pasta With Broccoli And Shrimp,No,Ingredients safe,"[""Meal""]","[""""]",MigraineDisorders.org,,6,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Apple Juice,No,Allowed juice,"[""Beverage""]","[""""]",MigraineDisorders.org,,7,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Stilton Cheese,Yes,High tyramine aged cheese,"[""Dairy"",""Aged"",""Cheeses""]","[""Tyramine""]",WebMD,,169,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Wheat Thins (Plain),No,Safe snack,"[""Snack""]","[""""]",MigraineDisorders.org,,182,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+White Chocolate,No,No cocoa solids,"[""Dessert""]","[""""]",MigraineDisorders.org,,183,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Wine (Red / White),Yes,Histamine/tannins,"[""Alcohol""]","[""Histamine"",""Tannins""]",MigraineDisorders.org,,184,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Yogurt,Yes,Fermented dairy,"[""Dairy""]","[""""]",MigraineDisorders.org,,185,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Broccoli,No,Safe vegetable,"[""Vegetable""]","[""""]",MigraineDisorders.org,,32,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Brussels Sprouts,No,Safe vegetable,"[""Vegetable""]","[""""]",MigraineDisorders.org,,33,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Pickled / Fermented Foods (Sauerkraut),Yes,Histamine,"[""Condiment""]","[""Histamine""]",MigraineDisorders.org,,137,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Seasonings (Unspecified),Yes,Label can conceal MSG/yeast extract,"[""Additive""]","[""MSG""]",Dizzy Cook,,206,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Soy Protein Isolate,Yes,Hydrolyzed soy high in glutamate,"[""Additive""]","[""Glutamate""]",Dizzy Cook,,207,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Peaches,No,Safe fruit,"[""Fruit""]","[""""]",MigraineDisorders.org,,131,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Strawberries,Conflicting,Safe fruit / Histamine,"[""Fruit""]","[""Histamine""]",Multiple,MigraineDisorders.org: No; MigraineC.com: Conflicting,170,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Calcium Caseinate,Yes,Caseinate containing free glutamate,"[""Additive""]","[""Glutamate""]",Dizzy Cook,,191,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Chocolate Milk,Yes,Chocolate/caffeine,"[""Dairy""]","[""Caffeine""]",MigraineDisorders.org,,56,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Soy Protein Concentrate,Yes,Processed soy protein with glutamate,"[""Additive""]","[""Glutamate""]",Dizzy Cook,,208,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Textured Vegetable Protein,Yes,Processed protein containing glutamate,"[""Additive""]","[""Glutamate""]",Dizzy Cook,,209,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Umami (Label),Yes,Umami wording signals added MSG,"[""Additive""]","[""MSG""]",Dizzy Cook,,210,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Yeast Extract,Yes,Common hidden source of glutamate,"[""Additive""]","[""Glutamate""]",Dizzy Cook,,211,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Yeast Food,Yes,Yeast nutrient mix can include glutamate,"[""Additive""]","[""Glutamate""]",Dizzy Cook,,212,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Citric Acid,Caution,Can trigger some sensitive individuals,"[""Additive""]","[""Citric Acid""]",Dizzy Cook,,213,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Potato,Yes,Tyramine,"[""Vegetable""]","[""Tyramine""]",MigraineC.com,,143,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Bacon / Hot Dogs / Salami / Cured Meats,Yes,Nitrates/nitrites,"[""Processed"",""Meat""]","[""Nitrates"",""Nitrites""]",MigraineDisorders.org,,14,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Pringles,Yes,Sulfite flakes,"[""Snack""]","[""""]",MigraineDisorders.org,,146,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Caramel Topping,No,Simple sugar,"[""Dessert""]","[""""]",MigraineDisorders.org,,42,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Eggplant,Yes,"Histamine,Tyramine,Nitrites","[""Vegetable""]","[""Histamine"",""Tyramine"",""Nitrites""]",MigraineC.com,,72,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Eggs,No,Safe protein,"[""Protein""]","[""""]",MigraineDisorders.org,,73,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Energy Drinks,Yes,Very high caffeine and stimulants,"[""Beverage"",""Energy"",""Caffeine""]","[""Caffeine""]",Migraine Disorders Org,,74,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+English Muffins ≥24 H,No,Aged yeast,"[""Bread/Grain""]","[""Yeast""]",MigraineDisorders.org,,75,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Fava Beans,Yes,Tyramine legumes,"[""Legume""]","[""Tyramine""]",MigraineDisorders.org,,76,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Feta Cheese,Yes,High tyramine aged cheese,"[""Dairy"",""Aged"",""Cheeses""]","[""Tyramine""]",WebMD,,77,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Figs,Conflicting,Tyramine / Allowed,"[""Fruit""]","[""Tyramine""]",Multiple,MigraineDisorders.org: Yes; MigraineC.com: Conflicting,78,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Fish – Fresh Fillets,No,Plain fish,"[""Fish""]","[""""]",MigraineDisorders.org,,79,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Fish – Smoked,Yes,Histamine,"[""Fish""]","[""Histamine""]",MigraineDisorders.org,,80,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Flavored Pretzels,Yes,MSG/onion,"[""Snack""]","[""MSG""]",MigraineDisorders.org,,81,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+French Fries – Unseasoned,No,Plain potato,"[""Snack""]","[""""]",MigraineDisorders.org,,82,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Garlic,No,Allowed vegetable,"[""Vegetable""]","[""""]",MigraineDisorders.org,,83,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Kiwi,No,Safe fruit,"[""Fruit""]","[""""]",MigraineDisorders.org,,97,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Ginger,No,"Anti-inflammatory, RCTs show pain relief","[""Herb"",""Supplement"",""Anti-Inflammatory""]","[""""]",PubMed,,84,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Gouda Cheese,Yes,High tyramine aged cheese,"[""Dairy"",""Aged"",""Cheeses""]","[""Tyramine""]",Sutter Health,,85,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Grapefruits,Yes,Citrus group,"[""Fruit""]","[""""]",MigraineDisorders.org,,86,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Grapes,Conflicting,Safe fruit / Sulfites,"[""Fruit""]","[""Sulfites""]",Multiple,MigraineDisorders.org: No; MigraineC.com: Conflicting,87,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Green Peas,Yes,Tyramine,"[""Vegetable""]","[""Tyramine""]",MigraineC.com,,88,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Guacamole,Yes,Avocado trigger,"[""Condiment""]","[""""]",MigraineDisorders.org,,89,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Ham / Lunch Meats (Nitrites),Yes,Nitrites,"[""Processed"",""Meat""]","[""Nitrites""]",MigraineDisorders.org,,90,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Herr’S Salt-Vinegar Chips,No,Listed safe,"[""Snack""]","[""""]",MigraineDisorders.org,,91,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Lentils,Yes,Tyramine legumes,"[""Legume""]","[""Tyramine""]",MigraineDisorders.org,,101,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Lettuce – Bagged,No,No sulfite,"[""Vegetable""]","[""""]",MigraineDisorders.org,,102,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Milk (White),No,Safe dairy,"[""Dairy""]","[""""]",MigraineDisorders.org,,111,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Anchovies,Yes,Aged/fermented,"[""Meat"",""Fish""]","[""""]",MigraineDisorders.org,,5,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Mushrooms,No,Safe vegetable,"[""Vegetable""]","[""""]",MigraineDisorders.org,,115,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Mustard Dips (Commercial),Yes,MSG/onion,"[""Condiment""]","[""MSG""]",MigraineDisorders.org,,116,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Natural Peanut Butter,Yes,Tyramine/nuts,"[""Nut/Seed""]","[""Tyramine"",""Nuts""]",MigraineDisorders.org,,117,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Navy Beans,Yes,Tyramine legumes,"[""Legume""]","[""Tyramine""]",MigraineDisorders.org,,118,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Nectarine,Yes,Histamine,"[""Fruit""]","[""Histamine""]",MigraineC.com,,119,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Nectarines,No,Safe fruit,"[""Fruit""]","[""""]",MigraineDisorders.org,,120,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Oatmeal (Plain),No,Safe grain,"[""Cereal""]","[""""]",MigraineDisorders.org,,121,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Oatmeal Cookies (No Raisins),No,Safe dessert,"[""Dessert""]","[""""]",MigraineDisorders.org,,122,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Taster's Choice Decaf Coffee,Caution,One cup max,"[""Beverage""]","[""""]",MigraineDisorders.org,,176,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Tomato,Yes,"Histamine,Tyramine,Sulfites,Nitrites","[""Vegetable""]","[""Histamine"",""Tyramine"",""Sulfites"",""Nitrites""]",MigraineC.com,,177,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Pork Chops (Fresh),No,Plain meat,"[""Meat""]","[""""]",MigraineDisorders.org,,142,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Potato Chips – Plain,No,Safe snack,"[""Snack""]","[""""]",MigraineDisorders.org,,144,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Potato Flakes (Boxed),Yes,Sulfite-treated,"[""Ingredient""]","[""""]",MigraineDisorders.org,,145,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Peas (Canned / Frozen),No,Allowed vegetable,"[""Vegetable""]","[""""]",MigraineDisorders.org,,134,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Pecans,Yes,Tyramine,"[""Nut/Seed""]","[""Tyramine""]",MigraineC.com,,135,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Pickled Cucumbers,Yes,Fermented/pickled tyramine,"[""Vegetable"",""Fermented"",""Pickled""]","[""Tyramine""]",Healthline,,138,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Pineapple,Yes,Trigger fruit,"[""Fruit""]","[""""]",MigraineDisorders.org,,139,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Pizza (Standard),Yes,Fresh yeast + aged cheese,"[""Meal""]","[""Yeast""]",MigraineDisorders.org,,140,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Plain Popcorn (Home-Popped),No,Safe snack,"[""Snack""]","[""""]",MigraineDisorders.org,,141,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Soybeans,Yes,"Histamine,Sulfites","[""Legume""]","[""Histamine"",""Sulfites""]",MigraineC.com,,165,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Soymilk / Plain Tofu,Caution,Introduce individually,"[""Soy""]","[""""]",MigraineDisorders.org,,166,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Spam (Processed Meat),Yes,Nitrites/MSG,"[""Processed"",""Meat""]","[""Nitrites"",""MSG""]",MigraineDisorders.org,,167,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Spinach,Conflicting,"Magnesium-rich leafy green may lower frequency / Histamine,Nitrites","[""Vegetable"",""Leafy"",""Green"",""Magnesium""]","[""Histamine"",""Nitrites""]",Multiple,MedicalNewsToday: No; MigraineC.com: Conflicting,168,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+A&W Root Beer,No,"Caffeine-free soda, no aspartame","[""Beverage""]","[""Caffeine"",""Aspartame""]",MigraineDisorders.org,,1,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Bagels – Fresh Bakery Or Fruit,Yes,Fresh yeast or dried fruit,"[""Bread/Grain""]","[""Yeast""]",MigraineDisorders.org,,15,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Canned Tuna With Broth,Yes,Contains soy/MSG,"[""Fish""]","[""MSG""]",MigraineDisorders.org,,41,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Caramels,No,Simple sugar,"[""Dessert""]","[""""]",MigraineDisorders.org,,43,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Carrots,No,Safe vegetable,"[""Vegetable""]","[""""]",MigraineDisorders.org,,44,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Cauliflower,No,Safe vegetable,"[""Vegetable""]","[""""]",MigraineDisorders.org,,45,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Celery,No,Safe vegetable,"[""Vegetable""]","[""""]",MigraineDisorders.org,,46,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Chamomile Tea,No,Naturally caffeine-free,"[""Beverage""]","[""Caffeine""]",MigraineDisorders.org,,47,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Cheddar Cheese,Yes,High tyramine (aged),"[""Aged"",""Cheeses"",""Dairy""]","[""Tyramine""]",MigraineDisorders.org,,48,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Cheddar-Flavored Crackers,Yes,Aged cheese flavor,"[""Snack""]","[""""]",MigraineDisorders.org,,49,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Cheese / Nut / Chocolate Breads,Yes,Mixed triggers,"[""Bread/Grain""]","[""""]",MigraineDisorders.org,,50,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Cherries,Yes,Histamine,"[""Fruit""]","[""Histamine""]",MigraineC.com,,51,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Chicken (Fresh),No,Plain meat,"[""Meat""]","[""""]",MigraineDisorders.org,,52,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Chicken Livers,Yes,Tyramine,"[""Organ"",""Meat""]","[""Tyramine""]",MigraineDisorders.org,,53,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Chicken Salad (Safe Canned Chicken),No,Prepared safe,"[""Meal""]","[""""]",MigraineDisorders.org,,54,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Chocolate,Yes,Phenylethylamine & caffeine,"[""Dessert""]","[""Phenylethylamine"",""Caffeine""]",MigraineDisorders.org,,55,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Cider / Red-Wine / Balsamic Vinegar,Yes,Fermented,"[""Condiment""]","[""""]",MigraineDisorders.org,,57,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Cinnamon Swirl Cake,No,Safe dessert,"[""Dessert""]","[""""]",MigraineDisorders.org,,58,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Coconut,Conflicting,Listed trigger / Allowed,"[""Nut/Seed""]","[""""]",Multiple,MigraineDisorders.org: Yes; MigraineC.com: Conflicting,59,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Colby Cheese,Yes,High tyramine,"[""Aged"",""Cheeses"",""Dairy""]","[""Tyramine""]",MigraineDisorders.org,,60,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Corn (Fresh / Canned / Frozen),No,Allowed vegetable,"[""Vegetable""]","[""""]",MigraineDisorders.org,,61,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Corn Chips (Plain),No,Plain chips,"[""Snack""]","[""""]",MigraineDisorders.org,,62,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Corned Beef,Yes,Nitrates/nitrites processed meat,"[""Processed"",""Meat""]","[""Nitrates"",""Nitrites""]",Sutter Health,,63,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Cornflake Crumbs,No,No MSG,"[""Ingredient""]","[""MSG""]",MigraineDisorders.org,,64,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Crackers – Unflavored,No,Plain,"[""Snack""]","[""""]",MigraineDisorders.org,,65,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Cranberries,Yes,Histamine,"[""Fruit""]","[""Histamine""]",MigraineC.com,,66,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Cranberry Juice (Splenda),No,Allowed juice,"[""Beverage""]","[""""]",MigraineDisorders.org,,67,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Cream Cheese,Caution,Fresh dairy,"[""Dairy""]","[""Carrageenan""]",MigraineDisorders.org,,68,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Deep-Dish Pizza,Yes,Fresh yeast + aged cheese,"[""Meal""]","[""Yeast""]",MigraineDisorders.org,,69,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Diet Rite Cola,No,"Caffeine-free, no aspartame","[""Beverage""]","[""Caffeine"",""Aspartame""]",MigraineDisorders.org,,70,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Doritos / Seasoned Chips,Yes,MSG/onion,"[""Snack""]","[""MSG""]",MigraineDisorders.org,,71,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Beef Liver,Yes,Tyramine,"[""Organ"",""Meat""]","[""Tyramine""]",MigraineDisorders.org,,21,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Beer,Yes,Histamine/tyramine,"[""Alcohol""]","[""Histamine"",""Tyramine""]",MigraineDisorders.org,,22,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Black Tea,Yes,Tannins,"[""Beverage""]","[""Tannins""]",MigraineDisorders.org,,23,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Nutritional Yeast,Yes,Rich in free glutamate,"[""Additive""]","[""Glutamate""]",Dizzy Cook,,204,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Protein Fortified,Yes,Hydrolyzed protein with glutamate,"[""Additive""]","[""Glutamate""]",Dizzy Cook,,205,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Blackberries,No,Safe fruit,"[""Fruit""]","[""""]",MigraineDisorders.org,,24,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Blue Cheese,Yes,High tyramine aged cheese,"[""Dairy"",""Aged"",""Cheeses""]","[""Tyramine""]",WebMD,,25,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Blueberries,No,Safe fruit,"[""Fruit""]","[""""]",MigraineDisorders.org,,26,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Blueberry Pie,No,Approved dessert,"[""Dessert""]","[""""]",MigraineDisorders.org,,27,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Bookbinder’S Mustard,No,"White vinegar, no MSG","[""Condiment""]","[""MSG""]",MigraineDisorders.org,,28,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Bread – Fresh Bakery / Pizza Crust,Yes,Fresh yeast,"[""Bread/Grain""]","[""Yeast""]",MigraineDisorders.org,,29,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Bread – Store-Bought Aged,No,Low tyramine,"[""Bread/Grain""]","[""Tyramine""]",MigraineDisorders.org,,30,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Broad Beans,Yes,Tyramine legumes,"[""Legume""]","[""Tyramine""]",MigraineDisorders.org,,31,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Bumble Bee Prime Fillet Tuna,No,No soy/MSG,"[""Fish""]","[""MSG""]",MigraineDisorders.org,,34,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Butter Noodles,No,Plain carb,"[""Meal""]","[""""]",MigraineDisorders.org,,35,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Buttermilk,Yes,Fermented dairy,"[""Dairy""]","[""""]",MigraineDisorders.org,,36,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+"Caffeine Drinks (Coffee, Tea, Colas)",Yes,Caffeine/tannins,"[""Beverage""]","[""Caffeine"",""Tannins""]",MigraineDisorders.org,,37,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Caffeine-Free Coke / Pepsi,No,Allowed soda,"[""Beverage""]","[""""]",MigraineDisorders.org,,38,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Camembert,Yes,High tyramine aged cheese,"[""Dairy"",""Aged"",""Cheeses""]","[""Tyramine""]",WebMD,,39,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Campbell’S Tomato Soup,No,No MSG/onion,"[""Soup""]","[""MSG""]",MigraineDisorders.org,,40,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Alfredo Sauce,Yes,Aged cheese & MSG/onion,"[""Condiment"",""Sauce""]","[""MSG""]",MigraineDisorders.org,,2,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Almond Extract,Yes,Dessert flavoring trigger,"[""Additive""]","[""""]",MigraineDisorders.org,,3,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+American Cheese,No,"Fresh, low-amine","[""Dairy""]","[""""]",MigraineDisorders.org,,4,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Gelatin,Yes,Protein hydrolysate with free glutamate,"[""Additive""]","[""Glutamate""]",Dizzy Cook,,195,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Glutamic Acid,Yes,Free form of glutamate,"[""Additive""]","[""Glutamate""]",Dizzy Cook,,196,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Hydrolyzed Corn Gluten,Yes,Hydrolyzed protein source of MSG,"[""Additive""]","[""MSG"",""Glutamate""]",Dizzy Cook,,197,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Hydrolyzed Proteins,Yes,Creates free glutamate (MSG‐like),"[""Additive""]","[""MSG"",""Glutamate""]",Dizzy Cook,,198,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Tangerines,Yes,Citrus group,"[""Fruit""]","[""""]",MigraineDisorders.org,,175,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Kombu (Seaweed Extract),Yes,Seaweed extract very high in glutamate,"[""Seaweed"",""Additive""]","[""Glutamate""]",Dizzy Cook,,199,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Apricot,Yes,Histamine,"[""Fruit""]","[""Histamine""]",MigraineC.com,,9,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Sodium Caseinate,Yes,Caseinate containing free glutamate,"[""Additive""]","[""Glutamate""]",Dizzy Cook,,192,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Apricot Nectar,No,Allowed juice,"[""Beverage""]","[""""]",MigraineDisorders.org,,10,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Apricots,No,Safe fruit,"[""Fruit""]","[""""]",MigraineDisorders.org,,11,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Heavy Cream,Caution,May contain Carrageenan,"[""Dairy""]","[""Carrageenan""]",Dizzy Cook,,186,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Accent (Msg Salt),Yes,MSG salt flavor enhancer,"[""Additive""]","[""MSG""]",Dizzy Cook,,187,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Ajinomoto,Yes,Brand of MSG additive,"[""Additive""]","[""MSG""]",Dizzy Cook,,188,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Autolyzed Yeast,Yes,Source of free glutamate,"[""Additive""]","[""Glutamate""]",Dizzy Cook,,189,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Bouillon,Yes,Often high in MSG and yeast extract,"[""Soup Base"",""Additive""]","[""MSG"",""Glutamate""]",Dizzy Cook,,190,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Guar Gum,Caution,Thickener that bothers some people,"[""Additive""]","[""Guar Gum""]",Dizzy Cook,,214,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Xanthan Gum,Caution,Thickener that bothers some people,"[""Additive""]","[""Xanthan Gum""]",Dizzy Cook,,215,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Sunflower Seeds (Plain),No,Safe seed,"[""Nut/Seed""]","[""""]",MigraineDisorders.org,,171,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Sweet Potato,Yes,Tyramine,"[""Vegetable""]","[""Tyramine""]",MigraineC.com,,172,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Sweet Potatoes / Yams,No,Safe vegetable,"[""Vegetable""]","[""""]",MigraineDisorders.org,,173,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Swiss Cheese,Yes,High tyramine,"[""Aged"",""Cheeses"",""Dairy""]","[""Tyramine""]",MigraineDisorders.org,,174,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Lettuce – Sulfite-Sprayed,Yes,Sulfite preservative,"[""Vegetable""]","[""""]",MigraineDisorders.org,,103,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Mango,No,Safe fruit,"[""Fruit""]","[""""]",MigraineDisorders.org,,107,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Mango Peach V8 Splash,No,Allowed beverage,"[""Beverage""]","[""""]",MigraineDisorders.org,,108,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Marinated Meats (“Simply Tender” Pork),Yes,Citrus marinade,"[""Processed"",""Meat""]","[""""]",MigraineDisorders.org,,109,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Marshmallow Crème,No,Safe sweet,"[""Dessert""]","[""""]",MigraineDisorders.org,,110,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Pumpkin,Yes,Histamine,"[""Vegetable""]","[""Histamine""]",MigraineC.com,,147,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Pumpkin Seeds,No,Magnesium-rich seeds linked to fewer attacks,"[""Seed"",""Magnesium""]","[""""]",MedicalNewsToday,,148,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Raisins / Dried Fruit (Sulfites),Yes,Tyramine/sulfite,"[""Fruit""]","[""Tyramine""]",MigraineDisorders.org,,149,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Ramen Noodles,Yes,MSG-rich instant seasoning,"[""Instant"",""Msg""]","[""MSG""]",Cleveland Clinic,,150,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Raspberries,Yes,Trigger fruit,"[""Fruit""]","[""""]",MigraineDisorders.org,,151,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Red Beans,Yes,Histamine,"[""Legume""]","[""Histamine""]",MigraineC.com,,152,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Red Beets,Yes,Nitrates,"[""Vegetable""]","[""Nitrates""]",MigraineC.com,,153,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Red Wine,Yes,Tannins,"[""Beverage""]","[""Tannins""]",MigraineDisorders.org,,154,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Ricotta Cheese,No,Fresh dairy,"[""Dairy""]","[""""]",MigraineDisorders.org,,155,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Ritz Crackers (Plain),No,Safe snack,"[""Snack""]","[""""]",MigraineDisorders.org,,156,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Rum / Whiskey / Dark Spirits,Yes,Histamine alcohols,"[""Alcohol""]","[""Histamine""]",MigraineDisorders.org,,157,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Salad Dressings (Commercial),Yes,MSG/onion/aged cheese,"[""Condiment""]","[""MSG""]",MigraineDisorders.org,,158,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Sesame Seeds,No,Safe seed,"[""Nut/Seed""]","[""""]",MigraineDisorders.org,,160,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Shallots / Leeks / Spring Onions,No,Allowed veg,"[""Vegetable""]","[""""]",MigraineDisorders.org,,161,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Smoked Fish,Yes,Histamine,"[""Fish""]","[""Histamine""]",MigraineDisorders.org,,162,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Snow Peas,Yes,Tyramine,"[""Vegetable""]","[""Tyramine""]",MigraineC.com,,163,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Soy Sauce / Miso / Tempeh,Yes,Fermented soy,"[""Soy""]","[""""]",MigraineDisorders.org,,164,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Onion & Garlic Pretzels / Chips,Yes,Onion powder,"[""Snack""]","[""""]",MigraineDisorders.org,,125,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Onions,Yes,Specific trigger,"[""Vegetable""]","[""""]",MigraineDisorders.org,,126,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Oranges,Yes,Citrus group,"[""Fruit""]","[""""]",MigraineDisorders.org,,127,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Papaya / Passion Fruit,Yes,Trigger fruit,"[""Fruit""]","[""""]",MigraineDisorders.org,,128,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Parmesan / Romano,Yes,Aged/fermented cheese,"[""Aged"",""Cheeses"",""Dairy""]","[""""]",MigraineDisorders.org,,129,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Pasta With Pepper & Hot Sauce,No,Ingredients safe,"[""Meal""]","[""""]",MigraineDisorders.org,,130,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Peanut Butter,Yes,Tyramine/nuts,"[""Nut/Seed""]","[""Tyramine"",""Nuts""]",MigraineDisorders.org,,132,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Pear Juice / Pears,No,Safe fruit,"[""Fruit""]","[""""]",MigraineDisorders.org,,133,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Honey Bunches Of Oats Cereal,No,Safe cereal,"[""Cereal""]","[""""]",MigraineDisorders.org,,92,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Hot Wings (Ready-Made),Yes,Marinated/MSG,"[""Meal""]","[""MSG""]",MigraineDisorders.org,,93,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Ice Cream – Vanilla / Strawberry,No,No chocolate,"[""Dessert"",""Dairy""]","[""""]",MigraineDisorders.org,,94,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Jalapeño Chips,Yes,Seasoned MSG,"[""Snack""]","[""MSG""]",MigraineDisorders.org,,95,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Kimchi,Yes,Fermented/pickled tyramine,"[""Vegetable"",""Fermented""]","[""Tyramine""]",Healthline,,96,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Kombucha,Yes,Fermented beverage with tyramine,"[""Beverage"",""Fermented""]","[""Tyramine""]",Healthline,,98,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+La Choy Chow-Mein Noodles,No,MSG-free crouton sub,"[""Ingredient""]","[""MSG""]",MigraineDisorders.org,,99,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Lemons,Yes,Citrus group,"[""Fruit""]","[""""]",MigraineDisorders.org,,100,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Okra,No,Safe vegetable,"[""Vegetable""]","[""""]",MigraineDisorders.org,,123,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Olives,Yes,"Histamine,Tyramine","[""Vegetable""]","[""Histamine"",""Tyramine""]",MigraineC.com,,124,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Pepperoni,Yes,Nitrates/nitrites processed meat,"[""Processed"",""Meat""]","[""Nitrates"",""Nitrites""]",Sutter Health,,136,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Bagels – Plain Or Sesame ≥24 H,No,Yeast aged,"[""Bread/Grain""]","[""Yeast""]",MigraineDisorders.org,,16,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00
+Baking Potatoes,No,Safe vegetable,"[""Vegetable""]","[""""]",MigraineDisorders.org,,17,2025-04-27T22:26:29.862082+00:00,2025-04-27T22:26:30.025539+00:00

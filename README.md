@@ -68,28 +68,26 @@ A modern personal website built with Next.js, React, TypeScript, and Tailwind CS
 
 The project uses a simplified single-file migration approach for Supabase. The complete schema is defined in `/supabase/migrations/20000000000000_schema_setup.sql`.
 
-### Database Reset and Migrations
+### Local Database Setup and Migrations
 
-If you need to reset your database and apply the migration:
+Use local Supabase for development and keep hosted Supabase for production.
 
-1. Reset your database (WARNING: this will delete all data):
-   ```sql
-   -- Run this in Supabase SQL Editor
-   DROP SCHEMA public CASCADE;
-   CREATE SCHEMA public;
-   GRANT ALL ON SCHEMA public TO postgres;
-   GRANT ALL ON SCHEMA public TO public;
+1. Start local Supabase services:
+   ```bash
+   supabase start
    ```
 
-2. Apply the migration:
+2. Apply local migrations:
    ```bash
-   # Make sure you've logged in and linked your project first
-   supabase login
-   supabase link --project-ref tzffjzocrazemvtgqavg
-   
-   # Push migrations
    supabase db push
    ```
+
+3. Run the app:
+   ```bash
+   ./start.sh
+   ```
+
+> Safety note: do not run destructive reset commands against the linked hosted project.
 
 ### Database Tables
 

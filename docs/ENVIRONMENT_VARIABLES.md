@@ -41,9 +41,15 @@ Vercel Analytics is automatically configured and requires no additional environm
 
 **Required Variables:**
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+# Local development database (Supabase CLI + Docker)
+NEXT_PUBLIC_SUPABASE_URL_LOCAL=http://127.0.0.1:54331
+NEXT_PUBLIC_SUPABASE_ANON_KEY_LOCAL=your_local_anon_key
+SUPABASE_SERVICE_ROLE_KEY_LOCAL=your_local_service_role_key
+
+# Hosted production database
+NEXT_PUBLIC_SUPABASE_URL=your_production_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_production_supabase_service_role_key
 ```
 
 ## Deployment
@@ -51,8 +57,9 @@ SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 ### Local Development
 
 1. Copy `.env.local.example` to `.env.local` (if it exists)
-2. Add your environment variables to `.env.local`
-3. Restart your development server
+2. Start local Supabase (`supabase start`) and set local env values
+3. Keep production vars in `.env.local` for fallback only
+4. Restart your development server
 
 ### Production (Vercel)
 
@@ -66,3 +73,4 @@ SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 - Use different keys for development and production environments
 - Regularly rotate sensitive keys like service role keys
 - PostHog API keys are safe to expose client-side (they're prefixed with NEXT_PUBLIC_) 
+- Do not run destructive reset commands against production (`--linked` / hosted project)

@@ -8,6 +8,7 @@
 
 import { createClient, createStaticClient } from "./server"
 import type { Database } from "../types/supabase"
+import { isLocalDevelopment } from "./environment"
 
 // Type definitions
 export interface Post {
@@ -28,6 +29,25 @@ export interface Post {
  */
 export function normalizeCategory(category: string): string {
 	return category.toLowerCase().trim()
+}
+
+function localDbFailureMessage(context: string, error: unknown): string {
+	const details =
+		error instanceof Error ? error.message : JSON.stringify(error ?? {})
+	return [
+		`[Local DB Required] ${context}`,
+		`Supabase error: ${details}`,
+		"",
+		"Fix steps:",
+		"1) Ensure Docker Desktop is running",
+		"2) Run: supabase start",
+		"3) Verify .env.local contains local vars:",
+		"   NEXT_PUBLIC_SUPABASE_URL_LOCAL=http://127.0.0.1:54331",
+		"   NEXT_PUBLIC_SUPABASE_ANON_KEY_LOCAL=<local anon key>",
+		"   SUPABASE_SERVICE_ROLE_KEY_LOCAL=<local service role key>",
+		"4) Run: supabase db push",
+		"5) Restart app: ./start.sh",
+	].join("\n")
 }
 
 /**
@@ -62,12 +82,24 @@ export const getPosts = async (
 		const { data, error } = await query
 
 		if (error) {
+			if (isLocalDevelopment()) {
+				throw new Error(localDbFailureMessage("Error fetching posts", error))
+			}
 			console.error("Error fetching posts:", error)
 			return []
 		}
 
 		return data as Post[]
 	} catch (error) {
+		if (isLocalDevelopment()) {
+			if (
+				error instanceof Error &&
+				error.message.includes("[Local DB Required]")
+			) {
+				throw error
+			}
+			throw new Error(localDbFailureMessage("Exception fetching posts", error))
+		}
 		console.error("Exception fetching posts:", error)
 		return []
 	}
@@ -105,12 +137,26 @@ export const getPostsStatic = async (
 		const { data, error } = await query
 
 		if (error) {
+			if (isLocalDevelopment()) {
+				throw new Error(localDbFailureMessage("Error fetching posts (static)", error))
+			}
 			console.error("Error fetching posts (static):", error)
 			return []
 		}
 
 		return data as Post[]
 	} catch (error) {
+		if (isLocalDevelopment()) {
+			if (
+				error instanceof Error &&
+				error.message.includes("[Local DB Required]")
+			) {
+				throw error
+			}
+			throw new Error(
+				localDbFailureMessage("Exception fetching posts (static)", error)
+			)
+		}
 		console.error("Exception fetching posts (static):", error)
 		return []
 	}
