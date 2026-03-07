@@ -203,13 +203,13 @@
 		font-family: var(--font-display, var(--font-body, system-ui, sans-serif));
 	}
 
-	/* Primary button — yellow pop for main CTAs */
+	/* Primary button — solid blue (30% color) */
 	.btn-primary {
 		padding: 0.75rem 1.5rem;
-		background-color: rgba(var(--color-accent-secondary), 0.9);
-		border: 1px solid rgba(var(--color-accent-secondary), 1);
+		background-color: rgb(var(--color-accent));
+		border: 1px solid rgb(var(--color-accent));
 		border-radius: 0.5rem;
-		color: #1a1a1a;
+		color: #fff;
 		font-weight: 600;
 		transition: all 200ms ease;
 		position: relative;
@@ -217,8 +217,8 @@
 	}
 
 	.btn-primary:hover {
-		background-color: rgba(var(--color-accent-secondary), 1);
-		box-shadow: 0 2px 8px rgba(var(--color-accent-secondary), 0.3);
+		opacity: 0.9;
+		box-shadow: 0 2px 8px rgba(var(--color-accent), 0.3);
 		transform: translateY(-1px);
 	}
 
@@ -240,15 +240,15 @@
 		border-color: rgba(var(--color-accent), 0.6);
 	}
 
-	/* Legacy neon button aliases — map to new styles during migration */
+	/* Legacy neon button aliases — map to btn-primary */
 	.neon-button-magenta,
 	.neon-button-pink,
 	.neon-button-orange {
 		padding: 0.75rem 1.5rem;
-		background-color: rgba(var(--color-accent-secondary), 0.9);
-		border: 1px solid rgba(var(--color-accent-secondary), 1);
+		background-color: rgb(var(--color-accent));
+		border: 1px solid rgb(var(--color-accent));
 		border-radius: 0.5rem;
-		color: #1a1a1a;
+		color: #fff;
 		font-weight: 600;
 		transition: all 200ms ease;
 	}
@@ -256,8 +256,8 @@
 	.neon-button-magenta:hover,
 	.neon-button-pink:hover,
 	.neon-button-orange:hover {
-		background-color: rgba(var(--color-accent-secondary), 1);
-		box-shadow: 0 2px 8px rgba(var(--color-accent-secondary), 0.3);
+		opacity: 0.9;
+		box-shadow: 0 2px 8px rgba(var(--color-accent), 0.3);
 		transform: translateY(-1px);
 	}
 
