@@ -42,7 +42,7 @@
 	--color-accent-secondary: 217, 160, 18;
 	--color-muted: 100, 100, 112;
 	--color-border: 200, 200, 210;
-	--color-card-bg: 235, 235, 240;
+	--color-card-bg: 225, 225, 232;
 
 	--color-violet: var(--color-accent);
 	--color-cyan: var(--color-accent);
@@ -61,7 +61,7 @@
 		--color-accent-secondary: 217, 160, 18;
 		--color-muted: 100, 100, 112;
 		--color-border: 200, 200, 210;
-		--color-card-bg: 235, 235, 240;
+		--color-card-bg: 225, 225, 232;
 
 		--color-violet: var(--color-accent);
 		--color-cyan: var(--color-accent);

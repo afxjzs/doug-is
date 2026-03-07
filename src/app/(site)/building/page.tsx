@@ -188,7 +188,7 @@ export default function BuildingPage() {
 							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:shadow-md rounded-xl overflow-hidden transition-all duration-300 group`}
 						>
 							<div className="flex flex-col md:flex-row">
-								<div className="md:w-2/5 bg-[rgba(var(--color-background),0.6)] flex items-center justify-center p-8 rounded-xl overflow-hidden">
+								<div className="md:w-2/5 bg-[#0e0e10] flex items-center justify-center p-8 rounded-xl overflow-hidden">
 									<div className="w-full h-full flex items-center justify-center">
 										<div className="relative w-full h-[140px] overflow-hidden rounded-xl">
 											<Image
@@ -196,7 +196,7 @@ export default function BuildingPage() {
 												alt={company.title}
 												fill
 												style={{ objectFit: "contain" }}
-												className="transition-transform duration-500 group-hover:scale-105 rounded-xl invert-on-light"
+												className="transition-transform duration-500 group-hover:scale-105 rounded-xl"
 												priority
 											/>
 										</div>
@@ -278,7 +278,7 @@ export default function BuildingPage() {
 							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:shadow-md rounded-xl overflow-hidden transition-all duration-300 group`}
 						>
 							<div className="flex flex-col md:flex-row">
-								<div className="md:w-2/5 bg-[rgba(var(--color-background),0.6)] flex items-center justify-center p-8 rounded-xl overflow-hidden">
+								<div className="md:w-2/5 bg-[#0e0e10] flex items-center justify-center p-8 rounded-xl overflow-hidden">
 									<div className="w-full h-full flex items-center justify-center">
 										<div className="relative w-full h-[200px] overflow-hidden rounded-xl">
 											{project.link ? (
@@ -297,7 +297,7 @@ export default function BuildingPage() {
 														alt={project.title}
 														fill
 														style={{ objectFit: "contain" }}
-														className="transition-transform duration-500 group-hover:scale-105 rounded-xl invert-on-light"
+														className="transition-transform duration-500 group-hover:scale-105 rounded-xl"
 													/>
 												</Link>
 											) : (
@@ -306,7 +306,7 @@ export default function BuildingPage() {
 													alt={project.title}
 													fill
 													style={{ objectFit: "contain" }}
-													className="transition-transform duration-500 group-hover:scale-105 rounded-xl invert-on-light"
+													className="transition-transform duration-500 group-hover:scale-105 rounded-xl"
 												/>
 											)}
 										</div>
