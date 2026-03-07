@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import ThemeToggle from "./ThemeToggle"
 
 export default function Footer() {
 	return (
@@ -165,8 +166,8 @@ export default function Footer() {
 					</div>
 				</div>
 
-				<div className="pt-8 border-t border-[rgba(var(--color-border),0.1)] flex flex-col md:flex-row justify-between items-center">
-					<p className="text-[rgba(var(--color-muted),1)] text-sm mb-4 md:mb-0">
+				<div className="pt-8 border-t border-[rgba(var(--color-border),0.1)] flex flex-col md:flex-row justify-between items-center gap-4">
+					<p className="text-[rgba(var(--color-muted),1)] text-sm">
 						&copy; {new Date().getFullYear()} doug.is. All rights reserved.
 					</p>
 
@@ -179,6 +180,8 @@ export default function Footer() {
 							I can help you do the same.
 						</Link>
 					</p>
+
+					<ThemeToggle />
 				</div>
 			</div>
 		</footer>

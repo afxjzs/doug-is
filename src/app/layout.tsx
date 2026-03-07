@@ -81,7 +81,14 @@ export default async function RootLayout({
 	children: React.ReactNode
 }) {
 	return (
-		<html lang="en" className="scroll-smooth">
+		<html lang="en" className="scroll-smooth" suppressHydrationWarning>
+			<head>
+				<script
+					dangerouslySetInnerHTML={{
+						__html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light"){document.documentElement.classList.add("light");document.documentElement.setAttribute("data-theme","light")}else if(t==="dark"){document.documentElement.classList.add("dark");document.documentElement.setAttribute("data-theme","dark")}}catch(e){}})()`,
+					}}
+				/>
+			</head>
 			<body className={`${instrumentSerif.variable} ${dmSans.variable}`}>
 				{/* Google Analytics - Load early for comprehensive tracking */}
 				<GoogleAnalytics />
