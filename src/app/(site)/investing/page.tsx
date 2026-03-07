@@ -61,7 +61,7 @@ export default function InvestingPage() {
 									alt="VentureBuilder Logo"
 									width={300}
 									height={150}
-									className="object-contain"
+									className="object-contain invert-on-light"
 								/>
 							</div>
 						</div>

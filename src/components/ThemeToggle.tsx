@@ -24,47 +24,57 @@ function applyTheme(theme: Theme) {
 	// "system" = no class, CSS media query handles it
 }
 
+function isDarkActive(theme: Theme): boolean {
+	if (theme === "dark") return true
+	if (theme === "light") return false
+	if (typeof window === "undefined") return true
+	return window.matchMedia("(prefers-color-scheme: dark)").matches
+}
+
 export default function ThemeToggle() {
 	const [theme, setTheme] = useState<Theme>("system")
+	const [isDark, setIsDark] = useState(true)
 
 	useEffect(() => {
 		const stored = getStoredTheme()
 		setTheme(stored)
 		applyTheme(stored)
+		setIsDark(isDarkActive(stored))
 	}, [])
 
-	const cycle = () => {
-		const order: Theme[] = ["system", "light", "dark"]
-		const next = order[(order.indexOf(theme) + 1) % order.length]
+	const toggle = () => {
+		const dark = isDarkActive(theme)
+		const next: Theme = dark ? "light" : "dark"
 		setTheme(next)
 		applyTheme(next)
+		setIsDark(!dark)
 		localStorage.setItem("theme", next)
 	}
 
-	const label =
-		theme === "system" ? "Auto" : theme === "light" ? "Light" : "Dark"
+	const label = isDark ? "turn on the lights" : "set the mood"
 
 	return (
 		<button
-			onClick={cycle}
-			className="flex items-center gap-1.5 text-sm text-[rgba(var(--color-muted),1)] hover:text-[rgba(var(--color-foreground),0.8)] transition-colors"
-			aria-label={`Theme: ${label}. Click to change.`}
+			onClick={toggle}
+			className="flex items-center gap-1.5 text-xs text-[rgba(var(--color-muted),1)] hover:text-[rgba(var(--color-foreground),0.8)] transition-colors"
+			aria-label={label}
 		>
-			{theme === "system" && (
-				<svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-					<path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-				</svg>
-			)}
-			{theme === "light" && (
-				<svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-					<path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-				</svg>
-			)}
-			{theme === "dark" && (
-				<svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-					<path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-				</svg>
-			)}
+			{/* Light switch icon */}
+			<svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+				{isDark ? (
+					<>
+						<rect x="8" y="2" width="8" height="14" rx="4" />
+						<circle cx="12" cy="9" r="2" fill="currentColor" />
+						<path strokeLinecap="round" d="M12 16v6" />
+					</>
+				) : (
+					<>
+						<rect x="8" y="2" width="8" height="14" rx="4" />
+						<circle cx="12" cy="6" r="2" fill="currentColor" />
+						<path strokeLinecap="round" d="M12 16v6" />
+					</>
+				)}
+			</svg>
 			{label}
 		</button>
 	)

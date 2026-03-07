@@ -46,7 +46,7 @@ export default function HoppingListPage() {
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-8">
-				<Link href="/building" className="text-[rgb(var(--color-accent))] hover:text-[rgb(var(--color-accent-secondary))] transition-colors mb-4 inline-block">
+				<Link href="/building" className="text-[rgb(var(--color-accent))] hover:text-[rgba(var(--color-accent),0.8)] transition-colors mb-4 inline-block">
 					← Back to Projects
 				</Link>
 				<h1 className="text-4xl font-bold gradient-heading mb-4">

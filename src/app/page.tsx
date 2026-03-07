@@ -117,7 +117,7 @@ export default async function Home() {
 									<AdvisingIcon />
 								</svg>
 							</div>
-							<h3 className="text-2xl md:text-3xl font-semibold text-[rgba(var(--color-foreground),0.9)] mb-3">
+							<h3 className="text-2xl md:text-3xl font-semibold gradient-heading mb-3">
 								advising
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.6)] mb-4 text-sm">
@@ -147,7 +147,7 @@ export default async function Home() {
 									<BuildingIcon />
 								</svg>
 							</div>
-							<h3 className="text-2xl md:text-3xl font-semibold text-[rgba(var(--color-foreground),0.9)] mb-3">
+							<h3 className="text-2xl md:text-3xl font-semibold gradient-heading mb-3">
 								building
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.6)] mb-4 text-sm">
@@ -176,7 +176,7 @@ export default async function Home() {
 									<InvestingIcon />
 								</svg>
 							</div>
-							<h3 className="text-2xl md:text-3xl font-semibold text-[rgba(var(--color-foreground),0.9)] mb-3">
+							<h3 className="text-2xl md:text-3xl font-semibold gradient-heading mb-3">
 								investing
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.6)] mb-4 text-sm">

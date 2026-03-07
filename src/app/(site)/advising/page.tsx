@@ -61,7 +61,7 @@ export default async function AdvisingPage() {
 										alt="Y Combinator Logo"
 										width={180}
 										height={36}
-										className="object-contain"
+										className="object-contain invert-on-light"
 									/>
 								</div>
 							</div>
@@ -74,7 +74,7 @@ export default async function AdvisingPage() {
 									href="https://www.prnewswire.com/news-releases/snappr-acquires-pretty-instant-301347884.html"
 									target="_blank"
 									rel="noopener noreferrer"
-									className="text-orange-400 hover:text-orange-300"
+									className="text-[rgb(var(--color-accent))] hover:text-[rgb(var(--color-accent-secondary))] transition-colors"
 								>
 									Snappr
 								</Link>{" "}
@@ -97,7 +97,7 @@ export default async function AdvisingPage() {
 										alt="Techstars Logo"
 										width={180}
 										height={36}
-										className="object-contain"
+										className="object-contain invert-on-light"
 									/>
 								</div>
 							</div>
@@ -131,7 +131,7 @@ export default async function AdvisingPage() {
 										alt="VentureBuilder Logo"
 										width={180}
 										height={36}
-										className="object-contain"
+										className="object-contain invert-on-light"
 									/>
 								</div>
 							</div>

@@ -15,7 +15,7 @@ const siteLinks = [
 const socialLinks = [
 	{
 		name: "Bluesky",
-		href: "https://bsky.app/profile/dougxyz.bsky.social",
+		href: "https://bsky.app/profile/doug.is",
 		icon: (
 			<svg fill="none" viewBox="0 0 64 57" className="w-5 h-5">
 				<path
