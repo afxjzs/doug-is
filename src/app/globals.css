@@ -13,21 +13,21 @@
 	/* Subheading font — defaults to body font, swap independently later */
 	--font-subheading: var(--font-body, system-ui, sans-serif);
 
-	--color-background: 20, 18, 24;
-	--color-foreground: 245, 243, 239;
-	--color-accent: 212, 148, 10;
-	--color-accent-secondary: 107, 141, 190;
-	--color-muted: 138, 138, 148;
+	--color-background: 14, 14, 16;
+	--color-foreground: 240, 240, 244;
+	--color-accent: 74, 158, 229;
+	--color-accent-secondary: 229, 72, 77;
+	--color-muted: 122, 122, 134;
 	--color-border: 255, 255, 255;
 
 	/* Legacy aliases — keep during migration, remove when all refs updated */
-	--color-violet: var(--color-accent-secondary);
-	--color-cyan: var(--color-accent-secondary);
-	--color-magenta: var(--color-accent);
+	--color-violet: var(--color-accent);
+	--color-cyan: var(--color-accent);
+	--color-magenta: var(--color-accent-secondary);
 	--color-gold: var(--color-accent);
-	--color-emerald: var(--color-accent-secondary);
-	--color-pink: var(--color-accent);
-	--color-orange: var(--color-accent);
+	--color-emerald: var(--color-accent);
+	--color-pink: var(--color-accent-secondary);
+	--color-orange: var(--color-accent-secondary);
 }
 
 /* ============================================
@@ -35,38 +35,38 @@
    ============================================ */
 .light,
 [data-theme="light"] {
-	--color-background: 250, 249, 246;
-	--color-foreground: 26, 26, 26;
-	--color-accent: 212, 148, 10;
-	--color-accent-secondary: 74, 111, 165;
-	--color-muted: 120, 120, 130;
-	--color-border: 230, 228, 224;
+	--color-background: 245, 245, 247;
+	--color-foreground: 20, 20, 24;
+	--color-accent: 44, 120, 190;
+	--color-accent-secondary: 210, 55, 60;
+	--color-muted: 100, 100, 112;
+	--color-border: 218, 218, 224;
 
-	--color-violet: var(--color-accent-secondary);
-	--color-cyan: var(--color-accent-secondary);
-	--color-magenta: var(--color-accent);
+	--color-violet: var(--color-accent);
+	--color-cyan: var(--color-accent);
+	--color-magenta: var(--color-accent-secondary);
 	--color-gold: var(--color-accent);
-	--color-emerald: var(--color-accent-secondary);
-	--color-pink: var(--color-accent);
-	--color-orange: var(--color-accent);
+	--color-emerald: var(--color-accent);
+	--color-pink: var(--color-accent-secondary);
+	--color-orange: var(--color-accent-secondary);
 }
 
 @media (prefers-color-scheme: light) {
 	:root:not(.dark):not([data-theme="dark"]) {
-		--color-background: 250, 249, 246;
-		--color-foreground: 26, 26, 26;
-		--color-accent: 212, 148, 10;
-		--color-accent-secondary: 74, 111, 165;
-		--color-muted: 120, 120, 130;
-		--color-border: 230, 228, 224;
+		--color-background: 245, 245, 247;
+		--color-foreground: 20, 20, 24;
+		--color-accent: 44, 120, 190;
+		--color-accent-secondary: 210, 55, 60;
+		--color-muted: 100, 100, 112;
+		--color-border: 218, 218, 224;
 
-		--color-violet: var(--color-accent-secondary);
-		--color-cyan: var(--color-accent-secondary);
-		--color-magenta: var(--color-accent);
+		--color-violet: var(--color-accent);
+		--color-cyan: var(--color-accent);
+		--color-magenta: var(--color-accent-secondary);
 		--color-gold: var(--color-accent);
-		--color-emerald: var(--color-accent-secondary);
-		--color-pink: var(--color-accent);
-		--color-orange: var(--color-accent);
+		--color-emerald: var(--color-accent);
+		--color-pink: var(--color-accent-secondary);
+		--color-orange: var(--color-accent-secondary);
 	}
 }
 
@@ -183,13 +183,13 @@
 		font-family: var(--font-display, var(--font-body, system-ui, sans-serif));
 	}
 
-	/* Primary button — warm amber accent */
+	/* Primary button — red pop for main CTAs */
 	.btn-primary {
 		padding: 0.75rem 1.5rem;
-		background-color: rgba(var(--color-accent), 0.9);
-		border: 1px solid rgba(var(--color-accent), 1);
+		background-color: rgba(var(--color-accent-secondary), 0.9);
+		border: 1px solid rgba(var(--color-accent-secondary), 1);
 		border-radius: 0.5rem;
-		color: rgb(var(--color-background));
+		color: #fff;
 		font-weight: 600;
 		transition: all 200ms ease;
 		position: relative;
@@ -197,18 +197,18 @@
 	}
 
 	.btn-primary:hover {
-		background-color: rgba(var(--color-accent), 1);
-		box-shadow: 0 2px 8px rgba(var(--color-accent), 0.3);
+		background-color: rgba(var(--color-accent-secondary), 1);
+		box-shadow: 0 2px 8px rgba(var(--color-accent-secondary), 0.3);
 		transform: translateY(-1px);
 	}
 
-	/* Secondary button — outlined */
+	/* Secondary button — outlined blue */
 	.btn-secondary {
 		padding: 0.75rem 1.5rem;
 		background-color: transparent;
-		border: 1px solid rgba(var(--color-accent-secondary), 0.4);
+		border: 1px solid rgba(var(--color-accent), 0.4);
 		border-radius: 0.5rem;
-		color: rgb(var(--color-accent-secondary));
+		color: rgb(var(--color-accent));
 		font-weight: 500;
 		transition: all 200ms ease;
 		position: relative;
@@ -216,8 +216,8 @@
 	}
 
 	.btn-secondary:hover {
-		background-color: rgba(var(--color-accent-secondary), 0.1);
-		border-color: rgba(var(--color-accent-secondary), 0.6);
+		background-color: rgba(var(--color-accent), 0.1);
+		border-color: rgba(var(--color-accent), 0.6);
 	}
 
 	/* Legacy neon button aliases — map to new styles during migration */
@@ -225,10 +225,10 @@
 	.neon-button-pink,
 	.neon-button-orange {
 		padding: 0.75rem 1.5rem;
-		background-color: rgba(var(--color-accent), 0.9);
-		border: 1px solid rgba(var(--color-accent), 1);
+		background-color: rgba(var(--color-accent-secondary), 0.9);
+		border: 1px solid rgba(var(--color-accent-secondary), 1);
 		border-radius: 0.5rem;
-		color: rgb(var(--color-background));
+		color: #fff;
 		font-weight: 600;
 		transition: all 200ms ease;
 	}
@@ -236,8 +236,8 @@
 	.neon-button-magenta:hover,
 	.neon-button-pink:hover,
 	.neon-button-orange:hover {
-		background-color: rgba(var(--color-accent), 1);
-		box-shadow: 0 2px 8px rgba(var(--color-accent), 0.3);
+		background-color: rgba(var(--color-accent-secondary), 1);
+		box-shadow: 0 2px 8px rgba(var(--color-accent-secondary), 0.3);
 		transform: translateY(-1px);
 	}
 
@@ -246,9 +246,9 @@
 	.neon-button-emerald {
 		padding: 0.75rem 1.5rem;
 		background-color: transparent;
-		border: 1px solid rgba(var(--color-accent-secondary), 0.4);
+		border: 1px solid rgba(var(--color-accent), 0.4);
 		border-radius: 0.5rem;
-		color: rgb(var(--color-accent-secondary));
+		color: rgb(var(--color-accent));
 		font-weight: 500;
 		transition: all 200ms ease;
 	}
@@ -256,8 +256,8 @@
 	.neon-button-cyan:hover,
 	.neon-button-violet:hover,
 	.neon-button-emerald:hover {
-		background-color: rgba(var(--color-accent-secondary), 0.1);
-		border-color: rgba(var(--color-accent-secondary), 0.6);
+		background-color: rgba(var(--color-accent), 0.1);
+		border-color: rgba(var(--color-accent), 0.6);
 	}
 
 	/* Links */
