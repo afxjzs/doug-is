@@ -322,26 +322,14 @@ export default function BuildingPage() {
 											}
 										>
 											<h2
-												className={`text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 ${
-													project.id === "hopping-list"
-														? "group-hover:text-[rgba(var(--color-magenta),1)]"
-														: project.id === "oil-price-ticker"
-														? "group-hover:text-[rgba(var(--color-orange),1)]"
-														: "group-hover:text-[rgba(var(--color-violet),1)]"
-												} transition-colors`}
+												className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 group-hover:text-[rgb(var(--color-accent))] transition-colors"
 											>
 												{project.title}
 											</h2>
 										</Link>
 									) : (
 										<h2
-											className={`text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 ${
-												project.id === "hopping-list"
-													? "group-hover:text-[rgba(var(--color-magenta),1)]"
-													: project.id === "oil-price-ticker"
-													? "group-hover:text-[rgba(var(--color-orange),1)]"
-													: "group-hover:text-[rgba(var(--color-violet),1)]"
-											} transition-colors`}
+											className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2"
 										>
 											{project.title}
 										</h2>
@@ -353,13 +341,7 @@ export default function BuildingPage() {
 										{project.tags.map((tag) => (
 											<span
 												key={tag}
-												className={`text-xs px-2 py-1 rounded-full ${
-													project.id === "hopping-list"
-														? "bg-[rgba(var(--color-magenta),0.1)] text-[rgba(var(--color-magenta),0.9)]"
-														: project.id === "oil-price-ticker"
-														? "bg-[rgba(var(--color-orange),0.1)] text-[rgba(var(--color-orange),0.9)]"
-														: "bg-[rgba(var(--color-violet),0.1)] text-[rgba(var(--color-violet),0.9)]"
-												}`}
+												className="text-xs px-2 py-1 rounded-full bg-[rgba(var(--color-accent),0.1)] text-[rgba(var(--color-accent),0.9)]"
 											>
 												{tag}
 											</span>
