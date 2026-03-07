@@ -62,7 +62,7 @@ export default async function Home() {
 	return (
 		<div className="max-w-4xl mx-auto">
 			{/* Hero Section */}
-			<div className="mb-16 py-16 px-8">
+			<div className="mb-16 py-16 px-8 animate-fade-in-up">
 				<div className="flex flex-col md:flex-row items-center justify-center gap-8 mb-8">
 					<div className="relative w-32 h-32 overflow-hidden rounded-full border-2 border-[rgba(var(--color-border),0.15)]">
 						<Image

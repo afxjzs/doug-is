@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils/index"
 import { useClientEventTracking } from "@/lib/analytics"
 
 const navItems = [
