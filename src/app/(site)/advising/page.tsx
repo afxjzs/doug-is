@@ -52,8 +52,8 @@ export default async function AdvisingPage() {
 
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
 					{/* Y Combinator */}
-					<div className="relative overflow-hidden rounded-lg border border-[rgba(var(--color-border),0.08)] transition-all duration-300 hover:shadow-md">
-						<div className="p-8 flex flex-col h-full">
+					<div className="dark-card">
+						<div className="flex flex-col h-full">
 							<div className="mb-6 flex justify-center">
 								<div className="h-20 flex items-center justify-center">
 									<Image
@@ -88,8 +88,8 @@ export default async function AdvisingPage() {
 					</div>
 
 					{/* Techstars */}
-					<div className="relative overflow-hidden rounded-lg border border-[rgba(var(--color-border),0.08)] transition-all duration-300 hover:shadow-md">
-						<div className="p-8 flex flex-col h-full">
+					<div className="dark-card">
+						<div className="flex flex-col h-full">
 							<div className="mb-6 flex justify-center">
 								<div className="h-20 flex items-center justify-center">
 									<Image
@@ -122,8 +122,8 @@ export default async function AdvisingPage() {
 					</div>
 
 					{/* VentureBuilder */}
-					<div className="relative overflow-hidden rounded-lg border border-[rgba(var(--color-border),0.08)] transition-all duration-300 hover:shadow-md">
-						<div className="p-8 flex flex-col h-full">
+					<div className="dark-card">
+						<div className="flex flex-col h-full">
 							<div className="mb-6 flex justify-center">
 								<div className="h-20 flex items-center justify-center">
 									<Image
@@ -144,7 +144,7 @@ export default async function AdvisingPage() {
 									href="https://venturebuilder.vc/nov"
 									target="_blank"
 									rel="noopener noreferrer"
-									className="text-red-400 hover:text-red-300"
+									className="text-[rgb(var(--color-accent))] hover:text-[rgb(var(--color-accent-secondary))] transition-colors"
 								>
 									VentureBuilder
 								</Link>
@@ -154,7 +154,7 @@ export default async function AdvisingPage() {
 									href="https://nov.com"
 									target="_blank"
 									rel="noopener noreferrer"
-									className="text-red-400 hover:text-red-300"
+									className="text-[rgb(var(--color-accent))] hover:text-[rgb(var(--color-accent-secondary))] transition-colors"
 								>
 									NOV
 								</Link>
@@ -392,8 +392,8 @@ export default async function AdvisingPage() {
 				</h2>
 
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-					<div className="relative overflow-hidden rounded-lg border border-[rgba(var(--color-border),0.08)] transition-all duration-300 hover:shadow-md">
-						<div className="p-8 flex flex-col h-full">
+					<div className="dark-card">
+						<div className="flex flex-col h-full">
 							<h3 className="text-xl font-semibold mb-4">
 								One-Time Strategy Session
 							</h3>
@@ -414,8 +414,8 @@ export default async function AdvisingPage() {
 						</div>
 					</div>
 
-					<div className="relative overflow-hidden rounded-lg border border-[rgba(var(--color-border),0.08)] transition-all duration-300 hover:shadow-md">
-						<div className="p-8 flex flex-col h-full">
+					<div className="dark-card">
+						<div className="flex flex-col h-full">
 							<h3 className="text-xl font-semibold mb-4">
 								Monthly Advisory
 							</h3>
@@ -436,8 +436,8 @@ export default async function AdvisingPage() {
 						</div>
 					</div>
 
-					<div className="relative overflow-hidden rounded-lg border border-[rgba(var(--color-border),0.08)] transition-all duration-300 hover:shadow-md">
-						<div className="p-8 flex flex-col h-full">
+					<div className="dark-card">
+						<div className="flex flex-col h-full">
 							<h3 className="text-xl font-semibold mb-4">
 								Custom Engagement
 							</h3>
