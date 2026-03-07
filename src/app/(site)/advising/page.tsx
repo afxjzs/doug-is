@@ -276,7 +276,7 @@ export default async function AdvisingPage() {
 				</div>
 			</div>
 
-			{/* B2B Services Section */}
+			{/* B2B Services Section — commented out for now
 			<div className="mb-16">
 				<h2 className="text-3xl font-bold gradient-heading mb-8">
 					B2B Startup Services
@@ -384,6 +384,7 @@ export default async function AdvisingPage() {
 					</div>
 				</div>
 			</div>
+			*/}
 
 			{/* Engagement Models */}
 			<div className="mb-16">
