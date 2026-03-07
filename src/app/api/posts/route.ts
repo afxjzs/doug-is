@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { createAdminClient } from "@/lib/supabase/serverClient"
 import { createClient } from "@/lib/supabase/server"
 import { nanoid } from "nanoid"
@@ -143,6 +143,9 @@ export async function POST(request: Request) {
 
 		// Revalidate all blog-related paths to ensure immediate cache invalidation
 		try {
+			// Bust the posts cache (used by SSR blog listing)
+			revalidateTag("posts")
+
 			// HOMEPAGE CACHE: Homepage displays latest blog post content
 			revalidatePath("/")
 

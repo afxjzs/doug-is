@@ -33,7 +33,7 @@ export default function ConnectingPage() {
 				</div>
 				<div>
 					<div className="dark-card mb-6">
-						<h2 className="text-xl font-semibold gradient-text-cyan mb-4">
+						<h2 className="text-xl font-semibold mb-4">
 							General Location
 						</h2>
 						<div className="space-y-4 text-[rgba(var(--color-foreground),0.8)]">
@@ -61,7 +61,7 @@ export default function ConnectingPage() {
 						</div>
 					</div>
 					<div className="dark-card">
-						<h2 className="text-xl font-semibold gradient-text-violet mb-4">
+						<h2 className="text-xl font-semibold mb-4">
 							Connect
 						</h2>
 						<SocialIcons />

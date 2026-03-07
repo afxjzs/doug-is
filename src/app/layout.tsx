@@ -1,49 +1,26 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import localFont from "next/font/local"
+import { Instrument_Serif, DM_Sans } from "next/font/google"
 import "./globals.css"
 import { ClientAnalyticsWrapper } from "@/components/ClientAnalyticsWrapper"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import LayoutWrapper from "@/components/LayoutWrapper"
 import { GoogleAnalytics } from "@/components/GoogleAnalytics"
 
-// Local font fallback
-const interLocal = localFont({
-	src: [
-		{
-			path: "../../public/fonts/Inter-Regular.woff2",
-			weight: "400",
-			style: "normal",
-		},
-		{
-			path: "../../public/fonts/Inter-Medium.woff2",
-			weight: "500",
-			style: "normal",
-		},
-		{
-			path: "../../public/fonts/Inter-SemiBold.woff2",
-			weight: "600",
-			style: "normal",
-		},
-		{
-			path: "../../public/fonts/Inter-Bold.woff2",
-			weight: "700",
-			style: "normal",
-		},
-	],
+// Display font — for H1, hero text, pull quotes
+const instrumentSerif = Instrument_Serif({
+	subsets: ["latin"],
+	weight: "400",
 	display: "swap",
-	variable: "--font-inter-local",
-	fallback: ["system-ui", "Arial", "sans-serif"],
+	variable: "--font-display",
+	fallback: ["Georgia", "serif"],
 })
 
-// Optimize font loading with display swap and preload
-const inter = Inter({
+// Body + subheading font
+const dmSans = DM_Sans({
 	subsets: ["latin"],
 	display: "swap",
-	variable: "--font-inter",
-	preload: true,
+	variable: "--font-body",
 	fallback: ["system-ui", "Arial", "sans-serif"],
-	adjustFontFallback: true,
 	weight: ["400", "500", "600", "700"],
 })
 
@@ -103,10 +80,16 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode
 }) {
-	// Use client-side LayoutWrapper to handle conditional layout application
 	return (
-		<html lang="en" className="scroll-smooth">
-			<body className={`${inter.variable} ${interLocal.variable}`}>
+		<html lang="en" className="scroll-smooth" suppressHydrationWarning>
+			<head>
+				<script
+					dangerouslySetInnerHTML={{
+						__html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light"){document.documentElement.classList.add("light");document.documentElement.setAttribute("data-theme","light")}else if(t==="dark"){document.documentElement.classList.add("dark");document.documentElement.setAttribute("data-theme","dark")}}catch(e){}})()`,
+					}}
+				/>
+			</head>
+			<body className={`${instrumentSerif.variable} ${dmSans.variable}`}>
 				{/* Google Analytics - Load early for comprehensive tracking */}
 				<GoogleAnalytics />
 

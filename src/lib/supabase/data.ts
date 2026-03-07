@@ -7,6 +7,7 @@
  */
 
 import { createClient, createStaticClient } from "./server"
+import { unstable_cache } from "next/cache"
 import type { Database } from "../types/supabase"
 import { isLocalDevelopment } from "./environment"
 
@@ -104,6 +105,46 @@ export const getPosts = async (
 		return []
 	}
 }
+
+/**
+ * Fetches published posts with cache tags for on-demand revalidation.
+ * Cached until revalidateTag("posts") is called (e.g., after admin save).
+ */
+export const getPublishedPosts = unstable_cache(
+	async (limit?: number, category?: string): Promise<Post[]> => {
+		try {
+			const supabase = createStaticClient()
+
+			let query = supabase
+				.from("posts")
+				.select("*")
+				.not("published_at", "is", null)
+				.order("published_at", { ascending: false })
+
+			if (category) {
+				query = query.ilike("category", normalizeCategory(category))
+			}
+
+			if (limit) {
+				query = query.limit(limit)
+			}
+
+			const { data, error } = await query
+
+			if (error) {
+				console.error("Error fetching published posts:", error)
+				return []
+			}
+
+			return data as Post[]
+		} catch (error) {
+			console.error("Exception fetching published posts:", error)
+			return []
+		}
+	},
+	["published-posts"],
+	{ tags: ["posts"] }
+)
 
 /**
  * Fetches all posts using static client (for build-time operations)

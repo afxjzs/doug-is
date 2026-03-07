@@ -86,7 +86,7 @@ export default function OilPriceTickerPage() {
 				<div className="mb-8">
 					<Link
 						href="/building"
-						className="text-[rgba(var(--color-orange),0.8)] hover:text-[rgba(var(--color-orange),1)] transition-colors inline-flex items-center gap-2"
+						className="text-[rgba(var(--color-accent),0.8)] hover:text-[rgba(var(--color-accent),1)] transition-colors inline-flex items-center gap-2"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -137,7 +137,7 @@ export default function OilPriceTickerPage() {
 							href="/files/OilPriceTicker.zip"
 							projectId="oil-price-ticker"
 							linkType="download"
-							className="neon-button-orange text-lg px-8 py-3 flex items-center gap-2"
+							className="btn-primary text-lg px-8 py-3 flex items-center gap-2"
 							download={true}
 						>
 							<svg
@@ -162,7 +162,7 @@ export default function OilPriceTickerPage() {
 							linkType="github"
 							target="_blank"
 							rel="noopener noreferrer"
-							className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-orange),0.9)] transition-colors border border-[rgba(var(--color-foreground),0.2)] hover:border-[rgba(var(--color-orange),0.3)] px-6 py-3 rounded-lg flex items-center gap-2"
+							className="text-[rgba(var(--color-foreground),0.7)] hover:text-[rgba(var(--color-accent),0.9)] transition-colors border border-[rgba(var(--color-foreground),0.2)] hover:border-[rgba(var(--color-accent),0.3)] px-6 py-3 rounded-lg flex items-center gap-2"
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -183,11 +183,11 @@ export default function OilPriceTickerPage() {
 						Key Features
 					</h2>
 					<div className="grid md:grid-cols-3 gap-8">
-						<div className="text-center p-6 bg-[rgba(var(--color-orange),0.05)] border border-[rgba(var(--color-orange),0.1)] rounded-xl">
-							<div className="w-16 h-16 mx-auto mb-4 bg-[rgba(var(--color-orange),0.1)] rounded-full flex items-center justify-center">
+						<div className="text-center p-6 bg-[rgba(var(--color-accent),0.05)] border border-[rgba(var(--color-accent),0.1)] rounded-xl">
+							<div className="w-16 h-16 mx-auto mb-4 bg-[rgba(var(--color-accent),0.1)] rounded-full flex items-center justify-center">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
-									className="h-8 w-8 text-[rgba(var(--color-orange),0.8)]"
+									className="h-8 w-8 text-[rgba(var(--color-accent),0.8)]"
 									viewBox="0 0 24 24"
 									fill="none"
 									stroke="currentColor"
@@ -198,7 +198,7 @@ export default function OilPriceTickerPage() {
 									<path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
 								</svg>
 							</div>
-							<h3 className="text-xl font-semibold mb-2 text-[rgba(var(--color-orange),0.9)]">
+							<h3 className="text-xl font-semibold mb-2 text-[rgba(var(--color-accent),0.9)]">
 								Live Updates
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)]">
@@ -206,11 +206,11 @@ export default function OilPriceTickerPage() {
 							</p>
 						</div>
 
-						<div className="text-center p-6 bg-[rgba(var(--color-orange),0.05)] border border-[rgba(var(--color-orange),0.1)] rounded-xl">
-							<div className="w-16 h-16 mx-auto mb-4 bg-[rgba(var(--color-orange),0.1)] rounded-full flex items-center justify-center">
+						<div className="text-center p-6 bg-[rgba(var(--color-accent),0.05)] border border-[rgba(var(--color-accent),0.1)] rounded-xl">
+							<div className="w-16 h-16 mx-auto mb-4 bg-[rgba(var(--color-accent),0.1)] rounded-full flex items-center justify-center">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
-									className="h-8 w-8 text-[rgba(var(--color-orange),0.8)]"
+									className="h-8 w-8 text-[rgba(var(--color-accent),0.8)]"
 									viewBox="0 0 24 24"
 									fill="none"
 									stroke="currentColor"
@@ -223,7 +223,7 @@ export default function OilPriceTickerPage() {
 									<path d="M9 21V9" />
 								</svg>
 							</div>
-							<h3 className="text-xl font-semibold mb-2 text-[rgba(var(--color-orange),0.9)]">
+							<h3 className="text-xl font-semibold mb-2 text-[rgba(var(--color-accent),0.9)]">
 								Menu Bar Integration
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)]">
@@ -231,11 +231,11 @@ export default function OilPriceTickerPage() {
 							</p>
 						</div>
 
-						<div className="text-center p-6 bg-[rgba(var(--color-orange),0.05)] border border-[rgba(var(--color-orange),0.1)] rounded-xl">
-							<div className="w-16 h-16 mx-auto mb-4 bg-[rgba(var(--color-orange),0.1)] rounded-full flex items-center justify-center">
+						<div className="text-center p-6 bg-[rgba(var(--color-accent),0.05)] border border-[rgba(var(--color-accent),0.1)] rounded-xl">
+							<div className="w-16 h-16 mx-auto mb-4 bg-[rgba(var(--color-accent),0.1)] rounded-full flex items-center justify-center">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
-									className="h-8 w-8 text-[rgba(var(--color-orange),0.8)]"
+									className="h-8 w-8 text-[rgba(var(--color-accent),0.8)]"
 									viewBox="0 0 24 24"
 									fill="none"
 									stroke="currentColor"
@@ -247,7 +247,7 @@ export default function OilPriceTickerPage() {
 									<circle cx="12" cy="12" r="3" />
 								</svg>
 							</div>
-							<h3 className="text-xl font-semibold mb-2 text-[rgba(var(--color-orange),0.9)]">
+							<h3 className="text-xl font-semibold mb-2 text-[rgba(var(--color-accent),0.9)]">
 								Customizable Preferences
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)]">
@@ -264,7 +264,7 @@ export default function OilPriceTickerPage() {
 					</h2>
 					<div className="grid md:grid-cols-2 gap-8">
 						<div className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] rounded-xl p-6">
-							<h3 className="text-xl font-semibold mb-4 text-[rgba(var(--color-orange),0.9)]">
+							<h3 className="text-xl font-semibold mb-4 text-[rgba(var(--color-accent),0.9)]">
 								Main Screenshot
 							</h3>
 							<div className="relative w-full h-64 rounded-lg overflow-hidden">
@@ -279,7 +279,7 @@ export default function OilPriceTickerPage() {
 						</div>
 
 						<div className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] rounded-xl p-6">
-							<h3 className="text-xl font-semibold mb-4 text-[rgba(var(--color-orange),0.9)]">
+							<h3 className="text-xl font-semibold mb-4 text-[rgba(var(--color-accent),0.9)]">
 								Preferences
 							</h3>
 							<div className="relative w-full h-64 rounded-lg overflow-hidden">
@@ -303,14 +303,14 @@ export default function OilPriceTickerPage() {
 					<div className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] rounded-xl p-8">
 						<div className="grid md:grid-cols-2 gap-8">
 							<div>
-								<h3 className="text-xl font-semibold mb-4 text-[rgba(var(--color-orange),0.9)]">
+								<h3 className="text-xl font-semibold mb-4 text-[rgba(var(--color-accent),0.9)]">
 									Compatibility
 								</h3>
 								<ul className="space-y-2 text-[rgba(var(--color-foreground),0.7)]">
 									<li className="flex items-center gap-2">
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
-											className="h-4 w-4 text-[rgba(var(--color-orange),0.8)]"
+											className="h-4 w-4 text-[rgba(var(--color-accent),0.8)]"
 											viewBox="0 0 24 24"
 											fill="none"
 											stroke="currentColor"
@@ -325,7 +325,7 @@ export default function OilPriceTickerPage() {
 									<li className="flex items-center gap-2">
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
-											className="h-4 w-4 text-[rgba(var(--color-orange),0.8)]"
+											className="h-4 w-4 text-[rgba(var(--color-accent),0.8)]"
 											viewBox="0 0 24 24"
 											fill="none"
 											stroke="currentColor"
@@ -340,7 +340,7 @@ export default function OilPriceTickerPage() {
 									<li className="flex items-center gap-2">
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
-											className="h-4 w-4 text-[rgba(var(--color-orange),0.8)]"
+											className="h-4 w-4 text-[rgba(var(--color-accent),0.8)]"
 											viewBox="0 0 24 24"
 											fill="none"
 											stroke="currentColor"
@@ -356,14 +356,14 @@ export default function OilPriceTickerPage() {
 							</div>
 
 							<div>
-								<h3 className="text-xl font-semibold mb-4 text-[rgba(var(--color-orange),0.9)]">
+								<h3 className="text-xl font-semibold mb-4 text-[rgba(var(--color-accent),0.9)]">
 									Technologies
 								</h3>
 								<ul className="space-y-2 text-[rgba(var(--color-foreground),0.7)]">
 									<li className="flex items-center gap-2">
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
-											className="h-4 w-4 text-[rgba(var(--color-orange),0.8)]"
+											className="h-4 w-4 text-[rgba(var(--color-accent),0.8)]"
 											viewBox="0 0 24 24"
 											fill="none"
 											stroke="currentColor"
@@ -378,7 +378,7 @@ export default function OilPriceTickerPage() {
 									<li className="flex items-center gap-2">
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
-											className="h-4 w-4 text-[rgba(var(--color-orange),0.8)]"
+											className="h-4 w-4 text-[rgba(var(--color-accent),0.8)]"
 											viewBox="0 0 24 24"
 											fill="none"
 											stroke="currentColor"
@@ -393,7 +393,7 @@ export default function OilPriceTickerPage() {
 									<li className="flex items-center gap-2">
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
-											className="h-4 w-4 text-[rgba(var(--color-orange),0.8)]"
+											className="h-4 w-4 text-[rgba(var(--color-accent),0.8)]"
 											viewBox="0 0 24 24"
 											fill="none"
 											stroke="currentColor"
@@ -422,7 +422,7 @@ export default function OilPriceTickerPage() {
 						issues, feel free to{" "}
 						<Link
 							href="/contact"
-							className="text-[rgba(var(--color-orange),0.8)] hover:text-[rgba(var(--color-orange),1)] transition-colors"
+							className="text-[rgba(var(--color-accent),0.8)] hover:text-[rgba(var(--color-accent),1)] transition-colors"
 						>
 							reach out
 						</Link>
@@ -431,7 +431,7 @@ export default function OilPriceTickerPage() {
 					<Link
 						href="/files/OilPriceTicker.zip"
 						download
-						className="neon-button-orange text-lg px-8 py-3 inline-flex items-center gap-2"
+						className="btn-primary text-lg px-8 py-3 inline-flex items-center gap-2"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

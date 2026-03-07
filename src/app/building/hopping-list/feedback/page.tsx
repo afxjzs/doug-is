@@ -46,7 +46,7 @@ export default function HoppingListFeedbackPage() {
 			<div className="mb-8">
 				<Link
 					href="/building/hopping-list"
-					className="neon-link mb-4 inline-block"
+					className="text-[rgb(var(--color-accent))] hover:text-[rgb(var(--color-accent-secondary))] transition-colors mb-4 inline-block"
 				>
 					← Back to Hopping List
 				</Link>
@@ -67,7 +67,7 @@ export default function HoppingListFeedbackPage() {
 							</div>
 						</div>
 						<div>
-							<h2 className="text-xl font-semibold gradient-text-magenta mb-2">
+							<h2 className="text-xl font-semibold mb-2">
 								We Value Your Input
 							</h2>
 							<p className="text-[rgba(var(--color-foreground),0.8)] mb-3">
@@ -98,7 +98,7 @@ export default function HoppingListFeedbackPage() {
 				{/* Sidebar with additional info */}
 				<div>
 					<div className="dark-card mb-6">
-						<h2 className="text-xl font-semibold gradient-text-magenta mb-4">
+						<h2 className="text-xl font-semibold mb-4">
 							About Hopping List
 						</h2>
 						<div className="space-y-4 text-[rgba(var(--color-foreground),0.8)]">
@@ -109,7 +109,7 @@ export default function HoppingListFeedbackPage() {
 							<div className="flex space-x-3">
 								<Link
 									href="/building/hopping-list"
-									className="neon-button-magenta text-sm px-4 py-2 text-center flex-1"
+									className="btn-primary text-sm px-4 py-2 text-center flex-1"
 								>
 									Project Details
 								</Link>
@@ -118,7 +118,7 @@ export default function HoppingListFeedbackPage() {
 					</div>
 
 					<div className="dark-card">
-						<h2 className="text-xl font-semibold gradient-text-magenta mb-4">
+						<h2 className="text-xl font-semibold mb-4">
 							Beta Testing
 						</h2>
 						<div className="space-y-4 text-[rgba(var(--color-foreground),0.8)]">
@@ -130,7 +130,7 @@ export default function HoppingListFeedbackPage() {
 								href="https://testflight.apple.com/join/CscPEAD4"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="neon-button-magenta text-sm px-4 py-2 text-center block"
+								className="btn-primary text-sm px-4 py-2 text-center block"
 							>
 								Join Beta Program
 							</Link>

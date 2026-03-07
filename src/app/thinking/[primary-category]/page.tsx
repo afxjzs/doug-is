@@ -128,7 +128,7 @@ export default async function ThinkingCategoryPage({
 									<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
 										{post.excerpt}
 									</p>
-									<div className="neon-link inline-flex items-center">
+									<div className="text-[rgb(var(--color-accent))] hover:text-[rgb(var(--color-accent-secondary))] transition-colors inline-flex items-center">
 										Read more
 										<svg
 											xmlns="http://www.w3.org/2000/svg"

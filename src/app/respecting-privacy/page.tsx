@@ -18,7 +18,7 @@ export default function PrivacyPolicyPage() {
 				</p>
 			</div>
 
-			<div className="bg-[rgba(var(--color-background),0.5)] border border-[rgba(var(--color-foreground),0.1)] rounded-lg p-8 backdrop-blur-sm">
+			<div className="border border-[rgba(var(--color-border),0.08)] rounded-lg p-8 bg-[rgba(var(--color-foreground),0.03)]">
 				<div className="prose prose-invert max-w-none">
 					<p className="text-xl leading-relaxed">
 						Doug won&apos;t tell or share or sell your information. Default

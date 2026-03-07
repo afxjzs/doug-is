@@ -3,10 +3,8 @@
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils/index"
 import { useClientEventTracking } from "@/lib/analytics"
 
-// Updated navigation items to remove the contact link
 const navItems = [
 	{ name: "/building", path: "/building" },
 	{ name: "/advising", path: "/advising" },
@@ -24,26 +22,21 @@ export default function Header() {
 	const handleNavClick = (toSection: string) => {
 		const fromSection = pathname.split("/")[1] || "home"
 		if (fromSection !== toSection.substring(1)) {
-			// Remove leading slash for comparison
 			analytics.trackSectionNavigation(fromSection, toSection.substring(1))
 		}
 	}
 
 	const handleConnectClick = () => {
 		const currentSection = pathname.split("/")[1] || "home"
-		// Track as section navigation to connecting page
 		analytics.trackSectionNavigation(currentSection, "connecting")
 	}
 
 	const handleMobileMenuToggle = () => {
 		const newState = !isMenuOpen
 		setIsMenuOpen(newState)
-
-		// Track mobile menu usage
 		analytics.trackMobileMenuToggle(newState ? "open" : "close")
 	}
 
-	// Add scroll effect
 	useEffect(() => {
 		const handleScroll = () => {
 			setScrolled(window.scrollY > 20)
@@ -53,7 +46,6 @@ export default function Header() {
 		return () => window.removeEventListener("scroll", handleScroll)
 	}, [])
 
-	// Add body class to prevent scrolling when menu is open
 	useEffect(() => {
 		if (isMenuOpen) {
 			document.body.classList.add("overflow-hidden")
@@ -70,28 +62,23 @@ export default function Header() {
 		<header
 			className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
 				scrolled
-					? "bg-[rgba(var(--color-background),0.8)] backdrop-blur-md shadow-lg"
+					? "bg-[rgba(var(--color-background),0.9)] backdrop-blur-md shadow-sm"
 					: ""
 			}`}
 		>
 			<div className="container mx-auto px-4 py-4">
 				{/* Desktop Header Layout */}
 				<div className="hidden md:flex items-center justify-between">
-					{/* Left - Empty space */}
 					<div className="flex-1"></div>
 
-					{/* Center - Logo and Navigation */}
 					<div className="flex items-center justify-center space-x-8">
-						{/* Logo */}
 						<Link href="/" className="group relative flex items-center">
 							<h1 className="text-lg font-bold gradient-heading">doug.is</h1>
-							<span className="absolute -inset-1 bg-gradient-to-r from-[rgba(var(--color-violet),0.2)] to-[rgba(var(--color-cyan),0.2)] opacity-30 blur-lg group-hover:opacity-50 transition-opacity"></span>
 							<span className="text-[rgba(var(--color-foreground),0.5)] text-lg">
 								...
 							</span>
 						</Link>
 
-						{/* Navigation links */}
 						{navItems.map((item) => (
 							<Link
 								key={item.path}
@@ -99,13 +86,13 @@ export default function Header() {
 								onClick={() => handleNavClick(item.path)}
 								className={`text-lg relative group transition-all duration-300 px-3 py-2 ${
 									pathname === item.path || pathname.startsWith(`${item.path}/`)
-										? "text-[rgba(var(--color-foreground),1)] drop-shadow-[0_0_3px_rgba(var(--color-cyan),0.7)]"
-										: "text-[rgba(var(--color-foreground),0.8)] hover:text-[rgba(var(--color-foreground),1)]"
+										? "text-[rgba(var(--color-foreground),1)]"
+										: "text-[rgba(var(--color-foreground),0.6)] hover:text-[rgba(var(--color-foreground),1)]"
 								}`}
 							>
 								{item.name}
 								<span
-									className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-[rgba(var(--color-violet),0.7)] to-[rgba(var(--color-cyan),0.7)] transition-all duration-300 ${
+									className={`absolute -bottom-1 left-0 h-0.5 bg-[rgb(var(--color-accent))] transition-all duration-300 ${
 										pathname === item.path ||
 										pathname.startsWith(`${item.path}/`)
 											? "w-full"
@@ -116,12 +103,11 @@ export default function Header() {
 						))}
 					</div>
 
-					{/* Right - Let's Connect button */}
 					<div className="flex-1 flex justify-end">
 						<Link
 							href="/connecting"
 							onClick={handleConnectClick}
-							className="neon-button-magenta text-sm py-2 whitespace-nowrap"
+							className="btn-primary text-sm py-2 whitespace-nowrap"
 						>
 							Let&apos;s Connect
 						</Link>
@@ -132,13 +118,11 @@ export default function Header() {
 				<div className="flex md:hidden items-center justify-between">
 					<Link href="/" className="group relative flex items-center">
 						<h1 className="text-lg font-bold gradient-heading">doug.is</h1>
-						<span className="absolute -inset-1 bg-gradient-to-r from-[rgba(var(--color-violet),0.2)] to-[rgba(var(--color-cyan),0.2)] opacity-30 blur-lg group-hover:opacity-50 transition-opacity"></span>
 						<span className="text-[rgba(var(--color-foreground),0.5)] text-lg">
 							...
 						</span>
 					</Link>
 
-					{/* Mobile menu button */}
 					<button
 						className="text-[rgba(var(--color-foreground),0.9)] z-50"
 						onClick={handleMobileMenuToggle}
@@ -178,9 +162,9 @@ export default function Header() {
 					</button>
 				</div>
 
-				{/* Mobile navigation with animation and backdrop blur */}
+				{/* Mobile navigation */}
 				<div
-					className={`fixed inset-0 bg-[rgba(var(--color-background),0.95)] backdrop-blur-lg transform transition-transform duration-300 ease-in-out z-40 ${
+					className={`fixed inset-0 bg-[rgba(var(--color-background),0.97)] backdrop-blur-lg transform transition-transform duration-300 ease-in-out z-40 ${
 						isMenuOpen ? "translate-x-0" : "translate-x-full"
 					}`}
 				>
@@ -193,7 +177,7 @@ export default function Header() {
 									className={`text-2xl relative group transition-all duration-300 ${
 										pathname === item.path ||
 										pathname.startsWith(`${item.path}/`)
-											? "text-[rgba(var(--color-cyan),1)] drop-shadow-[0_0_3px_rgba(var(--color-cyan),0.7)]"
+											? "text-[rgb(var(--color-accent))]"
 											: "text-[rgba(var(--color-foreground),0.8)] hover:text-[rgba(var(--color-foreground),1)]"
 									}`}
 									onClick={() => {
@@ -203,7 +187,7 @@ export default function Header() {
 								>
 									{item.name}
 									<span
-										className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-[rgba(var(--color-violet),0.7)] to-[rgba(var(--color-cyan),0.7)] transition-all duration-300 ${
+										className={`absolute -bottom-1 left-0 h-0.5 bg-[rgb(var(--color-accent))] transition-all duration-300 ${
 											pathname === item.path ||
 											pathname.startsWith(`${item.path}/`)
 												? "w-full"
@@ -215,7 +199,7 @@ export default function Header() {
 
 							<Link
 								href="/connecting"
-								className="neon-button-magenta mt-6"
+								className="btn-primary mt-6"
 								onClick={() => {
 									handleConnectClick()
 									setIsMenuOpen(false)

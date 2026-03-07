@@ -185,10 +185,10 @@ export default function BuildingPage() {
 					{companies.map((company) => (
 						<div
 							key={company.id}
-							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] hover:border-[rgba(var(--color-${company.color}),0.3)] rounded-xl overflow-hidden transition-all duration-300 group`}
+							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:shadow-md rounded-xl overflow-hidden transition-all duration-300 group`}
 						>
 							<div className="flex flex-col md:flex-row">
-								<div className="md:w-2/5 bg-[rgba(var(--color-background),0.6)] flex items-center justify-center p-8 rounded-xl overflow-hidden">
+								<div className="md:w-2/5 bg-[#0e0e10] flex items-center justify-center p-8 rounded-xl overflow-hidden">
 									<div className="w-full h-full flex items-center justify-center">
 										<div className="relative w-full h-[140px] overflow-hidden rounded-xl">
 											<Image
@@ -237,7 +237,7 @@ export default function BuildingPage() {
 											href={company.website}
 											target="_blank"
 											rel="noopener noreferrer"
-											className={`neon-button-${company.color} text-sm py-2`}
+											className={`btn-primary text-sm py-2`}
 											onClick={() =>
 												handleCompanyClick(company.id, company.title, "website")
 											}
@@ -275,16 +275,10 @@ export default function BuildingPage() {
 					{projects.map((project) => (
 						<div
 							key={project.id}
-							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] ${
-								project.id === "hopping-list"
-									? "hover:border-[rgba(var(--color-magenta),0.2)]"
-									: project.id === "oil-price-ticker"
-									? "hover:border-[rgba(var(--color-orange),0.2)]"
-									: "hover:border-[rgba(var(--color-violet),0.2)]"
-							} rounded-xl overflow-hidden transition-all duration-300 group`}
+							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:shadow-md rounded-xl overflow-hidden transition-all duration-300 group`}
 						>
 							<div className="flex flex-col md:flex-row">
-								<div className="md:w-2/5 bg-[rgba(var(--color-background),0.6)] flex items-center justify-center p-8 rounded-xl overflow-hidden">
+								<div className="md:w-2/5 bg-[#0e0e10] flex items-center justify-center p-8 rounded-xl overflow-hidden">
 									<div className="w-full h-full flex items-center justify-center">
 										<div className="relative w-full h-[200px] overflow-hidden rounded-xl">
 											{project.link ? (
@@ -328,26 +322,14 @@ export default function BuildingPage() {
 											}
 										>
 											<h2
-												className={`text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 ${
-													project.id === "hopping-list"
-														? "group-hover:text-[rgba(var(--color-magenta),1)]"
-														: project.id === "oil-price-ticker"
-														? "group-hover:text-[rgba(var(--color-orange),1)]"
-														: "group-hover:text-[rgba(var(--color-violet),1)]"
-												} transition-colors`}
+												className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 group-hover:text-[rgb(var(--color-accent))] transition-colors"
 											>
 												{project.title}
 											</h2>
 										</Link>
 									) : (
 										<h2
-											className={`text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 ${
-												project.id === "hopping-list"
-													? "group-hover:text-[rgba(var(--color-magenta),1)]"
-													: project.id === "oil-price-ticker"
-													? "group-hover:text-[rgba(var(--color-orange),1)]"
-													: "group-hover:text-[rgba(var(--color-violet),1)]"
-											} transition-colors`}
+											className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2"
 										>
 											{project.title}
 										</h2>
@@ -359,13 +341,7 @@ export default function BuildingPage() {
 										{project.tags.map((tag) => (
 											<span
 												key={tag}
-												className={`text-xs px-2 py-1 rounded-full ${
-													project.id === "hopping-list"
-														? "bg-[rgba(var(--color-magenta),0.1)] text-[rgba(var(--color-magenta),0.9)]"
-														: project.id === "oil-price-ticker"
-														? "bg-[rgba(var(--color-orange),0.1)] text-[rgba(var(--color-orange),0.9)]"
-														: "bg-[rgba(var(--color-violet),0.1)] text-[rgba(var(--color-violet),0.9)]"
-												}`}
+												className="text-xs px-2 py-1 rounded-full bg-[rgba(var(--color-accent),0.1)] text-[rgba(var(--color-accent),0.9)]"
 											>
 												{tag}
 											</span>
@@ -381,13 +357,7 @@ export default function BuildingPage() {
 												<div className="w-full mb-3">
 													<Link
 														href={project.link}
-														className={`neon-button-${
-															project.id === "hopping-list"
-																? "magenta"
-																: project.id === "oil-price-ticker"
-																? "orange"
-																: "violet"
-														} text-center block`}
+														className={`btn-primary text-center block`}
 														onClick={() =>
 															handleProjectClick(
 																project.id,

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
 import { getCurrentUser, isCurrentUserAdmin } from "@/lib/supabase/auth"
 import { createAuthServerClient } from "@/lib/auth/simple-auth-server"
@@ -209,6 +209,9 @@ export async function PATCH(
 
 		// Revalidate all blog-related paths to ensure immediate cache invalidation
 		try {
+			// Bust the posts cache (used by SSR blog listing)
+			revalidateTag("posts")
+
 			// HOMEPAGE CACHE: Homepage displays latest blog post content (title, excerpt, etc.)
 			revalidatePath("/")
 
@@ -300,6 +303,9 @@ export async function DELETE(
 
 		// Revalidate all blog-related paths to ensure immediate cache invalidation
 		try {
+			// Bust the posts cache (used by SSR blog listing)
+			revalidateTag("posts")
+
 			// HOMEPAGE CACHE: Deletion might change which post appears as "latest" on homepage
 			revalidatePath("/")
 

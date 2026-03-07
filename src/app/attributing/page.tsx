@@ -59,8 +59,8 @@ export default function AttributingPage() {
 				</p>
 			</div>
 
-			<div className="bg-[rgba(var(--color-background),0.5)] border border-[rgba(var(--color-foreground),0.1)] rounded-lg p-6 backdrop-blur-sm">
-				<h2 className="text-2xl mb-6 gradient-text-violet">Icons</h2>
+			<div className="border border-[rgba(var(--color-border),0.08)] rounded-lg p-6 bg-[rgba(var(--color-foreground),0.03)]">
+				<h2 className="text-2xl mb-6">Icons</h2>
 
 				<ul className="space-y-6">
 					{attributions.map((item, index) => (

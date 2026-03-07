@@ -180,7 +180,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 						${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}
 					`}
 				>
-					<h3 className="text-2xl font-semibold gradient-text-cyan mb-3">
+					<h3 className="text-2xl font-semibold mb-3">
 						Thank You!
 					</h3>
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-6">
@@ -189,7 +189,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 					</p>
 					<button
 						onClick={handleSendAnotherMessage}
-						className="neon-button-magenta px-6 py-2"
+						className="btn-primary px-6 py-2"
 					>
 						Send Another Message
 					</button>
@@ -349,7 +349,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 				<button
 					type="submit"
 					disabled={status === "submitting"}
-					className="neon-button-magenta w-full py-3 text-center"
+					className="btn-primary w-full py-3 text-center"
 				>
 					{status === "submitting" ? "Sending..." : "Send Message"}
 				</button>

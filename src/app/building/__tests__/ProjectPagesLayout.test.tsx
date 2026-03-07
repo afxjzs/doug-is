@@ -196,9 +196,9 @@ describe("Project Pages with Main Site Layout Integration", () => {
 				</BuildingLayout>
 			)
 
-			// Should maintain orange button styling
-			const orangeButtons = container.querySelectorAll(".neon-button-orange")
-			expect(orangeButtons.length).toBeGreaterThan(0)
+			// Should maintain primary button styling
+			const primaryButtons = container.querySelectorAll(".btn-primary")
+			expect(primaryButtons.length).toBeGreaterThan(0)
 		})
 
 		it("should maintain all project functionality", async () => {
@@ -270,7 +270,7 @@ describe("Project Pages with Main Site Layout Integration", () => {
 				)
 
 				// Should maintain any existing button styling
-				const allButtons = container.querySelectorAll('[class*="neon-button"]')
+				const allButtons = container.querySelectorAll('[class*="btn-"]')
 				// No specific expectation - just should not crash
 				expect(allButtons).toBeDefined()
 			} catch (error) {
