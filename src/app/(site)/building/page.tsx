@@ -185,7 +185,7 @@ export default function BuildingPage() {
 					{companies.map((company) => (
 						<div
 							key={company.id}
-							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] hover:border-[rgba(var(--color-${company.color}),0.3)] rounded-xl overflow-hidden transition-all duration-300 group`}
+							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:shadow-md rounded-xl overflow-hidden transition-all duration-300 group`}
 						>
 							<div className="flex flex-col md:flex-row">
 								<div className="md:w-2/5 bg-[rgba(var(--color-background),0.6)] flex items-center justify-center p-8 rounded-xl overflow-hidden">
@@ -237,7 +237,7 @@ export default function BuildingPage() {
 											href={company.website}
 											target="_blank"
 											rel="noopener noreferrer"
-											className={`neon-button-${company.color} text-sm py-2`}
+											className={`btn-primary text-sm py-2`}
 											onClick={() =>
 												handleCompanyClick(company.id, company.title, "website")
 											}
@@ -275,13 +275,7 @@ export default function BuildingPage() {
 					{projects.map((project) => (
 						<div
 							key={project.id}
-							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] ${
-								project.id === "hopping-list"
-									? "hover:border-[rgba(var(--color-magenta),0.2)]"
-									: project.id === "oil-price-ticker"
-									? "hover:border-[rgba(var(--color-orange),0.2)]"
-									: "hover:border-[rgba(var(--color-violet),0.2)]"
-							} rounded-xl overflow-hidden transition-all duration-300 group`}
+							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:shadow-md rounded-xl overflow-hidden transition-all duration-300 group`}
 						>
 							<div className="flex flex-col md:flex-row">
 								<div className="md:w-2/5 bg-[rgba(var(--color-background),0.6)] flex items-center justify-center p-8 rounded-xl overflow-hidden">
@@ -381,13 +375,7 @@ export default function BuildingPage() {
 												<div className="w-full mb-3">
 													<Link
 														href={project.link}
-														className={`neon-button-${
-															project.id === "hopping-list"
-																? "magenta"
-																: project.id === "oil-price-ticker"
-																? "orange"
-																: "violet"
-														} text-center block`}
+														className={`btn-primary text-center block`}
 														onClick={() =>
 															handleProjectClick(
 																project.id,
