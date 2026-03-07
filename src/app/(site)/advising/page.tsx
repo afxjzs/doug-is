@@ -24,9 +24,9 @@ export default async function AdvisingPage() {
 						Startup Advisory
 					</h1>
 					<p className="text-xl text-[rgba(var(--color-foreground),0.8)] mb-8 text-center max-w-2xl mx-auto">
-						Strategic guidance for B2B startups from a YC and Techstars alum
-						with extensive accelerator experience, as a founder and as an
-						operator.
+						I&apos;ve been through YC and Techstars as a founder, and I
+						run pilot programs at VentureBuilder. I know what early-stage
+						B2B companies need because I&apos;ve been one.
 					</p>
 					<div className="flex flex-wrap justify-center gap-4 mb-6">
 						<div className="px-4 py-2 bg-[rgba(var(--color-foreground),0.05)] rounded-full border border-[rgba(var(--color-foreground),0.1)]">
@@ -78,11 +78,10 @@ export default async function AdvisingPage() {
 								>
 									Snappr
 								</Link>{" "}
-								in 2021). As Co-Founder and CTO, I helped navigate the
-								challenges of rapid growth, fundraising, and product-market fit.
-								The YC network and mentorship were instrumental in shaping our
-								go-to-market strategy and developing key enterprise
-								partnerships.
+								in 2021). As Co-Founder and CTO, I dealt with the usual
+								early-stage chaos—fundraising, figuring out product-market
+								fit, learning how to sell to enterprises. The YC network
+								helped us land our first big partnerships.
 							</p>
 						</div>
 					</div>
@@ -114,9 +113,9 @@ export default async function AdvisingPage() {
 								>
 									DubPrime
 								</Link>
-								. I currently serve as Co-Founder, CTO, and CPO, building
-								innovative solutions and leveraging mentorship to create
-								sustainable growth strategies for enterprise fintech.
+								. I&apos;m Co-Founder, CTO, and CPO there now, building
+								the product and working through the Techstars network to
+								find our footing in enterprise fintech.
 							</p>
 						</div>
 					</div>
@@ -158,9 +157,9 @@ export default async function AdvisingPage() {
 								>
 									NOV
 								</Link>
-								. This role gives me unique insights into what makes B2B
-								partnerships successful and how to navigate enterprise sales
-								cycles.
+								. I get a front-row seat to what actually makes B2B
+								partnerships work and where enterprise sales cycles
+								tend to stall out.
 							</p>
 						</div>
 					</div>
@@ -179,9 +178,9 @@ export default async function AdvisingPage() {
 							Technology Strategy
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
-							Navigate complex technology decisions with confidence. I provide
-							guidance on tech stack selection, architecture planning, and
-							digital transformation initiatives.
+							Picking the right tech stack matters more than most founders
+							think, and changing it later is expensive. I help with stack
+							selection, architecture decisions, and technical roadmaps.
 						</p>
 						<ul className="space-y-2 mb-4">
 							<li className="flex items-start">
@@ -204,9 +203,9 @@ export default async function AdvisingPage() {
 							Product Development
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
-							Turn your vision into reality with strategic product development
-							guidance. From concept to launch, I help navigate the complexities
-							of building successful digital products.
+							I&apos;ve shipped a lot of products, some that worked and some
+							that didn&apos;t. That experience is useful when you&apos;re figuring
+							out what to build, what to skip, and how to get it out the door.
 						</p>
 						<ul className="space-y-2 mb-4">
 							<li className="flex items-start">
@@ -229,9 +228,9 @@ export default async function AdvisingPage() {
 							Startup Guidance
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
-							Navigate the challenges of early-stage growth with experienced
-							guidance. I help founders make informed decisions about
-							technology, product, and go-to-market strategies.
+							The early days are mostly about figuring out what&apos;s
+							actually important vs. what feels urgent. I help founders
+							think through the tech, product, and go-to-market stuff.
 						</p>
 						<ul className="space-y-2 mb-4">
 							<li className="flex items-start">
@@ -254,9 +253,9 @@ export default async function AdvisingPage() {
 							Team Building
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
-							Build high-performing technical teams that deliver results. I
-							provide guidance on hiring, team structure, and creating a culture
-							of innovation and excellence.
+							Hiring is hard, especially for technical roles at startups.
+							I&apos;ve built engineering teams from scratch and can help with
+							hiring, team structure, and keeping good people around.
 						</p>
 						<ul className="space-y-2 mb-4">
 							<li className="flex items-start">
@@ -495,8 +494,8 @@ export default async function AdvisingPage() {
 			{/* CTA Section */}
 			<div className="mb-16">
 				<ConnectCta
-					title="Ready to Accelerate Your Startup?"
-					description="Let's discuss how my experience with YC, Techstars, and enterprise pilot programs can help your B2B startup reach its goals."
+					title="Want to talk it through?"
+					description="If any of this sounds relevant to what you're working on, grab a time and let's chat. No pitch deck required."
 					buttonText="Get in Touch"
 				/>
 			</div>

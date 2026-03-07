@@ -121,8 +121,7 @@ export default async function Home() {
 								advising
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.6)] mb-4 text-sm">
-								Strategic guidance for B2B startups from a YC and Techstars
-								alum.
+								Startup advice from someone who&apos;s done YC and Techstars.
 							</p>
 							<span className="flex items-center text-sm text-[rgb(var(--color-accent))] group-hover:translate-x-1 transition-transform">
 								Learn more
@@ -203,7 +202,7 @@ export default async function Home() {
 								about me
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.6)] mb-4 text-sm">
-								Get to know me, my background, and how to get in touch.
+								The short version of who I am and what I&apos;m about.
 							</p>
 							<span className="flex items-center text-sm text-[rgb(var(--color-accent))] group-hover:translate-x-1 transition-transform">
 								Learn More

@@ -106,7 +106,7 @@ export default function HoppingListPage() {
 							to be a beta tester" button above, or use{" "}
 							<Link
 								href="https://testflight.apple.com/join/CscPEAD4"
-								className="text-[rgba(var(--color-magenta),0.9)] hover:text-[rgba(var(--color-magenta),1)] underline"
+								className="text-[rgb(var(--color-accent))] hover:text-[rgba(var(--color-accent),0.8)] underline"
 							>
 								this TestFlight link
 							</Link>
@@ -118,11 +118,11 @@ export default function HoppingListPage() {
 							from the TestFlight app.
 						</li>
 						<li>
-							<strong>Provide Feedback</strong> - Your feedback is invaluable to
-							me and helps improve the app before its official release.{" "}
+							<strong>Provide Feedback</strong> - Tell me what works and
+							what doesn&apos;t. Seriously, it helps a lot.{" "}
 							<Link
 								href="/building/hopping-list/feedback"
-								className="text-[rgba(var(--color-magenta),0.9)] hover:text-[rgba(var(--color-magenta),1)] underline font-medium"
+								className="text-[rgb(var(--color-accent))] hover:text-[rgba(var(--color-accent),0.8)] underline font-medium"
 							>
 								Submit feedback here
 							</Link>
@@ -137,13 +137,13 @@ export default function HoppingListPage() {
 						<div className="flex flex-wrap gap-3">
 							<Link
 								href="/building/hopping-list/feedback"
-								className="text-sm text-[rgba(var(--color-magenta),0.9)] hover:text-[rgba(var(--color-magenta),1)] underline"
+								className="text-sm text-[rgb(var(--color-accent))] hover:text-[rgba(var(--color-accent),0.8)] underline"
 							>
 								Report a Bug
 							</Link>
 							<Link
 								href="/building/hopping-list/feedback"
-								className="text-sm text-[rgba(var(--color-magenta),0.9)] hover:text-[rgba(var(--color-magenta),1)] underline"
+								className="text-sm text-[rgb(var(--color-accent))] hover:text-[rgba(var(--color-accent),0.8)] underline"
 							>
 								Request a Feature
 							</Link>
@@ -202,16 +202,14 @@ export default function HoppingListPage() {
 				</h2>
 				<div className="dark-card">
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
-						Hopping List was created to solve the common problem faced by
-						couples and families: efficiently managing shopping lists across
-						multiple stores. Most existing solutions are either too simplistic
-						or overly complicated.
+						My wife and I shop at like four different stores. Every existing
+						list app either does too little or way too much. We just needed
+						one list that knows which items go to which stores.
 					</p>
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
-						The core feature that sets Hopping List apart is the ability to add
-						a single item to multiple store locations. When you're at a specific
-						store, you only see the items you need that are available at that
-						location.
+						The main thing: you add an item once and tag it to whichever
+						stores carry it. When you&apos;re at a specific store, you only
+						see what&apos;s relevant there.
 					</p>
 					<p className="text-[rgba(var(--color-foreground),0.8)]">
 						For example, if you need milk and it's available at both Target and
@@ -349,15 +347,12 @@ export default function HoppingListPage() {
 						served dual purposes.
 					</p>
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
-						The app was designed with simplicity in mind, focusing on solving
-						the core problem without unnecessary complexity. The user interface
-						is intuitive, making it easy for anyone to use without a learning
-						curve.
+						I kept it simple on purpose. No aisle tracking, no meal planning,
+						no recipe integration. Just lists, stores, and items.
 					</p>
 					<p className="text-[rgba(var(--color-foreground),0.8)]">
-						The app is currently available in TestFlight for iOS users, with
-						plans for a full App Store release and Android version in the
-						future.
+						It&apos;s in TestFlight right now for iOS. Android... eventually.
+						Probably.
 					</p>
 				</div>
 			</div>
@@ -368,10 +363,9 @@ export default function HoppingListPage() {
 						Technical Details
 					</h2>
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
-						Hopping List was developed using FlutterFlow, a visual development
-						platform for Flutter apps, which enabled rapid prototyping and
-						iteration. Supabase provides the backend with PostgreSQL database,
-						authentication, and real-time updates for shared lists.
+						Built with FlutterFlow (a visual dev tool for Flutter) because I
+						needed to learn it for DubPrime anyway. Supabase handles the
+						backend: database, auth, and real-time sync between users.
 					</p>
 					<ul className="space-y-2 text-[rgba(var(--color-foreground),0.7)]">
 						<li className="flex items-center">
@@ -402,9 +396,8 @@ export default function HoppingListPage() {
 						Development Resources
 					</h2>
 					<div className="space-y-4">
-						<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
-							Source code and resources for developers interested in the
-							technical implementation.
+					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
+							If you want to poke around the code or contribute.
 						</p>
 						<div>
 							<Link

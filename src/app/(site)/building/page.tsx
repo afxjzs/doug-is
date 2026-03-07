@@ -11,7 +11,7 @@ const companies = [
 		id: "dubprime",
 		title: "DubPrime",
 		description:
-			"DubPrime bridges the gap between investors seeking portfolio diversification and borrowers needing quick capital. Our portfolio approach distributes capital across thousands of small-dollar loans, creating natural risk diffusion that traditional investments cannot match.",
+			"DubPrime connects investors looking to diversify with borrowers who need fast capital. We spread investments across thousands of small loans, so no single default hurts much. It's a simpler, more resilient model than most alternatives.",
 		role: "Co-Founder, CPO/CTO",
 		image: "/images/dubprime-grad-horizontal.png",
 		website: "https://www.dubprime.com/",
@@ -22,7 +22,7 @@ const companies = [
 		id: "venturebuilder",
 		title: "VentureBuilder",
 		description:
-			"A venture studio focused on connecting startups with industrial partners to accelerate growth through commercial relationships and strategic investments.",
+			"A venture studio that pairs startups with industrial partners. The idea is simple: real customers and real revenue from day one, not just VC money and hope.",
 		role: "Director of Pilot Programs",
 		image: "/images/venture-builder-color-white.webp",
 		website: "https://venturebuilder.vc/",
@@ -74,7 +74,7 @@ const projects = [
 		id: "migraine-free",
 		title: "Migraine Trigger Database",
 		description:
-			"A comprehensive database of foods and ingredients that may trigger migraines, along with their chemical triggers and categories. Built to help migraine sufferers make informed dietary choices.",
+			"A database of foods and ingredients that can trigger migraines, with their chemical triggers and categories. I get migraines, so I built this to figure out what to avoid.",
 		image: "/images/projects/migraine-square.webp",
 		tags: ["Next.js", "Supabase", "PostgreSQL", "TypeScript"],
 		link: "/migraine-free",
@@ -206,15 +206,9 @@ export default function BuildingPage() {
 									<h3 className="text-2xl font-bold text-[rgba(var(--color-foreground),0.95)] mb-2 transition-colors">
 										{company.title}
 									</h3>
-									{company.id === "dubprime" ? (
-										<p className="text-[rgba(var(--color-cyan),0.9)] font-medium mb-3">
-											{company.role}
-										</p>
-									) : (
-										<p className="text-[rgba(var(--color-emerald),1)] font-medium mb-3">
-											{company.role}
-										</p>
-									)}
+									<p className="text-[rgb(var(--color-accent))] font-medium mb-3">
+										{company.role}
+									</p>
 									<p className="text-[rgba(var(--color-foreground),0.7)] mb-5 leading-relaxed">
 										{company.description}
 									</p>
@@ -222,11 +216,7 @@ export default function BuildingPage() {
 										{company.tags.map((tag) => (
 											<span
 												key={tag}
-												className={`text-xs px-2 py-1 rounded-full ${
-													company.id === "dubprime"
-														? "bg-[rgba(var(--color-cyan),0.1)] text-[rgba(var(--color-cyan),0.9)]"
-														: "bg-[rgba(var(--color-emerald),0.1)] text-[rgba(var(--color-emerald),1)]"
-												}`}
+												className="text-xs px-2 py-1 rounded-full bg-[rgba(var(--color-accent),0.1)] text-[rgba(var(--color-accent),0.9)]"
 											>
 												{tag}
 											</span>

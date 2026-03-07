@@ -80,7 +80,7 @@ export default function SimpleLoginForm() {
 		<div className="p-8">
 			{/* Error message */}
 			{error && (
-				<div className="mb-6 p-4 bg-[rgba(var(--color-pink),0.1)] border border-[rgba(var(--color-pink),0.3)] text-[rgba(var(--color-pink),0.9)] rounded-lg">
+				<div className="mb-6 p-4 bg-[rgba(var(--color-accent),0.1)] border border-[rgba(var(--color-accent),0.3)] text-[rgba(var(--color-accent),0.9)] rounded-lg">
 					<div className="flex items-center">
 						<svg
 							className="w-5 h-5 mr-2"

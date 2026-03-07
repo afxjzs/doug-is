@@ -106,11 +106,11 @@ export default function OilPriceTickerPage() {
 
 				{/* Hero Section */}
 				<div className="mb-16">
-					<div className="text-center mb-8">
+					<div className="mb-8">
 						<h1 className="text-5xl font-bold gradient-heading mb-6">
 							Oil Price Ticker
 						</h1>
-						<p className="text-xl text-[rgba(var(--color-foreground),0.8)] max-w-2xl mx-auto leading-relaxed">
+						<p className="text-xl text-[rgba(var(--color-foreground),0.8)] max-w-2xl leading-relaxed">
 							A macOS menu bar app that displays live oil price updates with
 							customizable preferences and real-time data. Working with NOV, so
 							that means the price of oil is important to me and I just wanted
@@ -227,7 +227,7 @@ export default function OilPriceTickerPage() {
 								Menu Bar Integration
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)]">
-								Seamlessly integrates with macOS menu bar for easy access
+								Lives in your macOS menu bar, always visible
 							</p>
 						</div>
 
@@ -251,7 +251,7 @@ export default function OilPriceTickerPage() {
 								Customizable Preferences
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)]">
-								Adjust update intervals and display settings to your preferences
+								Set your own update interval and display format
 							</p>
 						</div>
 					</div>

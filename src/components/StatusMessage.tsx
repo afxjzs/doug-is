@@ -22,29 +22,29 @@ export default function StatusMessage({
 		container: {
 			base: "relative overflow-hidden rounded-lg border border-[rgba(var(--color-foreground),0.05)] p-4 mb-6",
 			loading:
-				"bg-[rgba(var(--color-cyan),0.05)] border-l-4 border-l-[rgba(var(--color-cyan),0.5)]",
+				"bg-[rgba(var(--color-accent),0.05)] border-l-4 border-l-[rgba(var(--color-accent),0.5)]",
 			error:
-				"bg-[rgba(var(--color-magenta),0.05)] border-l-4 border-l-[rgba(var(--color-magenta),0.5)]",
+				"bg-[rgba(var(--color-accent-secondary),0.05)] border-l-4 border-l-[rgba(var(--color-accent-secondary),0.5)]",
 			success:
-				"bg-[rgba(var(--color-emerald),0.05)] border-l-4 border-l-[rgba(var(--color-emerald),0.5)]",
+				"bg-[rgba(var(--color-accent),0.05)] border-l-4 border-l-[rgba(var(--color-accent),0.5)]",
 			warning:
-				"bg-[rgba(var(--color-gold),0.05)] border-l-4 border-l-[rgba(var(--color-gold),0.5)]",
-			info: "bg-[rgba(var(--color-violet),0.05)] border-l-4 border-l-[rgba(var(--color-violet),0.5)]",
+				"bg-[rgba(var(--color-accent-secondary),0.05)] border-l-4 border-l-[rgba(var(--color-accent-secondary),0.5)]",
+			info: "bg-[rgba(var(--color-accent),0.05)] border-l-4 border-l-[rgba(var(--color-accent),0.5)]",
 		},
 		text: {
-			loading: "text-[rgba(var(--color-cyan),0.9)]",
-			error: "text-[rgba(var(--color-magenta),0.9)]",
-			success: "text-[rgba(var(--color-emerald),0.9)]",
-			warning: "text-[rgba(var(--color-gold),0.9)]",
-			info: "text-[rgba(var(--color-violet),0.9)]",
+			loading: "text-[rgba(var(--color-accent),0.9)]",
+			error: "text-[rgba(var(--color-accent-secondary),0.9)]",
+			success: "text-[rgba(var(--color-accent),0.9)]",
+			warning: "text-[rgba(var(--color-accent-secondary),0.9)]",
+			info: "text-[rgba(var(--color-accent),0.9)]",
 		},
 		details: {
 			base: "text-sm mt-2 font-mono",
-			loading: "text-[rgba(var(--color-cyan),0.7)]",
-			error: "text-[rgba(var(--color-magenta),0.7)]",
-			success: "text-[rgba(var(--color-emerald),0.7)]",
-			warning: "text-[rgba(var(--color-gold),0.7)]",
-			info: "text-[rgba(var(--color-violet),0.7)]",
+			loading: "text-[rgba(var(--color-accent),0.7)]",
+			error: "text-[rgba(var(--color-accent-secondary),0.7)]",
+			success: "text-[rgba(var(--color-accent),0.7)]",
+			warning: "text-[rgba(var(--color-accent-secondary),0.7)]",
+			info: "text-[rgba(var(--color-accent),0.7)]",
 		},
 	}
 

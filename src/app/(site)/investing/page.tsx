@@ -27,8 +27,7 @@ export default function InvestingPage() {
 					Founder-Focused Investments
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
-					Founder-focused investments from someone who understands what it takes
-					to build something from nothing.
+					I invest in founders because I&apos;ve been one. Twice.
 				</p>
 			</div>
 
@@ -38,17 +37,16 @@ export default function InvestingPage() {
 						Investment Philosophy
 					</h2>
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
-						Most VCs today aren&apos;t former founders. They&apos;re MBAs who don&apos;t
-						truly understand what it takes to start a company and make it
-						successful. Building a startup requires more than just capital—it
-						requires experience, grit, and real-world understanding.
+						Most VCs aren&apos;t former founders. They haven&apos;t sat in a room
+						wondering if they can make payroll, or pivoted a product three
+						times in six months. I have, and it changes how you think about
+						what a company actually needs.
 					</p>
 					<p className="text-[rgba(var(--color-foreground),0.8)]">
-						I believe entrepreneurialism is the best thing about this country.
-						It&apos;s better to make a job than get a job. Whether it&apos;s finding
-						alternative pathways to funding, making key introductions at the
-						right time, or backing a founder&apos;s vision with capital, my goal is
-						to help startups succeed on their terms.
+						I think it&apos;s better to make a job than get a job. Sometimes
+						that means writing a check. Sometimes it means making an intro
+						or helping a founder find funding they didn&apos;t know existed.
+						Whatever gets the thing built.
 					</p>
 				</div>
 			</div>
@@ -72,7 +70,7 @@ export default function InvestingPage() {
 								Current Investment Focus
 							</h2>
 							<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
-								I&apos;m currently working with{" "}
+								Right now I&apos;m working with{" "}
 								<a
 									href="https://venturebuilder.vc"
 									target="_blank"
@@ -81,14 +79,13 @@ export default function InvestingPage() {
 								>
 									VentureBuilder.vc
 								</a>
-								, investing in companies that are working closely with NOV
-								through paid pilots to grow and scale their businesses.
+								, investing in startups that are running paid pilots with
+								NOV to prove out their products in the real world.
 							</p>
 							<p className="text-[rgba(var(--color-foreground),0.8)]">
-								The most successful companies develop sustainable business
-								models with real customers and revenue. My focus is on helping
-								startups form meaningful commercial relationships that drive
-								growth while providing immediate value.
+								The companies that last are the ones with actual customers
+								paying actual money. I care more about revenue traction
+								than pitch decks.
 							</p>
 						</div>
 					</div>
@@ -101,8 +98,8 @@ export default function InvestingPage() {
 						Discuss Your Startup
 					</h2>
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-8 max-w-lg mx-auto">
-						If you&apos;re building something interesting and looking for an
-						investor who understands the founder journey, let&apos;s talk.
+						If you&apos;re building something and want to talk to an investor
+						who&apos;s actually been a founder, grab a time.
 					</p>
 					<a
 						href="https://cal.com/afxjzs/startups"

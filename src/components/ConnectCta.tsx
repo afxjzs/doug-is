@@ -11,7 +11,7 @@ type ConnectCtaProps = {
 export default function ConnectCta({
 	className = "",
 	title = "Let's Connect",
-	description = "Interested in working together or just want to say hello? I'm always open to new opportunities and connections.",
+	description = "If you want to talk shop, bounce an idea around, or just say hi, I'm around.",
 	buttonText = "Get in Touch",
 	buttonHref = "/connecting",
 }: ConnectCtaProps) {

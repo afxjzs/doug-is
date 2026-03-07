@@ -55,10 +55,10 @@ export default function ProfessionalPage() {
 				</h2>
 
 				{/* Experience Item 1 */}
-				<div className="dark-card mb-6 group hover:border-[rgba(var(--color-cyan),0.2)]">
+				<div className="dark-card mb-6 group hover:border-[rgba(var(--color-accent),0.2)]">
 					<div className="flex flex-col md:flex-row justify-between mb-4">
 						<div>
-							<h3 className="text-xl font-semibold text-[rgba(var(--color-foreground),0.9)] group-hover:text-[rgba(var(--color-cyan),1)] transition-colors">
+							<h3 className="text-xl font-semibold text-[rgba(var(--color-foreground),0.9)] group-hover:text-[rgba(var(--color-accent),1)] transition-colors">
 								Senior Software Engineer
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)]">
@@ -90,10 +90,10 @@ export default function ProfessionalPage() {
 				</div>
 
 				{/* Experience Item 2 */}
-				<div className="dark-card mb-6 group hover:border-[rgba(var(--color-magenta),0.2)]">
+				<div className="dark-card mb-6 group hover:border-[rgba(var(--color-accent),0.2)]">
 					<div className="flex flex-col md:flex-row justify-between mb-4">
 						<div>
-							<h3 className="text-xl font-semibold text-[rgba(var(--color-foreground),0.9)] group-hover:text-[rgba(var(--color-magenta),1)] transition-colors">
+							<h3 className="text-xl font-semibold text-[rgba(var(--color-foreground),0.9)] group-hover:text-[rgba(var(--color-accent),1)] transition-colors">
 								Product Manager
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)]">
@@ -124,10 +124,10 @@ export default function ProfessionalPage() {
 				</div>
 
 				{/* Experience Item 3 */}
-				<div className="dark-card group hover:border-[rgba(var(--color-violet),0.2)]">
+				<div className="dark-card group hover:border-[rgba(var(--color-accent),0.2)]">
 					<div className="flex flex-col md:flex-row justify-between mb-4">
 						<div>
-							<h3 className="text-xl font-semibold text-[rgba(var(--color-foreground),0.9)] group-hover:text-[rgba(var(--color-violet),1)] transition-colors">
+							<h3 className="text-xl font-semibold text-[rgba(var(--color-foreground),0.9)] group-hover:text-[rgba(var(--color-accent),1)] transition-colors">
 								Founder & CEO
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)]">

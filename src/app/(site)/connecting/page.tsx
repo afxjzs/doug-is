@@ -20,8 +20,7 @@ export default function ConnectingPage() {
 					Let's Connect
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
-					Have a question or want to work together? Fill out the form below and
-					I&apos;ll get back to you as soon as possible.
+					Drop me a note. I read everything and I&apos;ll get back to you.
 				</p>
 			</div>
 
@@ -40,7 +39,7 @@ export default function ConnectingPage() {
 							<div className="flex items-start">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
-									className="h-12 w-12 mr-3 mt-0 text-[rgba(var(--color-magenta),1)]"
+									className="h-12 w-12 mr-3 mt-0 text-[rgb(var(--color-accent))]"
 									viewBox="0 0 20 20"
 									fill="currentColor"
 								>
