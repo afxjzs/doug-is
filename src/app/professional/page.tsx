@@ -199,7 +199,7 @@ export default function ProfessionalPage() {
 				<h2 className="text-2xl font-semibold gradient-heading mb-6">Skills</h2>
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 					<div className="dark-card">
-						<h3 className="text-xl font-semibold gradient-text-cyan mb-4">
+						<h3 className="text-xl font-semibold mb-4">
 							Technical
 						</h3>
 						<ul className="space-y-2 text-[rgba(var(--color-foreground),0.7)]">
@@ -227,7 +227,7 @@ export default function ProfessionalPage() {
 					</div>
 
 					<div className="dark-card">
-						<h3 className="text-xl font-semibold gradient-text-magenta mb-4">
+						<h3 className="text-xl font-semibold mb-4">
 							Business
 						</h3>
 						<ul className="space-y-2 text-[rgba(var(--color-foreground),0.7)]">
@@ -255,7 +255,7 @@ export default function ProfessionalPage() {
 					</div>
 
 					<div className="dark-card">
-						<h3 className="text-xl font-semibold gradient-text-violet mb-4">
+						<h3 className="text-xl font-semibold mb-4">
 							Leadership
 						</h3>
 						<ul className="space-y-2 text-[rgba(var(--color-foreground),0.7)]">

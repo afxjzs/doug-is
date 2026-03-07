@@ -62,7 +62,7 @@ export default function JustAtePage() {
 
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
 				<div className="dark-card">
-					<h2 className="text-xl font-semibold gradient-text-cyan mb-4">
+					<h2 className="text-xl font-semibold mb-4">
 						Technologies
 					</h2>
 					<ul className="space-y-2 text-[rgba(var(--color-foreground),0.7)]">
@@ -90,7 +90,7 @@ export default function JustAtePage() {
 				</div>
 
 				<div className="dark-card">
-					<h2 className="text-xl font-semibold gradient-text-magenta mb-4">
+					<h2 className="text-xl font-semibold mb-4">
 						Features
 					</h2>
 					<ul className="space-y-2 text-[rgba(var(--color-foreground),0.7)]">
@@ -118,7 +118,7 @@ export default function JustAtePage() {
 				</div>
 
 				<div className="dark-card">
-					<h2 className="text-xl font-semibold gradient-text-violet mb-4">
+					<h2 className="text-xl font-semibold mb-4">
 						Links
 					</h2>
 					<div className="space-y-4">

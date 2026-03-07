@@ -67,7 +67,7 @@ export default function HoppingListFeedbackPage() {
 							</div>
 						</div>
 						<div>
-							<h2 className="text-xl font-semibold gradient-text-magenta mb-2">
+							<h2 className="text-xl font-semibold mb-2">
 								We Value Your Input
 							</h2>
 							<p className="text-[rgba(var(--color-foreground),0.8)] mb-3">
@@ -98,7 +98,7 @@ export default function HoppingListFeedbackPage() {
 				{/* Sidebar with additional info */}
 				<div>
 					<div className="dark-card mb-6">
-						<h2 className="text-xl font-semibold gradient-text-magenta mb-4">
+						<h2 className="text-xl font-semibold mb-4">
 							About Hopping List
 						</h2>
 						<div className="space-y-4 text-[rgba(var(--color-foreground),0.8)]">
@@ -118,7 +118,7 @@ export default function HoppingListFeedbackPage() {
 					</div>
 
 					<div className="dark-card">
-						<h2 className="text-xl font-semibold gradient-text-magenta mb-4">
+						<h2 className="text-xl font-semibold mb-4">
 							Beta Testing
 						</h2>
 						<div className="space-y-4 text-[rgba(var(--color-foreground),0.8)]">

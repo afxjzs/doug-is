@@ -260,6 +260,26 @@
 		border-color: rgba(var(--color-accent), 0.6);
 	}
 
+	/* Card — consistent card pattern for dark + light */
+	.dark-card {
+		border: 1px solid rgba(var(--color-border), 0.08);
+		border-radius: 0.5rem;
+		padding: 2rem;
+		background-color: rgba(var(--color-foreground), 0.03);
+		transition: all 200ms ease;
+	}
+
+	.dark-card:hover {
+		border-color: rgba(var(--color-border), 0.15);
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+	}
+
+	/* Check mark accent */
+	.check-mark {
+		color: rgb(var(--color-accent));
+		font-weight: 600;
+	}
+
 	/* Links */
 	.neon-link {
 		color: rgb(var(--color-accent));

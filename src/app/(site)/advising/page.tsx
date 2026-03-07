@@ -110,7 +110,7 @@ export default async function AdvisingPage() {
 									href="https://dubprime.com"
 									target="_blank"
 									rel="noopener noreferrer"
-									className="text-emerald-400 hover:text-emerald-300"
+									className="text-[rgb(var(--color-accent))] hover:text-[rgb(var(--color-accent-secondary))] transition-colors"
 								>
 									DubPrime
 								</Link>
@@ -175,7 +175,7 @@ export default async function AdvisingPage() {
 
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 					<div className="dark-card">
-						<h3 className="text-xl font-semibold mb-4 gradient-text-cyan">
+						<h3 className="text-xl font-semibold mb-4">
 							Technology Strategy
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
@@ -200,7 +200,7 @@ export default async function AdvisingPage() {
 					</div>
 
 					<div className="dark-card">
-						<h3 className="text-xl font-semibold mb-4 gradient-text-magenta">
+						<h3 className="text-xl font-semibold mb-4">
 							Product Development
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
@@ -225,7 +225,7 @@ export default async function AdvisingPage() {
 					</div>
 
 					<div className="dark-card">
-						<h3 className="text-xl font-semibold mb-4 gradient-text-violet">
+						<h3 className="text-xl font-semibold mb-4">
 							Startup Guidance
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
@@ -250,7 +250,7 @@ export default async function AdvisingPage() {
 					</div>
 
 					<div className="dark-card">
-						<h3 className="text-xl font-semibold mb-4 gradient-text-cyan">
+						<h3 className="text-xl font-semibold mb-4">
 							Team Building
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
@@ -284,7 +284,7 @@ export default async function AdvisingPage() {
 
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 					<div className="dark-card">
-						<h3 className="text-xl font-semibold mb-4 gradient-text-cyan">
+						<h3 className="text-xl font-semibold mb-4">
 							B2B Go-to-Market Strategy
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
@@ -309,7 +309,7 @@ export default async function AdvisingPage() {
 					</div>
 
 					<div className="dark-card">
-						<h3 className="text-xl font-semibold mb-4 gradient-text-magenta">
+						<h3 className="text-xl font-semibold mb-4">
 							Accelerator Preparation
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
@@ -334,7 +334,7 @@ export default async function AdvisingPage() {
 					</div>
 
 					<div className="dark-card">
-						<h3 className="text-xl font-semibold mb-4 gradient-text-violet">
+						<h3 className="text-xl font-semibold mb-4">
 							Product-Market Fit
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
@@ -359,7 +359,7 @@ export default async function AdvisingPage() {
 					</div>
 
 					<div className="dark-card">
-						<h3 className="text-xl font-semibold mb-4 gradient-text-cyan">
+						<h3 className="text-xl font-semibold mb-4">
 							Fundraising Strategy
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
@@ -394,7 +394,7 @@ export default async function AdvisingPage() {
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 					<div className="relative overflow-hidden rounded-lg border border-[rgba(var(--color-border),0.08)] transition-all duration-300 hover:shadow-md">
 						<div className="p-8 flex flex-col h-full">
-							<h3 className="text-xl font-semibold gradient-text-violet mb-4">
+							<h3 className="text-xl font-semibold mb-4">
 								One-Time Strategy Session
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)] mb-6">
@@ -416,7 +416,7 @@ export default async function AdvisingPage() {
 
 					<div className="relative overflow-hidden rounded-lg border border-[rgba(var(--color-border),0.08)] transition-all duration-300 hover:shadow-md">
 						<div className="p-8 flex flex-col h-full">
-							<h3 className="text-xl font-semibold gradient-text-cyan mb-4">
+							<h3 className="text-xl font-semibold mb-4">
 								Monthly Advisory
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)] mb-6">
@@ -438,7 +438,7 @@ export default async function AdvisingPage() {
 
 					<div className="relative overflow-hidden rounded-lg border border-[rgba(var(--color-border),0.08)] transition-all duration-300 hover:shadow-md">
 						<div className="p-8 flex flex-col h-full">
-							<h3 className="text-xl font-semibold gradient-text-magenta mb-4">
+							<h3 className="text-xl font-semibold mb-4">
 								Custom Engagement
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)] mb-6">
