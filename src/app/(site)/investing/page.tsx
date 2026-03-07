@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { useEffect, useState } from "react"
+import { usePathname } from "next/navigation"
 import { quotes } from "./quotes"
 
 function getRandomQuote() {
@@ -10,10 +11,11 @@ function getRandomQuote() {
 
 export default function InvestingPage() {
 	const [randomQuote, setRandomQuote] = useState(quotes[0])
+	const pathname = usePathname()
 
 	useEffect(() => {
 		setRandomQuote(getRandomQuote())
-	}, [])
+	}, [pathname])
 
 	return (
 		<div className="max-w-4xl mx-auto">
