@@ -59,7 +59,7 @@ describe("OilPriceTickerPage", () => {
 				"/files/OilPriceTicker.zip"
 			)
 			expect(downloadButtons[0]).toHaveAttribute("download")
-			expect(downloadButtons[0]).toHaveClass("neon-button-orange")
+			expect(downloadButtons[0]).toHaveClass("btn-primary")
 		})
 
 		it("has a GitHub link", () => {
@@ -153,7 +153,7 @@ describe("OilPriceTickerPage", () => {
 			const downloadButtons = screen.getAllByRole("link", {
 				name: /download for macOS/i,
 			})
-			expect(downloadButtons[0]).toHaveClass("neon-button-orange")
+			expect(downloadButtons[0]).toHaveClass("btn-primary")
 		})
 
 		it("uses orange color theme throughout the page", () => {

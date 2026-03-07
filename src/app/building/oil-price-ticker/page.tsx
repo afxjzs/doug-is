@@ -137,7 +137,7 @@ export default function OilPriceTickerPage() {
 							href="/files/OilPriceTicker.zip"
 							projectId="oil-price-ticker"
 							linkType="download"
-							className="neon-button-orange text-lg px-8 py-3 flex items-center gap-2"
+							className="btn-primary text-lg px-8 py-3 flex items-center gap-2"
 							download={true}
 						>
 							<svg
@@ -431,7 +431,7 @@ export default function OilPriceTickerPage() {
 					<Link
 						href="/files/OilPriceTicker.zip"
 						download
-						className="neon-button-orange text-lg px-8 py-3 inline-flex items-center gap-2"
+						className="btn-primary text-lg px-8 py-3 inline-flex items-center gap-2"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

@@ -85,7 +85,7 @@ describe("BuildingPage - Oil Price Ticker", () => {
 			(link) => link.getAttribute("href") === "/building/oil-price-ticker"
 		)
 
-		expect(oilPriceProjectDetailButton).toHaveClass("neon-button-orange")
+		expect(oilPriceProjectDetailButton).toHaveClass("btn-primary")
 	})
 
 	it("positions Oil Price Ticker after Hopping List project", () => {

@@ -73,7 +73,7 @@ export default async function Home() {
 			{/* Hero Section */}
 			<div className="mb-16 relative">
 				<div className="absolute inset-0 rounded-lg -z-10"></div>
-				<div className="relative z-10 py-16 px-8 border border-[rgba(var(--color-foreground),0.05)] rounded-lg bg-[rgba(var(--color-background),0.8)] backdrop-blur-sm">
+				<div className="relative z-10 py-16 px-8 border border-[rgba(var(--color-foreground),0.05)] rounded-lg">
 					<div className="flex flex-col md:flex-row items-center justify-center gap-8 mb-8">
 						<div className="relative w-32 h-32 overflow-hidden rounded-full border-2 border-[rgba(var(--color-border),0.2)]">
 							<Image

@@ -46,7 +46,7 @@ export default function HoppingListPage() {
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-8">
-				<Link href="/building" className="neon-link mb-4 inline-block">
+				<Link href="/building" className="text-[rgb(var(--color-accent))] hover:text-[rgb(var(--color-accent-secondary))] transition-colors mb-4 inline-block">
 					← Back to Projects
 				</Link>
 				<h1 className="text-4xl font-bold gradient-heading mb-4">
@@ -74,13 +74,13 @@ export default function HoppingListPage() {
 					href="https://testflight.apple.com/join/CscPEAD4"
 					target="_blank"
 					rel="noopener noreferrer"
-					className="neon-button-magenta text-xl py-3 px-8"
+					className="btn-primary text-xl py-3 px-8"
 				>
 					Sign up to be a beta tester
 				</Link>
 				<Link
 					href="/building/hopping-list/feedback"
-					className="neon-button-magenta text-xl py-3 px-8 border-2 border-[rgba(var(--color-magenta),0.3)] bg-transparent hover:bg-[rgba(var(--color-magenta),0.1)]"
+					className="btn-secondary text-xl py-3 px-8"
 				>
 					Give Feedback
 				</Link>
@@ -320,13 +320,13 @@ export default function HoppingListPage() {
 					href="https://testflight.apple.com/join/CscPEAD4"
 					target="_blank"
 					rel="noopener noreferrer"
-					className="neon-button-magenta text-xl py-3 px-8"
+					className="btn-primary text-xl py-3 px-8"
 				>
 					Become a Beta Tester Now
 				</Link>
 				<Link
 					href="/building/hopping-list/feedback"
-					className="neon-button-magenta text-xl py-3 px-8 border-2 border-[rgba(var(--color-magenta),0.3)] bg-transparent hover:bg-[rgba(var(--color-magenta),0.1)]"
+					className="btn-secondary text-xl py-3 px-8"
 				>
 					Share Your Feedback
 				</Link>
@@ -411,7 +411,7 @@ export default function HoppingListPage() {
 								href="https://github.com/afxjzs/hoppinglist"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="neon-button-magenta w-full text-center inline-block"
+								className="btn-primary w-full text-center inline-block"
 							>
 								GitHub Repository
 							</Link>
@@ -421,7 +421,7 @@ export default function HoppingListPage() {
 			</div>
 
 			<div className="flex justify-center">
-				<Link href="/building" className="neon-button-magenta">
+				<Link href="/building" className="btn-primary">
 					← Back to Projects
 				</Link>
 			</div>

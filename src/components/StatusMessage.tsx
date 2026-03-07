@@ -20,7 +20,7 @@ export default function StatusMessage({
 }: StatusMessageProps) {
 	const styles = {
 		container: {
-			base: "relative overflow-hidden rounded-lg border border-[rgba(var(--color-foreground),0.05)] p-4 mb-6 backdrop-blur-sm",
+			base: "relative overflow-hidden rounded-lg border border-[rgba(var(--color-foreground),0.05)] p-4 mb-6",
 			loading:
 				"bg-[rgba(var(--color-cyan),0.05)] border-l-4 border-l-[rgba(var(--color-cyan),0.5)]",
 			error:

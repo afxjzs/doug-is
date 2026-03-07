@@ -44,7 +44,7 @@ export default function InnPage() {
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-8">
-				<Link href="/building" className="neon-link mb-4 inline-block">
+				<Link href="/building" className="text-[rgb(var(--color-accent))] hover:text-[rgb(var(--color-accent-secondary))] transition-colors mb-4 inline-block">
 					← Back to Projects
 				</Link>
 				<h1 className="text-4xl font-bold gradient-heading mb-4">
@@ -125,7 +125,7 @@ export default function InnPage() {
 								href="https://rubygems.org/gems/inn/versions/0.0.4"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="neon-button-cyan w-full text-center inline-block"
+								className="btn-primary w-full text-center inline-block"
 							>
 								RubyGems
 							</Link>
@@ -135,7 +135,7 @@ export default function InnPage() {
 								href="https://github.com/afxjzs/inn"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="neon-button-violet w-full text-center inline-block"
+								className="btn-secondary w-full text-center inline-block"
 							>
 								GitHub Repository
 							</Link>
@@ -232,7 +232,7 @@ beatles.include? musician2  # => false`}
 			</div>
 
 			<div className="flex justify-center">
-				<Link href="/building" className="neon-button-magenta">
+				<Link href="/building" className="btn-primary">
 					← Back to Projects
 				</Link>
 			</div>

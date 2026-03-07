@@ -46,7 +46,7 @@ export default function HoppingListFeedbackPage() {
 			<div className="mb-8">
 				<Link
 					href="/building/hopping-list"
-					className="neon-link mb-4 inline-block"
+					className="text-[rgb(var(--color-accent))] hover:text-[rgb(var(--color-accent-secondary))] transition-colors mb-4 inline-block"
 				>
 					← Back to Hopping List
 				</Link>
@@ -109,7 +109,7 @@ export default function HoppingListFeedbackPage() {
 							<div className="flex space-x-3">
 								<Link
 									href="/building/hopping-list"
-									className="neon-button-magenta text-sm px-4 py-2 text-center flex-1"
+									className="btn-primary text-sm px-4 py-2 text-center flex-1"
 								>
 									Project Details
 								</Link>
@@ -130,7 +130,7 @@ export default function HoppingListFeedbackPage() {
 								href="https://testflight.apple.com/join/CscPEAD4"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="neon-button-magenta text-sm px-4 py-2 text-center block"
+								className="btn-primary text-sm px-4 py-2 text-center block"
 							>
 								Join Beta Program
 							</Link>

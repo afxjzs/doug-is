@@ -24,7 +24,7 @@ export default function ProfessionalPage() {
 					href="/resume.pdf"
 					target="_blank"
 					rel="noopener noreferrer"
-					className="neon-button-cyan"
+					className="btn-secondary"
 				>
 					Download PDF Resume
 				</Link>
@@ -289,7 +289,7 @@ export default function ProfessionalPage() {
 					href="/resume.pdf"
 					target="_blank"
 					rel="noopener noreferrer"
-					className="neon-button-magenta"
+					className="btn-primary"
 				>
 					Download PDF Resume
 				</Link>

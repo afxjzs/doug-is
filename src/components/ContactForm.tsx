@@ -189,7 +189,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 					</p>
 					<button
 						onClick={handleSendAnotherMessage}
-						className="neon-button-magenta px-6 py-2"
+						className="btn-primary px-6 py-2"
 					>
 						Send Another Message
 					</button>
@@ -349,7 +349,7 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 				<button
 					type="submit"
 					disabled={status === "submitting"}
-					className="neon-button-magenta w-full py-3 text-center"
+					className="btn-primary w-full py-3 text-center"
 				>
 					{status === "submitting" ? "Sending..." : "Send Message"}
 				</button>

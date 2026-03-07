@@ -198,7 +198,7 @@ export default function GooseChasePage() {
 						href="https://goosechase.doug.is/"
 						target="_blank"
 						rel="noopener noreferrer"
-						className="neon-button-cyan text-center px-6 py-3"
+						className="btn-primary text-center px-6 py-3"
 						onClick={() =>
 							handleExternalLinkClick("website", "https://goosechase.doug.is/")
 						}
@@ -209,7 +209,7 @@ export default function GooseChasePage() {
 						href="https://github.com/afxjzs/goose-chase-simple"
 						target="_blank"
 						rel="noopener noreferrer"
-						className="neon-button-violet text-center px-6 py-3"
+						className="btn-secondary text-center px-6 py-3"
 						onClick={() =>
 							handleExternalLinkClick(
 								"github",
