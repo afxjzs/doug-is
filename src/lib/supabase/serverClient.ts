@@ -17,6 +17,7 @@ export interface Post {
 	content: string
 	excerpt: string
 	category: string
+	status?: string
 	published_at: string | null
 	featured_image: string | null
 	created_at: string

@@ -172,6 +172,7 @@ export async function PATCH(
 			content: postData.content,
 			excerpt: postData.excerpt,
 			category: postData.category,
+			status: postData.status || (postData.published ? "published" : "draft"),
 			featured_image: postData.featured_image || null,
 			published_at:
 				postData.published_at ||

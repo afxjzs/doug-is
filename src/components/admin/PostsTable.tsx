@@ -15,15 +15,31 @@ interface PostsTableProps {
 	posts: Post[]
 }
 
+const STATUS_LABELS: Record<string, string> = {
+	idea: "Idea",
+	draft: "Draft",
+	review: "Review",
+	published: "Published",
+}
+
+const STATUS_COLORS: Record<string, string> = {
+	idea: "text-blue-400",
+	draft: "text-yellow-400",
+	review: "text-orange-400",
+	published: "text-green-400",
+}
+
 export default function PostsTable({ posts }: PostsTableProps) {
 	const [searchTerm, setSearchTerm] = useState("")
 	const [categoryFilter, setCategoryFilter] = useState("all")
+	const [statusFilter, setStatusFilter] = useState("all")
 
 	// Get unique categories from posts
 	const uniqueCategories = Array.from(
 		new Set(posts.map((post) => post.category))
 	)
 	const categories = ["all", ...uniqueCategories]
+	const statuses = ["all", "idea", "draft", "review", "published"]
 
 	// Format date for display
 	const formatDate = (dateString: string | null) => {
@@ -46,7 +62,10 @@ export default function PostsTable({ posts }: PostsTableProps) {
 		const matchesCategory =
 			categoryFilter === "all" || post.category === categoryFilter
 
-		return matchesSearch && matchesCategory
+		const matchesStatus =
+			statusFilter === "all" || (post.status || (post.published_at ? "published" : "draft")) === statusFilter
+
+		return matchesSearch && matchesCategory && matchesStatus
 	})
 
 	// Function to truncate text
@@ -85,6 +104,20 @@ export default function PostsTable({ posts }: PostsTableProps) {
 
 				<div className="w-full sm:w-48">
 					<select
+						value={statusFilter}
+						onChange={(e) => setStatusFilter(e.target.value)}
+						className="w-full"
+					>
+						{statuses.map((s) => (
+							<option key={s} value={s}>
+								{s === "all" ? "All Statuses" : STATUS_LABELS[s]}
+							</option>
+						))}
+					</select>
+				</div>
+
+				<div className="w-full sm:w-48">
+					<select
 						value={categoryFilter}
 						onChange={(e) => setCategoryFilter(e.target.value)}
 						className="w-full"
@@ -106,7 +139,7 @@ export default function PostsTable({ posts }: PostsTableProps) {
 							<tr>
 								<th>Title</th>
 								<th>Category</th>
-								<th>Published</th>
+								<th>Status</th>
 								<th className="text-right">Actions</th>
 							</tr>
 						</thead>
@@ -138,12 +171,13 @@ export default function PostsTable({ posts }: PostsTableProps) {
 											<span className="post-category">{post.category}</span>
 										</td>
 										<td>
-											{post.published_at ? (
-												<span className="text-green-400">
+											<span className={STATUS_COLORS[post.status || (post.published_at ? "published" : "draft")]}>
+												{STATUS_LABELS[post.status || (post.published_at ? "published" : "draft")]}
+											</span>
+											{post.published_at && (
+												<span className="block text-xs text-[rgba(var(--color-foreground),0.5)]">
 													{formatDate(post.published_at)}
 												</span>
-											) : (
-												<span className="text-yellow-400">Draft</span>
 											)}
 										</td>
 										<td className="text-right whitespace-nowrap">

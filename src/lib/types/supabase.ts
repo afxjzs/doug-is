@@ -7,6 +7,8 @@ export type Json =
 	| { [key: string]: Json | undefined }
 	| Json[]
 
+export type PostStatus = "idea" | "draft" | "review" | "published"
+
 export interface Database {
 	public: {
 		Tables: {
@@ -57,6 +59,7 @@ export interface Database {
 					content: string
 					excerpt: string
 					category: string
+					status: PostStatus
 					published_at: string | null
 					featured_image: string | null
 					created_at: string
@@ -65,10 +68,11 @@ export interface Database {
 				Insert: {
 					id?: string
 					title: string
-					slug: string
-					content: string
+					slug?: string
+					content?: string
 					excerpt?: string
 					category?: string
+					status?: PostStatus
 					published_at?: string | null
 					featured_image?: string | null
 					created_at?: string
@@ -81,6 +85,7 @@ export interface Database {
 					content?: string
 					excerpt?: string
 					category?: string
+					status?: PostStatus
 					published_at?: string | null
 					featured_image?: string | null
 					created_at?: string

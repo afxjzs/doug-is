@@ -112,6 +112,7 @@ export async function POST(request: Request) {
 			content: json.content,
 			excerpt: json.excerpt,
 			category: json.category,
+			status: json.status || (json.published ? "published" : "draft"),
 			featured_image: json.featured_image || null,
 			published_at:
 				json.published_at || (json.published ? new Date().toISOString() : null),

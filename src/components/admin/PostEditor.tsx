@@ -10,6 +10,13 @@ import { nanoid } from "nanoid"
 import { getClientUser } from "@/lib/supabase/client"
 
 // Define the allowed post categories (capitalized for display)
+const POST_STATUSES = [
+	{ value: "idea", label: "Idea" },
+	{ value: "draft", label: "Draft" },
+	{ value: "review", label: "Review" },
+	{ value: "published", label: "Published" },
+]
+
 const POST_CATEGORIES = [
 	"Advisory",
 	"Business",
@@ -65,6 +72,9 @@ export default function PostEditor({ post, mode }: PostEditorProps) {
 	const [category, setCategory] = useState(
 		post?.category ? normalizeCategory(post.category) : POST_CATEGORIES[0]
 	)
+	const [status, setStatus] = useState(
+		post?.status || (post?.published_at ? "published" : "draft")
+	)
 	const [published, setPublished] = useState(post?.published_at ? true : false)
 	const [publishDate, setPublishDate] = useState(
 		formatDateForInput(post?.published_at || null)
@@ -99,6 +109,7 @@ export default function PostEditor({ post, mode }: PostEditorProps) {
 				content,
 				excerpt,
 				category: normalizeCategory(category),
+				status,
 				featured_image: featuredImage || null,
 				published: published,
 				published_at: published
@@ -315,6 +326,32 @@ export default function PostEditor({ post, mode }: PostEditorProps) {
 					{POST_CATEGORIES.map((cat) => (
 						<option key={cat} value={cat}>
 							{cat}
+						</option>
+					))}
+				</select>
+			</div>
+
+			{/* Status */}
+			<div className="space-y-2">
+				<label htmlFor="status" className="block text-sm font-medium">
+					Status
+				</label>
+				<select
+					id="status"
+					value={status}
+					onChange={(e) => {
+						setStatus(e.target.value)
+						if (e.target.value === "published" && !published) {
+							setPublished(true)
+						} else if (e.target.value !== "published" && published) {
+							setPublished(false)
+						}
+					}}
+					className="w-full px-4 py-2 bg-[rgba(var(--color-foreground),0.05)] border border-[rgba(var(--color-foreground),0.1)] rounded-md focus:outline-none focus:ring-2 focus:ring-[rgba(var(--color-violet),0.5)] focus:border-transparent"
+				>
+					{POST_STATUSES.map((s) => (
+						<option key={s.value} value={s.value}>
+							{s.label}
 						</option>
 					))}
 				</select>
