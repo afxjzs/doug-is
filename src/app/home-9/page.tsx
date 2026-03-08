@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
+import Link from "next/link"
 
 /**
  * Home 9 — "The Terminal"
@@ -171,13 +172,13 @@ export default function Home9() {
 					</div>
 					<div style={{ display: "flex", gap: "32px", fontSize: "12px", letterSpacing: "0.1em" }}>
 						{["advising", "building", "investing", "writing"].map(item => (
-							<a key={item} href={item === "writing" ? "/thinking" : `/${item}`} style={{
+							<Link key={item} href={item === "writing" ? "/thinking" : `/${item}`} style={{
 								color: "var(--cream-dim)",
 								transition: "color 0.2s",
 							}}
 							onMouseEnter={e => (e.target as HTMLElement).style.color = "#d4a853"}
 							onMouseLeave={e => (e.target as HTMLElement).style.color = "rgba(232,226,214,0.45)"}
-							>{item}</a>
+							>{item}</Link>
 						))}
 					</div>
 				</nav>
@@ -258,7 +259,7 @@ export default function Home9() {
 								it into something customers actually pay for.
 							</p>
 							<div style={{ display: "flex", gap: "16px" }}>
-								<a href="/connecting" style={{
+								<Link href="/connecting" style={{
 									padding: "14px 32px",
 									background: "var(--amber)",
 									color: "var(--navy)",
@@ -270,8 +271,8 @@ export default function Home9() {
 								}}
 								onMouseEnter={e => { (e.target as HTMLElement).style.background = "#e0b55e"; (e.target as HTMLElement).style.transform = "translateY(-2px)"; }}
 								onMouseLeave={e => { (e.target as HTMLElement).style.background = "#d4a853"; (e.target as HTMLElement).style.transform = "translateY(0)"; }}
-								>Get in Touch</a>
-								<a href="/thinking" style={{
+								>Get in Touch</Link>
+								<Link href="/thinking" style={{
 									padding: "14px 32px",
 									border: "1px solid var(--amber-dim)",
 									color: "var(--amber)",
@@ -283,7 +284,7 @@ export default function Home9() {
 								}}
 								onMouseEnter={e => (e.target as HTMLElement).style.borderColor = "#d4a853"}
 								onMouseLeave={e => (e.target as HTMLElement).style.borderColor = "rgba(212,168,83,0.3)"}
-								>Read My Writing</a>
+								>Read My Writing</Link>
 							</div>
 						</div>
 					</div>
@@ -336,7 +337,7 @@ export default function Home9() {
 									href: "/investing",
 								},
 							].map((item, i) => (
-								<a key={item.num} href={item.href} style={{
+								<Link key={item.num} href={item.href} style={{
 									padding: "48px 40px",
 									borderLeft: i > 0 ? "1px solid rgba(212,168,83,0.08)" : "none",
 									transition: "background 0.3s",
@@ -355,7 +356,7 @@ export default function Home9() {
 									<p style={{ fontSize: "13px", lineHeight: 1.7, color: "var(--cream-dim)" }}>
 										{item.desc}
 									</p>
-								</a>
+								</Link>
 							))}
 						</div>
 					</div>
@@ -369,15 +370,15 @@ export default function Home9() {
 								fontFamily: "'Playfair Display', Georgia, serif",
 								fontSize: "32px", fontWeight: 700,
 							}}>Writing</h2>
-							<a href="/thinking" style={{ fontSize: "12px", letterSpacing: "0.1em", color: "var(--amber-dim)", transition: "color 0.2s" }}
+							<Link href="/thinking" style={{ fontSize: "12px", letterSpacing: "0.1em", color: "var(--amber-dim)", transition: "color 0.2s" }}
 							onMouseEnter={e => (e.target as HTMLElement).style.color = "#d4a853"}
 							onMouseLeave={e => (e.target as HTMLElement).style.color = "rgba(212,168,83,0.3)"}
-							>ALL POSTS →</a>
+							>ALL POSTS →</Link>
 						</div>
 
 						<div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
 							{ARTICLES.map((article, i) => (
-								<a key={i} href={article.href} style={{
+								<Link key={i} href={article.href} style={{
 									padding: "32px",
 									background: "var(--navy-light)",
 									borderRadius: "8px",
@@ -403,7 +404,7 @@ export default function Home9() {
 										fontSize: "18px", fontWeight: 700,
 										marginTop: "12px", lineHeight: 1.4,
 									}}>{article.title}</h3>
-								</a>
+								</Link>
 							))}
 						</div>
 					</div>
@@ -472,7 +473,7 @@ export default function Home9() {
 					<p style={{ fontSize: "14px", color: "var(--cream-dim)", marginBottom: "32px" }}>
 						Building something? Thinking about it? I'm around.
 					</p>
-					<a href="/connecting" style={{
+					<Link href="/connecting" style={{
 						display: "inline-block",
 						padding: "14px 40px",
 						background: "var(--amber)",
@@ -485,7 +486,7 @@ export default function Home9() {
 					}}
 					onMouseEnter={e => { (e.target as HTMLElement).style.background = "#e0b55e"; (e.target as HTMLElement).style.transform = "translateY(-2px)"; }}
 					onMouseLeave={e => { (e.target as HTMLElement).style.background = "#d4a853"; (e.target as HTMLElement).style.transform = "translateY(0)"; }}
-					>Get in Touch</a>
+					>Get in Touch</Link>
 				</section>
 
 				{/* Footer */}

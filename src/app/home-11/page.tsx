@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 
 /**
  * Home 11 — "The Contrast"
@@ -79,11 +80,11 @@ export default function Home11() {
 					backdropFilter: scrollY > 80 ? "blur(12px)" : "none",
 					transition: "all 0.3s",
 				}}>
-					<a href="/" style={{
+					<Link href="/" style={{
 						fontFamily: "var(--serif)", fontSize: "22px",
 					}}>
 						doug.is
-					</a>
+					</Link>
 					<div style={{ display: "flex", gap: "32px" }}>
 						{[
 							{ label: "advising", href: "/advising" },
@@ -91,7 +92,7 @@ export default function Home11() {
 							{ label: "investing", href: "/investing" },
 							{ label: "writing", href: "/thinking" },
 						].map(item => (
-							<a key={item.label} href={item.href} style={{
+							<Link key={item.label} href={item.href} style={{
 								fontFamily: "var(--mono)", fontSize: "11px",
 								letterSpacing: "0.08em",
 								color: "rgba(245,240,232,0.4)",
@@ -99,7 +100,7 @@ export default function Home11() {
 							}}
 							onMouseEnter={e => (e.target as HTMLElement).style.color = "var(--green-bright)"}
 							onMouseLeave={e => (e.target as HTMLElement).style.color = "rgba(245,240,232,0.4)"}
-							>{item.label}</a>
+							>{item.label}</Link>
 						))}
 					</div>
 				</nav>
@@ -185,7 +186,7 @@ export default function Home11() {
 								who's already been through it.
 							</p>
 							<div style={{ display: "flex", gap: "16px" }}>
-								<a href="/connecting" style={{
+								<Link href="/connecting" style={{
 									padding: "14px 32px",
 									background: "var(--green)",
 									color: "var(--light)",
@@ -197,8 +198,8 @@ export default function Home11() {
 								}}
 								onMouseEnter={e => { (e.target as HTMLElement).style.background = "var(--green-bright)"; (e.target as HTMLElement).style.transform = "translateY(-2px)"; }}
 								onMouseLeave={e => { (e.target as HTMLElement).style.background = "var(--green)"; (e.target as HTMLElement).style.transform = "translateY(0)"; }}
-								>GET IN TOUCH</a>
-								<a href="/thinking" style={{
+								>GET IN TOUCH</Link>
+								<Link href="/thinking" style={{
 									padding: "14px 32px",
 									border: "1px solid rgba(245,240,232,0.12)",
 									color: "rgba(245,240,232,0.6)",
@@ -210,7 +211,7 @@ export default function Home11() {
 								}}
 								onMouseEnter={e => (e.target as HTMLElement).style.borderColor = "var(--green-bright)"}
 								onMouseLeave={e => (e.target as HTMLElement).style.borderColor = "rgba(245,240,232,0.12)"}
-								>MY WRITING</a>
+								>MY WRITING</Link>
 							</div>
 						</div>
 					</div>
@@ -277,7 +278,7 @@ export default function Home11() {
 									href: "/investing",
 								},
 							].map((item, i) => (
-								<a key={item.title} href={item.href} style={{
+								<Link key={item.title} href={item.href} style={{
 									padding: "40px",
 									borderLeft: i > 0 ? "1px solid rgba(12,12,12,0.08)" : "none",
 									transition: "background 0.3s",
@@ -294,7 +295,7 @@ export default function Home11() {
 										fontSize: "14px", lineHeight: 1.7,
 										color: "rgba(12,12,12,0.55)",
 									}}>{item.desc}</p>
-								</a>
+								</Link>
 							))}
 						</div>
 					</div>
@@ -345,15 +346,15 @@ export default function Home11() {
 							<h2 style={{ fontFamily: "var(--serif)", fontSize: "36px" }}>
 								Writing
 							</h2>
-							<a href="/thinking" style={{
+							<Link href="/thinking" style={{
 								fontFamily: "var(--mono)", fontSize: "12px",
 								letterSpacing: "0.1em", color: "var(--green)",
-							}}>ALL POSTS →</a>
+							}}>ALL POSTS →</Link>
 						</div>
 
 						<div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "32px" }}>
 							{ARTICLES.map((article, i) => (
-								<a key={i} href={article.href} style={{
+								<Link key={i} href={article.href} style={{
 									padding: "28px 0",
 									borderTop: "2px solid rgba(12,12,12,0.06)",
 									transition: "border-color 0.3s",
@@ -371,7 +372,7 @@ export default function Home11() {
 										fontFamily: "var(--serif)", fontSize: "20px",
 										marginTop: "10px", lineHeight: 1.4,
 									}}>{article.title}</h3>
-								</a>
+								</Link>
 							))}
 						</div>
 					</div>
@@ -389,7 +390,7 @@ export default function Home11() {
 					}}>
 						Let's build something<span style={{ color: "var(--green-bright)" }}>.</span>
 					</h2>
-					<a href="/connecting" style={{
+					<Link href="/connecting" style={{
 						display: "inline-block",
 						padding: "16px 40px",
 						background: "var(--green)",
@@ -402,7 +403,7 @@ export default function Home11() {
 					}}
 					onMouseEnter={e => { (e.target as HTMLElement).style.background = "var(--green-bright)"; (e.target as HTMLElement).style.transform = "translateY(-2px)"; }}
 					onMouseLeave={e => { (e.target as HTMLElement).style.background = "var(--green)"; (e.target as HTMLElement).style.transform = "translateY(0)"; }}
-					>GET IN TOUCH</a>
+					>GET IN TOUCH</Link>
 				</section>
 
 				{/* Footer */}

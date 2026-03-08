@@ -217,7 +217,7 @@ export default function Home8() {
 					{/* CTA */}
 					<div className="p-10 md:p-16 border border-[rgba(var(--color-foreground),0.08)] flex flex-col justify-center">
 						<h2 className="font-mono text-sm text-[rgba(var(--color-foreground),0.3)] mb-4 tracking-wider">
-							// CONTACT
+							{"// CONTACT"}
 						</h2>
 						<p className="text-[rgba(var(--color-foreground),0.5)] mb-6 leading-relaxed">
 							Building something? Need someone who's been through it? I'm

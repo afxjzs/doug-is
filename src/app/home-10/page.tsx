@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 
 /**
  * Home 10 — "The Editorial"
@@ -76,12 +77,12 @@ export default function Home10() {
 					borderBottom: scrollY > 50 ? "1px solid var(--fg-faint)" : "1px solid transparent",
 					transition: "all 0.3s ease",
 				}}>
-					<a href="/" style={{
+					<Link href="/" style={{
 						fontFamily: "var(--serif)", fontSize: "20px", fontWeight: 700,
 						color: "var(--fg)",
 					}}>
 						doug.is
-					</a>
+					</Link>
 					<div style={{ display: "flex", gap: "36px", fontSize: "13px", fontWeight: 500, letterSpacing: "0.02em" }}>
 						{[
 							{ label: "advising", href: "/advising" },
@@ -90,12 +91,12 @@ export default function Home10() {
 							{ label: "writing", href: "/thinking" },
 							{ label: "contact", href: "/connecting" },
 						].map(item => (
-							<a key={item.label} href={item.href} style={{
+							<Link key={item.label} href={item.href} style={{
 								color: "var(--fg-dim)", transition: "color 0.2s",
 							}}
 							onMouseEnter={e => (e.target as HTMLElement).style.color = "var(--accent)"}
 							onMouseLeave={e => (e.target as HTMLElement).style.color = "rgba(26,26,24,0.5)"}
-							>{item.label}</a>
+							>{item.label}</Link>
 						))}
 					</div>
 				</nav>
@@ -143,7 +144,7 @@ export default function Home10() {
 							who need someone in their corner who's already been through it.
 						</p>
 						<div className="h10-reveal-delay2" style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-							<a href="/connecting" style={{
+							<Link href="/connecting" style={{
 								padding: "16px 36px",
 								background: "var(--accent)",
 								color: "var(--bg)",
@@ -154,8 +155,8 @@ export default function Home10() {
 							}}
 							onMouseEnter={e => { (e.target as HTMLElement).style.background = "#d4632f"; (e.target as HTMLElement).style.transform = "translateY(-2px)"; }}
 							onMouseLeave={e => { (e.target as HTMLElement).style.background = "#c4572a"; (e.target as HTMLElement).style.transform = "translateY(0)"; }}
-							>Get in Touch</a>
-							<a href="/thinking" style={{
+							>Get in Touch</Link>
+							<Link href="/thinking" style={{
 								padding: "16px 36px",
 								border: "1.5px solid var(--fg-faint)",
 								color: "var(--fg)",
@@ -166,7 +167,7 @@ export default function Home10() {
 							}}
 							onMouseEnter={e => (e.target as HTMLElement).style.borderColor = "var(--accent)"}
 							onMouseLeave={e => (e.target as HTMLElement).style.borderColor = "rgba(26,26,24,0.12)"}
-							>Read My Writing</a>
+							>Read My Writing</Link>
 						</div>
 					</div>
 
@@ -242,7 +243,7 @@ export default function Home10() {
 									href: "/investing",
 								},
 							].map((item) => (
-								<a key={item.title} href={item.href} style={{
+								<Link key={item.title} href={item.href} style={{
 									borderTop: "2px solid var(--fg-faint)",
 									paddingTop: "24px",
 									transition: "border-color 0.3s",
@@ -257,7 +258,7 @@ export default function Home10() {
 									<p style={{
 										fontSize: "14px", lineHeight: 1.7, color: "var(--fg-dim)",
 									}}>{item.desc}</p>
-								</a>
+								</Link>
 							))}
 						</div>
 					</div>
@@ -289,15 +290,15 @@ export default function Home10() {
 						<h2 style={{
 							fontFamily: "var(--serif)", fontSize: "36px", fontWeight: 700,
 						}}>Writing</h2>
-						<a href="/thinking" style={{
+						<Link href="/thinking" style={{
 							fontSize: "13px", fontWeight: 500, color: "var(--accent)",
 							letterSpacing: "0.05em",
-						}}>All Articles →</a>
+						}}>All Articles →</Link>
 					</div>
 
 					<div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "32px" }}>
 						{ARTICLES.map((article, i) => (
-							<a key={i} href={article.href} style={{
+							<Link key={i} href={article.href} style={{
 								borderTop: "2px solid var(--fg-faint)",
 								paddingTop: "24px",
 								transition: "border-color 0.3s",
@@ -314,7 +315,7 @@ export default function Home10() {
 									fontFamily: "var(--serif)", fontSize: "20px", fontWeight: 600,
 									marginTop: "12px", lineHeight: 1.4,
 								}}>{article.title}</h3>
-							</a>
+							</Link>
 						))}
 					</div>
 				</section>
@@ -337,7 +338,7 @@ export default function Home10() {
 					<p style={{ fontSize: "16px", color: "var(--fg-dim)", marginBottom: "32px" }}>
 						Building something? Thinking about it? I'm around.
 					</p>
-					<a href="/connecting" style={{
+					<Link href="/connecting" style={{
 						display: "inline-block",
 						padding: "16px 40px",
 						background: "var(--accent)",
@@ -349,7 +350,7 @@ export default function Home10() {
 					}}
 					onMouseEnter={e => { (e.target as HTMLElement).style.background = "#d4632f"; (e.target as HTMLElement).style.transform = "translateY(-2px)"; }}
 					onMouseLeave={e => { (e.target as HTMLElement).style.background = "#c4572a"; (e.target as HTMLElement).style.transform = "translateY(0)"; }}
-					>Get in Touch</a>
+					>Get in Touch</Link>
 				</section>
 
 				{/* Footer */}
