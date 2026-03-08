@@ -40,16 +40,35 @@ export default function Home8() {
 
 			{/* Hero — brutalist oversized type */}
 			<section className="min-h-screen flex flex-col justify-end px-6 pt-28 pb-12 relative z-10">
-				{/* Background image — harsh crop, no gradient fade */}
-				<div className="absolute top-0 right-0 w-1/2 h-full hidden lg:block">
-					<Image
-						src="/images/doug-nyc.jpg"
-						alt="NYC"
-						fill
-						className="object-cover"
-						style={{ mixBlendMode: "luminosity", opacity: 0.3 }}
-						priority
-					/>
+				{/* Background — hexagon grid pattern, full width */}
+				<div
+					className="absolute inset-0 opacity-[0.06]"
+					style={{
+						marginLeft: "calc(-50vw + 50%)",
+						marginRight: "calc(-50vw + 50%)",
+						width: "100vw",
+					}}
+				>
+					<svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+						<defs>
+							<pattern
+								id="hex-brutalist"
+								x="0"
+								y="0"
+								width="52"
+								height="60"
+								patternUnits="userSpaceOnUse"
+							>
+								<polygon
+									points="26,0 52,15 52,45 26,60 0,45 0,15"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="1"
+								/>
+							</pattern>
+						</defs>
+						<rect width="100%" height="100%" fill="url(#hex-brutalist)" className="text-[rgb(var(--color-foreground))]" />
+					</svg>
 				</div>
 
 				<div className="relative z-10 max-w-6xl mx-auto w-full">

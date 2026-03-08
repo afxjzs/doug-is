@@ -114,17 +114,17 @@ export default function Home11() {
 					padding: "120px 48px 80px",
 					position: "relative",
 				}}>
-					{/* Floating photo — right side */}
+					{/* Floating photo — centered in negative space between text (max 900px) and viewport edge */}
 					<div style={{
 						position: "absolute",
-						right: "48px",
+						right: "calc((100vw - 1400px) / 2 + 48px)",
 						top: "50%",
-						transform: "translateY(-50%)",
-						width: "280px",
-						height: "380px",
+						transform: "translateY(-50%) translateX(50%)",
+						width: "300px",
+						height: "400px",
 						borderRadius: "8px",
 						overflow: "hidden",
-						opacity: 0.25,
+						opacity: 0.4,
 					}}>
 						{/* eslint-disable-next-line @next/next/no-img-element */}
 						<img
@@ -133,8 +133,7 @@ export default function Home11() {
 							style={{
 								width: "100%", height: "100%",
 								objectFit: "cover",
-								filter: "grayscale(1) contrast(1.2)",
-								mixBlendMode: "luminosity",
+								filter: "grayscale(1) contrast(1.05)",
 							}}
 						/>
 					</div>
