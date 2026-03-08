@@ -12,7 +12,11 @@ export default function LayoutWrapper({
 
 	// Routes that should NOT have the site layout
 	const isSpecialRoute =
-		pathname.startsWith("/migraine-free") || pathname.startsWith("/admin")
+		pathname.startsWith("/migraine-free") ||
+		pathname.startsWith("/admin") ||
+		pathname.startsWith("/home-9") ||
+		pathname.startsWith("/home-10") ||
+		pathname.startsWith("/home-11")
 
 	if (isSpecialRoute) {
 		// Special routes get no wrapper - they handle their own layout

@@ -70,13 +70,13 @@ describe("Metadata Validation Framework", () => {
 		test("should have complete metadata for social sharing", () => {
 			// This test will fail until we implement proper homepage metadata
 			const homepageMetadata: Metadata = {
-				title: "doug.is | Developer, Investor, Entrepreneur",
+				title: "doug.is | Engineer, Advisor, Investor",
 				description:
-					"Personal website of Douglas E. Rogers - Developer, Investor, and Entrepreneur",
+					"Personal website of Douglas E. Rogers - Engineer, Advisor, and Investor",
 				openGraph: {
-					title: "doug.is | Developer, Investor, Entrepreneur",
+					title: "doug.is | Engineer, Advisor, Investor",
 					description:
-						"Personal website of Douglas E. Rogers - Developer, Investor, and Entrepreneur",
+						"Personal website of Douglas E. Rogers - Engineer, Advisor, and Investor",
 					url: "https://doug.is",
 					siteName: "doug.is",
 					type: "website",
@@ -85,15 +85,15 @@ describe("Metadata Validation Framework", () => {
 							url: "https://doug.is/images/social/homepage-social.jpg",
 							width: 1200,
 							height: 630,
-							alt: "doug.is - Developer, Investor, Entrepreneur",
+							alt: "doug.is - Engineer, Advisor, Investor",
 						},
 					],
 				},
 				twitter: {
 					card: "summary_large_image",
-					title: "doug.is | Developer, Investor, Entrepreneur",
+					title: "doug.is | Engineer, Advisor, Investor",
 					description:
-						"Personal website of Douglas E. Rogers - Developer, Investor, and Entrepreneur",
+						"Personal website of Douglas E. Rogers - Engineer, Advisor, and Investor",
 					images: ["https://doug.is/images/social/homepage-social.jpg"],
 					creator: "@afxjzs",
 				},

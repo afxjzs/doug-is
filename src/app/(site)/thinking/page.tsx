@@ -16,7 +16,7 @@ export default async function ThinkingPage() {
 					doug.is/thinking
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
-					Thoughts, ideas, and insights on various topics.
+					Writing about startups, code, investing, and whatever else is on my mind.
 				</p>
 			</div>
 

@@ -85,5 +85,5 @@ export function getSiteName(): string {
  * @returns The default site description
  */
 export function getSiteDescription(): string {
-	return "Douglas E. Rogers - Developer, Investor, Entrepreneur"
+	return "Douglas E. Rogers - Engineer, Advisor, Investor"
 }

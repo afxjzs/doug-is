@@ -24,10 +24,10 @@ interface Post {
 }
 
 export const metadata: Metadata = {
-	title: `${getSiteName()} | Developer, Investor, Entrepreneur`,
+	title: `${getSiteName()} | Engineer, Advisor, Investor`,
 	description: getSiteDescription(),
 	openGraph: {
-		title: `${getSiteName()} | Developer, Investor, Entrepreneur`,
+		title: `${getSiteName()} | Engineer, Advisor, Investor`,
 		description: getSiteDescription(),
 		url: getCanonicalUrl("/"),
 		siteName: getSiteName(),
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 				url: getSocialImageUrl("/images/doug-2024-cropped.png"),
 				width: 1200,
 				height: 630,
-				alt: `${getSiteName()} - Developer, Investor, Entrepreneur`,
+				alt: `${getSiteName()} - Engineer, Advisor, Investor`,
 			},
 		],
 		locale: "en_US",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: `${getSiteName()} | Developer, Investor, Entrepreneur`,
+		title: `${getSiteName()} | Engineer, Advisor, Investor`,
 		description: getSiteDescription(),
 		images: [getSocialImageUrl("/images/doug-2024-cropped.png")],
 		creator: "@glowingrec",
@@ -150,7 +150,7 @@ export default async function Home() {
 								building
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.6)] mb-4 text-sm">
-								Check out projects I&apos;ve built and technologies I work with.
+								Companies I&apos;m running and side projects I&apos;ve shipped.
 							</p>
 							<span className="flex items-center text-sm text-[rgb(var(--color-accent))] group-hover:translate-x-1 transition-transform">
 								View projects

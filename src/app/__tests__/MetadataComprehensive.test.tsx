@@ -29,7 +29,7 @@ describe("Comprehensive Metadata Testing", () => {
 		it("should have comprehensive metadata", () => {
 			expect(homeMetadata).toBeDefined()
 			expect(homeMetadata.title).toBe(
-				"doug.is | Developer, Investor, Entrepreneur"
+				"doug.is | Engineer, Advisor, Investor"
 			)
 			expect(homeMetadata.description).toContain("Douglas E. Rogers")
 			expect(homeMetadata.openGraph).toBeDefined()
@@ -39,7 +39,7 @@ describe("Comprehensive Metadata Testing", () => {
 
 		it("should have proper OpenGraph metadata", () => {
 			const og = homeMetadata.openGraph
-			expect(og?.title).toBe("doug.is | Developer, Investor, Entrepreneur")
+			expect(og?.title).toBe("doug.is | Engineer, Advisor, Investor")
 			expect(og?.description).toContain("Douglas E. Rogers")
 			expect(og?.url).toBe("https://doug.is/")
 			expect(og?.siteName).toBe("doug.is")
@@ -51,7 +51,7 @@ describe("Comprehensive Metadata Testing", () => {
 		it("should have proper Twitter card metadata", () => {
 			const twitter = homeMetadata.twitter
 			expect(twitter?.card).toBe("summary_large_image")
-			expect(twitter?.title).toBe("doug.is | Developer, Investor, Entrepreneur")
+			expect(twitter?.title).toBe("doug.is | Engineer, Advisor, Investor")
 			expect(twitter?.description).toContain("Douglas E. Rogers")
 			expect(twitter?.images).toBeDefined()
 			expect(twitter?.creator).toBe("@glowingrec")

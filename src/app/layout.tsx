@@ -27,7 +27,7 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
 	title: "doug.is...",
 	description:
-		"Personal website of Doug Rogers - Developer, Investor, and Entrepreneur",
+		"Personal website of Doug Rogers - Engineer, Advisor, and Investor",
 	metadataBase: new URL("https://doug.is"),
 	icons: {
 		icon: [
@@ -53,9 +53,9 @@ export const metadata: Metadata = {
 		locale: "en_US",
 		url: "https://doug.is",
 		siteName: "doug.is",
-		title: "doug.is - Developer, Investor, Entrepreneur",
+		title: "doug.is - Engineer, Advisor, Investor",
 		description:
-			"Personal website of Doug Rogers - Developer, Investor, and Entrepreneur",
+			"Personal website of Doug Rogers - Engineer, Advisor, and Investor",
 		images: [
 			{
 				url: "/android-chrome-512x512.png",
@@ -67,9 +67,9 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "doug.is - Developer, Investor, Entrepreneur",
+		title: "doug.is - Engineer, Advisor, Investor",
 		description:
-			"Personal website of Doug Rogers - Developer, Investor, and Entrepreneur",
+			"Personal website of Doug Rogers - Engineer, Advisor, and Investor",
 		images: ["/android-chrome-512x512.png"],
 		creator: "@glowingrec",
 	},

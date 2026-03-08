@@ -112,7 +112,7 @@ export async function isAdmin() {
 	if (!user?.email) return false
 
 	const adminEmails = (
-		process.env.ADMIN_EMAILS || "doug@doug.is,doug.rogers@outlook.com"
+		process.env.ADMIN_EMAILS || "doug@doug.is"
 	)
 		.split(",")
 		.map((email) => email.trim().toLowerCase())

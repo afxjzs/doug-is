@@ -39,15 +39,15 @@ export default function HustlingPage() {
 						About Me
 					</h2>
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
-						I&apos;m Doug Rogers, a passionate developer, investor, and
-						entrepreneur. With over 25 years of experience in the tech industry,
-						I specialize in building modern web applications, helping B2b
-						startups, and providing strategic advisory services.
+						I&apos;m Doug Rogers. I&apos;ve been building software for over 25
+						years, and somewhere along the way I started building companies too.
+						These days I split my time between writing code, advising startups,
+						and investing in founders.
 					</p>
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-6">
-						My background spans software development, product design, and
-						general engineering. I enjoy combining these disciplines to create
-						innovative solutions and help businesses grow.
+						I&apos;ve done YC and Techstars, shipped products that real people
+						use, and made most of the mistakes you can make along the way. That
+						experience is what I bring to the table when I work with founders.
 					</p>
 					<SocialIcons iconSize="small" />
 				</div>
@@ -81,8 +81,8 @@ export default function HustlingPage() {
 							Advisory
 						</h3>
 						<p className="text-[rgba(var(--color-foreground),0.7)]">
-							Helping businesses grow through strategic planning, product
-							development, and technical guidance.
+							Working with founders on what actually matters: product,
+							go-to-market, and not running out of money.
 						</p>
 					</div>
 				</div>
@@ -106,9 +106,9 @@ export default function HustlingPage() {
 			{/* Connect CTA Section */}
 			<ConnectCta
 				className="mb-16"
-				title="Ready to Work Together?"
-				description="Whether you have a project in mind or just want to chat about opportunities, I'm always open to new connections."
-				buttonText="Let's Connect"
+				title="Want to talk?"
+				description="If you're working on something interesting or just want to compare notes, I'm around."
+				buttonText="Get in Touch"
 				buttonHref="/connecting"
 			/>
 		</div>

@@ -4,7 +4,7 @@
 
 import { NextRequest, NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/serverClient"
-import { isCurrentUserAdmin } from "@/lib/supabase/auth"
+import { isAdmin } from "@/lib/supabase/server"
 import { nanoid } from "nanoid"
 
 // Set maximum upload size (10MB)
@@ -32,9 +32,9 @@ export async function POST(request: NextRequest) {
 
 		// Check if user is authenticated and has admin privileges
 		try {
-			const isAdmin = await isCurrentUserAdmin()
+			const adminCheck = await isAdmin()
 
-			if (!isAdmin) {
+			if (!adminCheck) {
 				console.error("Upload failed: User not authenticated or not an admin")
 				return NextResponse.json(
 					{ error: "Admin privileges required" },

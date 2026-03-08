@@ -140,7 +140,7 @@ export function generateSiteStructuredData() {
 		"@type": "Organization",
 		name: "doug.is",
 		url: "https://doug.is",
-		description: "Developer, Investor, Entrepreneur",
+		description: "Engineer, Advisor, Investor",
 		sameAs: [
 			"https://twitter.com/douglasrogers",
 			"https://github.com/douglasrogers",

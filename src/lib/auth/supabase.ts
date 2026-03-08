@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getDatabaseConfig } from "@/lib/supabase/environment"
 
 // List of admin emails
-export const ALLOWED_ADMIN_EMAILS = ["douglas.rogers@gmail.com"]
+export const ALLOWED_ADMIN_EMAILS = ["douglas.rogers@gmail.com", "doug@doug.is"]
 
 /**
  * Centralized cookie settings to maintain consistency
