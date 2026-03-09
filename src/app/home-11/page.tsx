@@ -105,112 +105,116 @@ export default function Home11() {
 					</div>
 				</nav>
 
-				{/* Hero — oversized type with photo */}
+				{/* Hero — oversized type with hex-masked photo on left */}
 				<section style={{
 					minHeight: "100vh",
 					display: "flex",
-					flexDirection: "column" as const,
-					justifyContent: "center",
+					alignItems: "center",
 					padding: "120px 48px 80px",
 					position: "relative",
 				}}>
-					{/* Floating photo — centered in negative space between text (max 900px) and viewport edge */}
-					<div style={{
-						position: "absolute",
-						right: "calc((100vw - 1400px) / 2 + 48px)",
-						top: "50%",
-						transform: "translateY(-50%) translateX(50%)",
-						width: "300px",
-						height: "400px",
-						borderRadius: "8px",
-						overflow: "hidden",
-						opacity: 0.4,
-					}}>
-						{/* eslint-disable-next-line @next/next/no-img-element */}
-						<img
-							src="/images/doug-2024-cropped-compr.png"
-							alt=""
-							style={{
-								width: "100%", height: "100%",
-								objectFit: "cover",
-								filter: "grayscale(1) contrast(1.05)",
-							}}
-						/>
-					</div>
-					<div style={{ maxWidth: "1400px", margin: "0 auto", width: "100%" }}>
-						{/* Small intro */}
+					<div style={{ maxWidth: "1400px", margin: "0 auto", width: "100%", display: "flex", alignItems: "center", gap: "80px" }}>
+						{/* Left — round photo */}
 						<div style={{
-							fontFamily: "var(--mono)", fontSize: "12px",
-							letterSpacing: "0.15em", color: "var(--green-bright)",
-							marginBottom: "32px",
-							opacity: mounted ? 1 : 0,
-							transform: mounted ? "translateY(0)" : "translateY(20px)",
-							transition: "all 0.6s ease 0.2s",
-						}}>
-							DOUG ROGERS — ENGINEER, ADVISOR, INVESTOR
-						</div>
-
-						{/* Big headline */}
-						<h1 style={{
-							fontFamily: "var(--serif)",
-							fontSize: "clamp(48px, 7vw, 96px)",
-							lineHeight: 1.05,
-							marginBottom: "40px",
-							maxWidth: "900px",
+							flexShrink: 0,
+							width: "320px",
+							height: "320px",
+							borderRadius: "50%",
+							overflow: "hidden",
+							border: "2px solid rgba(45,90,61,0.4)",
 							opacity: mounted ? 1 : 0,
 							transform: mounted ? "translateY(0)" : "translateY(30px)",
-							transition: "all 0.8s ease 0.3s",
+							transition: "all 0.8s ease 0.2s",
 						}}>
-							I take raw ideas and turn them into{" "}
-							<span style={{
-								fontStyle: "italic",
-								color: "var(--green-bright)",
-							}}>products people pay&nbsp;for</span>
-						</h1>
+							{/* eslint-disable-next-line @next/next/no-img-element */}
+							<img
+								src="/images/doug-2024-cropped-compr.png"
+								alt="Doug Rogers"
+								style={{
+									width: "100%", height: "100%",
+									objectFit: "cover",
+									filter: "grayscale(1) brightness(1.1) contrast(1.1)",
+								}}
+							/>
+						</div>
 
-						{/* Sub + CTA */}
-						<div style={{
-							display: "flex", gap: "60px", alignItems: "flex-end",
-							opacity: mounted ? 1 : 0,
-							transform: mounted ? "translateY(0)" : "translateY(20px)",
-							transition: "all 0.8s ease 0.5s",
-						}}>
-							<p style={{
-								fontSize: "16px", lineHeight: 1.7,
-								color: "rgba(245,240,232,0.5)",
-								maxWidth: "420px",
+						{/* Right — text content */}
+						<div style={{ flex: 1 }}>
+							{/* Small intro */}
+							<div style={{
+								fontFamily: "var(--mono)", fontSize: "12px",
+								letterSpacing: "0.15em", color: "var(--green-bright)",
+								marginBottom: "32px",
+								opacity: mounted ? 1 : 0,
+								transform: mounted ? "translateY(0)" : "translateY(20px)",
+								transition: "all 0.6s ease 0.3s",
 							}}>
-								Multiple startups, two exits, YC and Techstars.
-								I help founders who need someone in their corner
-								who's already been through it.
-							</p>
-							<div style={{ display: "flex", gap: "16px" }}>
-								<Link href="/connecting" style={{
-									padding: "14px 32px",
-									background: "var(--green)",
-									color: "var(--light)",
-									fontFamily: "var(--mono)",
-									fontSize: "12px",
-									letterSpacing: "0.05em",
-									borderRadius: "4px",
-									transition: "all 0.2s",
-								}}
-								onMouseEnter={e => { (e.target as HTMLElement).style.background = "var(--green-bright)"; (e.target as HTMLElement).style.transform = "translateY(-2px)"; }}
-								onMouseLeave={e => { (e.target as HTMLElement).style.background = "var(--green)"; (e.target as HTMLElement).style.transform = "translateY(0)"; }}
-								>GET IN TOUCH</Link>
-								<Link href="/thinking" style={{
-									padding: "14px 32px",
-									border: "1px solid rgba(245,240,232,0.12)",
-									color: "rgba(245,240,232,0.6)",
-									fontFamily: "var(--mono)",
-									fontSize: "12px",
-									letterSpacing: "0.05em",
-									borderRadius: "4px",
-									transition: "all 0.2s",
-								}}
-								onMouseEnter={e => (e.target as HTMLElement).style.borderColor = "var(--green-bright)"}
-								onMouseLeave={e => (e.target as HTMLElement).style.borderColor = "rgba(245,240,232,0.12)"}
-								>MY WRITING</Link>
+								DOUG ROGERS — ENGINEER, ADVISOR, INVESTOR
+							</div>
+
+							{/* Big headline */}
+							<h1 style={{
+								fontFamily: "var(--serif)",
+								fontSize: "clamp(48px, 6vw, 88px)",
+								lineHeight: 1.05,
+								marginBottom: "40px",
+								maxWidth: "800px",
+								opacity: mounted ? 1 : 0,
+								transform: mounted ? "translateY(0)" : "translateY(30px)",
+								transition: "all 0.8s ease 0.4s",
+							}}>
+								I take raw ideas and turn them into{" "}
+								<span style={{
+									fontStyle: "italic",
+									color: "var(--green-bright)",
+								}}>products people pay&nbsp;for</span>
+							</h1>
+
+							{/* Sub + CTA */}
+							<div style={{
+								display: "flex", gap: "60px", alignItems: "flex-end",
+								flexWrap: "wrap" as const,
+								opacity: mounted ? 1 : 0,
+								transform: mounted ? "translateY(0)" : "translateY(20px)",
+								transition: "all 0.8s ease 0.6s",
+							}}>
+								<p style={{
+									fontSize: "16px", lineHeight: 1.7,
+									color: "rgba(245,240,232,0.5)",
+									maxWidth: "420px",
+								}}>
+									Multiple startups, two exits, YC and Techstars.
+									I help founders who need someone in their corner
+									who's already been through it.
+								</p>
+								<div style={{ display: "flex", gap: "16px" }}>
+									<Link href="/connecting" style={{
+										padding: "14px 32px",
+										background: "var(--green)",
+										color: "var(--light)",
+										fontFamily: "var(--mono)",
+										fontSize: "12px",
+										letterSpacing: "0.05em",
+										borderRadius: "4px",
+										transition: "all 0.2s",
+									}}
+									onMouseEnter={e => { (e.target as HTMLElement).style.background = "var(--green-bright)"; (e.target as HTMLElement).style.transform = "translateY(-2px)"; }}
+									onMouseLeave={e => { (e.target as HTMLElement).style.background = "var(--green)"; (e.target as HTMLElement).style.transform = "translateY(0)"; }}
+									>GET IN TOUCH</Link>
+									<Link href="/thinking" style={{
+										padding: "14px 32px",
+										border: "1px solid rgba(245,240,232,0.12)",
+										color: "rgba(245,240,232,0.6)",
+										fontFamily: "var(--mono)",
+										fontSize: "12px",
+										letterSpacing: "0.05em",
+										borderRadius: "4px",
+										transition: "all 0.2s",
+									}}
+									onMouseEnter={e => (e.target as HTMLElement).style.borderColor = "var(--green-bright)"}
+									onMouseLeave={e => (e.target as HTMLElement).style.borderColor = "rgba(245,240,232,0.12)"}
+									>MY WRITING</Link>
+								</div>
 							</div>
 						</div>
 					</div>

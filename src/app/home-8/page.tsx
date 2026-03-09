@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
 import { ParallaxHexagons } from "@/components/ParallaxHexagons"
 
 /**
@@ -55,12 +54,24 @@ export default function Home8() {
 								id="hex-brutalist"
 								x="0"
 								y="0"
-								width="52"
-								height="60"
+								width="27.7"
+								height="48"
 								patternUnits="userSpaceOnUse"
 							>
 								<polygon
-									points="26,0 52,15 52,45 26,60 0,45 0,15"
+									points="13.85,0 27.7,8 27.7,24 13.85,32 0,24 0,8"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="1"
+								/>
+								<polygon
+									points="0,24 13.85,32 13.85,48 0,56 -13.85,48 -13.85,32"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="1"
+								/>
+								<polygon
+									points="27.7,24 41.55,32 41.55,48 27.7,56 13.85,48 13.85,32"
 									fill="none"
 									stroke="currentColor"
 									strokeWidth="1"
@@ -184,7 +195,7 @@ export default function Home8() {
 				</div>
 			</section>
 
-			{/* Photo band — full width, harsh */}
+			{/* Quote band — full width, hexagon pattern */}
 			<section className="relative z-10">
 				<div
 					className="relative h-[50vh] overflow-hidden"
@@ -192,22 +203,49 @@ export default function Home8() {
 						marginLeft: "calc(-50vw + 50%)",
 						marginRight: "calc(-50vw + 50%)",
 						width: "100vw",
+						background: "#0e0e10",
 					}}
 				>
-					<Image
-						src="/images/doug-casual.jpg"
-						alt="Doug Rogers"
-						fill
-						className="object-cover grayscale"
-					/>
-					<div className="absolute inset-0 bg-[rgba(var(--color-background),0.6)]" />
+					{/* Hexagon pattern background */}
+					<div className="absolute inset-0 opacity-[0.15]">
+						<svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+							<defs>
+								<pattern
+									id="hex-band"
+									x="0"
+									y="0"
+									width="27.7"
+									height="48"
+									patternUnits="userSpaceOnUse"
+								>
+									<polygon
+										points="13.85,0 27.7,8 27.7,24 13.85,32 0,24 0,8"
+										fill="none"
+										stroke="white"
+										strokeWidth="1"
+									/>
+									<polygon
+										points="0,24 13.85,32 13.85,48 0,56 -13.85,48 -13.85,32"
+										fill="none"
+										stroke="white"
+										strokeWidth="1"
+									/>
+									<polygon
+										points="27.7,24 41.55,32 41.55,48 27.7,56 13.85,48 13.85,32"
+										fill="none"
+										stroke="white"
+										strokeWidth="1"
+									/>
+								</pattern>
+							</defs>
+							<rect width="100%" height="100%" fill="url(#hex-band)" />
+						</svg>
+					</div>
 					<div className="absolute inset-0 flex items-center justify-center">
 						<p
-							className="text-4xl md:text-6xl lg:text-7xl font-bold text-center leading-[0.9] max-w-4xl px-6"
+							className="text-4xl md:text-6xl lg:text-7xl font-bold text-center leading-[0.9] max-w-4xl px-6 text-white"
 							style={{
 								fontFamily: "var(--font-display)",
-								mixBlendMode: "difference",
-								color: "white",
 							}}
 						>
 							It's not how many

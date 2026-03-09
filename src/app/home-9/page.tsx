@@ -141,6 +141,27 @@ export default function Home9() {
 				.h9-page { --navy: #0a0e1a; --navy-light: #141b2d; --amber: #d4a853; --amber-dim: rgba(212,168,83,0.3); --cream: #e8e2d6; --cream-dim: rgba(232,226,214,0.45); }
 				@keyframes h9-float { 0%,100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-20px) rotate(3deg); } }
 				@keyframes h9-glow { 0%,100% { opacity: 0.4; } 50% { opacity: 0.8; } }
+				@media (max-width: 768px) {
+					.h9-nav { padding: 16px 20px !important; }
+					.h9-nav-links { display: none !important; }
+					.h9-hero { padding: 100px 20px 60px !important; }
+					.h9-hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+					.h9-terminal-content { min-height: 360px !important; padding: 16px !important; }
+					.h9-terminal-content div { font-size: 12px !important; }
+					.h9-hero-photo { width: 90px !important; height: 90px !important; }
+					.h9-hero-ctas { flex-direction: column !important; }
+					.h9-hero-ctas a { text-align: center !important; }
+					.h9-cred-bar { padding: 16px 20px !important; }
+					.h9-pillars { padding: 60px 20px !important; }
+					.h9-pillars-grid { grid-template-columns: 1fr !important; }
+					.h9-pillars-grid a { border-left: none !important; border-bottom: 1px solid rgba(212,168,83,0.08) !important; padding: 32px 0 !important; }
+					.h9-articles { padding: 0 20px 60px !important; }
+					.h9-articles-grid { grid-template-columns: 1fr !important; }
+					.h9-quote-band { height: 300px !important; padding: 0 20px !important; }
+					.h9-quote-band p { font-size: 24px !important; }
+					.h9-cta { padding: 60px 20px !important; }
+					.h9-footer { padding: 20px !important; }
+				}
 			`}} />
 
 			<div className="h9-page" style={{
@@ -151,7 +172,7 @@ export default function Home9() {
 				overflow: "hidden",
 			}}>
 				{/* Nav */}
-				<nav style={{
+				<nav className="h9-nav" style={{
 					position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
 					padding: "20px 40px",
 					display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -170,7 +191,7 @@ export default function Home9() {
 							doug.is
 						</span>
 					</div>
-					<div style={{ display: "flex", gap: "32px", fontSize: "12px", letterSpacing: "0.1em" }}>
+					<div className="h9-nav-links" style={{ display: "flex", gap: "32px", fontSize: "12px", letterSpacing: "0.1em" }}>
 						{["advising", "building", "investing", "writing"].map(item => (
 							<Link key={item} href={item === "writing" ? "/thinking" : `/${item}`} style={{
 								color: "var(--cream-dim)",
@@ -184,7 +205,7 @@ export default function Home9() {
 				</nav>
 
 				{/* Hero */}
-				<section style={{
+				<section className="h9-hero" style={{
 					minHeight: "100vh",
 					display: "flex", alignItems: "center",
 					padding: "0 40px",
@@ -210,7 +231,7 @@ export default function Home9() {
 						))}
 					</div>
 
-					<div style={{ maxWidth: "1200px", margin: "0 auto", width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }}>
+					<div className="h9-hero-grid" style={{ maxWidth: "1200px", margin: "0 auto", width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }}>
 						{/* Left — terminal */}
 						<div style={{
 							background: "var(--navy-light)",
@@ -230,13 +251,33 @@ export default function Home9() {
 								<span style={{ fontSize: "11px", color: "var(--cream-dim)", marginLeft: "12px" }}>~/doug-rogers</span>
 							</div>
 							{/* Terminal content */}
-							<div style={{ padding: "24px", minHeight: "420px" }}>
+							<div className="h9-terminal-content" style={{ padding: "24px", minHeight: "420px" }}>
 								<TerminalText />
 							</div>
 						</div>
 
 						{/* Right — headline */}
 						<div>
+							{/* Circular B&W photo */}
+							<div className="h9-hero-photo" style={{
+								width: "120px",
+								height: "120px",
+								borderRadius: "50%",
+								overflow: "hidden",
+								border: "2px solid var(--amber)",
+								marginBottom: "28px",
+							}}>
+								{/* eslint-disable-next-line @next/next/no-img-element */}
+								<img
+									src="/images/doug-2024-cropped-compr.png"
+									alt="Doug Rogers"
+									style={{
+										width: "100%", height: "100%",
+										objectFit: "cover",
+										filter: "grayscale(1) brightness(1.1) contrast(1.05)",
+									}}
+								/>
+							</div>
 							<h1 style={{
 								fontFamily: "'Playfair Display', Georgia, serif",
 								fontSize: "clamp(40px, 5vw, 64px)",
@@ -256,9 +297,9 @@ export default function Home9() {
 							}}>
 								I'm not a theoretical advisor. I've raised capital, invested capital,
 								pivoted, shipped, sold. I excel at taking a raw idea and turning
-								it into something customers actually pay for.
+								it into something customers actually pay for, validating all the way.
 							</p>
-							<div style={{ display: "flex", gap: "16px" }}>
+							<div className="h9-hero-ctas" style={{ display: "flex", gap: "16px" }}>
 								<Link href="/connecting" style={{
 									padding: "14px 32px",
 									background: "var(--amber)",
@@ -291,7 +332,7 @@ export default function Home9() {
 				</section>
 
 				{/* Credential bar */}
-				<section style={{
+				<section className="h9-cred-bar" style={{
 					borderTop: "1px solid rgba(212,168,83,0.08)",
 					borderBottom: "1px solid rgba(212,168,83,0.08)",
 					padding: "20px 40px",
@@ -314,9 +355,9 @@ export default function Home9() {
 				</section>
 
 				{/* Three pillars */}
-				<section style={{ padding: "100px 40px" }}>
+				<section className="h9-pillars" style={{ padding: "100px 40px" }}>
 					<div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-						<div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0" }}>
+						<div className="h9-pillars-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0" }}>
 							{[
 								{
 									num: "01",
@@ -363,7 +404,7 @@ export default function Home9() {
 				</section>
 
 				{/* Articles */}
-				<section style={{ padding: "0 40px 100px" }}>
+				<section className="h9-articles" style={{ padding: "0 40px 100px" }}>
 					<div style={{ maxWidth: "1200px", margin: "0 auto" }}>
 						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "40px" }}>
 							<h2 style={{
@@ -376,7 +417,7 @@ export default function Home9() {
 							>ALL POSTS →</Link>
 						</div>
 
-						<div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
+						<div className="h9-articles-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
 							{ARTICLES.map((article, i) => (
 								<Link key={i} href={article.href} style={{
 									padding: "32px",
@@ -411,7 +452,7 @@ export default function Home9() {
 				</section>
 
 				{/* Photo + quote band */}
-				<section style={{
+				<section className="h9-quote-band" style={{
 					position: "relative",
 					height: "400px",
 					overflow: "hidden",
@@ -431,7 +472,7 @@ export default function Home9() {
 						position: "absolute", inset: 0,
 						background: "linear-gradient(to right, rgba(10,14,26,0.7), rgba(10,14,26,0.3))",
 					}} />
-					<div style={{
+					<div className="h9-quote-band" style={{
 						position: "relative", zIndex: 1,
 						height: "100%",
 						display: "flex", alignItems: "center",
@@ -455,7 +496,7 @@ export default function Home9() {
 				</section>
 
 				{/* Bottom CTA */}
-				<section style={{
+				<section className="h9-cta" style={{
 					padding: "80px 40px",
 					textAlign: "center" as const,
 				}}>
@@ -490,7 +531,7 @@ export default function Home9() {
 				</section>
 
 				{/* Footer */}
-				<footer style={{
+				<footer className="h9-footer" style={{
 					padding: "24px 40px",
 					borderTop: "1px solid rgba(212,168,83,0.06)",
 					display: "flex", justifyContent: "space-between",
