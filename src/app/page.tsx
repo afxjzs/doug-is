@@ -66,7 +66,7 @@ export default function Home() {
 				style={{
 					display: "flex",
 					alignItems: "center",
-					padding: "80px 40px 60px",
+					padding: "120px 40px 100px",
 					position: "relative",
 				}}
 			>
@@ -270,7 +270,7 @@ export default function Home() {
 				>
 					{[
 						"YC W15",
-						"JPMorgan / Techstars '24",
+						"Techstars '24",
 						"25+ Years Building",
 						"2x Exits",
 					].map((item, i, arr) => (
