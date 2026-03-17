@@ -6,10 +6,10 @@ import { usePathname } from "next/navigation"
 import { useClientEventTracking } from "@/lib/analytics"
 
 const navItems = [
-	{ name: "/building", path: "/building" },
 	{ name: "/advising", path: "/advising" },
+	{ name: "/building", path: "/building" },
 	{ name: "/investing", path: "/investing" },
-	{ name: "/thinking", path: "/thinking" },
+	{ name: "/writing", path: "/thinking" },
 ]
 
 export default function Header() {
@@ -24,11 +24,6 @@ export default function Header() {
 		if (fromSection !== toSection.substring(1)) {
 			analytics.trackSectionNavigation(fromSection, toSection.substring(1))
 		}
-	}
-
-	const handleConnectClick = () => {
-		const currentSection = pathname.split("/")[1] || "home"
-		analytics.trackSectionNavigation(currentSection, "connecting")
 	}
 
 	const handleMobileMenuToggle = () => {
@@ -60,154 +55,152 @@ export default function Header() {
 
 	return (
 		<header
-			className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-				scrolled
-					? "bg-[rgba(var(--color-background),0.9)] backdrop-blur-md shadow-sm"
-					: ""
-			}`}
+			className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+			style={{
+				background: scrolled ? "rgba(10,14,26,0.95)" : "transparent",
+				backdropFilter: scrolled ? "blur(20px)" : "none",
+				borderBottom: scrolled
+					? "1px solid rgba(212,168,83,0.1)"
+					: "1px solid transparent",
+			}}
 		>
-			<div className="container mx-auto px-4 py-4">
-				{/* Desktop Header Layout */}
-				<div className="hidden md:flex items-center justify-between">
-					<div className="flex-1"></div>
+			<div className="max-w-[1200px] mx-auto px-4 md:px-10 py-4 md:py-5 flex items-center justify-between">
+				{/* Left: glowing hexagon + doug.is */}
+				<Link href="/" className="flex items-center gap-3">
+					<svg
+						width="10"
+						height="12"
+						viewBox="0 0 86.6 100"
+						className="animate-hex-glow"
+						style={{ fill: "rgb(var(--color-accent))" }}
+					>
+						<polygon points="43.3,0 86.6,25 86.6,75 43.3,100 0,75 0,25" />
+					</svg>
+					<span
+						className="text-sm tracking-[0.15em]"
+						style={{ color: "rgba(var(--color-foreground), 0.45)" }}
+					>
+						doug.is
+					</span>
+				</Link>
 
-					<div className="flex items-center justify-center space-x-8">
-						<Link href="/" className="group relative flex items-center">
-							<h1 className="text-lg font-bold gradient-heading">doug.is</h1>
-							<span className="text-[rgba(var(--color-foreground),0.5)] text-lg">
-								...
-							</span>
+				{/* Desktop nav */}
+				<nav className="hidden md:flex items-center gap-1.5 text-xs tracking-[0.1em]">
+					<span
+						className="mr-2"
+						style={{ color: "rgba(var(--color-foreground), 0.45)" }}
+					>
+						doug.is...
+					</span>
+					{navItems.map((item) => (
+						<Link
+							key={item.path}
+							href={item.path}
+							onClick={() => handleNavClick(item.path)}
+							className="px-1.5 py-1 transition-colors duration-200"
+							style={{
+								color:
+									pathname === item.path ||
+									pathname.startsWith(`${item.path}/`)
+										? "rgb(var(--color-accent))"
+										: "rgba(var(--color-foreground), 0.45)",
+							}}
+							onMouseEnter={(e) =>
+								(e.currentTarget.style.color = "rgb(var(--color-accent))")
+							}
+							onMouseLeave={(e) => {
+								if (
+									pathname !== item.path &&
+									!pathname.startsWith(`${item.path}/`)
+								) {
+									e.currentTarget.style.color =
+										"rgba(var(--color-foreground), 0.45)"
+								}
+							}}
+						>
+							{item.name}
 						</Link>
+					))}
+				</nav>
 
+				{/* Mobile hamburger */}
+				<button
+					className="md:hidden z-50"
+					style={{ color: "rgba(var(--color-foreground), 0.9)" }}
+					onClick={handleMobileMenuToggle}
+					aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+				>
+					{isMenuOpen ? (
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							className="w-6 h-6"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth={2}
+								d="M6 18L18 6M6 6l12 12"
+							/>
+						</svg>
+					) : (
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							className="w-6 h-6"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth={2}
+								d="M4 6h16M4 12h16M4 18h16"
+							/>
+						</svg>
+					)}
+				</button>
+
+				{/* Mobile navigation overlay */}
+				<div
+					className={`fixed inset-0 transform transition-transform duration-300 ease-in-out z-40 ${
+						isMenuOpen ? "translate-x-0" : "translate-x-full"
+					}`}
+					style={{
+						background: "rgba(10,14,26,0.97)",
+						backdropFilter: "blur(20px)",
+					}}
+				>
+					<div className="flex flex-col items-center justify-center h-full gap-8">
 						{navItems.map((item) => (
 							<Link
 								key={item.path}
 								href={item.path}
-								onClick={() => handleNavClick(item.path)}
-								className={`text-lg relative group transition-all duration-300 px-3 py-2 ${
-									pathname === item.path || pathname.startsWith(`${item.path}/`)
-										? "text-[rgba(var(--color-foreground),1)]"
-										: "text-[rgba(var(--color-foreground),0.6)] hover:text-[rgba(var(--color-foreground),1)]"
-								}`}
-							>
-								{item.name}
-								<span
-									className={`absolute -bottom-1 left-0 h-0.5 bg-[rgb(var(--color-accent))] transition-all duration-300 ${
+								className="text-2xl tracking-[0.1em] transition-colors duration-200"
+								style={{
+									color:
 										pathname === item.path ||
 										pathname.startsWith(`${item.path}/`)
-											? "w-full"
-											: "w-0 group-hover:w-full"
-									}`}
-								></span>
-							</Link>
-						))}
-					</div>
-
-					<div className="flex-1 flex justify-end">
-						<Link
-							href="/connecting"
-							onClick={handleConnectClick}
-							className="btn-primary text-sm py-2 whitespace-nowrap"
-						>
-							Let&apos;s Connect
-						</Link>
-					</div>
-				</div>
-
-				{/* Mobile Header Layout */}
-				<div className="flex md:hidden items-center justify-between">
-					<Link href="/" className="group relative flex items-center">
-						<h1 className="text-lg font-bold gradient-heading">doug.is</h1>
-						<span className="text-[rgba(var(--color-foreground),0.5)] text-lg">
-							...
-						</span>
-					</Link>
-
-					<button
-						className="text-[rgba(var(--color-foreground),0.9)] z-50"
-						onClick={handleMobileMenuToggle}
-						aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-					>
-						{isMenuOpen ? (
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								className="w-6 h-6"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M6 18L18 6M6 6l12 12"
-								/>
-							</svg>
-						) : (
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								className="w-6 h-6"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M4 6h16M4 12h16M4 18h16"
-								/>
-							</svg>
-						)}
-					</button>
-				</div>
-
-				{/* Mobile navigation */}
-				<div
-					className={`fixed inset-0 bg-[rgba(var(--color-background),0.97)] backdrop-blur-lg transform transition-transform duration-300 ease-in-out z-40 ${
-						isMenuOpen ? "translate-x-0" : "translate-x-full"
-					}`}
-				>
-					<div className="container mx-auto px-4 py-24">
-						<nav className="flex flex-col space-y-8 items-center">
-							{navItems.map((item) => (
-								<Link
-									key={item.path}
-									href={item.path}
-									className={`text-2xl relative group transition-all duration-300 ${
-										pathname === item.path ||
-										pathname.startsWith(`${item.path}/`)
-											? "text-[rgb(var(--color-accent))]"
-											: "text-[rgba(var(--color-foreground),0.8)] hover:text-[rgba(var(--color-foreground),1)]"
-									}`}
-									onClick={() => {
-										handleNavClick(item.path)
-										setIsMenuOpen(false)
-									}}
-								>
-									{item.name}
-									<span
-										className={`absolute -bottom-1 left-0 h-0.5 bg-[rgb(var(--color-accent))] transition-all duration-300 ${
-											pathname === item.path ||
-											pathname.startsWith(`${item.path}/`)
-												? "w-full"
-												: "w-0 group-hover:w-full"
-										}`}
-									></span>
-								</Link>
-							))}
-
-							<Link
-								href="/connecting"
-								className="btn-primary mt-6"
+											? "rgb(var(--color-accent))"
+											: "rgba(var(--color-foreground), 0.6)",
+								}}
 								onClick={() => {
-									handleConnectClick()
+									handleNavClick(item.path)
 									setIsMenuOpen(false)
 								}}
 							>
-								Let&apos;s Connect
+								{item.name}
 							</Link>
-						</nav>
+						))}
+						<Link
+							href="/connecting"
+							className="btn-primary mt-4"
+							onClick={() => setIsMenuOpen(false)}
+						>
+							Get in Touch
+						</Link>
 					</div>
 				</div>
 			</div>

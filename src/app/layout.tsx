@@ -1,27 +1,28 @@
 import type { Metadata } from "next"
-import { Instrument_Serif, DM_Sans } from "next/font/google"
+import { JetBrains_Mono, Playfair_Display } from "next/font/google"
 import "./globals.css"
 import { ClientAnalyticsWrapper } from "@/components/ClientAnalyticsWrapper"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import LayoutWrapper from "@/components/LayoutWrapper"
 import { GoogleAnalytics } from "@/components/GoogleAnalytics"
 
-// Display font — for H1, hero text, pull quotes
-const instrumentSerif = Instrument_Serif({
-	subsets: ["latin"],
-	weight: "400",
-	display: "swap",
-	variable: "--font-display",
-	fallback: ["Georgia", "serif"],
-})
-
-// Body + subheading font
-const dmSans = DM_Sans({
+// Body + UI font — monospace for terminal aesthetic
+const jetbrainsMono = JetBrains_Mono({
 	subsets: ["latin"],
 	display: "swap",
 	variable: "--font-body",
-	fallback: ["system-ui", "Arial", "sans-serif"],
-	weight: ["400", "500", "600", "700"],
+	fallback: ["'Fira Code'", "'SF Mono'", "monospace"],
+	weight: ["300", "400", "500"],
+})
+
+// Display font — serif for headlines and emphasis
+const playfairDisplay = Playfair_Display({
+	subsets: ["latin"],
+	display: "swap",
+	variable: "--font-display",
+	fallback: ["Georgia", "serif"],
+	weight: ["400", "700"],
+	style: ["normal", "italic"],
 })
 
 export const metadata: Metadata = {
@@ -82,14 +83,8 @@ export default async function RootLayout({
 }) {
 	return (
 		<html lang="en" className="scroll-smooth" suppressHydrationWarning>
-			<head>
-				<script
-					dangerouslySetInnerHTML={{
-						__html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light"){document.documentElement.classList.add("light");document.documentElement.setAttribute("data-theme","light")}else if(t==="dark"){document.documentElement.classList.add("dark");document.documentElement.setAttribute("data-theme","dark")}}catch(e){}})()`,
-					}}
-				/>
-			</head>
-			<body className={`${instrumentSerif.variable} ${dmSans.variable}`}>
+			<head />
+			<body className={`${jetbrainsMono.variable} ${playfairDisplay.variable}`}>
 				{/* Google Analytics - Load early for comprehensive tracking */}
 				<GoogleAnalytics />
 

@@ -14,7 +14,6 @@ export default function LayoutWrapper({
 	const isSpecialRoute =
 		pathname.startsWith("/migraine-free") ||
 		pathname.startsWith("/admin") ||
-		pathname.startsWith("/home-9") ||
 		pathname.startsWith("/home-10") ||
 		pathname.startsWith("/home-11")
 

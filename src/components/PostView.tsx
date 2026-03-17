@@ -79,12 +79,12 @@ export const PostView: FC<PostViewProps> = ({ post, isDraft = false }) => {
 		<div className="max-w-3xl mx-auto">
 			{/* Draft Banner - Only shown in admin preview */}
 			{isDraft && (
-				<div className="mb-6 p-4 bg-yellow-900/30 border border-yellow-600/50 rounded-lg">
+				<div className="mb-6 p-4 bg-[rgba(var(--color-accent),0.1)] border border-[rgba(var(--color-accent),0.4)] rounded-lg">
 					<div className="flex items-center gap-2">
-						<div className="h-2 w-2 rounded-full bg-yellow-500" />
-						<span className="text-yellow-400 font-medium">DRAFT PREVIEW</span>
+						<div className="h-2 w-2 rounded-full bg-[rgb(var(--color-accent))]" />
+						<span className="text-[rgb(var(--color-accent))] font-medium">DRAFT PREVIEW</span>
 					</div>
-					<p className="text-yellow-300/80 text-sm mt-1">
+					<p className="text-[rgba(var(--color-accent),0.7)] text-sm mt-1">
 						This is an unpublished draft. Only administrators can view this
 						content.
 					</p>
@@ -93,14 +93,14 @@ export const PostView: FC<PostViewProps> = ({ post, isDraft = false }) => {
 
 			<header className="mb-8">
 				<h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-				<div className="flex items-center text-gray-500 mb-4">
+				<div className="flex items-center text-[rgba(var(--color-foreground),0.45)] mb-4">
 					<time dateTime={post.published_at || post.created_at || ""}>
 						{formattedDate}
 					</time>
 					<span className="mx-2">•</span>
 					<Link
 						href={`/thinking/about/${post.category.toLowerCase()}`}
-						className="capitalize text-blue-500 hover:text-blue-600 transition-colors"
+						className="capitalize text-[rgb(var(--color-accent))] hover:text-[rgba(var(--color-accent),0.7)] transition-colors"
 					>
 						{post.category}
 					</Link>
@@ -131,10 +131,10 @@ export const PostView: FC<PostViewProps> = ({ post, isDraft = false }) => {
 				</div>
 			</article>
 
-			<footer className="pt-6 border-t border-gray-200 dark:border-gray-700">
+			<footer className="pt-6 border-t border-[rgba(var(--color-border),0.08)]">
 				<Link
 					href="/thinking"
-					className="text-blue-500 hover:text-blue-600 transition-colors"
+					className="text-[rgb(var(--color-accent))] hover:text-[rgba(var(--color-accent),0.7)] transition-colors"
 				>
 					← Back to Thinking
 				</Link>

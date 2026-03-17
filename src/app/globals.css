@@ -1,27 +1,29 @@
 /**
  * Global CSS for Next.js 15 with Tailwind CSS v4
- * Design system: Editorial Minimalism
- * Dark default, light mode via .light class on <html>
+ * Design system: Terminal — Navy + Amber
+ * Dark-only theme. Monospace + Serif contrast.
  */
 
 @import "tailwindcss";
 
 /* ============================================
-   Design Tokens — Dark Theme (default)
+   Design Tokens — Terminal Palette
    ============================================ */
 :root {
-	/* Subheading font — defaults to body font, swap independently later */
-	--font-subheading: var(--font-body, system-ui, sans-serif);
+	/* Font stack */
+	--font-subheading: var(--font-body, 'JetBrains Mono', monospace);
 
-	--color-background: 14, 14, 16;
-	--color-foreground: 240, 240, 244;
-	--color-accent: 74, 158, 229;
-	--color-accent-secondary: 251, 191, 36;
-	--color-muted: 122, 122, 134;
-	--color-border: 255, 255, 255;
-	--color-card-bg: 24, 24, 28;
+	/* Navy + Amber palette (RGB triplets for rgba() flexibility) */
+	--color-background: 10, 14, 26;         /* #0a0e1a navy */
+	--color-background-alt: 20, 27, 45;     /* #141b2d navy-light */
+	--color-foreground: 232, 226, 214;      /* #e8e2d6 cream */
+	--color-accent: 212, 168, 83;           /* #d4a853 amber */
+	--color-accent-secondary: 212, 168, 83; /* amber */
+	--color-muted: 232, 226, 214;           /* cream (used at reduced opacity) */
+	--color-border: 212, 168, 83;           /* amber borders */
+	--color-card-bg: 20, 27, 45;            /* navy-light */
 
-	/* Legacy aliases — keep during migration, remove when all refs updated */
+	/* Legacy aliases — keep during migration */
 	--color-violet: var(--color-accent);
 	--color-cyan: var(--color-accent);
 	--color-magenta: var(--color-accent-secondary);
@@ -29,48 +31,6 @@
 	--color-emerald: var(--color-accent);
 	--color-pink: var(--color-accent-secondary);
 	--color-orange: var(--color-accent-secondary);
-}
-
-/* ============================================
-   Light Theme
-   ============================================ */
-.light,
-[data-theme="light"] {
-	--color-background: 245, 245, 247;
-	--color-foreground: 20, 20, 24;
-	--color-accent: 44, 120, 190;
-	--color-accent-secondary: 217, 160, 18;
-	--color-muted: 100, 100, 112;
-	--color-border: 200, 200, 210;
-	--color-card-bg: 225, 225, 232;
-
-	--color-violet: var(--color-accent);
-	--color-cyan: var(--color-accent);
-	--color-magenta: var(--color-accent-secondary);
-	--color-gold: var(--color-accent);
-	--color-emerald: var(--color-accent);
-	--color-pink: var(--color-accent-secondary);
-	--color-orange: var(--color-accent-secondary);
-}
-
-@media (prefers-color-scheme: light) {
-	:root:not(.dark):not([data-theme="dark"]) {
-		--color-background: 245, 245, 247;
-		--color-foreground: 20, 20, 24;
-		--color-accent: 44, 120, 190;
-		--color-accent-secondary: 217, 160, 18;
-		--color-muted: 100, 100, 112;
-		--color-border: 200, 200, 210;
-		--color-card-bg: 225, 225, 232;
-
-		--color-violet: var(--color-accent);
-		--color-cyan: var(--color-accent);
-		--color-magenta: var(--color-accent-secondary);
-		--color-gold: var(--color-accent);
-		--color-emerald: var(--color-accent);
-		--color-pink: var(--color-accent-secondary);
-		--color-orange: var(--color-accent-secondary);
-	}
 }
 
 /* ============================================
@@ -78,20 +38,21 @@
    ============================================ */
 @layer base {
 	body {
-		font-family: var(--font-body, system-ui, sans-serif);
+		font-family: var(--font-body, 'JetBrains Mono', monospace);
 		background-color: rgb(var(--color-background));
 		color: rgb(var(--color-foreground));
 		min-height: 100vh;
+		letter-spacing: 0.02em;
 	}
 
 	h1 {
-		font-family: var(--font-display, var(--font-body, system-ui, sans-serif));
+		font-family: var(--font-display, 'Playfair Display', Georgia, serif);
 		font-weight: 700;
 		line-height: 1.1;
 	}
 
 	h2, h3, h4 {
-		font-family: var(--font-subheading, var(--font-body, system-ui, sans-serif));
+		font-family: var(--font-display, 'Playfair Display', Georgia, serif);
 		font-weight: 600;
 		line-height: 1.2;
 	}
@@ -117,6 +78,16 @@
 			transform: translateY(0);
 		}
 	}
+
+	@keyframes hex-glow {
+		0%, 100% { opacity: 0.4; }
+		50% { opacity: 0.8; }
+	}
+
+	@keyframes hex-float {
+		0%, 100% { transform: translateY(0px) rotate(0deg); }
+		50% { transform: translateY(-20px) rotate(3deg); }
+	}
 }
 
 /* ============================================
@@ -127,16 +98,8 @@
 		animation: fade-in-up 0.5s ease-out both;
 	}
 
-	/* Invert white-on-transparent images in light mode */
-	.light .invert-on-light,
-	[data-theme="light"] .invert-on-light {
-		filter: invert(1);
-	}
-}
-
-@media (prefers-color-scheme: light) {
-	:root:not(.dark):not([data-theme="dark"]) .invert-on-light {
-		filter: invert(1);
+	.animate-hex-glow {
+		animation: hex-glow 3s ease infinite;
 	}
 }
 
@@ -144,21 +107,21 @@
    Typography — Prose Overrides
    ============================================ */
 .prose h1 {
-	font-family: var(--font-display, var(--font-body, system-ui, sans-serif));
+	font-family: var(--font-display, 'Playfair Display', Georgia, serif);
 	font-size: 2em;
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
 }
 
 .prose h2 {
-	font-family: var(--font-subheading, var(--font-body, system-ui, sans-serif));
+	font-family: var(--font-display, 'Playfair Display', Georgia, serif);
 	font-size: 1.5em;
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
 }
 
 .prose h3 {
-	font-family: var(--font-subheading, var(--font-body, system-ui, sans-serif));
+	font-family: var(--font-display, 'Playfair Display', Georgia, serif);
 	font-size: 1.25em;
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
@@ -200,7 +163,7 @@
 	background-color: rgba(var(--color-foreground), 0.1);
 	padding: 0.25em;
 	border-radius: 0.25em;
-	font-family: monospace;
+	font-family: var(--font-body, 'JetBrains Mono', monospace);
 }
 
 .prose pre code {
@@ -208,24 +171,36 @@
 	padding: 0;
 }
 
+.prose a {
+	color: rgb(var(--color-accent));
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.prose a:hover {
+	color: rgba(var(--color-accent), 0.8);
+}
+
 /* ============================================
    Component Classes
    ============================================ */
 @layer components {
-	/* Headings — replaces .gradient-heading */
+	/* Headings */
 	.gradient-heading {
 		color: rgb(var(--color-foreground));
-		font-family: var(--font-display, var(--font-body, system-ui, sans-serif));
+		font-family: var(--font-display, 'Playfair Display', Georgia, serif);
 	}
 
-	/* Primary button — solid blue (30% color) */
+	/* Primary button — amber bg, navy text */
 	.btn-primary {
 		padding: 0.75rem 1.5rem;
 		background-color: rgb(var(--color-accent));
 		border: 1px solid rgb(var(--color-accent));
-		border-radius: 0.5rem;
-		color: #fff;
-		font-weight: 600;
+		border-radius: 6px;
+		color: rgb(var(--color-background));
+		font-weight: 500;
+		font-size: 13px;
+		letter-spacing: 0.05em;
 		transition: all 200ms ease;
 		position: relative;
 		overflow: hidden;
@@ -237,14 +212,16 @@
 		transform: translateY(-1px);
 	}
 
-	/* Secondary button — outlined blue */
+	/* Secondary button — outlined amber */
 	.btn-secondary {
 		padding: 0.75rem 1.5rem;
 		background-color: transparent;
-		border: 1px solid rgba(var(--color-accent), 0.4);
-		border-radius: 0.5rem;
+		border: 1px solid rgba(var(--color-accent), 0.3);
+		border-radius: 6px;
 		color: rgb(var(--color-accent));
-		font-weight: 500;
+		font-weight: 400;
+		font-size: 13px;
+		letter-spacing: 0.05em;
 		transition: all 200ms ease;
 		position: relative;
 		overflow: hidden;
@@ -262,9 +239,11 @@
 		padding: 0.75rem 1.5rem;
 		background-color: rgb(var(--color-accent));
 		border: 1px solid rgb(var(--color-accent));
-		border-radius: 0.5rem;
-		color: #fff;
-		font-weight: 600;
+		border-radius: 6px;
+		color: rgb(var(--color-background));
+		font-weight: 500;
+		font-size: 13px;
+		letter-spacing: 0.05em;
 		transition: all 200ms ease;
 	}
 
@@ -281,10 +260,12 @@
 	.neon-button-emerald {
 		padding: 0.75rem 1.5rem;
 		background-color: transparent;
-		border: 1px solid rgba(var(--color-accent), 0.4);
-		border-radius: 0.5rem;
+		border: 1px solid rgba(var(--color-accent), 0.3);
+		border-radius: 6px;
 		color: rgb(var(--color-accent));
-		font-weight: 500;
+		font-weight: 400;
+		font-size: 13px;
+		letter-spacing: 0.05em;
 		transition: all 200ms ease;
 	}
 
@@ -295,7 +276,7 @@
 		border-color: rgba(var(--color-accent), 0.6);
 	}
 
-	/* Card — consistent card pattern for dark + light */
+	/* Card — terminal style */
 	.dark-card {
 		border: 1px solid rgba(var(--color-border), 0.08);
 		border-radius: 0.5rem;
@@ -305,8 +286,9 @@
 	}
 
 	.dark-card:hover {
-		border-color: rgba(var(--color-border), 0.15);
+		border-color: rgba(var(--color-border), 0.2);
 		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+		transform: translateY(-2px);
 	}
 
 	/* Check mark accent */
@@ -322,6 +304,6 @@
 	}
 
 	.neon-link:hover {
-		color: rgb(var(--color-accent-secondary));
+		color: rgba(var(--color-accent), 0.7);
 	}
 }

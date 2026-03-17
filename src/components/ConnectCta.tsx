@@ -10,20 +10,35 @@ type ConnectCtaProps = {
 
 export default function ConnectCta({
 	className = "",
-	title = "Let's Connect",
+	title = "Let\u2019s Connect",
 	description = "If you want to talk shop, bounce an idea around, or just say hi, I'm around.",
 	buttonText = "Get in Touch",
 	buttonHref = "/connecting",
 }: ConnectCtaProps) {
 	return (
 		<div className={`relative ${className}`}>
-			<div className="relative z-10 p-8 border border-[rgba(var(--color-border),0.1)] rounded-lg bg-[rgba(var(--color-foreground),0.03)]">
+			<div
+				className="relative z-10 p-8 rounded-lg"
+				style={{
+					backgroundColor: "rgb(var(--color-card-bg))",
+					border: "1px solid rgba(var(--color-border), 0.08)",
+				}}
+			>
 				<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
 					<div className="flex-1">
-						<h2 className="text-2xl font-semibold gradient-heading mb-2 md:text-left">
+						<h2
+							className="text-2xl font-semibold mb-2 md:text-left"
+							style={{
+								fontFamily: "var(--font-display, 'Playfair Display', Georgia, serif)",
+								color: "rgb(var(--color-foreground))",
+							}}
+						>
 							{title}
 						</h2>
-						<p className="text-[rgba(var(--color-foreground),0.8)] md:text-left">
+						<p
+							className="md:text-left"
+							style={{ color: "rgba(var(--color-foreground), 0.45)" }}
+						>
 							{description}
 						</p>
 					</div>

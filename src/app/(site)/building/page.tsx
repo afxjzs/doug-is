@@ -8,6 +8,17 @@ import { useClientEventTracking } from "@/lib/analytics"
 // Companies I'm currently building
 const companies = [
 	{
+		id: "gaius",
+		title: "GAIuS",
+		description:
+			"Explainable AI for high-stakes decisions. GAIuS is a cognitive architecture for explainable decision systems that operates in environments requiring traceable, auditable AI. Features structured reasoning, model-driven inference, explicit constraints, and governed adaptation for defense, fintech, and construction industries.",
+		role: "Co-Founder (via DubPrime)",
+		image: "/images/dubprime-grad-horizontal.png",
+		website: "https://gaius.fyi",
+		tags: ["AI", "Explainable AI", "Defense", "Fintech", "Construction"],
+		color: "amber",
+	},
+	{
 		id: "dubprime",
 		title: "DubPrime",
 		description:
@@ -188,7 +199,7 @@ export default function BuildingPage() {
 							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:shadow-md rounded-xl overflow-hidden transition-all duration-300 group`}
 						>
 							<div className="flex flex-col md:flex-row">
-								<div className="md:w-2/5 bg-[#0e0e10] flex items-center justify-center p-8 rounded-xl overflow-hidden">
+								<div className="md:w-2/5 bg-[rgb(var(--color-background))] flex items-center justify-center p-8 rounded-xl overflow-hidden">
 									<div className="w-full h-full flex items-center justify-center">
 										<div className="relative w-full h-[140px] overflow-hidden rounded-xl">
 											<Image
@@ -268,7 +279,7 @@ export default function BuildingPage() {
 							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:shadow-md rounded-xl overflow-hidden transition-all duration-300 group`}
 						>
 							<div className="flex flex-col md:flex-row">
-								<div className="md:w-2/5 bg-[#0e0e10] flex items-center justify-center p-8 rounded-xl overflow-hidden">
+								<div className="md:w-2/5 bg-[rgb(var(--color-background))] flex items-center justify-center p-8 rounded-xl overflow-hidden">
 									<div className="w-full h-full flex items-center justify-center">
 										<div className="relative w-full h-[200px] overflow-hidden rounded-xl">
 											{project.link ? (

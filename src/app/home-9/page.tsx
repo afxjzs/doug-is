@@ -13,9 +13,9 @@ import Link from "next/link"
  */
 
 const ARTICLES = [
-	{ title: "AI Slop Will Eat Itself", category: "Technology", href: "/thinking/about/technology/ai-slop-will-eat-itself" },
-	{ title: "Planner/Executor: A Systematic Approach to LLM-Guided Development", category: "Development", href: "/thinking/about/development/plannerexecutor-a-systematic-approach-to-llm-guided-development" },
-	{ title: "Introducing the Migraine Trigger Foods Database", category: "Lifestyle", href: "/thinking/about/lifestyle/introducing-the-migraine-trigger-foods-database-mtfdb" },
+	{ title: "AI Slop Will Eat Itself", category: "Technology", href: "/thinking/about/technology/ai-slop-will-eat-itself", summary: "What happens when AI-generated content becomes AI training data? A feedback loop that degrades everything." },
+	{ title: "Planner/Executor: A Systematic Approach to LLM-Guided Development", category: "Development", href: "/thinking/about/development/plannerexecutor-a-systematic-approach-to-llm-guided-development", summary: "LLMs need role clarity to excel. Explicit role separation prevents the chaos of planning and executing simultaneously." },
+	{ title: "Introducing the Migraine Trigger Foods Database", category: "Lifestyle", href: "/thinking/about/lifestyle/introducing-the-migraine-trigger-foods-database-mtfdb", summary: "A database of foods and ingredients that can trigger migraines. I get migraines, so I built this to figure out what to avoid." },
 ]
 
 function TerminalText() {
@@ -191,15 +191,17 @@ export default function Home9() {
 							doug.is
 						</span>
 					</div>
-					<div className="h9-nav-links" style={{ display: "flex", gap: "32px", fontSize: "12px", letterSpacing: "0.1em" }}>
+					<div className="h9-nav-links" style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", letterSpacing: "0.1em" }}>
+						<span style={{ color: "var(--cream-dim)", marginRight: "8px" }}>doug.is...</span>
 						{["advising", "building", "investing", "writing"].map(item => (
 							<Link key={item} href={item === "writing" ? "/thinking" : `/${item}`} style={{
 								color: "var(--cream-dim)",
 								transition: "color 0.2s",
+								padding: "0 6px",
 							}}
 							onMouseEnter={e => (e.target as HTMLElement).style.color = "#d4a853"}
 							onMouseLeave={e => (e.target as HTMLElement).style.color = "rgba(232,226,214,0.45)"}
-							>{item}</Link>
+							>/{item}</Link>
 						))}
 					</div>
 				</nav>
@@ -343,7 +345,7 @@ export default function Home9() {
 						gap: "12px",
 						fontSize: "12px", letterSpacing: "0.1em", color: "var(--cream-dim)",
 					}}>
-						{["YC Alum", "Techstars '24", "2 Exits", "25+ Years Building", "Accelerator Director"].map((item, i, arr) => (
+						{["YC W15", "JPMorgan / Techstars '24", "25+ Years Building", "2x Exits"].map((item, i, arr) => (
 							<span key={item} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
 								{item}
 								{i < arr.length - 1 && (
@@ -362,13 +364,13 @@ export default function Home9() {
 								{
 									num: "01",
 									title: "Advising",
-									desc: "Whatever mistake you're about to make, I probably already made it. Let's skip that part.",
+									desc: "Fractional CTO & strategic advisor for early-stage founders navigating 0→1 product development.",
 									href: "/advising",
 								},
 								{
 									num: "02",
 									title: "Building",
-									desc: "DubPrime (fintech, Techstars '24), VentureBuilder, and side projects when I can't sleep.",
+									desc: "DubPrime (fintech, Techstars '24), GAIuS (gaius.fyi), VentureBuilder, and side projects when I can't sleep.",
 									href: "/building",
 								},
 								{
@@ -445,6 +447,9 @@ export default function Home9() {
 										fontSize: "18px", fontWeight: 700,
 										marginTop: "12px", lineHeight: 1.4,
 									}}>{article.title}</h3>
+									<p style={{ fontSize: "12px", lineHeight: 1.6, color: "var(--cream-dim)", marginTop: "10px" }}>
+										{article.summary}
+									</p>
 								</Link>
 							))}
 						</div>
@@ -508,11 +513,11 @@ export default function Home9() {
 						margin: "0 auto 24px",
 						lineHeight: 1.3,
 					}}>
-						Whatever you're struggling with,{" "}
-						<span style={{ color: "var(--amber)", fontStyle: "italic" }}>I've been there.</span>
+						Let's build{" "}
+						<span style={{ color: "var(--amber)", fontStyle: "italic" }}>something great.</span>
 					</p>
 					<p style={{ fontSize: "14px", color: "var(--cream-dim)", marginBottom: "32px" }}>
-						Building something? Thinking about it? I'm around.
+						Got an idea? Already building? Let's talk.
 					</p>
 					<Link href="/connecting" style={{
 						display: "inline-block",
@@ -538,7 +543,7 @@ export default function Home9() {
 					fontSize: "11px", color: "rgba(232,226,214,0.25)",
 				}}>
 					<span>doug.is</span>
-					<span>built with coffee and spite</span>
+					<span>built with &lt;3 by my robots</span>
 				</footer>
 			</div>
 		</>
