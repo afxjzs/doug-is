@@ -13,7 +13,7 @@ const companies = [
 		description:
 			"Explainable AI for high-stakes decisions. GAIuS is a cognitive architecture for explainable decision systems that operates in environments requiring traceable, auditable AI. Features structured reasoning, model-driven inference, explicit constraints, and governed adaptation for defense, fintech, and construction industries.",
 		role: "Co-Founder (via DubPrime)",
-		image: "/images/dubprime-grad-horizontal.png",
+		image: "/images/gaius-logo-wide-dark-bg.png",
 		website: "https://gaius.fyi",
 		tags: ["AI", "Explainable AI", "Defense", "Fintech", "Construction"],
 		color: "amber",

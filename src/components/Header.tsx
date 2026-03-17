@@ -78,14 +78,14 @@ export default function Header() {
 					</svg>
 					<span
 						className="text-sm tracking-[0.15em]"
-						style={{ color: "rgba(var(--color-foreground), 0.45)" }}
+						style={{ color: "rgba(var(--color-foreground), 0.45)", fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)" }}
 					>
 						doug.is
 					</span>
 				</Link>
 
 				{/* Desktop nav */}
-				<nav className="hidden md:flex items-center gap-1.5 text-xs tracking-[0.1em]">
+				<nav className="hidden md:flex items-center gap-1.5 text-xs tracking-[0.1em]" style={{ fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)" }}>
 					<span
 						className="mr-2"
 						style={{ color: "rgba(var(--color-foreground), 0.45)" }}

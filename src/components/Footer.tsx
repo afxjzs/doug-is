@@ -7,6 +7,7 @@ export default function Footer() {
 			style={{
 				borderTop: "1px solid rgba(var(--color-border), 0.06)",
 				color: "rgba(var(--color-foreground), 0.25)",
+				fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
 			}}
 		>
 			<span>doug.is</span>

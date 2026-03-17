@@ -11,7 +11,7 @@
    ============================================ */
 :root {
 	/* Font stack */
-	--font-subheading: var(--font-body, 'JetBrains Mono', monospace);
+	--font-subheading: var(--font-body, 'Inter', system-ui, sans-serif);
 
 	/* Navy + Amber palette (RGB triplets for rgba() flexibility) */
 	--color-background: 10, 14, 26;         /* #0a0e1a navy */
@@ -38,11 +38,10 @@
    ============================================ */
 @layer base {
 	body {
-		font-family: var(--font-body, 'JetBrains Mono', monospace);
+		font-family: var(--font-body, 'Inter', system-ui, sans-serif);
 		background-color: rgb(var(--color-background));
 		color: rgb(var(--color-foreground));
 		min-height: 100vh;
-		letter-spacing: 0.02em;
 	}
 
 	h1 {
@@ -163,7 +162,7 @@
 	background-color: rgba(var(--color-foreground), 0.1);
 	padding: 0.25em;
 	border-radius: 0.25em;
-	font-family: var(--font-body, 'JetBrains Mono', monospace);
+	font-family: var(--font-mono, 'JetBrains Mono', monospace);
 }
 
 .prose pre code {
@@ -191,13 +190,14 @@
 		font-family: var(--font-display, 'Playfair Display', Georgia, serif);
 	}
 
-	/* Primary button — amber bg, navy text */
+	/* Primary button — amber bg, navy text, monospace */
 	.btn-primary {
 		padding: 0.75rem 1.5rem;
 		background-color: rgb(var(--color-accent));
 		border: 1px solid rgb(var(--color-accent));
 		border-radius: 6px;
 		color: rgb(var(--color-background));
+		font-family: var(--font-mono, 'JetBrains Mono', monospace);
 		font-weight: 500;
 		font-size: 13px;
 		letter-spacing: 0.05em;
@@ -212,13 +212,14 @@
 		transform: translateY(-1px);
 	}
 
-	/* Secondary button — outlined amber */
+	/* Secondary button — outlined amber, monospace */
 	.btn-secondary {
 		padding: 0.75rem 1.5rem;
 		background-color: transparent;
 		border: 1px solid rgba(var(--color-accent), 0.3);
 		border-radius: 6px;
 		color: rgb(var(--color-accent));
+		font-family: var(--font-mono, 'JetBrains Mono', monospace);
 		font-weight: 400;
 		font-size: 13px;
 		letter-spacing: 0.05em;
@@ -241,6 +242,7 @@
 		border: 1px solid rgb(var(--color-accent));
 		border-radius: 6px;
 		color: rgb(var(--color-background));
+		font-family: var(--font-mono, 'JetBrains Mono', monospace);
 		font-weight: 500;
 		font-size: 13px;
 		letter-spacing: 0.05em;
@@ -263,6 +265,7 @@
 		border: 1px solid rgba(var(--color-accent), 0.3);
 		border-radius: 6px;
 		color: rgb(var(--color-accent));
+		font-family: var(--font-mono, 'JetBrains Mono', monospace);
 		font-weight: 400;
 		font-size: 13px;
 		letter-spacing: 0.05em;

@@ -64,10 +64,9 @@ export default function Home() {
 			{/* Hero */}
 			<section
 				style={{
-					minHeight: "100vh",
 					display: "flex",
 					alignItems: "center",
-					padding: "0 40px",
+					padding: "80px 40px 60px",
 					position: "relative",
 				}}
 			>
@@ -169,6 +168,7 @@ export default function Home() {
 									fontSize: "11px",
 									color: "rgba(var(--color-foreground), 0.45)",
 									marginLeft: "12px",
+									fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
 								}}
 							>
 								~/doug-rogers
@@ -262,6 +262,7 @@ export default function Home() {
 						justifyContent: "center",
 						alignItems: "center",
 						gap: "12px",
+						fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
 						fontSize: "12px",
 						letterSpacing: "0.1em",
 						color: "rgba(var(--color-foreground), 0.45)",
@@ -341,6 +342,7 @@ export default function Home() {
 							>
 								<span
 									style={{
+										fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
 										fontSize: "11px",
 										color: "rgba(var(--color-accent), 0.3)",
 										display: "block",
@@ -399,6 +401,7 @@ export default function Home() {
 						<Link
 							href="/thinking"
 							style={{
+								fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
 								fontSize: "12px",
 								letterSpacing: "0.1em",
 								color: "rgba(var(--color-accent), 0.3)",
@@ -448,6 +451,7 @@ export default function Home() {
 							>
 								<span
 									style={{
+										fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
 										fontSize: "10px",
 										letterSpacing: "0.15em",
 										color: "rgba(var(--color-accent), 0.3)",

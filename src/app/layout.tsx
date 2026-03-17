@@ -1,16 +1,25 @@
 import type { Metadata } from "next"
-import { JetBrains_Mono, Playfair_Display } from "next/font/google"
+import { JetBrains_Mono, Playfair_Display, Inter } from "next/font/google"
 import "./globals.css"
 import { ClientAnalyticsWrapper } from "@/components/ClientAnalyticsWrapper"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import LayoutWrapper from "@/components/LayoutWrapper"
 import { GoogleAnalytics } from "@/components/GoogleAnalytics"
 
-// Body + UI font — monospace for terminal aesthetic
-const jetbrainsMono = JetBrains_Mono({
+// Body font — clean sans-serif for readable paragraphs
+const inter = Inter({
 	subsets: ["latin"],
 	display: "swap",
 	variable: "--font-body",
+	fallback: ["system-ui", "Arial", "sans-serif"],
+	weight: ["300", "400", "500", "600"],
+})
+
+// Monospace font — for terminal, tags, buttons, code
+const jetbrainsMono = JetBrains_Mono({
+	subsets: ["latin"],
+	display: "swap",
+	variable: "--font-mono",
 	fallback: ["'Fira Code'", "'SF Mono'", "monospace"],
 	weight: ["300", "400", "500"],
 })
@@ -84,7 +93,7 @@ export default async function RootLayout({
 	return (
 		<html lang="en" className="scroll-smooth" suppressHydrationWarning>
 			<head />
-			<body className={`${jetbrainsMono.variable} ${playfairDisplay.variable}`}>
+			<body className={`${inter.variable} ${jetbrainsMono.variable} ${playfairDisplay.variable}`}>
 				{/* Google Analytics - Load early for comprehensive tracking */}
 				<GoogleAnalytics />
 
