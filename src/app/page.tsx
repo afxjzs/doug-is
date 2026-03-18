@@ -34,7 +34,7 @@ function HexSeparator() {
 			width="8"
 			height="10"
 			viewBox="0 0 86.6 100"
-			style={{ fill: "rgb(var(--color-accent))", flexShrink: 0 }}
+			className="fill-[rgb(var(--color-accent))] shrink-0"
 		>
 			<polygon points="43.3,0 86.6,25 86.6,75 43.3,100 0,75 0,25" />
 		</svg>
@@ -60,25 +60,11 @@ export default function Home() {
 	}, [])
 
 	return (
-		<div style={{ marginTop: "-7rem", marginBottom: "-3rem" }}>
+		<div className="-mt-28 -mb-12">
 			{/* Hero */}
-			<section
-				style={{
-					display: "flex",
-					alignItems: "center",
-					padding: "120px 40px 100px",
-					position: "relative",
-				}}
-			>
+			<section className="flex items-center px-5 md:px-10 pt-[220px] pb-[200px] relative">
 				{/* Floating hexagons */}
-				<div
-					style={{
-						position: "absolute",
-						inset: 0,
-						overflow: "hidden",
-						pointerEvents: "none",
-					}}
-				>
+				<div className="absolute inset-0 overflow-hidden pointer-events-none">
 					{[
 						{ size: 120, x: "80%", y: "15%", delay: "0s" },
 						{ size: 80, x: "10%", y: "70%", delay: "1s" },
@@ -87,13 +73,12 @@ export default function Home() {
 					].map((hex, i) => (
 						<svg
 							key={i}
+							className="absolute opacity-[0.06]"
 							style={{
-								position: "absolute",
 								left: hex.x,
 								top: hex.y,
 								width: `${hex.size}px`,
 								height: `${hex.size * 1.155}px`,
-								opacity: 0.06,
 								animation: `hex-float 8s ease-in-out ${hex.delay} infinite`,
 								transform: `translateY(${-scrollY * 0.05 * (i + 1)}px)`,
 							}}
@@ -102,138 +87,55 @@ export default function Home() {
 							<polygon
 								points="43.3,0 86.6,25 86.6,75 43.3,100 0,75 0,25"
 								fill="none"
-								stroke="rgb(var(--color-accent))"
+								className="stroke-[rgb(var(--color-accent))]"
 								strokeWidth="1"
 							/>
 						</svg>
 					))}
 				</div>
 
-				<div
-					className="hero-grid"
-					style={{
-						maxWidth: "1200px",
-						margin: "0 auto",
-						width: "100%",
-						display: "grid",
-						gridTemplateColumns: "1fr 1fr",
-						gap: "80px",
-						alignItems: "center",
-					}}
-				>
+				<div className="max-w-[1200px] mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center">
 					{/* Left — terminal */}
-					<div
-						style={{
-							backgroundColor: "rgb(var(--color-background-alt))",
-							borderRadius: "12px",
-							border: "1px solid rgba(var(--color-border), 0.12)",
-							overflow: "hidden",
-						}}
-					>
-						<div
-							style={{
-								padding: "12px 16px",
-								borderBottom: "1px solid rgba(var(--color-border), 0.08)",
-								display: "flex",
-								alignItems: "center",
-								gap: "8px",
-							}}
-						>
-							<div
-								style={{
-									width: "10px",
-									height: "10px",
-									borderRadius: "50%",
-									background: "#ff5f57",
-								}}
-							/>
-							<div
-								style={{
-									width: "10px",
-									height: "10px",
-									borderRadius: "50%",
-									background: "#febc2e",
-								}}
-							/>
-							<div
-								style={{
-									width: "10px",
-									height: "10px",
-									borderRadius: "50%",
-									background: "#28c840",
-								}}
-							/>
-							<span
-								style={{
-									fontSize: "11px",
-									color: "rgba(var(--color-foreground), 0.45)",
-									marginLeft: "12px",
-									fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-								}}
-							>
+					<div className="bg-[rgb(var(--color-background-alt))] rounded-xl border border-[rgba(var(--color-border),0.12)] overflow-hidden">
+						{/* Terminal title bar */}
+						<div className="px-4 py-3 border-b border-[rgba(var(--color-border),0.08)] flex items-center gap-2">
+							<div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+							<div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+							<div className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+							<span className="text-[11px] text-[rgba(var(--color-foreground),0.45)] ml-3 font-[family-name:var(--font-mono)]">
 								~/doug-rogers
 							</span>
 						</div>
-						<div style={{ padding: "24px", minHeight: "420px" }}>
+						{/* Terminal content */}
+						<div className="p-6 min-h-[420px]">
 							<TerminalText />
 						</div>
 					</div>
 
 					{/* Right — headline */}
 					<div>
-						<div
-							style={{
-								width: "120px",
-								height: "120px",
-								borderRadius: "50%",
-								overflow: "hidden",
-								border: "2px solid rgb(var(--color-accent))",
-								marginBottom: "28px",
-							}}
-						>
+						{/* Circular B&W photo */}
+						<div className="w-[120px] h-[120px] rounded-full overflow-hidden border-2 border-[rgb(var(--color-accent))] mb-7">
 							{/* eslint-disable-next-line @next/next/no-img-element */}
 							<img
 								src="/images/doug-2024-cropped-compr.png"
 								alt="Doug Rogers"
-								style={{
-									width: "100%",
-									height: "100%",
-									objectFit: "cover",
-									filter: "grayscale(1) brightness(1.1) contrast(1.05)",
-								}}
+								className="w-full h-full object-cover grayscale brightness-110 contrast-105"
 							/>
 						</div>
-						<h1
-							style={{
-								fontFamily:
-									"var(--font-display, 'Playfair Display', Georgia, serif)",
-								fontSize: "clamp(40px, 5vw, 64px)",
-								fontWeight: 700,
-								lineHeight: 1.1,
-								marginBottom: "24px",
-								color: "rgb(var(--color-foreground))",
-							}}
-						>
+						<h1 className="font-[family-name:var(--font-display)] text-[clamp(40px,5vw,64px)] font-bold leading-[1.1] mb-6">
 							Ideas to products.{" "}
-							<span style={{ color: "rgb(var(--color-accent))" }}>
+							<span className="text-[rgb(var(--color-accent))]">
 								Zero to one.
 							</span>
 						</h1>
-						<p
-							style={{
-								fontSize: "16px",
-								lineHeight: 1.7,
-								color: "rgba(var(--color-foreground), 0.45)",
-								maxWidth: "440px",
-								marginBottom: "40px",
-							}}
-						>
+						<p className="text-base leading-[1.7] text-[rgba(var(--color-foreground),0.45)] max-w-[440px] mb-10">
 							I&apos;m not a theoretical advisor. I&apos;ve raised capital,
 							invested capital, pivoted, shipped, sold. I excel at taking a raw
 							idea and turning it into something customers actually pay for,
 							validating all the way.
 						</p>
-						<div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+						<div className="flex flex-wrap gap-4">
 							<Link href="/connecting" className="btn-primary">
 								Get in Touch
 							</Link>
@@ -246,42 +148,15 @@ export default function Home() {
 			</section>
 
 			{/* Credential bar */}
-			<section
-				style={{
-					borderTop: "1px solid rgba(var(--color-border), 0.08)",
-					borderBottom: "1px solid rgba(var(--color-border), 0.08)",
-					padding: "20px 40px",
-				}}
-			>
-				<div
-					style={{
-						maxWidth: "1200px",
-						margin: "0 auto",
-						display: "flex",
-						flexWrap: "wrap",
-						justifyContent: "center",
-						alignItems: "center",
-						gap: "12px",
-						fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-						fontSize: "12px",
-						letterSpacing: "0.1em",
-						color: "rgba(var(--color-foreground), 0.45)",
-					}}
-				>
+			<section className="border-t border-b border-[rgba(var(--color-border),0.08)] py-5 px-5 md:px-10">
+				<div className="max-w-[1200px] mx-auto flex flex-wrap justify-center items-center gap-3 font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-foreground),0.45)]">
 					{[
-						"YC W15",
-						"Techstars '24",
+						"Y Combinator (W15)",
+						"Techstars (JPM/24)",
 						"25+ Years Building",
 						"2x Exits",
 					].map((item, i, arr) => (
-						<span
-							key={item}
-							style={{
-								display: "flex",
-								alignItems: "center",
-								gap: "12px",
-							}}
-						>
+						<span key={item} className="flex items-center gap-3">
 							{item}
 							{i < arr.length - 1 && <HexSeparator />}
 						</span>
@@ -290,16 +165,9 @@ export default function Home() {
 			</section>
 
 			{/* Three pillars */}
-			<section style={{ padding: "100px 40px" }}>
-				<div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-					<div
-						className="pillars-grid"
-						style={{
-							display: "grid",
-							gridTemplateColumns: "repeat(3, 1fr)",
-							gap: "0",
-						}}
-					>
+			<section className="py-24 px-5 md:px-10">
+				<div className="max-w-[1200px] mx-auto">
+					<div className="grid grid-cols-1 md:grid-cols-3">
 						{[
 							{
 								num: "01",
@@ -323,52 +191,19 @@ export default function Home() {
 							<Link
 								key={item.num}
 								href={item.href}
-								className="group"
-								style={{
-									padding: "48px 40px",
-									borderLeft:
-										i > 0
-											? "1px solid rgba(var(--color-border), 0.08)"
-											: "none",
-									transition: "background 0.3s",
-								}}
-								onMouseEnter={(e) =>
-									(e.currentTarget.style.background =
-										"rgba(var(--color-accent), 0.03)")
-								}
-								onMouseLeave={(e) =>
-									(e.currentTarget.style.background = "transparent")
-								}
+								className={`group p-10 md:px-10 transition-colors duration-300 hover:bg-[rgba(var(--color-accent),0.03)] ${
+									i > 0
+										? "md:border-l border-t md:border-t-0 border-[rgba(var(--color-border),0.08)]"
+										: ""
+								}`}
 							>
-								<span
-									style={{
-										fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-										fontSize: "11px",
-										color: "rgba(var(--color-accent), 0.3)",
-										display: "block",
-										marginBottom: "16px",
-									}}
-								>
+								<span className="block mb-4 font-[family-name:var(--font-mono)] text-[11px] text-[rgba(var(--color-accent),0.3)]">
 									{item.num}
 								</span>
-								<h3
-									style={{
-										fontFamily:
-											"var(--font-display, 'Playfair Display', Georgia, serif)",
-										fontSize: "28px",
-										fontWeight: 700,
-										marginBottom: "12px",
-									}}
-								>
+								<h3 className="font-[family-name:var(--font-display)] text-[28px] font-bold mb-3">
 									{item.title}
 								</h3>
-								<p
-									style={{
-										fontSize: "13px",
-										lineHeight: 1.7,
-										color: "rgba(var(--color-foreground), 0.45)",
-									}}
-								>
+								<p className="text-[13px] leading-[1.7] text-[rgba(var(--color-foreground),0.45)]">
 									{item.desc}
 								</p>
 							</Link>
@@ -378,108 +213,34 @@ export default function Home() {
 			</section>
 
 			{/* Articles */}
-			<section style={{ padding: "0 40px 100px" }}>
-				<div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-					<div
-						style={{
-							display: "flex",
-							justifyContent: "space-between",
-							alignItems: "baseline",
-							marginBottom: "40px",
-						}}
-					>
-						<h2
-							style={{
-								fontFamily:
-									"var(--font-display, 'Playfair Display', Georgia, serif)",
-								fontSize: "32px",
-								fontWeight: 700,
-							}}
-						>
+			<section className="px-5 md:px-10 pb-24">
+				<div className="max-w-[1200px] mx-auto">
+					<div className="flex justify-between items-baseline mb-10">
+						<h2 className="font-[family-name:var(--font-display)] text-[32px] font-bold">
 							Writing
 						</h2>
 						<Link
 							href="/thinking"
-							style={{
-								fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-								fontSize: "12px",
-								letterSpacing: "0.1em",
-								color: "rgba(var(--color-accent), 0.3)",
-								transition: "color 0.2s",
-							}}
-							onMouseEnter={(e) =>
-								(e.currentTarget.style.color = "rgb(var(--color-accent))")
-							}
-							onMouseLeave={(e) =>
-								(e.currentTarget.style.color =
-									"rgba(var(--color-accent), 0.3)")
-							}
+							className="font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-accent),0.3)] hover:text-[rgb(var(--color-accent))] transition-colors"
 						>
 							ALL POSTS &rarr;
 						</Link>
 					</div>
 
-					<div
-						className="articles-grid"
-						style={{
-							display: "grid",
-							gridTemplateColumns: "repeat(3, 1fr)",
-							gap: "24px",
-						}}
-					>
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 						{ARTICLES.map((article, i) => (
 							<Link
 								key={i}
 								href={article.href}
-								style={{
-									padding: "32px",
-									backgroundColor: "rgb(var(--color-background-alt))",
-									borderRadius: "8px",
-									border: "1px solid rgba(var(--color-border), 0.06)",
-									transition: "all 0.3s",
-								}}
-								onMouseEnter={(e) => {
-									e.currentTarget.style.borderColor =
-										"rgba(var(--color-border), 0.2)"
-									e.currentTarget.style.transform = "translateY(-4px)"
-								}}
-								onMouseLeave={(e) => {
-									e.currentTarget.style.borderColor =
-										"rgba(var(--color-border), 0.06)"
-									e.currentTarget.style.transform = "translateY(0)"
-								}}
+								className="p-8 bg-[rgb(var(--color-background-alt))] rounded-lg border border-[rgba(var(--color-border),0.06)] transition-all duration-300 hover:border-[rgba(var(--color-border),0.2)] hover:-translate-y-1"
 							>
-								<span
-									style={{
-										fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-										fontSize: "10px",
-										letterSpacing: "0.15em",
-										color: "rgba(var(--color-accent), 0.3)",
-										textTransform: "uppercase" as const,
-									}}
-								>
+								<span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.15em] text-[rgba(var(--color-accent),0.3)] uppercase">
 									{article.category}
 								</span>
-								<h3
-									style={{
-										fontFamily:
-											"var(--font-display, 'Playfair Display', Georgia, serif)",
-										fontSize: "18px",
-										fontWeight: 700,
-										marginTop: "12px",
-										lineHeight: 1.4,
-									}}
-								>
+								<h3 className="font-[family-name:var(--font-display)] text-lg font-bold mt-3 leading-snug">
 									{article.title}
 								</h3>
-								<p
-									style={{
-										fontSize: "12px",
-										lineHeight: 1.6,
-										color: "rgba(var(--color-foreground), 0.45)",
-										marginTop: "10px",
-									}}
-								>
+								<p className="text-xs leading-relaxed text-[rgba(var(--color-foreground),0.45)] mt-2.5">
 									{article.summary}
 								</p>
 							</Link>
@@ -489,60 +250,18 @@ export default function Home() {
 			</section>
 
 			{/* Photo + quote band */}
-			<section
-				style={{
-					position: "relative",
-					height: "400px",
-					overflow: "hidden",
-				}}
-			>
+			<section className="relative h-[400px] md:h-[400px] overflow-hidden">
 				{/* eslint-disable-next-line @next/next/no-img-element */}
 				<img
 					src="/images/doug-nyc.jpg"
 					alt="NYC Skyline"
-					style={{
-						position: "absolute",
-						inset: 0,
-						width: "100%",
-						height: "100%",
-						objectFit: "cover",
-						filter:
-							"sepia(0.4) saturate(0.6) brightness(0.35) hue-rotate(10deg)",
-					}}
+					className="absolute inset-0 w-full h-full object-cover sepia-[0.4] saturate-[0.6] brightness-[0.35] hue-rotate-[10deg]"
 				/>
-				<div
-					style={{
-						position: "absolute",
-						inset: 0,
-						background:
-							"linear-gradient(to right, rgba(10,14,26,0.7), rgba(10,14,26,0.3))",
-					}}
-				/>
-				<div
-					style={{
-						position: "relative",
-						zIndex: 1,
-						height: "100%",
-						display: "flex",
-						alignItems: "center",
-						padding: "0 48px",
-						maxWidth: "1200px",
-						margin: "0 auto",
-					}}
-				>
-					<p
-						style={{
-							fontFamily:
-								"var(--font-display, 'Playfair Display', Georgia, serif)",
-							fontSize: "clamp(28px, 3.5vw, 44px)",
-							fontWeight: 700,
-							lineHeight: 1.3,
-							color: "rgb(var(--color-foreground))",
-							maxWidth: "600px",
-						}}
-					>
+				<div className="absolute inset-0 bg-gradient-to-r from-[rgba(10,14,26,0.7)] to-[rgba(10,14,26,0.3)]" />
+				<div className="relative z-10 h-full flex items-center px-5 md:px-12 max-w-[1200px] mx-auto">
+					<p className="font-[family-name:var(--font-display)] text-[clamp(28px,3.5vw,44px)] font-bold leading-[1.3] max-w-[600px]">
 						&ldquo;It&apos;s not how many mistakes you make.{" "}
-						<span style={{ color: "rgb(var(--color-accent))" }}>
+						<span className="text-[rgb(var(--color-accent))]">
 							It&apos;s how many you don&apos;t make twice.&rdquo;
 						</span>
 					</p>
@@ -550,62 +269,20 @@ export default function Home() {
 			</section>
 
 			{/* Bottom CTA */}
-			<section
-				style={{
-					padding: "80px 40px",
-					textAlign: "center" as const,
-				}}
-			>
-				<p
-					style={{
-						fontFamily:
-							"var(--font-display, 'Playfair Display', Georgia, serif)",
-						fontSize: "clamp(28px, 3vw, 40px)",
-						fontWeight: 700,
-						maxWidth: "600px",
-						margin: "0 auto 24px",
-						lineHeight: 1.3,
-					}}
-				>
+			<section className="py-20 px-5 md:px-10 text-center">
+				<p className="font-[family-name:var(--font-display)] text-[clamp(28px,3vw,40px)] font-bold max-w-[600px] mx-auto mb-6 leading-[1.3]">
 					Let&apos;s build{" "}
-					<span
-						style={{
-							color: "rgb(var(--color-accent))",
-							fontStyle: "italic",
-						}}
-					>
+					<span className="text-[rgb(var(--color-accent))] italic">
 						something great.
 					</span>
 				</p>
-				<p
-					style={{
-						fontSize: "14px",
-						color: "rgba(var(--color-foreground), 0.45)",
-						marginBottom: "32px",
-					}}
-				>
+				<p className="text-sm text-[rgba(var(--color-foreground),0.45)] mb-8">
 					Got an idea? Already building? Let&apos;s talk.
 				</p>
 				<Link href="/connecting" className="btn-primary">
 					Get in Touch
 				</Link>
 			</section>
-
-			{/* Responsive overrides */}
-			<style jsx>{`
-				@media (max-width: 768px) {
-					.hero-grid {
-						grid-template-columns: 1fr !important;
-						gap: 40px !important;
-					}
-					.pillars-grid {
-						grid-template-columns: 1fr !important;
-					}
-					.articles-grid {
-						grid-template-columns: 1fr !important;
-					}
-				}
-			`}</style>
 		</div>
 	)
 }

@@ -17,28 +17,13 @@ export default function ConnectCta({
 }: ConnectCtaProps) {
 	return (
 		<div className={`relative ${className}`}>
-			<div
-				className="relative z-10 p-8 rounded-lg"
-				style={{
-					backgroundColor: "rgb(var(--color-card-bg))",
-					border: "1px solid rgba(var(--color-border), 0.08)",
-				}}
-			>
+			<div className="relative z-10 p-8 rounded-lg bg-[rgb(var(--color-card-bg))] border border-[rgba(var(--color-border),0.08)]">
 				<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
 					<div className="flex-1">
-						<h2
-							className="text-2xl font-semibold mb-2 md:text-left"
-							style={{
-								fontFamily: "var(--font-display, 'Playfair Display', Georgia, serif)",
-								color: "rgb(var(--color-foreground))",
-							}}
-						>
+						<h2 className="text-2xl font-semibold mb-2 md:text-left font-[family-name:var(--font-display)] text-[rgb(var(--color-foreground))]">
 							{title}
 						</h2>
-						<p
-							className="md:text-left"
-							style={{ color: "rgba(var(--color-foreground), 0.45)" }}
-						>
+						<p className="md:text-left text-[rgba(var(--color-foreground),0.45)]">
 							{description}
 						</p>
 					</div>

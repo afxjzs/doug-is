@@ -206,8 +206,7 @@ export default function BuildingPage() {
 												src={company.image}
 												alt={company.title}
 												fill
-												style={{ objectFit: "contain" }}
-												className="transition-transform duration-500 group-hover:scale-105 rounded-xl"
+												className="object-contain transition-transform duration-500 group-hover:scale-105 rounded-xl"
 												priority
 											/>
 										</div>
@@ -297,8 +296,7 @@ export default function BuildingPage() {
 														src={project.image}
 														alt={project.title}
 														fill
-														style={{ objectFit: "contain" }}
-														className="transition-transform duration-500 group-hover:scale-105 rounded-xl"
+														className="object-contain transition-transform duration-500 group-hover:scale-105 rounded-xl"
 													/>
 												</Link>
 											) : (
@@ -306,8 +304,7 @@ export default function BuildingPage() {
 													src={project.image}
 													alt={project.title}
 													fill
-													style={{ objectFit: "contain" }}
-													className="transition-transform duration-500 group-hover:scale-105 rounded-xl"
+													className="object-contain transition-transform duration-500 group-hover:scale-105 rounded-xl"
 												/>
 											)}
 										</div>

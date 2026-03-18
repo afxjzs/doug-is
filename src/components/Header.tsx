@@ -12,6 +12,10 @@ const navItems = [
 	{ name: "/writing", path: "/thinking" },
 ]
 
+function isActive(pathname: string, itemPath: string) {
+	return pathname === itemPath || pathname.startsWith(`${itemPath}/`)
+}
+
 export default function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 	const [scrolled, setScrolled] = useState(false)
@@ -55,14 +59,11 @@ export default function Header() {
 
 	return (
 		<header
-			className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-			style={{
-				background: scrolled ? "rgba(10,14,26,0.95)" : "transparent",
-				backdropFilter: scrolled ? "blur(20px)" : "none",
-				borderBottom: scrolled
-					? "1px solid rgba(212,168,83,0.1)"
-					: "1px solid transparent",
-			}}
+			className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
+				scrolled
+					? "bg-[rgba(10,14,26,0.95)] backdrop-blur-[20px] border-[rgba(var(--color-border),0.1)]"
+					: "bg-transparent border-transparent"
+			}`}
 		>
 			<div className="max-w-[1200px] mx-auto px-4 md:px-10 py-4 md:py-5 flex items-center justify-between">
 				{/* Left: glowing hexagon + doug.is */}
@@ -71,25 +72,18 @@ export default function Header() {
 						width="10"
 						height="12"
 						viewBox="0 0 86.6 100"
-						className="animate-hex-glow"
-						style={{ fill: "rgb(var(--color-accent))" }}
+						className="animate-hex-glow fill-[rgb(var(--color-accent))]"
 					>
 						<polygon points="43.3,0 86.6,25 86.6,75 43.3,100 0,75 0,25" />
 					</svg>
-					<span
-						className="text-sm tracking-[0.15em]"
-						style={{ color: "rgba(var(--color-foreground), 0.45)", fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)" }}
-					>
+					<span className="text-sm tracking-[0.15em] text-[rgba(var(--color-foreground),0.45)] font-[family-name:var(--font-mono)]">
 						doug.is
 					</span>
 				</Link>
 
 				{/* Desktop nav */}
-				<nav className="hidden md:flex items-center gap-1.5 text-xs tracking-[0.1em]" style={{ fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)" }}>
-					<span
-						className="mr-2"
-						style={{ color: "rgba(var(--color-foreground), 0.45)" }}
-					>
+				<nav className="hidden md:flex items-center gap-1.5 text-xs tracking-[0.1em] font-[family-name:var(--font-mono)]">
+					<span className="mr-2 text-[rgba(var(--color-foreground),0.45)]">
 						doug.is...
 					</span>
 					{navItems.map((item) => (
@@ -97,26 +91,11 @@ export default function Header() {
 							key={item.path}
 							href={item.path}
 							onClick={() => handleNavClick(item.path)}
-							className="px-1.5 py-1 transition-colors duration-200"
-							style={{
-								color:
-									pathname === item.path ||
-									pathname.startsWith(`${item.path}/`)
-										? "rgb(var(--color-accent))"
-										: "rgba(var(--color-foreground), 0.45)",
-							}}
-							onMouseEnter={(e) =>
-								(e.currentTarget.style.color = "rgb(var(--color-accent))")
-							}
-							onMouseLeave={(e) => {
-								if (
-									pathname !== item.path &&
-									!pathname.startsWith(`${item.path}/`)
-								) {
-									e.currentTarget.style.color =
-										"rgba(var(--color-foreground), 0.45)"
-								}
-							}}
+							className={`px-1.5 py-1 transition-colors duration-200 ${
+								isActive(pathname, item.path)
+									? "text-[rgb(var(--color-accent))]"
+									: "text-[rgba(var(--color-foreground),0.45)] hover:text-[rgb(var(--color-accent))]"
+							}`}
 						>
 							{item.name}
 						</Link>
@@ -125,8 +104,7 @@ export default function Header() {
 
 				{/* Mobile hamburger */}
 				<button
-					className="md:hidden z-50"
-					style={{ color: "rgba(var(--color-foreground), 0.9)" }}
+					className="md:hidden z-50 text-[rgba(var(--color-foreground),0.9)]"
 					onClick={handleMobileMenuToggle}
 					aria-label={isMenuOpen ? "Close menu" : "Open menu"}
 				>
@@ -165,27 +143,20 @@ export default function Header() {
 
 				{/* Mobile navigation overlay */}
 				<div
-					className={`fixed inset-0 transform transition-transform duration-300 ease-in-out z-40 ${
+					className={`fixed inset-0 transform transition-transform duration-300 ease-in-out z-40 bg-[rgba(10,14,26,0.97)] backdrop-blur-[20px] ${
 						isMenuOpen ? "translate-x-0" : "translate-x-full"
 					}`}
-					style={{
-						background: "rgba(10,14,26,0.97)",
-						backdropFilter: "blur(20px)",
-					}}
 				>
 					<div className="flex flex-col items-center justify-center h-full gap-8">
 						{navItems.map((item) => (
 							<Link
 								key={item.path}
 								href={item.path}
-								className="text-2xl tracking-[0.1em] transition-colors duration-200"
-								style={{
-									color:
-										pathname === item.path ||
-										pathname.startsWith(`${item.path}/`)
-											? "rgb(var(--color-accent))"
-											: "rgba(var(--color-foreground), 0.6)",
-								}}
+								className={`text-2xl tracking-[0.1em] transition-colors duration-200 ${
+									isActive(pathname, item.path)
+										? "text-[rgb(var(--color-accent))]"
+										: "text-[rgba(var(--color-foreground),0.6)]"
+								}`}
 								onClick={() => {
 									handleNavClick(item.path)
 									setIsMenuOpen(false)
