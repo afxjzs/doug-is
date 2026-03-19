@@ -97,6 +97,14 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
   const calLoadedRef = useRef(false)
   const analytics = useAnalytics()
 
+  // Check for ?showcal=1 to skip straight to calendar
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get("showcal") === "1") {
+      setFormStatus("success")
+    }
+  }, [])
+
   // Track page view with UTM params on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -266,16 +274,6 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
     }
   }
 
-  const handleResetForm = () => {
-    localStorage.removeItem(STORAGE_KEY)
-    const initial: Record<string, string> = {}
-    variant.form.fields.forEach((f) => {
-      initial[f.name] = ""
-    })
-    setFormData(initial)
-    setFormStatus("idle")
-    calLoadedRef.current = false
-  }
 
   return (
     <div className="min-h-screen" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
@@ -587,12 +585,6 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
                   className="w-full min-h-[550px] rounded-2xl overflow-auto bg-[#111827] border border-[rgba(148,163,184,0.1)]"
                   style={{ colorScheme: "dark" }}
                 />
-                <button
-                  onClick={handleResetForm}
-                  className="mt-8 text-sm text-[#64748B] hover:text-[#94A3B8] transition-colors underline underline-offset-4"
-                >
-                  Submit another idea
-                </button>
               </div>
             ) : (
               <div className="p-8 md:p-10 rounded-3xl bg-[#111827] border border-[rgba(148,163,184,0.08)]">
