@@ -14,6 +14,8 @@ export class PostHogProvider implements AnalyticsProvider {
 		this.apiKey = process.env.NEXT_PUBLIC_POSTHOG_KEY
 		this.host =
 			process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com"
+		// Initialize eagerly so tracking is ready before child useEffects fire
+		this.initialize()
 	}
 
 	/**
