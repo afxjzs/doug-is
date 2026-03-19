@@ -13,12 +13,12 @@ describe("StatusMessage", () => {
 		)
 		expect(
 			screen.getByText("Success message").parentElement?.parentElement
-		).toHaveClass("bg-[rgba(var(--color-emerald),0.05)]")
+		).toHaveClass("bg-[rgba(var(--color-accent),0.05)]")
 
 		rerender(<StatusMessage type="error" message="Error message" />)
 		expect(
 			screen.getByText("Error message").parentElement?.parentElement
-		).toHaveClass("bg-[rgba(var(--color-magenta),0.05)]")
+		).toHaveClass("bg-[rgba(var(--color-accent-secondary),0.05)]")
 	})
 
 	it("shows details when showDetails is true", () => {
