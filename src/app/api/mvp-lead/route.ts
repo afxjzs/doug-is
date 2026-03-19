@@ -116,9 +116,9 @@ export async function POST(request: Request) {
 			])
 
 			if (error) {
-				console.error("Supabase error:", error)
+				console.error("Supabase error:", JSON.stringify(error))
 				return NextResponse.json(
-					{ message: "Failed to save lead" },
+					{ message: "Failed to save lead", detail: error.message, code: error.code },
 					{ status: 500 }
 				)
 			}
