@@ -127,8 +127,8 @@ export async function POST(request: Request) {
 			}
 		}
 
-		// Send Telegram notification (non-blocking)
-		sendTelegramNotification({
+		// Send Telegram notification
+		await sendTelegramNotification({
 			name,
 			email,
 			phone,
