@@ -37,31 +37,55 @@ const iconMap: Record<string, React.ReactNode> = {
 }
 
 function loadCalEmbed(calLink: string, namespace: string) {
-  // Load Cal.com embed script dynamically
-  const script = document.createElement("script")
-  script.src = "https://app.cal.com/embed/embed.js"
-  script.async = true
-  script.onload = () => {
-    const Cal = (window as any).Cal
-    if (!Cal) return
+  // Match Cal.com's official embed pattern: set up queue before script loads
+  const C = window as any
+  const A = "https://app.cal.com/embed/embed.js"
+  const L = "init"
+  const p = function (a: any, ar: any) { a.q.push(ar) }
+  const d = document
 
-    Cal("init", namespace, { origin: "https://app.cal.com" })
-    Cal.ns[namespace]("inline", {
-      elementOrSelector: `#my-cal-inline-${namespace}`,
-      config: { layout: "month_view", useSlotsViewOnSmallScreen: "true", theme: "dark" },
-      calLink,
-    })
-    Cal.ns[namespace]("ui", {
-      theme: "dark",
-      cssVarsPerTheme: {
-        light: { "cal-brand": "#0d1121" },
-        dark: { "cal-brand": "#517bf4" },
-      },
-      hideEventTypeDetails: false,
-      layout: "month_view",
-    })
+  C.Cal = C.Cal || function (...args: any[]) {
+    const cal = C.Cal
+    const ar = args
+    if (!cal.loaded) {
+      cal.ns = {}
+      cal.q = cal.q || []
+      d.head.appendChild(d.createElement("script")).src = A
+      cal.loaded = true
+    }
+    if (ar[0] === L) {
+      const api: any = function (...apiArgs: any[]) { p(api, apiArgs) }
+      const ns = ar[1]
+      api.q = api.q || []
+      if (typeof ns === "string") {
+        cal.ns[ns] = cal.ns[ns] || api
+        p(cal.ns[ns], ar)
+        p(cal, ["initNamespace", ns])
+      } else {
+        p(cal, ar)
+      }
+      return
+    }
+    p(cal, ar)
   }
-  document.head.appendChild(script)
+
+  C.Cal("init", namespace, { origin: "https://app.cal.com" })
+
+  C.Cal.ns[namespace]("inline", {
+    elementOrSelector: `#my-cal-inline-${namespace}`,
+    config: { layout: "month_view", useSlotsViewOnSmallScreen: "true", theme: "dark" },
+    calLink,
+  })
+
+  C.Cal.ns[namespace]("ui", {
+    theme: "dark",
+    cssVarsPerTheme: {
+      light: { "cal-brand": "#0d1121" },
+      dark: { "cal-brand": "#517bf4" },
+    },
+    hideEventTypeDetails: false,
+    layout: "month_view",
+  })
 }
 
 export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
