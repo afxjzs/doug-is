@@ -38,6 +38,7 @@ jobs:
           "ProjectPagesLayoutIntegration"
           "PageTitleConsistency"
           "PostsTable"
+          "ContactsList"
 
       - name: Build
         run: npm run build
