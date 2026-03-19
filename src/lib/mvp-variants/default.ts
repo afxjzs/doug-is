@@ -188,8 +188,8 @@ export const defaultVariant: MVPVariantConfig = {
   },
 
   cal: {
-    link: "afxjzs/30min",
-    namespace: "30min",
+    link: "afxjzs/mvp-discovery-call",
+    namespace: "mvp-discovery-call",
     layout: "month_view",
   },
 }

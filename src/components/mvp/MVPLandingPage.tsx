@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import Image from "next/image"
 import { MVPVariantConfig } from "@/lib/mvp-variants/types"
+import { useAnalytics } from "@/lib/analytics/context"
 
 interface MVPLandingPageProps {
   variant: MVPVariantConfig
@@ -46,11 +47,16 @@ function loadCalEmbed(calLink: string, namespace: string) {
 
     Cal("init", namespace, { origin: "https://app.cal.com" })
     Cal.ns[namespace]("inline", {
-      elementOrSelector: "#my-cal-inline-30min",
-      config: { layout: "month_view", useSlotsViewOnSmallScreen: "true" },
+      elementOrSelector: `#my-cal-inline-${namespace}`,
+      config: { layout: "month_view", useSlotsViewOnSmallScreen: "true", theme: "dark" },
       calLink,
     })
     Cal.ns[namespace]("ui", {
+      theme: "dark",
+      cssVarsPerTheme: {
+        light: { "cal-brand": "#0d1121" },
+        dark: { "cal-brand": "#517bf4" },
+      },
       hideEventTypeDetails: false,
       layout: "month_view",
     })
@@ -65,6 +71,29 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null)
   const formRef = useRef<HTMLDivElement>(null)
   const calLoadedRef = useRef(false)
+  const analytics = useAnalytics()
+
+  // Track page view with UTM params on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const utmProps: Record<string, string> = {}
+    for (const key of ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]) {
+      const val = params.get(key)
+      if (val) utmProps[key] = val
+    }
+    analytics.trackEvent({
+      event: "project_view" as any,
+      properties: {
+        project_name: "mvp-landing",
+        project_type: "landing-page",
+        variant: variant.id,
+        referrer: document.referrer || undefined,
+        ...utmProps,
+        timestamp: new Date().toISOString(),
+      },
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Initialize form data from localStorage or defaults
   useEffect(() => {
@@ -109,14 +138,41 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
   useEffect(() => {
     if (formStatus === "success" && !calLoadedRef.current) {
       calLoadedRef.current = true
-      // Small delay to let the DOM render the container
       setTimeout(() => {
         loadCalEmbed(variant.cal.link, variant.cal.namespace)
       }, 100)
     }
   }, [formStatus, variant.cal.link, variant.cal.namespace])
 
+  // Listen for Cal.com booking completion
+  useEffect(() => {
+    const handleCalMessage = (e: MessageEvent) => {
+      if (e.data?.type === "CAL:booking:created" || e.data?.type === "booking:created") {
+        analytics.trackEvent({
+          event: "project_demo_click" as any,
+          properties: {
+            project_name: "mvp-landing",
+            interaction: "cal_booking_completed",
+            variant: variant.id,
+            timestamp: new Date().toISOString(),
+          },
+        })
+      }
+    }
+    window.addEventListener("message", handleCalMessage)
+    return () => window.removeEventListener("message", handleCalMessage)
+  }, [analytics, variant.id])
+
   const scrollToForm = () => {
+    analytics.trackEvent({
+      event: "project_demo_click" as any,
+      properties: {
+        project_name: "mvp-landing",
+        interaction: "cta_click",
+        variant: variant.id,
+        timestamp: new Date().toISOString(),
+      },
+    })
     formRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
@@ -124,6 +180,16 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
     e.preventDefault()
     setFormStatus("submitting")
     setErrorMessage("")
+
+    analytics.trackEvent({
+      event: "contact_form_submit",
+      properties: {
+        form_type: "mvp-lead",
+        variant: variant.id,
+        stage: formData.stage,
+        timestamp: new Date().toISOString(),
+      },
+    })
 
     try {
       const res = await fetch("/api/mvp-lead", {
@@ -149,11 +215,30 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
         STORAGE_KEY,
         JSON.stringify({ data: formData, status: "success" })
       )
+
+      analytics.trackEvent({
+        event: "contact_form_success",
+        properties: {
+          form_type: "mvp-lead",
+          variant: variant.id,
+          stage: formData.stage,
+          timestamp: new Date().toISOString(),
+        },
+      })
     } catch (error) {
+      const msg = error instanceof Error ? error.message : "An unexpected error occurred"
       setFormStatus("error")
-      setErrorMessage(
-        error instanceof Error ? error.message : "An unexpected error occurred"
-      )
+      setErrorMessage(msg)
+
+      analytics.trackEvent({
+        event: "contact_form_error",
+        properties: {
+          form_type: "mvp-lead",
+          error_message: msg,
+          variant: variant.id,
+          timestamp: new Date().toISOString(),
+        },
+      })
     }
   }
 
@@ -474,7 +559,7 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
                 </p>
                 {/* Cal.com embed container */}
                 <div
-                  id="my-cal-inline-30min"
+                  id={`my-cal-inline-${variant.cal.namespace}`}
                   className="w-full min-h-[550px] rounded-2xl overflow-auto bg-[#111827] border border-[rgba(148,163,184,0.1)]"
                   style={{ colorScheme: "dark" }}
                 />

@@ -2,14 +2,14 @@ import { createClient } from "@supabase/supabase-js"
 import { NextResponse } from "next/server"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ""
 
-const isMissingCredentials = !supabaseUrl || !supabaseKey
+const isMissingCredentials = !supabaseUrl || !supabaseServiceKey
 
 let supabase: ReturnType<typeof createClient> | null = null
 try {
 	if (!isMissingCredentials) {
-		supabase = createClient(supabaseUrl, supabaseKey)
+		supabase = createClient(supabaseUrl, supabaseServiceKey)
 	}
 } catch (error) {
 	console.error("Failed to initialize Supabase client:", error)
