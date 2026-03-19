@@ -97,14 +97,6 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
   const calLoadedRef = useRef(false)
   const analytics = useAnalytics()
 
-  // Check for ?showcal=1 to skip straight to calendar
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    if (params.get("showcal") === "1") {
-      setFormStatus("success")
-    }
-  }, [])
-
   // Track page view with UTM params on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -129,20 +121,27 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
 
   // Initialize form data from localStorage or defaults
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const showCal = params.get("showcal") === "1"
+
+    // ?showcal=1 skips straight to calendar view
+    if (showCal) {
+      setFormStatus("success")
+      return
+    }
+
     const saved = localStorage.getItem(STORAGE_KEY)
     if (saved) {
       try {
         const parsed = JSON.parse(saved)
-        if (parsed.status === "success") {
-          setFormStatus("success")
-          setFormData(parsed.data || {})
-          return
+        // Only restore draft field data, never restore success state
+        if (parsed.data) {
+          setFormData(parsed.data)
         }
-        setFormData(parsed.data || {})
-        return
       } catch {
         // ignore corrupt data
       }
+      return
     }
     const initial: Record<string, string> = {}
     variant.form.fields.forEach((f) => {
@@ -243,10 +242,7 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
       }
 
       setFormStatus("success")
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({ data: formData, status: "success" })
-      )
+      localStorage.removeItem(STORAGE_KEY)
 
       analytics.trackEvent({
         event: "contact_form_success",
