@@ -2,17 +2,17 @@
 
 import { useEffect } from "react"
 import { usePathname } from "next/navigation"
+import { AnalyticsProviderComponent, useAnalytics } from "@/lib/analytics/context"
 
 function PageViewTracker() {
 	const pathname = usePathname()
+	const analytics = useAnalytics()
 
 	useEffect(() => {
-		// Only track page view on client side
 		if (typeof window !== "undefined") {
-			// Simple page view tracking without analytics dependency
-			console.log("Page view:", window.location.href)
+			analytics.trackPageView(window.location.href, document.title)
 		}
-	}, [pathname])
+	}, [pathname, analytics])
 
 	return null
 }
@@ -23,9 +23,9 @@ interface ClientAnalyticsProps {
 
 export function ClientAnalytics({ children }: ClientAnalyticsProps) {
 	return (
-		<>
+		<AnalyticsProviderComponent>
 			<PageViewTracker />
 			{children}
-		</>
+		</AnalyticsProviderComponent>
 	)
 }
