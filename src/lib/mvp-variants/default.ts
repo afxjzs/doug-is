@@ -103,7 +103,7 @@ export const defaultVariant: MVPVariantConfig = {
       {
         question: "Can a real app actually be built in a week?",
         answer:
-          "Yes. AI has fundamentally changed development speed. I combine AI tooling with 25 years of engineering experience to build in days what used to take months. The key is focus — we build one core user flow extremely well, not a bloated feature list.",
+          "Yes. AI has fundamentally changed development speed. I combine AI tooling with 25 years of product building experience to build in days what used to take months. The key is focus — we build one core user flow extremely well, not a bloated feature list.",
       },
       {
         question: "What if my idea is too complex?",
