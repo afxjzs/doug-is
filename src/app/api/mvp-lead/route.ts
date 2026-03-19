@@ -117,8 +117,11 @@ export async function POST(request: Request) {
 
 			if (error) {
 				console.error("Supabase error:", JSON.stringify(error))
+				const userMessage = error.code === "23514"
+					? "There was a validation issue. Please check your email and try again."
+					: "Something went wrong saving your info. Please try again."
 				return NextResponse.json(
-					{ message: "Failed to save lead", detail: error.message, code: error.code },
+					{ message: userMessage },
 					{ status: 500 }
 				)
 			}
