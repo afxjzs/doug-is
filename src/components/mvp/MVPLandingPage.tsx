@@ -421,6 +421,35 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
           </div>
         </section>
 
+        {/* Who It's For */}
+        <section className="py-24 md:py-32 relative">
+          <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-blue-600/5 rounded-full blur-[100px]" />
+
+          <div className="relative max-w-3xl mx-auto px-6">
+            <h2 className="text-3xl md:text-5xl font-bold text-center mb-5">
+              {variant.audience.headline}
+            </h2>
+            <p className="text-[#94A3B8] text-lg md:text-xl text-center max-w-2xl mx-auto mb-12">
+              {variant.audience.description}
+            </p>
+            <div className="space-y-4">
+              {variant.audience.items.map((item) => (
+                <div
+                  key={item}
+                  className="flex items-start gap-4 p-5 rounded-2xl bg-[#111827] border border-[rgba(148,163,184,0.08)] hover:border-[rgba(59,130,246,0.2)] transition-all duration-300"
+                >
+                  <div className="mt-0.5 w-6 h-6 rounded-full bg-blue-500/15 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="text-[#CBD5E1] text-lg">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Credentials / About */}
         <section className="py-24 md:py-32 relative overflow-hidden">
           <div className="absolute left-0 top-0 w-full h-full bg-gradient-to-b from-[#111827]/50 via-[#0B1120] to-[#111827]/50" />

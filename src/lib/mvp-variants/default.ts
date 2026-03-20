@@ -6,7 +6,7 @@ export const defaultVariant: MVPVariantConfig = {
   hero: {
     headline: "Your MVP\nBuilt and Deployed\nin One Week",
     subHeadline:
-      "You have the idea. I have 25 years experience building products. Let's get it out there.",
+      "Most early products die in the same place: too much planning, too many contractors, and not enough real shipping.",
     ctaText: "Let's Build Your MVP",
   },
 
@@ -50,6 +50,18 @@ export const defaultVariant: MVPVariantConfig = {
           "The one thing your app needs to do — built end-to-end, polished, and ready for real users.",
         icon: "flow",
       },
+    ],
+  },
+
+  audience: {
+    headline: "Is This for You?",
+    description:
+      "This isn't for everyone. It's for people who are ready to stop planning and start shipping.",
+    items: [
+      "You have a strong idea but no technical cofounder",
+      "You need to validate demand before raising or hiring",
+      "You want to productize a workflow or service you already offer",
+      "You're stuck between \"learn to code\" and \"hire an expensive agency\"",
     ],
   },
 
@@ -133,7 +145,7 @@ export const defaultVariant: MVPVariantConfig = {
   form: {
     headline: "Ready to Build?",
     description:
-      "Tell me about your idea. If it's a fit, we'll hop on a quick call to nail down the details.",
+      "You don't need a 12-person team. You need someone who can shape the product, make smart tradeoffs, and get it into the world.",
     fields: [
       {
         name: "name",

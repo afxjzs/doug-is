@@ -30,6 +30,13 @@ export interface MVPVariantConfig {
     }>
   }
 
+  /** Who it's for section */
+  audience: {
+    headline: string
+    description: string
+    items: string[]
+  }
+
   /** Credentials / "work with a real human" section */
   credentials: {
     headline: string
