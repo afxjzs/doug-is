@@ -37,11 +37,18 @@ export default function Header() {
 	}
 
 	useEffect(() => {
+		let ticking = false
 		const handleScroll = () => {
-			setScrolled(window.scrollY > 20)
+			if (ticking) return
+			requestAnimationFrame(() => {
+				const past = window.scrollY > 20
+				setScrolled((prev) => (prev !== past ? past : prev))
+				ticking = false
+			})
+			ticking = true
 		}
 
-		window.addEventListener("scroll", handleScroll)
+		window.addEventListener("scroll", handleScroll, { passive: true })
 		return () => window.removeEventListener("scroll", handleScroll)
 	}, [])
 
@@ -59,11 +66,15 @@ export default function Header() {
 
 	return (
 		<header
-			className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
+			className={`fixed top-0 left-0 right-0 z-50 border-b ${
 				scrolled
 					? "bg-[rgba(10,14,26,0.95)] backdrop-blur-[20px] border-[rgba(var(--color-border),0.1)]"
 					: "bg-transparent border-transparent"
 			}`}
+			style={{
+				transition:
+					"background-color var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out), backdrop-filter var(--dur-base) var(--ease-out)",
+			}}
 		>
 			<div className="max-w-[1200px] mx-auto px-4 md:px-10 py-4 md:py-5 flex items-center justify-between">
 				{/* Left: glowing hexagon + doug.is */}
@@ -91,7 +102,10 @@ export default function Header() {
 							key={item.path}
 							href={item.path}
 							onClick={() => handleNavClick(item.path)}
-							className={`px-1.5 py-1 transition-colors duration-200 ${
+							style={{
+								transition: "color var(--dur-base) var(--ease-out)",
+							}}
+							className={`px-1.5 py-1 ${
 								isActive(pathname, item.path)
 									? "text-[rgb(var(--color-accent))]"
 									: "text-[rgba(var(--color-foreground),0.45)] hover:text-[rgb(var(--color-accent))]"
@@ -141,18 +155,28 @@ export default function Header() {
 					)}
 				</button>
 
-				{/* Mobile navigation overlay */}
+				{/* Mobile navigation overlay — iOS drawer curve.
+				   Items stagger in once the drawer has opened so the entry has tempo. */}
 				<div
-					className={`fixed inset-0 transform transition-transform duration-300 ease-in-out z-40 bg-[rgba(10,14,26,0.97)] backdrop-blur-[20px] ${
+					className={`fixed inset-0 transform z-40 bg-[rgba(10,14,26,0.97)] backdrop-blur-[20px] ${
 						isMenuOpen ? "translate-x-0" : "translate-x-full"
 					}`}
+					style={{
+						transition: "transform 320ms var(--ease-drawer)",
+					}}
 				>
 					<div className="flex flex-col items-center justify-center h-full gap-8">
-						{navItems.map((item) => (
+						{navItems.map((item, i) => (
 							<Link
 								key={item.path}
 								href={item.path}
-								className={`text-2xl tracking-[0.1em] transition-colors duration-200 ${
+								style={{
+									transition: "color var(--dur-base) var(--ease-out), opacity 280ms var(--ease-out), transform 280ms var(--ease-out)",
+									transitionDelay: isMenuOpen ? `${120 + i * 50}ms` : "0ms",
+									opacity: isMenuOpen ? 1 : 0,
+									transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
+								}}
+								className={`text-2xl tracking-[0.1em] ${
 									isActive(pathname, item.path)
 										? "text-[rgb(var(--color-accent))]"
 										: "text-[rgba(var(--color-foreground),0.6)]"
@@ -168,6 +192,11 @@ export default function Header() {
 						<Link
 							href="/connecting"
 							className="btn-primary mt-4"
+							style={{
+								transitionDelay: isMenuOpen ? `${120 + navItems.length * 50}ms` : "0ms",
+								opacity: isMenuOpen ? 1 : 0,
+								transform: isMenuOpen ? "translateY(0)" : "translateY(8px)",
+							}}
 							onClick={() => setIsMenuOpen(false)}
 						>
 							Get in Touch

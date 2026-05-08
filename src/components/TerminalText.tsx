@@ -1,10 +1,10 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef } from "react"
 
 const allLines = [
 	"$ whoami",
-	"doug rogers \u2014 engineer, founder, advisor",
+	"doug rogers — engineer, founder, advisor",
 	"",
 	"$ cat experience.log",
 	"25+ years building products",
@@ -15,118 +15,151 @@ const allLines = [
 	"$ cat strengths.txt",
 	"rapid prototyping & MVPs",
 	"idea validation & ICP identification",
-	"0 \u2192 1 product development",
+	"0 → 1 product development",
 	"customer empathy (the real kind)",
 	"",
 	"$ echo $STATUS",
 	"still shipping.",
 ]
 
+const COMMAND_SPEED = 45
+const TEXT_SPEED = 18
+const PROMPT = "❯ " // ❯
+
+function makeLineEl(line: string): HTMLDivElement {
+	const div = document.createElement("div")
+	div.style.minHeight = "25px"
+
+	if (line.startsWith("$")) {
+		const promptSpan = document.createElement("span")
+		promptSpan.style.color = "rgb(var(--color-accent))"
+		promptSpan.textContent = PROMPT
+		const textSpan = document.createElement("span")
+		textSpan.style.color = "rgb(var(--color-foreground))"
+		textSpan.textContent = line.substring(2)
+		div.appendChild(promptSpan)
+		div.appendChild(textSpan)
+	} else {
+		const span = document.createElement("span")
+		span.style.color = "rgba(var(--color-foreground), 0.55)"
+		span.textContent = line
+		div.appendChild(span)
+	}
+	return div
+}
+
 export default function TerminalText() {
-	const [lines, setLines] = useState<string[]>([])
-	const [currentLine, setCurrentLine] = useState(0)
-	const [currentChar, setCurrentChar] = useState(0)
-	const [showCursor, setShowCursor] = useState(true)
+	const containerRef = useRef<HTMLDivElement>(null)
+	const cancelledRef = useRef(false)
 
 	useEffect(() => {
-		const timer = setInterval(() => {
-			setShowCursor((prev) => !prev)
-		}, 530)
-		return () => clearInterval(timer)
+		const container = containerRef.current
+		if (!container) return
+
+		cancelledRef.current = false
+
+		// Reduced-motion: dump everything immediately, no typing.
+		const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+		if (reduced) {
+			allLines.forEach((line) => {
+				container.appendChild(makeLineEl(line || " "))
+			})
+			return () => {
+				cancelledRef.current = true
+				container.replaceChildren()
+			}
+		}
+
+		// Cursor element — animation is CSS-only; we just move it between
+		// lines and remove it when done.
+		const cursor = document.createElement("span")
+		cursor.textContent = "█"
+		cursor.style.color = "rgb(var(--color-accent))"
+		cursor.style.marginLeft = "1px"
+		cursor.style.animation = "terminal-blink 1s steps(2) infinite"
+
+		const typeLine = (lineIndex: number, charIndex: number) => {
+			if (cancelledRef.current) return
+			if (lineIndex >= allLines.length) {
+				cursor.remove()
+				return
+			}
+
+			const line = allLines[lineIndex]
+
+			// Empty line — just append a blank and move on after a short pause.
+			if (line === "") {
+				const blank = document.createElement("div")
+				blank.style.minHeight = "25px"
+				container.insertBefore(blank, cursor)
+				setTimeout(() => typeLine(lineIndex + 1, 0), 200)
+				return
+			}
+
+			// First char of a line — make a fresh row and put the cursor in it.
+			if (charIndex === 0) {
+				const row = document.createElement("div")
+				row.style.minHeight = "25px"
+
+				if (line.startsWith("$")) {
+					const promptSpan = document.createElement("span")
+					promptSpan.style.color = "rgb(var(--color-accent))"
+					promptSpan.textContent = PROMPT
+					row.appendChild(promptSpan)
+					const textSpan = document.createElement("span")
+					textSpan.style.color = "rgb(var(--color-foreground))"
+					textSpan.dataset.terminalContent = "true"
+					row.appendChild(textSpan)
+				} else {
+					const textSpan = document.createElement("span")
+					textSpan.style.color = "rgba(var(--color-foreground), 0.55)"
+					textSpan.dataset.terminalContent = "true"
+					row.appendChild(textSpan)
+				}
+
+				row.appendChild(cursor)
+				container.appendChild(row)
+			}
+
+			const isCommand = line.startsWith("$")
+			const visible = isCommand ? line.substring(2) : line
+			const target = visible.substring(0, charIndex + 1)
+
+			// Update only the text span — no React, no full re-render.
+			const lastRow = container.lastElementChild as HTMLElement | null
+			const textSpan = lastRow?.querySelector(
+				'[data-terminal-content="true"]'
+			) as HTMLElement | null
+			if (textSpan) textSpan.textContent = target
+
+			const charsToType = visible.length
+
+			if (charIndex + 1 < charsToType) {
+				setTimeout(
+					() => typeLine(lineIndex, charIndex + 1),
+					isCommand ? COMMAND_SPEED : TEXT_SPEED
+				)
+			} else {
+				setTimeout(() => typeLine(lineIndex + 1, 0), 50)
+			}
+		}
+
+		typeLine(0, 0)
+
+		return () => {
+			cancelledRef.current = true
+			container.replaceChildren()
+		}
 	}, [])
-
-	useEffect(() => {
-		if (currentLine >= allLines.length) return
-
-		const line = allLines[currentLine]
-		if (line === "") {
-			setTimeout(() => {
-				setLines((prev) => [...prev, ""])
-				setCurrentLine((prev) => prev + 1)
-				setCurrentChar(0)
-			}, 200)
-			return
-		}
-
-		if (currentChar >= line.length) {
-			setLines((prev) => [...prev, line])
-			setCurrentLine((prev) => prev + 1)
-			setCurrentChar(0)
-			return
-		}
-
-		const isCommand = line.startsWith("$")
-		const speed = isCommand ? 45 : 18
-
-		const timer = setTimeout(() => {
-			setCurrentChar((prev) => prev + 1)
-		}, speed)
-
-		return () => clearTimeout(timer)
-	}, [currentLine, currentChar])
-
-	const typingLine =
-		currentLine < allLines.length
-			? allLines[currentLine].substring(0, currentChar)
-			: ""
 
 	return (
 		<div
+			ref={containerRef}
 			style={{
 				fontFamily: "var(--font-body, 'JetBrains Mono', monospace)",
 				fontSize: "14px",
 				lineHeight: "1.8",
 			}}
-		>
-			{lines.map((line, i) => (
-				<div key={i} style={{ minHeight: "25px" }}>
-					{line.startsWith("$") ? (
-						<span>
-							<span style={{ color: "rgb(var(--color-accent))" }}>
-								&#10095;{" "}
-							</span>
-							<span style={{ color: "rgb(var(--color-foreground))" }}>
-								{line.substring(2)}
-							</span>
-						</span>
-					) : (
-						<span
-							style={{ color: "rgba(var(--color-foreground), 0.55)" }}
-						>
-							{line}
-						</span>
-					)}
-				</div>
-			))}
-			{currentLine < allLines.length && (
-				<div style={{ minHeight: "25px" }}>
-					{typingLine.startsWith("$") ? (
-						<span>
-							<span style={{ color: "rgb(var(--color-accent))" }}>
-								&#10095;{" "}
-							</span>
-							<span style={{ color: "rgb(var(--color-foreground))" }}>
-								{typingLine.substring(2)}
-							</span>
-						</span>
-					) : (
-						<span
-							style={{ color: "rgba(var(--color-foreground), 0.55)" }}
-						>
-							{typingLine}
-						</span>
-					)}
-					<span
-						style={{
-							opacity: showCursor ? 1 : 0,
-							color: "rgb(var(--color-accent))",
-							transition: "opacity 0.1s",
-						}}
-					>
-						&#9610;
-					</span>
-				</div>
-			)}
-		</div>
+		/>
 	)
 }
