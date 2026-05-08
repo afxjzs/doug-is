@@ -10,11 +10,20 @@ function getRandomQuote() {
 }
 
 export default function InvestingPage() {
+	// Render an empty quote until mount, then fade the random pick in.
+	// Avoids the default→real swap flicker that previously fired on every navigation.
 	const [randomQuote, setRandomQuote] = useState(quotes[0])
+	const [quoteVisible, setQuoteVisible] = useState(false)
 	const pathname = usePathname()
 
 	useEffect(() => {
-		setRandomQuote(getRandomQuote())
+		setQuoteVisible(false)
+		// Small delay so the fade-in is perceptible on rapid navigations.
+		const t = setTimeout(() => {
+			setRandomQuote(getRandomQuote())
+			setQuoteVisible(true)
+		}, 40)
+		return () => clearTimeout(t)
 	}, [pathname])
 
 	return (
@@ -115,7 +124,14 @@ export default function InvestingPage() {
 			<div className="mb-16">
 				<div className="max-w-3xl mx-auto">
 					<div className="relative rounded-lg py-6 px-8 bg-[rgba(var(--color-foreground),0.03)]">
-						<blockquote className="relative z-10 pl-4">
+						<blockquote
+							className="relative z-10 pl-4"
+							style={{
+								opacity: quoteVisible ? 1 : 0,
+								transition:
+									"opacity var(--dur-slow) var(--ease-out)",
+							}}
+						>
 							<div className="absolute top-0 left-0 w-[2px] h-full bg-[rgba(var(--color-accent),0.4)]"></div>
 							<p className="italic text-lg md:text-xl text-[rgba(var(--color-foreground),0.85)] leading-relaxed pl-4">
 								&ldquo;{randomQuote.text}&rdquo;

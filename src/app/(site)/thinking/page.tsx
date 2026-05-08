@@ -30,7 +30,11 @@ export default async function ThinkingPage() {
 					{posts.map((post) => (
 						<article
 							key={post.id}
-							className="flex flex-col overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 bg-[rgba(var(--color-background-alt),0.5)] border border-[rgba(var(--color-foreground),0.1)]"
+							className="flex flex-col overflow-hidden rounded-xl shadow-lg hover:shadow-xl bg-[rgba(var(--color-background-alt),0.5)] border border-[rgba(var(--color-foreground),0.1)]"
+							style={{
+								transition:
+									"box-shadow var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out)",
+							}}
 						>
 							<div className="group">
 								{post.featured_image ? (
@@ -46,7 +50,8 @@ export default async function ThinkingPage() {
 											fill
 											priority
 											sizes="(max-width: 768px) 100vw, 800px"
-											className="object-cover group-hover:scale-105 transition-transform duration-500"
+											className="object-cover group-hover:scale-[1.04]"
+											style={{ transition: "transform var(--dur-slow) var(--ease-out)" }}
 											unoptimized={post.featured_image.includes("supabase")}
 										/>
 									</Link>
@@ -57,7 +62,8 @@ export default async function ThinkingPage() {
 									<div className="flex items-center mb-3">
 										<Link
 											href={`/thinking/about/${post.category.toLowerCase()}`}
-											className="text-xs font-medium px-2.5 py-1 rounded-full bg-[rgba(var(--color-violet),0.1)] text-[rgba(var(--color-violet),0.8)] hover:bg-[rgba(var(--color-violet),0.2)] transition-colors"
+											className="text-xs font-medium px-2.5 py-1 rounded-full bg-[rgba(var(--color-violet),0.1)] text-[rgba(var(--color-violet),0.8)] hover:bg-[rgba(var(--color-violet),0.2)]"
+											style={{ transition: "background-color var(--dur-base) var(--ease-out)" }}
 										>
 											{post.category}
 										</Link>
@@ -74,17 +80,24 @@ export default async function ThinkingPage() {
 										}`}
 										className="block"
 									>
-										<h2 className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-3 group-hover:text-[rgb(var(--color-violet))] transition-colors">
+										<h2
+											className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-3 group-hover:text-[rgb(var(--color-violet))]"
+											style={{ transition: "color var(--dur-slow) var(--ease-out)" }}
+										>
 											{post.title}
 										</h2>
 										<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
 											{post.excerpt}
 										</p>
-										<div className="text-[rgb(var(--color-accent))] hover:text-[rgb(var(--color-accent-secondary))] transition-colors inline-flex items-center">
+										<div
+											className="text-[rgb(var(--color-accent))] hover:text-[rgb(var(--color-accent-secondary))] inline-flex items-center"
+											style={{ transition: "color var(--dur-base) var(--ease-out)" }}
+										>
 											Read more
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
-												className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform"
+												className="h-5 w-5 ml-1 group-hover:translate-x-1"
+												style={{ transition: "transform var(--dur-slow) var(--ease-out)" }}
 												viewBox="0 0 20 20"
 												fill="currentColor"
 											>

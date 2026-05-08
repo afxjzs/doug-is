@@ -176,9 +176,12 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 						border border-[rgba(var(--color-cyan),0.4)]
 						shadow-[0_0_15px_rgba(var(--color-cyan),0.3)]
 						rounded-md text-center p-8
-						transition-all duration-500 ease-in-out
 						${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}
 					`}
+					style={{
+						transition:
+							"opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out)",
+					}}
 				>
 					<h3 className="text-2xl font-semibold mb-3">
 						Thank You!
@@ -222,6 +225,10 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 					onFocus={() => handleFieldFocus("name")}
 					required
 					disabled={status === "submitting"}
+					style={{
+						transition:
+							"border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out)",
+					}}
 					className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
 						fieldErrors.name
 							? "border-[rgba(var(--color-red),0.5)]"
@@ -251,6 +258,10 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 					onFocus={() => handleFieldFocus("email")}
 					required
 					disabled={status === "submitting"}
+					style={{
+						transition:
+							"border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out)",
+					}}
 					className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
 						fieldErrors.email
 							? "border-[rgba(var(--color-red),0.5)]"
@@ -280,6 +291,10 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 						onFocus={() => handleFieldFocus("subject")}
 						required
 						disabled={status === "submitting"}
+						style={{
+							transition:
+								"border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out)",
+						}}
 						className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
 							fieldErrors.subject
 								? "border-[rgba(var(--color-red),0.5)]"
@@ -302,6 +317,10 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 						onFocus={() => handleFieldFocus("subject")}
 						required
 						disabled={status === "submitting"}
+						style={{
+							transition:
+								"border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out)",
+						}}
 						className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
 							fieldErrors.subject
 								? "border-[rgba(var(--color-red),0.5)]"
@@ -332,6 +351,10 @@ export default function ContactForm({ subjects }: ContactFormProps) {
 					required
 					disabled={status === "submitting"}
 					rows={6}
+					style={{
+						transition:
+							"border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out)",
+					}}
 					className={`w-full p-3 bg-[rgba(var(--color-foreground),0.03)] border ${
 						fieldErrors.message
 							? "border-[rgba(var(--color-red),0.5)]"

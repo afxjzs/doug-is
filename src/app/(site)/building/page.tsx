@@ -196,7 +196,11 @@ export default function BuildingPage() {
 					{companies.map((company) => (
 						<div
 							key={company.id}
-							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:shadow-md rounded-xl overflow-hidden transition-all duration-300 group`}
+							className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:shadow-md rounded-xl overflow-hidden group"
+							style={{
+								transition:
+									"border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out)",
+							}}
 						>
 							<div className="flex flex-col md:flex-row">
 								<div className="md:w-2/5 bg-[rgb(var(--color-background))] flex items-center justify-center p-8 rounded-xl overflow-hidden">
@@ -206,14 +210,15 @@ export default function BuildingPage() {
 												src={company.image}
 												alt={company.title}
 												fill
-												className="object-contain transition-transform duration-500 group-hover:scale-105 rounded-xl"
+												className="object-contain group-hover:scale-[1.04] rounded-xl"
+												style={{ transition: "transform var(--dur-slow) var(--ease-out)" }}
 												priority
 											/>
 										</div>
 									</div>
 								</div>
 								<div className="p-8 md:w-3/5">
-									<h3 className="text-2xl font-bold text-[rgba(var(--color-foreground),0.95)] mb-2 transition-colors">
+									<h3 className="text-2xl font-bold text-[rgba(var(--color-foreground),0.95)] mb-2">
 										{company.title}
 									</h3>
 									<p className="text-[rgb(var(--color-accent))] font-medium mb-3">
@@ -275,7 +280,11 @@ export default function BuildingPage() {
 					{projects.map((project) => (
 						<div
 							key={project.id}
-							className={`bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:shadow-md rounded-xl overflow-hidden transition-all duration-300 group`}
+							className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:shadow-md rounded-xl overflow-hidden group"
+							style={{
+								transition:
+									"border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out)",
+							}}
 						>
 							<div className="flex flex-col md:flex-row">
 								<div className="md:w-2/5 bg-[rgb(var(--color-background))] flex items-center justify-center p-8 rounded-xl overflow-hidden">
@@ -296,7 +305,8 @@ export default function BuildingPage() {
 														src={project.image}
 														alt={project.title}
 														fill
-														className="object-contain transition-transform duration-500 group-hover:scale-105 rounded-xl"
+														className="object-contain group-hover:scale-[1.04] rounded-xl"
+														style={{ transition: "transform var(--dur-slow) var(--ease-out)" }}
 													/>
 												</Link>
 											) : (
@@ -304,7 +314,8 @@ export default function BuildingPage() {
 													src={project.image}
 													alt={project.title}
 													fill
-													className="object-contain transition-transform duration-500 group-hover:scale-105 rounded-xl"
+													className="object-contain group-hover:scale-[1.04] rounded-xl"
+													style={{ transition: "transform var(--dur-slow) var(--ease-out)" }}
 												/>
 											)}
 										</div>
@@ -320,7 +331,8 @@ export default function BuildingPage() {
 											}
 										>
 											<h2
-												className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 group-hover:text-[rgb(var(--color-accent))] transition-colors"
+												className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 group-hover:text-[rgb(var(--color-accent))]"
+												style={{ transition: "color var(--dur-base) var(--ease-out)" }}
 											>
 												{project.title}
 											</h2>
