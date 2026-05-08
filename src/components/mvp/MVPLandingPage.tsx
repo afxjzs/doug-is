@@ -5,6 +5,38 @@ import Image from "next/image"
 import { MVPVariantConfig } from "@/lib/mvp-variants/types"
 import { useAnalytics } from "@/lib/analytics/context"
 
+// Reveal-on-scroll: flips data-revealed once the element crosses the viewport.
+// Children stagger via CSS `transition-delay` set with the `data-stagger` index.
+function useReveal<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    // Already in view (e.g. on a short page) → reveal immediately, skip the observer.
+    const rect = el.getBoundingClientRect()
+    if (rect.top < window.innerHeight) {
+      el.setAttribute("data-revealed", "true")
+      return
+    }
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.setAttribute("data-revealed", "true")
+            obs.unobserve(entry.target)
+          }
+        })
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.05 }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
+  return ref
+}
+
 interface MVPLandingPageProps {
   variant: MVPVariantConfig
 }
@@ -96,6 +128,15 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
   const formRef = useRef<HTMLDivElement>(null)
   const calLoadedRef = useRef(false)
   const analytics = useAnalytics()
+
+  // Reveal-on-scroll wrappers — one per section that has a grid we want to stagger.
+  const statsRevealRef = useReveal<HTMLDivElement>()
+  const featuresRevealRef = useReveal<HTMLDivElement>()
+  const audienceRevealRef = useReveal<HTMLDivElement>()
+  const credentialsRevealRef = useReveal<HTMLDivElement>()
+  const processRevealRef = useReveal<HTMLDivElement>()
+  const faqRevealRef = useReveal<HTMLDivElement>()
+  const formRevealRef = useReveal<HTMLDivElement>()
 
   // Track page view with UTM params on mount
   useEffect(() => {
@@ -276,19 +317,95 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
       <style>{`
         .mvp-landing * { box-sizing: border-box; }
         .mvp-landing h1, .mvp-landing h2, .mvp-landing h3, .mvp-landing h4 { font-family: 'Inter', system-ui, sans-serif; }
-        @keyframes mvp-float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
-        @keyframes mvp-glow-pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }
+
+        /* Background atmosphere — tightened range so it reads as ambient, not twitchy. */
+        @keyframes mvp-glow-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.7; } }
+
+        /* Hero entrance — 12px lift, 480ms with the system ease-out. */
+        @keyframes mvp-hero-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        .mvp-hero-in { animation: mvp-hero-in var(--dur-hero) var(--ease-out) both; }
+
+        /* Brand gradient on the headline — subtle drift, slowed enough to feel ambient. */
         @keyframes mvp-gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes mvp-slide-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .mvp-gradient-text { background: linear-gradient(135deg, #60A5FA, #A78BFA, #34D399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200% 200%; animation: mvp-gradient-shift 6s ease infinite; }
-        .mvp-card-glow:hover { box-shadow: 0 0 40px rgba(59, 130, 246, 0.08), 0 8px 32px rgba(0, 0, 0, 0.3); }
-        .mvp-stat-card { background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.8)); backdrop-filter: blur(12px); }
-        .mvp-feature-icon { background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(167, 139, 250, 0.15)); }
-        .mvp-step-number { background: linear-gradient(135deg, #3B82F6, #8B5CF6); }
-        .mvp-cta-btn { background: linear-gradient(135deg, #3B82F6, #6366F1); transition: all 0.3s ease; }
-        .mvp-cta-btn:hover { background: linear-gradient(135deg, #2563EB, #4F46E5); box-shadow: 0 0 40px rgba(59, 130, 246, 0.35); transform: translateY(-2px); }
-        .mvp-form-input { transition: all 0.2s ease; }
+        .mvp-gradient-text {
+          background: linear-gradient(135deg, #60A5FA, #A78BFA, #34D399);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          background-size: 200% 200%;
+          animation: mvp-gradient-shift 14s ease-in-out infinite;
+        }
+
+        /* Trust-badge dot — gentle warm pulse instead of the default animate-pulse wobble. */
+        @keyframes mvp-dot-pulse { 0%, 100% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.15); opacity: 1; } }
+        .mvp-dot-pulse { animation: mvp-dot-pulse 2.4s var(--ease-in-out) infinite; }
+
+        /* Scroll reveal — wrapper sets data-revealed="true" when in view.
+           Children with .mvp-reveal-child stagger their entry via transition-delay. */
+        .mvp-reveal { opacity: 0; transform: translateY(16px); transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
+        .mvp-reveal[data-revealed="true"] { opacity: 1; transform: translateY(0); }
+
+        .mvp-reveal-children > .mvp-reveal-child { opacity: 0; transform: translateY(16px); transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
+        .mvp-reveal-children[data-revealed="true"] > .mvp-reveal-child { opacity: 1; transform: translateY(0); }
+
+        /* Stat / feature / audience cards. Hover lift gated to real pointers. */
+        .mvp-stat-card { background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.8)); backdrop-filter: blur(12px); transition: border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out); }
+        .mvp-feature-icon { background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(167, 139, 250, 0.15)); transition: transform var(--dur-base) var(--ease-out); }
+        .mvp-step-number { background: linear-gradient(135deg, #3B82F6, #8B5CF6); box-shadow: 0 0 24px rgba(59, 130, 246, 0.18); transition: box-shadow var(--dur-slow) var(--ease-out); }
+
+        @media (hover: hover) and (pointer: fine) {
+          .mvp-card-glow:hover { box-shadow: 0 0 40px rgba(59, 130, 246, 0.08), 0 8px 32px rgba(0, 0, 0, 0.3); }
+          .mvp-feature-card:hover .mvp-feature-icon { transform: scale(1.06); }
+          .mvp-step-card:hover .mvp-step-number { box-shadow: 0 0 36px rgba(99, 102, 241, 0.32); }
+        }
+
+        /* Primary CTA — proper transitions + press feedback. */
+        .mvp-cta-btn {
+          background: linear-gradient(135deg, #3B82F6, #6366F1);
+          box-shadow: 0 4px 14px -4px rgba(59, 130, 246, 0.32);
+          transition:
+            background var(--dur-base) var(--ease-out),
+            box-shadow var(--dur-base) var(--ease-out),
+            transform var(--dur-press) var(--ease-press);
+        }
+        @media (hover: hover) and (pointer: fine) {
+          .mvp-cta-btn:hover {
+            background: linear-gradient(135deg, #2563EB, #4F46E5);
+            box-shadow: 0 8px 28px -8px rgba(59, 130, 246, 0.5);
+            transform: translateY(-1px);
+          }
+        }
+        .mvp-cta-btn:active { transform: translateY(0) scale(0.97); transition-duration: 80ms; }
+        .mvp-cta-btn:disabled { transform: none !important; }
+
+        /* Submit-state crossfade — text and spinner stack in the same slot,
+           opacity + blur bridge the swap so neither side pops. */
+        .mvp-cta-content { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; }
+        .mvp-cta-layer { transition: opacity var(--dur-fast) var(--ease-out), filter var(--dur-fast) var(--ease-out); }
+        .mvp-cta-layer[data-hidden="true"] { opacity: 0; filter: blur(2px); pointer-events: none; }
+        .mvp-cta-layer[data-stacked="true"] { position: absolute; inset: 0; }
+
+        /* Form inputs — specific properties, no surprise re-paints. */
+        .mvp-form-input {
+          transition:
+            border-color var(--dur-fast) var(--ease-out),
+            box-shadow var(--dur-fast) var(--ease-out),
+            background-color var(--dur-fast) var(--ease-out);
+        }
         .mvp-form-input:focus { box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+
+        /* FAQ accordion — grid-template-rows trick for true auto-height. */
+        .mvp-faq-grid { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--dur-slow) var(--ease-out); }
+        .mvp-faq-grid[data-open="true"] { grid-template-rows: 1fr; }
+        .mvp-faq-grid > * { overflow: hidden; min-height: 0; }
+        .mvp-faq-chevron { transition: transform var(--dur-base) var(--ease-out), background-color var(--dur-base) var(--ease-out); }
+        .mvp-faq-chevron[data-open="true"] { transform: rotate(180deg); background-color: rgba(59, 130, 246, 0.2); }
+
+        /* Success state — scale-from-0.95 (never scale-from-0) entrance. */
+        @keyframes mvp-success-in { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .mvp-success-in { animation: mvp-success-in var(--dur-slow) var(--ease-out) both; }
+        @keyframes mvp-check-pop { from { opacity: 0; transform: scale(0.6); } 60% { opacity: 1; transform: scale(1.08); } to { opacity: 1; transform: scale(1); } }
+        .mvp-check-pop { animation: mvp-check-pop 420ms var(--ease-out) 80ms both; }
       `}</style>
 
       <div className="mvp-landing bg-[#0B1120] text-[#F8FAFC]">
@@ -304,10 +421,10 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
             <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
           </div>
 
-          <div className="relative max-w-5xl mx-auto px-6 py-20 md:py-0 text-center" style={{ animation: "mvp-slide-up 0.8s ease-out" }}>
+          <div className="relative max-w-5xl mx-auto px-6 py-20 md:py-0 text-center mvp-hero-in">
             {/* Trust badge */}
             <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] text-sm text-blue-400 mb-10 backdrop-blur-sm">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-emerald-400 mvp-dot-pulse" />
               Now accepting projects
             </div>
 
@@ -374,11 +491,12 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
             <p className="text-[#94A3B8] text-lg md:text-xl text-center max-w-3xl mx-auto mb-16 leading-relaxed">
               {variant.valueProp.description}
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div ref={statsRevealRef} className="mvp-reveal-children grid grid-cols-1 md:grid-cols-3 gap-6">
               {variant.valueProp.stats.map((stat, idx) => (
                 <div
                   key={stat.label}
-                  className="mvp-stat-card text-center p-10 rounded-3xl border border-[rgba(148,163,184,0.08)] hover:border-[rgba(59,130,246,0.2)] transition-all duration-300"
+                  className="mvp-reveal-child mvp-stat-card text-center p-10 rounded-3xl border border-[rgba(148,163,184,0.08)] hover:border-[rgba(59,130,246,0.2)]"
+                  style={{ transitionDelay: `${idx * 60}ms` }}
                 >
                   <div className={`text-5xl md:text-6xl font-extrabold mb-3 ${idx === 0 ? "text-blue-400" : idx === 1 ? "text-emerald-400" : "text-purple-400"}`}>
                     {stat.value}
@@ -404,16 +522,28 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
             <p className="text-[#94A3B8] text-lg md:text-xl text-center max-w-2xl mx-auto mb-16">
               {variant.features.description}
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {variant.features.items.map((item) => (
+            <div ref={featuresRevealRef} className="mvp-reveal-children grid grid-cols-1 md:grid-cols-2 gap-6">
+              {variant.features.items.map((item, idx) => (
                 <div
                   key={item.title}
-                  className="mvp-card-glow group p-8 rounded-3xl bg-[#111827] border border-[rgba(148,163,184,0.08)] hover:border-[rgba(99,102,241,0.3)] transition-all duration-300"
+                  className="mvp-reveal-child mvp-card-glow mvp-feature-card group p-8 rounded-3xl bg-[#111827] border border-[rgba(148,163,184,0.08)] hover:border-[rgba(99,102,241,0.3)]"
+                  style={{
+                    transitionDelay: `${idx * 60}ms`,
+                    transitionProperty:
+                      "opacity, transform, border-color, box-shadow",
+                    transitionDuration: "var(--dur-slow)",
+                    transitionTimingFunction: "var(--ease-out)",
+                  }}
                 >
-                  <div className="mvp-feature-icon w-14 h-14 rounded-2xl flex items-center justify-center text-blue-400 mb-5 group-hover:scale-110 transition-transform duration-300">
+                  <div className="mvp-feature-icon w-14 h-14 rounded-2xl flex items-center justify-center text-blue-400 mb-5">
                     {iconMap[item.icon] || iconMap.rocket}
                   </div>
-                  <h3 className="text-xl font-bold mb-3 group-hover:text-blue-300 transition-colors">{item.title}</h3>
+                  <h3
+                    className="text-xl font-bold mb-3 group-hover:text-blue-300"
+                    style={{ transition: "color var(--dur-base) var(--ease-out)" }}
+                  >
+                    {item.title}
+                  </h3>
                   <p className="text-[#94A3B8] leading-relaxed">{item.description}</p>
                 </div>
               ))}
@@ -432,11 +562,17 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
             <p className="text-[#94A3B8] text-lg md:text-xl text-center max-w-2xl mx-auto mb-12">
               {variant.audience.description}
             </p>
-            <div className="space-y-4">
-              {variant.audience.items.map((item) => (
+            <div ref={audienceRevealRef} className="mvp-reveal-children space-y-4">
+              {variant.audience.items.map((item, idx) => (
                 <div
                   key={item}
-                  className="flex items-start gap-4 p-5 rounded-2xl bg-[#111827] border border-[rgba(148,163,184,0.08)] hover:border-[rgba(59,130,246,0.2)] transition-all duration-300"
+                  className="mvp-reveal-child flex items-start gap-4 p-5 rounded-2xl bg-[#111827] border border-[rgba(148,163,184,0.08)] hover:border-[rgba(59,130,246,0.2)]"
+                  style={{
+                    transitionDelay: `${idx * 50}ms`,
+                    transitionProperty: "opacity, transform, border-color",
+                    transitionDuration: "var(--dur-slow)",
+                    transitionTimingFunction: "var(--ease-out)",
+                  }}
                 >
                   <div className="mt-0.5 w-6 h-6 rounded-full bg-blue-500/15 flex items-center justify-center flex-shrink-0">
                     <svg className="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -457,7 +593,7 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
           <div className="absolute left-[10%] top-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-blue-600/10 rounded-full blur-[80px]" />
 
           <div className="relative max-w-5xl mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+            <div ref={credentialsRevealRef} className="mvp-reveal grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
               {/* Photo side */}
               <div className="text-center md:text-left">
                 <div className="relative inline-block mb-10">
@@ -516,13 +652,17 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
             <h2 className="text-3xl md:text-5xl font-bold text-center mb-20">
               {variant.process.headline}
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+            <div ref={processRevealRef} className="mvp-reveal-children grid grid-cols-1 md:grid-cols-4 gap-8 relative">
               {/* Connecting line (desktop) */}
               <div className="hidden md:block absolute top-12 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-blue-500/0" />
 
-              {variant.process.steps.map((step) => (
-                <div key={step.number} className="relative text-center group">
-                  <div className="mvp-step-number relative z-10 w-24 h-24 rounded-3xl flex items-center justify-center text-3xl font-extrabold text-white mx-auto mb-8 shadow-[0_0_30px_rgba(59,130,246,0.2)] group-hover:shadow-[0_0_40px_rgba(99,102,241,0.3)] transition-shadow duration-300">
+              {variant.process.steps.map((step, idx) => (
+                <div
+                  key={step.number}
+                  className="mvp-reveal-child mvp-step-card relative text-center group"
+                  style={{ transitionDelay: `${idx * 70}ms` }}
+                >
+                  <div className="mvp-step-number relative z-10 w-24 h-24 rounded-3xl flex items-center justify-center text-3xl font-extrabold text-white mx-auto mb-8">
                     {step.number}
                   </div>
                   <h3 className="font-bold text-lg mb-3">{step.title}</h3>
@@ -543,39 +683,51 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
             <h2 className="text-3xl md:text-5xl font-bold text-center mb-16">
               {variant.faq.headline}
             </h2>
-            <div className="space-y-4">
-              {variant.faq.items.map((item, idx) => (
-                <div
-                  key={item.question}
-                  className="rounded-2xl border border-[rgba(148,163,184,0.08)] overflow-hidden transition-all duration-200 hover:border-[rgba(148,163,184,0.15)]"
-                >
-                  <button
-                    onClick={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)}
-                    className="w-full flex items-center justify-between p-6 md:p-7 text-left bg-[#111827] hover:bg-[#1E293B]/60 transition-colors"
-                  >
-                    <span className="font-semibold text-lg pr-4">{item.question}</span>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-200 ${openFaqIndex === idx ? "bg-blue-500/20 rotate-180" : "bg-[rgba(148,163,184,0.08)]"}`}>
-                      <svg
-                        className="w-4 h-4 text-blue-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </div>
-                  </button>
+            <div ref={faqRevealRef} className="mvp-reveal-children space-y-4">
+              {variant.faq.items.map((item, idx) => {
+                const open = openFaqIndex === idx
+                return (
                   <div
-                    className="overflow-hidden transition-all duration-300"
-                    style={{ maxHeight: openFaqIndex === idx ? "500px" : "0px", opacity: openFaqIndex === idx ? 1 : 0 }}
+                    key={item.question}
+                    className="mvp-reveal-child rounded-2xl border border-[rgba(148,163,184,0.08)] overflow-hidden hover:border-[rgba(148,163,184,0.15)]"
+                    style={{
+                      transitionDelay: `${idx * 40}ms`,
+                      transitionProperty: "opacity, transform, border-color",
+                      transitionDuration: "var(--dur-slow)",
+                      transitionTimingFunction: "var(--ease-out)",
+                    }}
                   >
-                    <div className="px-6 md:px-7 pb-6 md:pb-7 bg-[#111827] text-[#94A3B8] leading-relaxed">
-                      {item.answer}
+                    <button
+                      onClick={() => setOpenFaqIndex(open ? null : idx)}
+                      className="w-full flex items-center justify-between p-6 md:p-7 text-left bg-[#111827] hover:bg-[#1E293B]/60"
+                      style={{ transition: "background-color var(--dur-base) var(--ease-out)" }}
+                    >
+                      <span className="font-semibold text-lg pr-4">{item.question}</span>
+                      <div
+                        className="mvp-faq-chevron w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-[rgba(148,163,184,0.08)]"
+                        data-open={open ? "true" : "false"}
+                      >
+                        <svg
+                          className="w-4 h-4 text-blue-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2.5}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </button>
+                    <div className="mvp-faq-grid" data-open={open ? "true" : "false"}>
+                      <div>
+                        <div className="px-6 md:px-7 pb-6 md:pb-7 bg-[#111827] text-[#94A3B8] leading-relaxed">
+                          {item.answer}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </section>
@@ -594,8 +746,8 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
             </p>
 
             {formStatus === "success" ? (
-              <div className="text-center">
-                <div className="w-20 h-20 rounded-full bg-emerald-500/15 flex items-center justify-center mx-auto mb-6 border border-emerald-500/25">
+              <div className="text-center mvp-success-in">
+                <div className="mvp-check-pop w-20 h-20 rounded-full bg-emerald-500/15 flex items-center justify-center mx-auto mb-6 border border-emerald-500/25">
                   <svg className="w-10 h-10 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
@@ -612,10 +764,13 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
                 />
               </div>
             ) : (
-              <div className="p-8 md:p-10 rounded-3xl bg-[#111827] border border-[rgba(148,163,184,0.08)]">
+              <div ref={formRevealRef} className="mvp-reveal p-8 md:p-10 rounded-3xl bg-[#111827] border border-[rgba(148,163,184,0.08)]">
                 <form onSubmit={handleSubmit} className="space-y-5">
                   {formStatus === "error" && (
-                    <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                    <div
+                      className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm"
+                      style={{ animation: "mvp-success-in var(--dur-slow) var(--ease-out) both" }}
+                    >
                       {errorMessage}
                     </div>
                   )}
@@ -687,19 +842,30 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
                   <button
                     type="submit"
                     disabled={formStatus === "submitting"}
-                    className="mvp-cta-btn w-full py-4 text-white text-lg font-semibold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+                    className="mvp-cta-btn w-full py-4 text-white text-lg font-semibold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
                   >
-                    {formStatus === "submitting" ? (
-                      <span className="inline-flex items-center gap-2">
+                    <span className="mvp-cta-content">
+                      {/* Idle label — fades + blurs out when submitting */}
+                      <span
+                        className="mvp-cta-layer"
+                        data-stacked="true"
+                        data-hidden={formStatus === "submitting" ? "true" : "false"}
+                      >
+                        {variant.form.submitText}
+                      </span>
+                      {/* Spinner overlay — fades + sharpens in */}
+                      <span
+                        className="mvp-cta-layer inline-flex items-center gap-2"
+                        data-hidden={formStatus === "submitting" ? "false" : "true"}
+                        aria-hidden={formStatus !== "submitting"}
+                      >
                         <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                         </svg>
                         Submitting...
                       </span>
-                    ) : (
-                      variant.form.submitText
-                    )}
+                    </span>
                   </button>
 
                   <p className="text-center text-sm text-[#475569]">
