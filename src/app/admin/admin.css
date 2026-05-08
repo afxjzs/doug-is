@@ -65,7 +65,9 @@
 	padding: 0.75rem 1rem;
 	color: var(--admin-text-secondary);
 	text-decoration: none;
-	transition: all 0.2s ease;
+	transition:
+		background-color var(--dur-fast) var(--ease-out),
+		color var(--dur-fast) var(--ease-out);
 	border-radius: 0.375rem;
 	margin: 0.25rem 0.75rem;
 	text-align: left;
@@ -102,7 +104,9 @@
 	color: var(--admin-text-secondary);
 	text-decoration: none;
 	border-radius: 0.375rem;
-	transition: all 0.2s ease;
+	transition:
+		background-color var(--dur-fast) var(--ease-out),
+		color var(--dur-fast) var(--ease-out);
 	margin-bottom: 0.5rem;
 	text-align: left;
 }
@@ -147,7 +151,10 @@
 	padding: 0.75rem 1.5rem;
 	border-radius: 0.5rem;
 	font-weight: 500;
-	transition: all 0.2s ease;
+	transition:
+		background-color var(--dur-base) var(--ease-out),
+		box-shadow var(--dur-base) var(--ease-out),
+		transform var(--dur-press) var(--ease-press);
 	display: inline-flex;
 	align-items: center;
 	gap: 0.5rem;
@@ -161,6 +168,11 @@
 	box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
 }
 
+.admin-layout .bg-green-600:active {
+	transform: translateY(0) scale(0.97);
+	transition-duration: 80ms;
+}
+
 /* Admin button variants - MATCHING SITE DESIGN */
 .admin-layout .btn-primary {
 	background-color: rgba(var(--color-violet), 0.1);
@@ -169,7 +181,11 @@
 	color: white;
 	padding: 0.75rem 1.5rem;
 	font-weight: 500;
-	transition: all 300ms;
+	transition:
+		background-color var(--dur-base) var(--ease-out),
+		border-color var(--dur-base) var(--ease-out),
+		box-shadow var(--dur-base) var(--ease-out),
+		transform var(--dur-press) var(--ease-press);
 	position: relative;
 	overflow: hidden;
 	display: inline-flex;
@@ -185,13 +201,21 @@
 	box-shadow: 0 0 15px rgba(var(--color-violet), 0.3);
 }
 
+.admin-layout .btn-primary:active {
+	transform: scale(0.97);
+	transition-duration: 80ms;
+}
+
 .admin-layout .btn-secondary {
 	background-color: rgba(255, 255, 255, 0.1);
 	color: var(--admin-text-primary);
 	padding: 0.5rem 1rem;
 	border-radius: 0.375rem;
 	font-weight: 500;
-	transition: all 0.2s ease;
+	transition:
+		background-color var(--dur-fast) var(--ease-out),
+		border-color var(--dur-fast) var(--ease-out),
+		transform var(--dur-press) var(--ease-press);
 	display: inline-flex;
 	align-items: center;
 	gap: 0.5rem;
@@ -205,6 +229,11 @@
 	border-color: rgba(255, 255, 255, 0.2);
 }
 
+.admin-layout .btn-secondary:active {
+	transform: scale(0.97);
+	transition-duration: 80ms;
+}
+
 /* Admin neon button variants to match site design */
 .admin-layout .neon-button-violet {
 	padding: 0.75rem 1.5rem;
@@ -213,7 +242,11 @@
 	border-radius: 0.5rem;
 	color: white;
 	font-weight: 500;
-	transition: all 300ms;
+	transition:
+		background-color var(--dur-base) var(--ease-out),
+		border-color var(--dur-base) var(--ease-out),
+		box-shadow var(--dur-base) var(--ease-out),
+		transform var(--dur-press) var(--ease-press);
 	position: relative;
 	overflow: hidden;
 	min-width: 160px;
@@ -238,7 +271,11 @@
 	border-radius: 0.5rem;
 	color: white;
 	font-weight: 500;
-	transition: all 300ms;
+	transition:
+		background-color var(--dur-base) var(--ease-out),
+		border-color var(--dur-base) var(--ease-out),
+		box-shadow var(--dur-base) var(--ease-out),
+		transform var(--dur-press) var(--ease-press);
 	position: relative;
 	overflow: hidden;
 	min-width: 160px;
@@ -263,7 +300,11 @@
 	border-radius: 0.5rem;
 	color: white;
 	font-weight: 500;
-	transition: all 300ms;
+	transition:
+		background-color var(--dur-base) var(--ease-out),
+		border-color var(--dur-base) var(--ease-out),
+		box-shadow var(--dur-base) var(--ease-out),
+		transform var(--dur-press) var(--ease-press);
 	position: relative;
 	overflow: hidden;
 	min-width: 160px;
@@ -285,7 +326,7 @@
 .admin-layout a {
 	color: var(--admin-accent);
 	text-decoration: none;
-	transition: color 0.2s ease;
+	transition: color var(--dur-fast) var(--ease-out);
 }
 
 .admin-layout a:hover {
@@ -400,6 +441,10 @@
 	color: var(--admin-text-secondary);
 }
 
+.admin-layout .posts-table tbody tr {
+	transition: background-color 120ms var(--ease-out);
+}
+
 .admin-layout .posts-table tr:hover {
 	background-color: rgba(255, 255, 255, 0.02);
 }
@@ -446,7 +491,9 @@
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	border-radius: 0.5rem;
 	margin-bottom: 0;
-	transition: all 0.2s ease;
+	transition:
+		border-color var(--dur-fast) var(--ease-out),
+		box-shadow var(--dur-fast) var(--ease-out);
 }
 
 .admin-layout .contacts-list .contact-card:hover {
@@ -495,12 +542,20 @@
 	font-weight: 500;
 	border: none;
 	cursor: pointer;
-	transition: all 0.2s ease;
+	transition:
+		background-color var(--dur-fast) var(--ease-out),
+		color var(--dur-fast) var(--ease-out),
+		transform var(--dur-press) var(--ease-press);
 }
 
 .admin-layout .contacts-list .btn-mark-read:hover {
 	background-color: #0891b2;
 	transform: translateY(-1px);
+}
+
+.admin-layout .contacts-list .btn-mark-read:active {
+	transform: translateY(0) scale(0.97);
+	transition-duration: 80ms;
 }
 
 .admin-layout .contacts-list .btn-mark-read.read {
@@ -539,7 +594,9 @@
 	background: none;
 	color: var(--admin-text-secondary);
 	cursor: pointer;
-	transition: all 0.2s ease;
+	transition:
+		color var(--dur-fast) var(--ease-out),
+		border-color var(--dur-fast) var(--ease-out);
 	border-bottom: 2px solid transparent;
 	font-weight: 500;
 }
@@ -568,7 +625,9 @@
 	padding: 0.75rem 1rem;
 	border-radius: 0.5rem;
 	font-size: 0.875rem;
-	transition: all 0.2s ease;
+	transition:
+		border-color var(--dur-fast) var(--ease-out),
+		box-shadow var(--dur-fast) var(--ease-out);
 }
 
 .admin-layout .search-controls input:focus,
@@ -586,7 +645,7 @@
 @media (max-width: 768px) {
 	.admin-navigation {
 		transform: translateX(-100%);
-		transition: transform 0.3s ease;
+		transition: transform 280ms var(--ease-drawer);
 	}
 
 	.admin-navigation.open {
