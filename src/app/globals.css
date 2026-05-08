@@ -31,6 +31,37 @@
 	--color-emerald: var(--color-accent);
 	--color-pink: var(--color-accent-secondary);
 	--color-orange: var(--color-accent-secondary);
+
+	/* Motion tokens — every animation in the system pulls from these.
+	   Built on Emil Kowalski's design-engineering philosophy:
+	   strong custom curves, durations under 300ms for UI. */
+	--ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+	--ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+	--ease-press: cubic-bezier(0.4, 0, 0.2, 1);
+	--ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+	--dur-press: 140ms;
+	--dur-fast: 180ms;
+	--dur-base: 220ms;
+	--dur-slow: 320ms;
+	--dur-hero: 480ms;
+}
+
+/* ============================================
+   Reduced Motion — global accessibility baseline.
+   Honors prefers-reduced-motion by collapsing all animation
+   and transition durations. Opacity/color transitions still
+   feel right at near-zero; transform-based motion disappears.
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
 }
 
 /* ============================================
@@ -87,6 +118,11 @@
 		0%, 100% { transform: translateY(0px) rotate(0deg); }
 		50% { transform: translateY(-20px) rotate(3deg); }
 	}
+
+	/* Terminal cursor — `steps(2)` makes a clean on/off blink instead of a fade. */
+	@keyframes terminal-blink {
+		50% { opacity: 0; }
+	}
 }
 
 /* ============================================
@@ -99,6 +135,21 @@
 
 	.animate-hex-glow {
 		animation: hex-glow 3s ease infinite;
+	}
+
+	/* Hero entrance — fade up 8px in 480ms with the system ease-out.
+	   `both` so the element keeps its from-state until its delay fires. */
+	.hero-stagger {
+		opacity: 0;
+		transform: translateY(8px);
+		animation: hero-stagger var(--dur-hero) var(--ease-out) both;
+	}
+
+	@keyframes hero-stagger {
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 }
 
@@ -190,7 +241,9 @@
 		font-family: var(--font-display, 'Playfair Display', Georgia, serif);
 	}
 
-	/* Primary button — amber bg, navy text, monospace */
+	/* Primary button — amber bg, navy text, monospace.
+	   Carries a baseline shadow so hover *grows* it rather than
+	   summoning one from nothing. Press feedback via :active. */
 	.btn-primary {
 		padding: 0.75rem 1.5rem;
 		background-color: rgb(var(--color-accent));
@@ -201,15 +254,27 @@
 		font-weight: 500;
 		font-size: 13px;
 		letter-spacing: 0.05em;
-		transition: all 200ms ease;
+		box-shadow: 0 1px 3px rgba(var(--color-accent), 0.12);
+		transition:
+			background-color var(--dur-base) var(--ease-out),
+			box-shadow var(--dur-base) var(--ease-out),
+			transform var(--dur-press) var(--ease-press),
+			opacity var(--dur-base) var(--ease-out);
 		position: relative;
 		overflow: hidden;
 	}
 
-	.btn-primary:hover {
-		opacity: 0.9;
-		box-shadow: 0 2px 8px rgba(var(--color-accent), 0.3);
-		transform: translateY(-1px);
+	@media (hover: hover) and (pointer: fine) {
+		.btn-primary:hover {
+			opacity: 0.92;
+			box-shadow: 0 4px 14px -4px rgba(var(--color-accent), 0.4);
+			transform: translateY(-1px);
+		}
+	}
+
+	.btn-primary:active {
+		transform: translateY(0) scale(0.97);
+		transition-duration: 80ms;
 	}
 
 	/* Secondary button — outlined amber, monospace */
@@ -223,17 +288,28 @@
 		font-weight: 400;
 		font-size: 13px;
 		letter-spacing: 0.05em;
-		transition: all 200ms ease;
+		transition:
+			background-color var(--dur-base) var(--ease-out),
+			border-color var(--dur-base) var(--ease-out),
+			color var(--dur-base) var(--ease-out),
+			transform var(--dur-press) var(--ease-press);
 		position: relative;
 		overflow: hidden;
 	}
 
-	.btn-secondary:hover {
-		background-color: rgba(var(--color-accent), 0.1);
-		border-color: rgba(var(--color-accent), 0.6);
+	@media (hover: hover) and (pointer: fine) {
+		.btn-secondary:hover {
+			background-color: rgba(var(--color-accent), 0.1);
+			border-color: rgba(var(--color-accent), 0.6);
+		}
 	}
 
-	/* Legacy neon button aliases — map to btn-primary */
+	.btn-secondary:active {
+		transform: scale(0.97);
+		transition-duration: 80ms;
+	}
+
+	/* Legacy neon button aliases — same treatment as btn-primary. */
 	.neon-button-magenta,
 	.neon-button-pink,
 	.neon-button-orange {
@@ -246,15 +322,29 @@
 		font-weight: 500;
 		font-size: 13px;
 		letter-spacing: 0.05em;
-		transition: all 200ms ease;
+		box-shadow: 0 1px 3px rgba(var(--color-accent), 0.12);
+		transition:
+			background-color var(--dur-base) var(--ease-out),
+			box-shadow var(--dur-base) var(--ease-out),
+			transform var(--dur-press) var(--ease-press),
+			opacity var(--dur-base) var(--ease-out);
 	}
 
-	.neon-button-magenta:hover,
-	.neon-button-pink:hover,
-	.neon-button-orange:hover {
-		opacity: 0.9;
-		box-shadow: 0 2px 8px rgba(var(--color-accent), 0.3);
-		transform: translateY(-1px);
+	@media (hover: hover) and (pointer: fine) {
+		.neon-button-magenta:hover,
+		.neon-button-pink:hover,
+		.neon-button-orange:hover {
+			opacity: 0.92;
+			box-shadow: 0 4px 14px -4px rgba(var(--color-accent), 0.4);
+			transform: translateY(-1px);
+		}
+	}
+
+	.neon-button-magenta:active,
+	.neon-button-pink:active,
+	.neon-button-orange:active {
+		transform: translateY(0) scale(0.97);
+		transition-duration: 80ms;
 	}
 
 	.neon-button-cyan,
@@ -269,29 +359,49 @@
 		font-weight: 400;
 		font-size: 13px;
 		letter-spacing: 0.05em;
-		transition: all 200ms ease;
+		transition:
+			background-color var(--dur-base) var(--ease-out),
+			border-color var(--dur-base) var(--ease-out),
+			color var(--dur-base) var(--ease-out),
+			transform var(--dur-press) var(--ease-press);
 	}
 
-	.neon-button-cyan:hover,
-	.neon-button-violet:hover,
-	.neon-button-emerald:hover {
-		background-color: rgba(var(--color-accent), 0.1);
-		border-color: rgba(var(--color-accent), 0.6);
+	@media (hover: hover) and (pointer: fine) {
+		.neon-button-cyan:hover,
+		.neon-button-violet:hover,
+		.neon-button-emerald:hover {
+			background-color: rgba(var(--color-accent), 0.1);
+			border-color: rgba(var(--color-accent), 0.6);
+		}
 	}
 
-	/* Card — terminal style */
+	.neon-button-cyan:active,
+	.neon-button-violet:active,
+	.neon-button-emerald:active {
+		transform: scale(0.97);
+		transition-duration: 80ms;
+	}
+
+	/* Card — terminal style. Hover lift trimmed to -1px and gated to
+	   real-pointer devices so touch screens don't fire phantom hovers. */
 	.dark-card {
 		border: 1px solid rgba(var(--color-border), 0.08);
 		border-radius: 0.5rem;
 		padding: 2rem;
 		background-color: rgb(var(--color-card-bg));
-		transition: all 200ms ease;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+		transition:
+			border-color var(--dur-base) var(--ease-out),
+			box-shadow var(--dur-base) var(--ease-out),
+			transform var(--dur-base) var(--ease-out);
 	}
 
-	.dark-card:hover {
-		border-color: rgba(var(--color-border), 0.2);
-		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-		transform: translateY(-2px);
+	@media (hover: hover) and (pointer: fine) {
+		.dark-card:hover {
+			border-color: rgba(var(--color-border), 0.2);
+			box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.18);
+			transform: translateY(-1px);
+		}
 	}
 
 	/* Check mark accent */
@@ -303,7 +413,7 @@
 	/* Links */
 	.neon-link {
 		color: rgb(var(--color-accent));
-		transition: color 200ms ease;
+		transition: color var(--dur-base) var(--ease-out);
 	}
 
 	.neon-link:hover {
