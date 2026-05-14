@@ -87,11 +87,13 @@ export default function TerminalText() {
 
 			const line = allLines[lineIndex]
 
-			// Empty line — just append a blank and move on after a short pause.
+			// Empty line — append a blank and pause briefly. The cursor lives
+			// inside the previous row, so we append the blank after it (not via
+			// insertBefore, which would require cursor to be a direct child).
 			if (line === "") {
 				const blank = document.createElement("div")
 				blank.style.minHeight = "25px"
-				container.insertBefore(blank, cursor)
+				container.appendChild(blank)
 				setTimeout(() => typeLine(lineIndex + 1, 0), 200)
 				return
 			}
