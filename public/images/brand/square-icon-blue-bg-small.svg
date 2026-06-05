@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1332px" height="1332px" viewBox="0 0 1332 1332" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>square-icon-blue-bg-small</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="4K-6-Copy-2" transform="translate(-414.000000, -414.000000)">
+            <g id="square-icon-blue-bg-small" transform="translate(414.000000, 414.000000)">
+                <circle id="Oval" fill="#58A6FF" cx="666" cy="666" r="666"></circle>
+                <path d="M666,509 L1186,666 L666,823 L146,666 L666,509 Z M644,562 L296,667 L644,772 L644,562 Z" id="Combined-Shape" fill="#000000" transform="translate(666.000000, 666.000000) rotate(-45.000000) translate(-666.000000, -666.000000) "></path>
+                <polygon id="Path-2" fill="#FFFFFF" transform="translate(527.913948, 805.606138) rotate(-45.000000) translate(-527.913948, -805.606138) " points="701.913948 910.606138 353.913948 805.606138 701.913948 700.606138"></polygon>
+                <path d="M666,0 C1033.82164,0 1332,298.178357 1332,666 C1332,1033.82164 1033.82164,1332 666,1332 C298.178357,1332 0,1033.82164 0,666 C0,298.178357 298.178357,0 666,0 Z M666,91 C348.436269,91 91,348.436269 91,666 C91,983.563731 348.436269,1241 666,1241 C983.563731,1241 1241,983.563731 1241,666 C1241,348.436269 983.563731,91 666,91 Z" id="Oval" fill="#000000" fill-rule="nonzero"></path>
+                <rect id="Rectangle" fill="#000000" x="608" y="71" width="116" height="150"></rect>
+                <rect id="Rectangle-Copy" fill="#000000" x="608" y="1111" width="116" height="150"></rect>
+                <rect id="Rectangle-Copy" fill="#000000" transform="translate(146.000000, 665.782372) rotate(-270.000000) translate(-146.000000, -665.782372) " x="88" y="590.782372" width="116" height="150"></rect>
+                <rect id="Rectangle-Copy-2" fill="#000000" transform="translate(1186.223636, 665.782372) rotate(-270.000000) translate(-1186.223636, -665.782372) " x="1128.22364" y="590.782372" width="116" height="150"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

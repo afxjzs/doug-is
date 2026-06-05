@@ -79,18 +79,6 @@ const nextConfig = {
 		unoptimized: process.env.NODE_ENV === "development",
 	},
 
-	// Clean URLs for standalone "stuff" pages: /building/stuff/<name>
-	// serves the static file public/building/stuff/<name>.html as-is.
-	// The index at /building/stuff (src/app/building/stuff/page.tsx) lists them.
-	async rewrites() {
-		return [
-			{
-				source: "/building/stuff/:name",
-				destination: "/building/stuff/:name.html",
-			},
-		]
-	},
-
 	// Increase timeout for builds
 	staticPageGenerationTimeout: 180, // 3 minutes
 

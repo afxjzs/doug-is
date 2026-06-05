@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1332px" height="1332px" viewBox="0 0 1332 1332" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>square-icon-black</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="4K-6" transform="translate(-414.000000, -414.000000)" fill="#000000">
+            <g id="square-icon-black" transform="translate(414.000000, 414.000000)">
+                <path d="M666,586 L1186,666 L666,746 L146,666 L666,586 Z M644.484975,612.853553 L296.484975,666.353553 L644.484975,719.853553 L644.484975,612.853553 Z" id="Combined-Shape" transform="translate(666.000000, 666.000000) rotate(-45.000000) translate(-666.000000, -666.000000) "></path>
+                <path d="M666,0 C1033.82164,0 1332,298.178357 1332,666 C1332,1033.82164 1033.82164,1332 666,1332 C298.178357,1332 0,1033.82164 0,666 C0,298.178357 298.178357,0 666,0 Z M666,91 C348.436269,91 91,348.436269 91,666 C91,983.563731 348.436269,1241 666,1241 C983.563731,1241 1241,983.563731 1241,666 C1241,348.436269 983.563731,91 666,91 Z" id="Oval" fill-rule="nonzero"></path>
+                <rect id="Rectangle" x="617" y="80" width="98" height="52"></rect>
+                <rect id="Rectangle-Copy" x="617" y="1200" width="98" height="52"></rect>
+                <rect id="Rectangle-Copy" transform="translate(106.000000, 665.782372) rotate(-270.000000) translate(-106.000000, -665.782372) " x="57" y="639.782372" width="98" height="52"></rect>
+                <rect id="Rectangle-Copy-2" transform="translate(1226.223636, 665.782372) rotate(-270.000000) translate(-1226.223636, -665.782372) " x="1177.22364" y="639.782372" width="98" height="52"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

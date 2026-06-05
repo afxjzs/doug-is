@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="868px" height="868px" viewBox="0 0 868 868" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Rectangle</title>
+    <defs>
+        <linearGradient x1="-5.89805982e-15%" y1="100%" x2="100%" y2="1.56341953e-14%" id="linearGradient-1">
+            <stop stop-color="#F0AC66" offset="0%"></stop>
+            <stop stop-color="#E32B6C" offset="57.2497815%"></stop>
+            <stop stop-color="#501847" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="4K-4" transform="translate(-2453.000000, -1080.000000)" fill="url(#linearGradient-1)" stroke="#979797">
+            <rect id="Rectangle" x="2453.5" y="1080.5" width="867" height="867"></rect>
+        </g>
+    </g>
+</svg>
