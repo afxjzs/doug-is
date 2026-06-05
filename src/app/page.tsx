@@ -1,32 +1,6 @@
-"use client"
-
-import { useEffect, useState } from "react"
 import Link from "next/link"
-import TerminalText from "@/components/TerminalText"
-
-const ARTICLES = [
-	{
-		title: "AI Slop Will Eat Itself",
-		category: "Technology",
-		href: "/thinking/about/technology/ai-slop-will-eat-itself",
-		summary:
-			"What happens when AI-generated content becomes AI training data? A feedback loop that degrades everything.",
-	},
-	{
-		title: "Planner/Executor: A Systematic Approach to LLM-Guided Development",
-		category: "Development",
-		href: "/thinking/about/development/plannerexecutor-a-systematic-approach-to-llm-guided-development",
-		summary:
-			"LLMs need role clarity to excel. Explicit role separation prevents the chaos of planning and executing simultaneously.",
-	},
-	{
-		title: "Introducing the Migraine Trigger Foods Database",
-		category: "Lifestyle",
-		href: "/thinking/about/lifestyle/introducing-the-migraine-trigger-foods-database-mtfdb",
-		summary:
-			"A database of foods and ingredients that can trigger migraines. I get migraines, so I built this to figure out what to avoid.",
-	},
-]
+import HeroSection from "@/components/HeroSection"
+import { getPublishedPosts } from "@/lib/supabase/data"
 
 function HexSeparator() {
 	return (
@@ -41,111 +15,13 @@ function HexSeparator() {
 	)
 }
 
-export default function Home() {
-	const [scrollY, setScrollY] = useState(0)
-
-	useEffect(() => {
-		let ticking = false
-		const onScroll = () => {
-			if (!ticking) {
-				requestAnimationFrame(() => {
-					setScrollY(window.scrollY)
-					ticking = false
-				})
-				ticking = true
-			}
-		}
-		window.addEventListener("scroll", onScroll, { passive: true })
-		return () => window.removeEventListener("scroll", onScroll)
-	}, [])
+export default async function Home() {
+	const posts = await getPublishedPosts(3)
 
 	return (
 		<div className="-mt-28 -mb-12">
 			{/* Hero */}
-			<section className="flex items-center px-5 md:px-10 pt-[220px] pb-[200px] relative">
-				{/* Floating hexagons */}
-				<div className="absolute inset-0 overflow-hidden pointer-events-none">
-					{[
-						{ size: 120, x: "80%", y: "15%", delay: "0s" },
-						{ size: 80, x: "10%", y: "70%", delay: "1s" },
-						{ size: 60, x: "70%", y: "80%", delay: "2s" },
-						{ size: 40, x: "20%", y: "20%", delay: "0.5s" },
-					].map((hex, i) => (
-						<svg
-							key={i}
-							className="absolute opacity-[0.06]"
-							style={{
-								left: hex.x,
-								top: hex.y,
-								width: `${hex.size}px`,
-								height: `${hex.size * 1.155}px`,
-								animation: `hex-float 8s ease-in-out ${hex.delay} infinite`,
-								transform: `translateY(${-scrollY * 0.05 * (i + 1)}px)`,
-							}}
-							viewBox="0 0 86.6 100"
-						>
-							<polygon
-								points="43.3,0 86.6,25 86.6,75 43.3,100 0,75 0,25"
-								fill="none"
-								className="stroke-[rgb(var(--color-accent))]"
-								strokeWidth="1"
-							/>
-						</svg>
-					))}
-				</div>
-
-				<div className="max-w-[1200px] mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center">
-					{/* Left — terminal */}
-					<div className="bg-[rgb(var(--color-background-alt))] rounded-xl border border-[rgba(var(--color-border),0.12)] overflow-hidden">
-						{/* Terminal title bar */}
-						<div className="px-4 py-3 border-b border-[rgba(var(--color-border),0.08)] flex items-center gap-2">
-							<div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
-							<div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
-							<div className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
-							<span className="text-[11px] text-[rgba(var(--color-foreground),0.45)] ml-3 font-[family-name:var(--font-mono)]">
-								~/doug-rogers
-							</span>
-						</div>
-						{/* Terminal content */}
-						<div className="p-6 min-h-[420px]">
-							<TerminalText />
-						</div>
-					</div>
-
-					{/* Right — headline */}
-					<div>
-						{/* Circular B&W photo */}
-						<div className="w-[120px] h-[120px] rounded-full overflow-hidden border-2 border-[rgb(var(--color-accent))] mb-7">
-							{/* eslint-disable-next-line @next/next/no-img-element */}
-							<img
-								src="/images/doug-2024-cropped-compr.png"
-								alt="Doug Rogers"
-								className="w-full h-full object-cover grayscale brightness-110 contrast-105"
-							/>
-						</div>
-						<h1 className="font-[family-name:var(--font-display)] text-[clamp(40px,5vw,64px)] font-bold leading-[1.1] mb-6">
-							Ideas to products.{" "}
-							<span className="text-[rgb(var(--color-accent))]">
-								Zero to one.
-							</span>
-						</h1>
-						<p className="text-base leading-[1.7] text-[rgba(var(--color-foreground),0.45)] max-w-[440px] mb-10">
-							I&apos;m not a theoretical advisor. I&apos;ve raised capital,
-							invested capital, pivoted, shipped, sold. I excel at taking a raw
-							idea and turning it into something customers actually pay for,
-							validating all the way.
-						</p>
-						<div className="flex flex-wrap gap-4">
-							<Link href="/connecting" className="btn-primary">
-								Get in Touch
-							</Link>
-							<Link href="/thinking" className="btn-secondary">
-								Read My Writing
-							</Link>
-						</div>
-					</div>
-				</div>
-			</section>
+			<HeroSection />
 
 			{/* Credential bar */}
 			<section className="border-t border-b border-[rgba(var(--color-border),0.08)] py-5 px-5 md:px-10">
@@ -172,7 +48,7 @@ export default function Home() {
 							{
 								num: "01",
 								title: "Advising",
-								desc: "Fractional CTO & strategic advisor for early-stage founders navigating 0\u21921 product development.",
+								desc: "Fractional CTO & strategic advisor for early-stage founders navigating 0→1 product development.",
 								href: "/advising",
 							},
 							{
@@ -228,20 +104,20 @@ export default function Home() {
 					</div>
 
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-						{ARTICLES.map((article, i) => (
+						{posts.map((post) => (
 							<Link
-								key={i}
-								href={article.href}
+								key={post.id}
+								href={`/thinking/about/${post.category.toLowerCase()}/${post.slug}`}
 								className="p-8 bg-[rgb(var(--color-background-alt))] rounded-lg border border-[rgba(var(--color-border),0.06)] transition-all duration-300 hover:border-[rgba(var(--color-border),0.2)] hover:-translate-y-1"
 							>
 								<span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.15em] text-[rgba(var(--color-accent),0.3)] uppercase">
-									{article.category}
+									{post.category}
 								</span>
 								<h3 className="font-[family-name:var(--font-display)] text-lg font-bold mt-3 leading-snug">
-									{article.title}
+									{post.title}
 								</h3>
 								<p className="text-xs leading-relaxed text-[rgba(var(--color-foreground),0.45)] mt-2.5">
-									{article.summary}
+									{post.excerpt}
 								</p>
 							</Link>
 						))}
