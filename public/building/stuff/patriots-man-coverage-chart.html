@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Patriots 2025 Opponents — Man Coverage Targets</title>
+<style>
+  :root{
+    --navy:#0a2342;
+    --navy2:#0b2545;
+    --red:#c8102e;
+    --silver:#b0b7bc;
+    --silver-light:#e6e9eb;
+    --green:#1f9e57;
+    --green-soft:#34c172;
+    --ink:#0a2342;
+    --muted:#5d6b7a;
+    --line:#d7dde2;
+    --bg:#f4f6f8;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    padding:28px 22px 48px;
+  }
+  .wrap{max-width:920px;margin:0 auto}
+  header h1{
+    font-size:25px;line-height:1.15;margin:0 0 4px;
+    letter-spacing:-.01em;
+  }
+  header .sub{color:var(--muted);font-size:14px;margin:0 0 2px}
+  .accent{height:4px;width:64px;background:var(--red);border-radius:3px;margin:12px 0 22px}
+
+  /* player panel */
+  .players{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:26px;
+  }
+  @media (max-width:640px){.players{grid-template-columns:1fr}}
+  .card{
+    background:linear-gradient(180deg,var(--navy) 0%, var(--navy2) 100%);
+    color:#fff;border-radius:12px;padding:16px 18px;
+    box-shadow:0 1px 0 rgba(255,255,255,.04) inset;
+  }
+  .card h3{margin:0 0 2px;font-size:16px;display:flex;align-items:center;gap:8px}
+  .card .pos{color:var(--silver);font-weight:500;font-size:12px}
+  .stat{display:flex;align-items:baseline;gap:8px;margin-top:10px}
+  .stat .big{font-size:22px;font-weight:700;color:var(--green-soft)}
+  .stat .lbl{font-size:12.5px;color:#dfe4e8;line-height:1.3}
+  .card ul{margin:10px 0 0;padding-left:16px}
+  .card li{font-size:12.5px;color:#cfd6dc;margin:3px 0;line-height:1.35}
+  .caveat{font-size:11.5px;color:#f4b9c2;margin-top:10px;border-top:1px solid rgba(255,255,255,.12);padding-top:8px}
+
+  /* legend */
+  .legend{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin:0 0 14px;font-size:12.5px;color:var(--muted)}
+  .legend .key{display:flex;align-items:center;gap:6px}
+  .swatch{width:14px;height:14px;border-radius:3px;display:inline-block}
+  .sw-green{background:var(--green)}
+  .sw-navy{background:var(--navy)}
+  .sw-line{width:14px;height:0;border-top:2px dashed var(--red)}
+
+  /* chart */
+  .chart{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 18px 10px}
+  .row{display:grid;grid-template-columns:128px 1fr;align-items:center;gap:12px;padding:6px 0;position:relative}
+  .team{display:flex;align-items:center;gap:7px;justify-content:flex-end;font-size:13.5px;font-weight:600}
+  .team .x2{font-size:10px;font-weight:700;color:#fff;background:var(--red);border-radius:4px;padding:1px 5px;letter-spacing:.02em}
+  .barwrap{position:relative;height:26px;background:var(--silver-light);border-radius:5px;overflow:hidden;cursor:default}
+  .bar{height:100%;border-radius:5px 0 0 5px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-size:12px;font-weight:700;transition:filter .12s}
+  .bar.high{background:linear-gradient(90deg,var(--green) 0%, var(--green-soft) 100%)}
+  .bar.low{background:linear-gradient(90deg,#234a73 0%, var(--navy) 100%)}
+  .barwrap:hover .bar{filter:brightness(1.08)}
+  /* league avg line, positioned in JS */
+  .avgline{position:absolute;top:-4px;bottom:-4px;width:0;border-left:2px dashed var(--red);z-index:5}
+  .avgcap{position:absolute;top:-20px;transform:translateX(-50%);font-size:10.5px;color:var(--red);font-weight:700;white-space:nowrap}
+  .scale-host{position:relative;grid-column:2;height:18px;margin-top:2px}
+  .tick{position:absolute;font-size:10px;color:var(--muted);transform:translateX(-50%)}
+
+  /* tooltip */
+  .tip{
+    position:fixed;z-index:50;pointer-events:none;opacity:0;transition:opacity .1s;
+    background:var(--navy);color:#fff;border-radius:9px;padding:10px 12px;font-size:12px;
+    box-shadow:0 8px 24px rgba(10,35,66,.28);min-width:190px;
+  }
+  .tip h4{margin:0 0 6px;font-size:13px;display:flex;justify-content:space-between;gap:10px}
+  .tip .g{color:var(--silver)}
+  .tip table{width:100%;border-collapse:collapse}
+  .tip td{padding:2px 0;font-size:11.5px}
+  .tip td.v{text-align:right;font-weight:700}
+  .tip .hl{color:var(--green-soft)}
+  footer{margin-top:18px;font-size:11.5px;color:var(--muted);line-height:1.5}
+  footer a{color:var(--navy)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Where Maye &amp; Brown Can Feast: Patriots 2025 Opponents by Man-Coverage Rate</h1>
+    <p class="sub">Higher man rate = more one-on-one looks for AJ Brown, the NFL's #1 receiver vs man. Greener bars = better matchups.</p>
+  </header>
+  <div class="accent"></div>
+
+  <div class="players">
+    <div class="card">
+      <h3>AJ Brown <span class="pos">· WR</span></h3>
+      <div class="stat"><span class="big">4.27</span><span class="lbl">yards / route run vs man — <b>led the entire NFL</b> in 2024</span></div>
+      <ul>
+        <li>#1 in the NFL in first downs per route vs man (250+ routes)</li>
+        <li>Most missed tackles forced on man-coverage catches (11)</li>
+        <li>At his best on slants &amp; crossers over the middle</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Drake Maye <span class="pos">· QB</span></h3>
+      <div class="stat"><span class="big">2nd</span><span class="lbl">in the NFL in EPA per dropback on <b>slant routes</b> (2025)</span></div>
+      <ul>
+        <li>66.6% completions, 88.1 rating as a 2024 rookie</li>
+        <li>Thrives attacking the middle — exactly Brown's strength</li>
+      </ul>
+      <div class="caveat">Watch-out: Maye graded among the league's weakest vs single-high (Cover 1/3) looks in 2024 — man-heavy teams that stay single-high are the real test.</div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="key"><span class="swatch sw-green"></span> Above-average man rate — attack with Brown 1-on-1</div>
+    <div class="key"><span class="swatch sw-navy"></span> Below-average — more zone, find soft spots</div>
+    <div class="key"><span class="sw-line"></span> League average (22.6%)</div>
+    <div class="key" style="margin-left:auto"><span class="x2" style="background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:4px;padding:1px 5px">×2</span> faced twice</div>
+  </div>
+
+  <div class="chart" id="chart"></div>
+
+  <footer>
+    <b>How to read it:</b> bars are each opponent's man-coverage rate. The more man an opponent plays, the more often Brown wins his rep one-on-one and Maye has a clear first read. Hover any bar for that team's zone rate plus Middle-Closed / Middle-Open tendencies.<br>
+    Coverage rates from the supplied NFL man &amp; zone table (2024 season). Player splits:
+    <a href="https://www.pff.com/nfl/players/drake-maye/143969">PFF</a>,
+    <a href="https://insidetheiggles.com/pff-demonstrates-once-again-how-a-j-brown-is-uncoverable-against-the-best">PFF via Inside the Iggles</a>,
+    <a href="https://www.cbssports.com/nfl/news/a-j-brown-trade-patriots-drake-maye/">CBS Sports</a>,
+    <a href="https://www.boston.com/sports/new-england-patriots/2026/06/01/new-england-patriots-a-j-brown-offense-drake-maye-nfl-football/">Boston.com</a>.
+  </footer>
+</div>
+
+<div class="tip" id="tip"></div>
+
+<script>
+const LEAGUE_AVG = 22.6;
+const MAX = 35; // x-axis max for scaling
+// opponents: distinct teams on the 2025 schedule
+const data = [
+  {team:"Broncos",  man:32.1, zone:63.1, mc:48.8, mo:48.5, games:["Wk 17"]},
+  {team:"Lions",    man:32.0, zone:63.0, mc:57.5, mo:40.4, games:["Wk 10"]},
+  {team:"Steelers", man:31.1, zone:64.5, mc:56.1, mo:41.3, games:["Wk 2"]},
+  {team:"Jets",     man:30.9, zone:62.5, mc:48.3, mo:48.6, games:["Wk 6","Wk 16"]},
+  {team:"Bears",    man:29.1, zone:66.0, mc:49.0, mo:46.1, games:["Wk 7"]},
+  {team:"Bills",    man:23.9, zone:70.4, mc:42.5, mo:53.4, games:["Wk 4","Wk 13"]},
+  {team:"Dolphins", man:22.5, zone:71.7, mc:45.2, mo:51.6, games:["Wk 8","Wk 18"]},
+  {team:"Chiefs",   man:19.8, zone:74.1, mc:42.1, mo:53.8, games:["Wk 15"]},
+  {team:"Jaguars",  man:17.6, zone:78.6, mc:45.9, mo:51.5, games:["Wk 3"]},
+  {team:"Packers",  man:17.0, zone:78.4, mc:47.9, mo:49.3, games:["Wk 9"]},
+  {team:"Vikings",  man:15.8, zone:77.1, mc:30.3, mo:64.2, games:["Wk 14"]},
+  {team:"Seahawks", man:15.2, zone:80.4, mc:44.3, mo:52.4, games:["Wk 1"]},
+  {team:"Raiders",  man:14.6, zone:78.6, mc:54.1, mo:41.9, games:["Wk 5"]},
+  {team:"Chargers", man:12.9, zone:81.3, mc:41.6, mo:53.9, games:["Wk 12"]},
+];
+
+const chart = document.getElementById('chart');
+const tip = document.getElementById('tip');
+const pct = v => (v/MAX*100);
+
+data.forEach(d=>{
+  const row = document.createElement('div');
+  row.className='row';
+  const high = d.man >= LEAGUE_AVG;
+  const x2 = d.games.length>1 ? `<span class="x2">×2</span>` : '';
+  row.innerHTML = `
+    <div class="team">${d.team} ${x2}</div>
+    <div class="barwrap">
+      <div class="bar ${high?'high':'low'}" style="width:${pct(d.man)}%">${d.man}%</div>
+    </div>`;
+  chart.appendChild(row);
+
+  const bw = row.querySelector('.barwrap');
+  bw.addEventListener('mousemove', e=>{
+    tip.style.opacity='1';
+    const verdict = high
+      ? `<span class="hl">Attack 1-on-1 — Brown's matchup</span>`
+      : `Zone-heavy — work the middle`;
+    tip.innerHTML = `
+      <h4>${d.team} <span class="g">${d.games.join(' · ')}</span></h4>
+      <table>
+        <tr><td>Man rate</td><td class="v ${high?'hl':''}">${d.man}%</td></tr>
+        <tr><td>Zone rate</td><td class="v">${d.zone}%</td></tr>
+        <tr><td>Middle closed</td><td class="v">${d.mc}%</td></tr>
+        <tr><td>Middle open</td><td class="v">${d.mo}%</td></tr>
+      </table>
+      <div style="margin-top:7px;font-size:11px;border-top:1px solid rgba(255,255,255,.14);padding-top:6px">${verdict}</div>`;
+    let x=e.clientX+14, y=e.clientY+14;
+    if(x+220>window.innerWidth) x=e.clientX-220;
+    if(y+150>window.innerHeight) y=e.clientY-150;
+    tip.style.left=x+'px'; tip.style.top=y+'px';
+  });
+  bw.addEventListener('mouseleave', ()=>{ tip.style.opacity='0'; });
+});
+
+// league average line + caption — overlay across the bar track
+chart.style.position='relative';
+const overlay = document.createElement('div');
+overlay.style.position='absolute';
+overlay.style.left = `calc(18px + 128px + 12px)`;
+overlay.style.right='18px';
+overlay.style.top='0';
+overlay.style.bottom='0';
+overlay.style.pointerEvents='none';
+const ol2 = document.createElement('div');
+ol2.style.position='absolute';
+ol2.style.top='18px';
+ol2.style.bottom='14px';
+ol2.style.left=pct(LEAGUE_AVG)+'%';
+ol2.style.borderLeft='2px dashed var(--red)';
+const cap = document.createElement('div');
+cap.textContent='Lg avg 22.6%';
+cap.style.position='absolute';
+cap.style.top='-2px';
+cap.style.left=pct(LEAGUE_AVG)+'%';
+cap.style.transform='translateX(-50%)';
+cap.style.fontSize='10.5px';
+cap.style.fontWeight='700';
+cap.style.color='var(--red)';
+cap.style.whiteSpace='nowrap';
+overlay.appendChild(ol2);
+overlay.appendChild(cap);
+chart.appendChild(overlay);
+
+// x-axis scale
+const scaleRow = document.createElement('div');
+scaleRow.className='row';
+scaleRow.style.borderTop='1px solid var(--line)';
+scaleRow.style.marginTop='6px';
+scaleRow.innerHTML = `<div></div><div class="scale-host" id="scale"></div>`;
+chart.appendChild(scaleRow);
+const scale = scaleRow.querySelector('#scale');
+[0,5,10,15,20,25,30,35].forEach(t=>{
+  const el=document.createElement('span');
+  el.className='tick'; el.textContent=t+'%'; el.style.left=pct(t)+'%';
+  scale.appendChild(el);
+});
+</script>
+</body>
+</html>
