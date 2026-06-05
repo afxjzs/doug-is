@@ -1,6 +1,47 @@
 import Link from "next/link"
+import { Metadata } from "next"
 import HeroSection from "@/components/HeroSection"
 import { getPublishedPosts } from "@/lib/supabase/data"
+import {
+	getCanonicalUrl,
+	getSocialImageUrl,
+	getSiteName,
+} from "@/lib/utils/domain-detection"
+
+const HOME_TITLE = "doug.is | Engineer, Advisor, Investor"
+const HOME_DESCRIPTION =
+	"Douglas E. Rogers - Engineer, Advisor, and Investor. Building startups, advising founders, and investing in companies with real revenue."
+
+export const metadata: Metadata = {
+	title: HOME_TITLE,
+	description: HOME_DESCRIPTION,
+	openGraph: {
+		title: HOME_TITLE,
+		description: HOME_DESCRIPTION,
+		url: getCanonicalUrl("/"),
+		siteName: getSiteName(),
+		images: [
+			{
+				url: getSocialImageUrl("/images/projects/doug-is.png"),
+				width: 1200,
+				height: 630,
+				alt: "doug.is - Engineer, Advisor, Investor",
+			},
+		],
+		locale: "en_US",
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: HOME_TITLE,
+		description: HOME_DESCRIPTION,
+		images: [getSocialImageUrl("/images/projects/doug-is.png")],
+		creator: "@glowingrec",
+	},
+	alternates: {
+		canonical: getCanonicalUrl("/"),
+	},
+}
 
 function HexSeparator() {
 	return (

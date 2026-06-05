@@ -25,6 +25,14 @@ describe("Domain Detection", () => {
 
 		it("should fallback to localhost for development when env var not set", () => {
 			delete process.env.NEXT_PUBLIC_SITE_URL
+			delete process.env.VERCEL_URL
+			// NODE_ENV is read-only under TS; override it so the function
+			// genuinely takes the development fallback branch.
+			Object.defineProperty(process.env, "NODE_ENV", {
+				value: "development",
+				configurable: true,
+				writable: true,
+			})
 			expect(getSiteUrl()).toBe("http://localhost:3000")
 		})
 

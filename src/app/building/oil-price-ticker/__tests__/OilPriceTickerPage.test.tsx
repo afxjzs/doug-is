@@ -157,9 +157,16 @@ describe("OilPriceTickerPage", () => {
 		})
 
 		it("uses orange color theme throughout the page", () => {
-			// Check for orange accent elements
-			const orangeElements = document.querySelectorAll('[class*="orange"]')
-			expect(orangeElements.length).toBeGreaterThan(0)
+			// The site's orange/amber theme is applied via the accent color token.
+			// The design "polish" pass migrated literal Tailwind `orange-*` classes
+			// to the CSS-variable-based accent system, where `--color-orange` maps to
+			// `--color-accent` (#d4a853 amber). Detect the current implementation:
+			// elements styled with the accent color, the `btn-primary` accent button,
+			// or any remaining literal orange classes.
+			const orangeThemedElements = document.querySelectorAll(
+				'[class*="color-accent"], [class*="orange"], .btn-primary'
+			)
+			expect(orangeThemedElements.length).toBeGreaterThan(0)
 		})
 	})
 

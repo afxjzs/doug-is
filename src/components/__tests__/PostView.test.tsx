@@ -139,15 +139,22 @@ describe("PostView Component", () => {
 		it("renders draft banner with correct styling", () => {
 			render(<PostView post={mockPost} isDraft={true} />)
 
-			// Look for the banner container
+			// Look for the banner container (accent-themed background + border)
 			const draftBannerContainer = screen
 				.getByText("DRAFT PREVIEW")
-				.closest("[class*='bg-yellow-900']")
+				.closest("[class*='bg-[rgba(var(--color-accent),0.1)]']")
 			expect(draftBannerContainer).toBeInTheDocument()
+			expect(draftBannerContainer).toHaveClass(
+				"border",
+				"rounded-lg"
+			)
 
-			// Check for draft indicator
+			// Check for draft indicator dot (accent-colored)
 			const indicator = screen.getByText("DRAFT PREVIEW").previousSibling
-			expect(indicator).toHaveClass("bg-yellow-500")
+			expect(indicator).toHaveClass(
+				"bg-[rgb(var(--color-accent))]",
+				"rounded-full"
+			)
 		})
 
 		it("renders draft banner above post content", () => {

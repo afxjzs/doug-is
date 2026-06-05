@@ -1,4 +1,4 @@
-import { render, screen, waitFor, act } from "@testing-library/react"
+import { render, screen, act } from "@testing-library/react"
 import { jest } from "@jest/globals"
 
 // Mock Next.js Image component
@@ -70,6 +70,35 @@ Object.defineProperty(global, "fetch", {
 	writable: true,
 })
 
+// Mock the server-side data layer so the async Thinking Server Component
+// renders deterministically with representative posts.
+jest.mock("@/lib/supabase/data", () => ({
+	getPublishedPosts: jest.fn(async () => [
+		{
+			id: "post-1",
+			title: "Building Resilient Systems",
+			slug: "building-resilient-systems",
+			content: "Full content here.",
+			excerpt: "How to design systems that survive failure.",
+			published_at: "2025-01-15T00:00:00.000Z",
+			category: "Building",
+			status: "published",
+			featured_image: null,
+		},
+		{
+			id: "post-2",
+			title: "Why Revenue Beats Pitch Decks",
+			slug: "revenue-beats-pitch-decks",
+			content: "Full content here.",
+			excerpt: "Investing in founders with real revenue.",
+			published_at: "2025-02-20T00:00:00.000Z",
+			category: "Investing",
+			status: "published",
+			featured_image: null,
+		},
+	]),
+}))
+
 describe("Page Title Consistency", () => {
 	afterEach(() => {
 		jest.clearAllMocks()
@@ -104,17 +133,21 @@ describe("Page Title Consistency", () => {
 				"@/app/(site)/thinking/page"
 			)
 
-			await act(async () => {
-				render(<ThinkingPage />)
-			})
+			// Thinking is an async Server Component: invoke and await it to get the
+			// resolved element, then render that (the Next 15 / React 19 pattern).
+			const ui = await ThinkingPage()
 
-			// Wait for async loading to complete
-			await waitFor(() => {
-				expect(screen.queryByText("Loading posts...")).not.toBeInTheDocument()
+			await act(async () => {
+				render(ui)
 			})
 
 			const heading = screen.getByRole("heading", { level: 1 })
 			expect(heading).toHaveTextContent("doug.is/thinking")
+
+			// The mocked data layer should have produced real article content.
+			expect(
+				screen.getByText("Building Resilient Systems")
+			).toBeInTheDocument()
 		})
 
 		it("Connecting page should have correct h1 title", async () => {

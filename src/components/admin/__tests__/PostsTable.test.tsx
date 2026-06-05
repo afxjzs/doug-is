@@ -4,7 +4,7 @@
  * Tests for the admin posts management table including draft view functionality.
  */
 
-import { render, screen, fireEvent } from "@testing-library/react"
+import { render, screen, fireEvent, within } from "@testing-library/react"
 import PostsTable from "../PostsTable"
 import { Post } from "@/lib/supabase/clientData"
 
@@ -71,10 +71,14 @@ describe("PostsTable", () => {
 		it("renders posts table with correct headers", () => {
 			render(<PostsTable posts={mockPosts} />)
 
-			expect(screen.getByText("Title")).toBeInTheDocument()
-			expect(screen.getByText("Category")).toBeInTheDocument()
-			expect(screen.getByText("Published")).toBeInTheDocument()
-			expect(screen.getByText("Actions")).toBeInTheDocument()
+			// Scope to the table's column headers so we assert against the
+			// header row specifically (the words "Status" etc. also appear
+			// elsewhere as filter options and status badges).
+			const headers = screen
+				.getAllByRole("columnheader")
+				.map((header) => header.textContent)
+
+			expect(headers).toEqual(["Title", "Category", "Status", "Actions"])
 		})
 
 		it("displays posts with correct information", () => {
@@ -89,7 +93,13 @@ describe("PostsTable", () => {
 			render(<PostsTable posts={mockPosts} />)
 
 			expect(screen.getByText("Jan 1, 2024")).toBeInTheDocument() // Published date
-			expect(screen.getByText("Draft")).toBeInTheDocument() // Draft status
+
+			// "Draft" also appears as a status-filter <option>, so scope to the
+			// table body to assert the draft post's status badge specifically.
+			const rowGroups = screen.getAllByRole("rowgroup") // [thead, tbody]
+			const tbody = rowGroups[rowGroups.length - 1]
+			expect(within(tbody).getByText("Draft")).toBeInTheDocument() // Draft status badge
+			expect(within(tbody).getByText("Published")).toBeInTheDocument() // Published status badge
 		})
 	})
 
@@ -265,7 +275,11 @@ describe("PostsTable", () => {
 
 			render(<PostsTable posts={[nullPublishedPost]} />)
 
-			expect(screen.getByText("Draft")).toBeInTheDocument()
+			// "Draft" also appears as a status-filter <option>; scope to the
+			// table body to assert the post's "Draft" status badge.
+			const rowGroups = screen.getAllByRole("rowgroup") // [thead, tbody]
+			const tbody = rowGroups[rowGroups.length - 1]
+			expect(within(tbody).getByText("Draft")).toBeInTheDocument()
 			expect(
 				screen.getByRole("link", { name: /view draft/i })
 			).toBeInTheDocument()

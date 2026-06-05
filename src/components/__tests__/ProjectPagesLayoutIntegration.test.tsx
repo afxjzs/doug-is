@@ -146,13 +146,12 @@ describe("Project Pages Layout Integration", () => {
 				}).length
 			).toBeGreaterThan(0)
 
+			// The "Thinking" section is labeled "/writing" in the nav but routes
+			// to /thinking, so assert the navigation link by its destination href.
 			expect(
-				screen.getAllByText((content, element) => {
-					return (
-						element?.tagName.toLowerCase() === "a" &&
-						content.includes("thinking")
-					)
-				}).length
+				screen
+					.getAllByRole("link")
+					.filter((link) => link.getAttribute("href") === "/thinking").length
 			).toBeGreaterThan(0)
 		})
 
@@ -165,15 +164,12 @@ describe("Project Pages Layout Integration", () => {
 				</BuildingLayout>
 			)
 
-			// Test Connect button is present (multiple elements due to responsive design + footer)
-			expect(
-				screen.getAllByText((content, element) => {
-					return (
-						element?.tagName.toLowerCase() === "a" &&
-						content.toLowerCase().includes("connect")
-					)
-				}).length
-			).toBeGreaterThan(0)
+			// The Connect CTA links to /connecting. Its visible label is
+			// "Get in Touch", so assert the CTA by its destination href.
+			const connectCtas = screen
+				.getAllByRole("link")
+				.filter((link) => link.getAttribute("href") === "/connecting")
+			expect(connectCtas.length).toBeGreaterThan(0)
 		})
 
 		test("building layout maintains responsive structure", async () => {

@@ -115,7 +115,12 @@ describe("Project Pages with Main Site Layout Integration", () => {
 			expect(investingLinks.length).toBeGreaterThan(0)
 			expect(investingLinks[0]).toHaveAttribute("href", "/investing")
 
-			const thinkingLinks = screen.getAllByRole("link", { name: /thinking/i })
+			// The "Thinking" section is labeled "/writing" in the nav but routes
+			// to /thinking, so query by destination href rather than visible text.
+			const allLinks = screen.getAllByRole("link")
+			const thinkingLinks = allLinks.filter(
+				(link) => link.getAttribute("href") === "/thinking"
+			)
 			expect(thinkingLinks.length).toBeGreaterThan(0)
 			expect(thinkingLinks[0]).toHaveAttribute("href", "/thinking")
 		})
