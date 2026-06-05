@@ -83,15 +83,17 @@ export async function readThing(slug: string): Promise<string | null> {
 
 // Self-scoped so it can never collide with the hosted document's own CSS:
 // every rule is namespaced under .dougis-stuff-nav, and we never style bare
-// elements (a, body, nav, ...).
+// elements (a, body, nav, ...). The bar inherits the document's own background
+// and text color so it blends into each page instead of imposing a harsh slab;
+// the divider uses a neutral gray that reads on both light and dark pages.
 const NAV_STYLE = `<style id="dougis-stuff-nav-style">
 .dougis-stuff-nav{position:sticky;top:0;z-index:2147483647;display:flex;gap:14px;align-items:center;
-margin:0;padding:11px 18px;width:100%;box-sizing:border-box;background:#0b1020;
-border-bottom:1px solid rgba(255,255,255,.14);font-size:13px;line-height:1;
+margin:0;padding:11px 18px;width:100%;box-sizing:border-box;background-color:inherit;color:inherit;
+border-bottom:1px solid rgba(128,128,128,.22);font-size:13px;line-height:1;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-.dougis-stuff-nav a{color:#e6e9eb;text-decoration:none;font-weight:600;letter-spacing:.01em;background:none}
-.dougis-stuff-nav a:hover{color:#fff;text-decoration:underline}
-.dougis-stuff-nav span{color:rgba(255,255,255,.3);font-weight:400}
+.dougis-stuff-nav a{color:inherit;text-decoration:none;font-weight:600;letter-spacing:.01em;background:none;opacity:.75}
+.dougis-stuff-nav a:hover{opacity:1;text-decoration:underline}
+.dougis-stuff-nav span{opacity:.35;font-weight:400}
 </style>`
 
 const NAV_HTML = `<nav class="dougis-stuff-nav" role="navigation" aria-label="doug.is">

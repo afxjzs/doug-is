@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import { usePathname } from "next/navigation"
 import BuildingLayout from "../layout"
+import LayoutWrapper from "@/components/LayoutWrapper"
 
 // Mock Next.js navigation
 jest.mock("next/navigation", () => ({
@@ -57,6 +58,16 @@ jest.mock("next/image", () => {
 
 const mockUsePathname = usePathname as jest.MockedFunction<typeof usePathname>
 
+// In production the site chrome (header + footer) comes from the root layout's
+// LayoutWrapper. BuildingLayout is now a pass-through, so to reproduce the real
+// RootLayout(LayoutWrapper) -> BuildingLayout(pass-through) -> page nesting we
+// wrap the building content in LayoutWrapper, exactly as production does.
+const BuildingChrome = ({ children }: { children: React.ReactNode }) => (
+	<LayoutWrapper>
+		<BuildingLayout>{children}</BuildingLayout>
+	</LayoutWrapper>
+)
+
 describe("Project Pages with Main Site Layout Integration", () => {
 	describe("Building Layout Integration", () => {
 		beforeEach(() => {
@@ -72,9 +83,9 @@ describe("Project Pages with Main Site Layout Integration", () => {
 			)
 
 			render(
-				<BuildingLayout>
+				<BuildingChrome>
 					<TestContent />
-				</BuildingLayout>
+				</BuildingChrome>
 			)
 
 			// Should have main site layout elements
@@ -97,9 +108,9 @@ describe("Project Pages with Main Site Layout Integration", () => {
 			const TestContent = () => <div>Project content</div>
 
 			render(
-				<BuildingLayout>
+				<BuildingChrome>
 					<TestContent />
-				</BuildingLayout>
+				</BuildingChrome>
 			)
 
 			// Should have navigation links (handle responsive design with multiple elements)
@@ -129,9 +140,9 @@ describe("Project Pages with Main Site Layout Integration", () => {
 			const TestContent = () => <div>Project content</div>
 
 			render(
-				<BuildingLayout>
+				<BuildingChrome>
 					<TestContent />
-				</BuildingLayout>
+				</BuildingChrome>
 			)
 
 			// Should have social media links in footer
@@ -149,9 +160,9 @@ describe("Project Pages with Main Site Layout Integration", () => {
 			const TestContent = () => <div>Project content</div>
 
 			render(
-				<BuildingLayout>
+				<BuildingChrome>
 					<TestContent />
-				</BuildingLayout>
+				</BuildingChrome>
 			)
 
 			// Check for proper semantic elements
@@ -172,9 +183,9 @@ describe("Project Pages with Main Site Layout Integration", () => {
 				.default
 
 			render(
-				<BuildingLayout>
+				<BuildingChrome>
 					<OilPriceTickerPage />
-				</BuildingLayout>
+				</BuildingChrome>
 			)
 
 			// Should have both layout and page content
@@ -196,9 +207,9 @@ describe("Project Pages with Main Site Layout Integration", () => {
 				.default
 
 			const { container } = render(
-				<BuildingLayout>
+				<BuildingChrome>
 					<OilPriceTickerPage />
-				</BuildingLayout>
+				</BuildingChrome>
 			)
 
 			// Should maintain primary button styling
@@ -211,9 +222,9 @@ describe("Project Pages with Main Site Layout Integration", () => {
 				.default
 
 			render(
-				<BuildingLayout>
+				<BuildingChrome>
 					<OilPriceTickerPage />
-				</BuildingLayout>
+				</BuildingChrome>
 			)
 
 			// Should have download and GitHub links (handle multiple elements)
@@ -246,9 +257,9 @@ describe("Project Pages with Main Site Layout Integration", () => {
 				const HoppingListPage = (await import("../hopping-list/page")).default
 
 				render(
-					<BuildingLayout>
+					<BuildingChrome>
 						<HoppingListPage />
-					</BuildingLayout>
+					</BuildingChrome>
 				)
 
 				// Should have layout structure
@@ -269,9 +280,9 @@ describe("Project Pages with Main Site Layout Integration", () => {
 				const HoppingListPage = (await import("../hopping-list/page")).default
 
 				const { container } = render(
-					<BuildingLayout>
+					<BuildingChrome>
 						<HoppingListPage />
-					</BuildingLayout>
+					</BuildingChrome>
 				)
 
 				// Should maintain any existing button styling
