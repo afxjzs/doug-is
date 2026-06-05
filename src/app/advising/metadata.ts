@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 		description:
 			"Advisory roles and consulting services for startups and established companies.",
 		images: ["https://doug.is/images/advisory-services.jpg"],
-		creator: "@glowingrec",
+		creator: "@doug__is",
 	},
 	alternates: {
 		canonical: "https://doug.is/advising",

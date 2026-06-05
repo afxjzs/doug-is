@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 		description:
 			"A powerful form builder with drag-and-drop interface, validation, conditional logic, and API integration",
 		images: [getSocialImageUrl("/images/projects/doug-is.png")],
-		creator: "@glowingrec",
+		creator: "@doug__is",
 	},
 	alternates: {
 		canonical: getCanonicalUrl("/building/bolt-form"),

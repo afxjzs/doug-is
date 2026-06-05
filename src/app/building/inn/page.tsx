@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 		description:
 			"A lightweight Ruby gem that adds the .in? method for improved code readability",
 		images: [getSocialImageUrl("/images/projects/rubygems-logo.png")],
-		creator: "@glowingrec",
+		creator: "@doug__is",
 	},
 	alternates: {
 		canonical: getCanonicalUrl("/building/inn"),

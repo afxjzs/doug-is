@@ -35,7 +35,7 @@ export const metadata: Metadata = {
 		description:
 			"A shopping list app that shows you what you need at each specific store",
 		images: [getSocialImageUrl("/images/projects/hopping-list-logo.png")],
-		creator: "@glowingrec",
+		creator: "@doug__is",
 	},
 	alternates: {
 		canonical: getCanonicalUrl("/building/hopping-list"),

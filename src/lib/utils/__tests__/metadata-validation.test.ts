@@ -49,7 +49,7 @@ describe("Metadata Validation", () => {
 					title: "Test Page",
 					description: "Test description",
 					images: ["https://doug.is/images/test.jpg"],
-					creator: "@glowingrec",
+					creator: "@doug__is",
 				},
 				alternates: {
 					canonical: "https://doug.is/test",
@@ -74,7 +74,7 @@ describe("Metadata Validation", () => {
 			expect(mockMetadata.twitter.images).toBeDefined()
 			expect(Array.isArray(mockMetadata.twitter.images)).toBe(true)
 			expect(mockMetadata.twitter.images.length).toBeGreaterThan(0)
-			expect(mockMetadata.twitter.creator).toBe("@glowingrec")
+			expect(mockMetadata.twitter.creator).toBe("@doug__is")
 
 			// Validate canonical URL
 			expect(mockMetadata.alternates).toBeDefined()
@@ -106,7 +106,7 @@ describe("Metadata Validation", () => {
 					title: "Test Blog Post",
 					description: "Test blog post description",
 					images: ["https://doug.is/images/test-featured.jpg"],
-					creator: "@glowingrec",
+					creator: "@doug__is",
 				},
 				other: {
 					"article:published_time": "2024-01-15T10:00:00Z",
@@ -153,7 +153,7 @@ describe("Metadata Validation", () => {
 					title: "Test Project",
 					description: "Test project description",
 					images: ["https://doug.is/images/projects/test-project.png"],
-					creator: "@glowingrec",
+					creator: "@doug__is",
 				},
 				alternates: {
 					canonical: "https://doug.is/building/test-project",
@@ -163,7 +163,7 @@ describe("Metadata Validation", () => {
 			// Validate project page metadata
 			expect(mockProjectMetadata.openGraph.type).toBe("website")
 			expect(mockProjectMetadata.title).toContain("| Building |")
-			expect(mockProjectMetadata.twitter.creator).toBe("@glowingrec")
+			expect(mockProjectMetadata.twitter.creator).toBe("@doug__is")
 		})
 	})
 

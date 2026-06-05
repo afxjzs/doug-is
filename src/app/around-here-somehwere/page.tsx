@@ -106,7 +106,8 @@ export default function ContactPage() {
 							</h3>
 							<div className="flex space-x-4">
 								<a
-									href="https://twitter.com/yourusername"
+									href="https://twitter.com/doug__is"
+									aria-label="Twitter"
 									target="_blank"
 									rel="noopener noreferrer"
 									className="text-gray-600 hover:text-blue-500"

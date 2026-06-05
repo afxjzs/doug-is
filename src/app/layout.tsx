@@ -81,7 +81,7 @@ export const metadata: Metadata = {
 		description:
 			"Personal website of Doug Rogers - Engineer, Advisor, and Investor",
 		images: ["/android-chrome-512x512.png"],
-		creator: "@glowingrec",
+		creator: "@doug__is",
 	},
 }
 

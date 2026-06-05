@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 		description:
 			"Small standalone things I've made — interactive charts, experiments, and one-off pages.",
 		images: [getSocialImageUrl("/images/projects/doug-is.png")],
-		creator: "@glowingrec",
+		creator: "@doug__is",
 	},
 	alternates: {
 		canonical: getCanonicalUrl("/building/stuff"),

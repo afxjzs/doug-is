@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 		description:
 			"Thoughts, ideas, and musings on technology, business, and life.",
 		images: ["https://doug.is/images/doug-2024-cropped-compr.png"],
-		creator: "@glowingrec",
+		creator: "@doug__is",
 	},
 	alternates: {
 		canonical: "https://doug.is/thinking",

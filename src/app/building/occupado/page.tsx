@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 		description:
 			"A smart calendar app that helps you manage multiple calendars in one unified view",
 		images: [getSocialImageUrl("/images/projects/doug-is.png")],
-		creator: "@glowingrec",
+		creator: "@doug__is",
 	},
 	alternates: {
 		canonical: getCanonicalUrl("/building/occupado"),

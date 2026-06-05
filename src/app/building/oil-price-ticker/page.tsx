@@ -44,7 +44,7 @@ export const metadata: Metadata = {
 		images: [
 			getSocialImageUrl("/images/projects/oil-price-ticker/oil-price-icon.png"),
 		],
-		creator: "@glowingrec",
+		creator: "@doug__is",
 	},
 	alternates: {
 		canonical: getCanonicalUrl("/building/oil-price-ticker"),

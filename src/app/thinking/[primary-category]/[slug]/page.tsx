@@ -78,7 +78,7 @@ export async function generateMetadata({
 				title: post.title,
 				description: post.excerpt,
 				images: [socialImageUrl],
-				creator: "@glowingrec",
+				creator: "@doug__is",
 			},
 			other: {
 				"article:published_time": post.published_at,

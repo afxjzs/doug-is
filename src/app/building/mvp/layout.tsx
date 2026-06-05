@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     title,
     description,
     images: [getSocialImageUrl("/building/mvp/twitter-image")],
-    creator: "@glowingrec",
+    creator: "@doug__is",
   },
   alternates: {
     canonical: getCanonicalUrl("/building/mvp"),

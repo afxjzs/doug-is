@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 		description:
 			"Let's connect! Find me on social media, send me an email, or schedule a meeting.",
 		images: ["https://doug.is/images/doug-2024-cropped-compr.png"],
-		creator: "@glowingrec",
+		creator: "@doug__is",
 	},
 	alternates: {
 		canonical: "https://doug.is/connecting",

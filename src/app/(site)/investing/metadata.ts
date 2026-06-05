@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 		title: "doug.is / Investing",
 		description: "Investment targets and other investing-related content.",
 		images: ["https://doug.is/images/doug-2024-cropped-compr.png"],
-		creator: "@glowingrec",
+		creator: "@doug__is",
 	},
 	alternates: {
 		canonical: "https://doug.is/investing",

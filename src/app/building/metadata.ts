@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 		title: `${getSiteName()} / Building`,
 		description: "Projects and applications I've built",
 		images: [getSocialImageUrl("/images/projects/doug-is.png")],
-		creator: "@glowingrec",
+		creator: "@doug__is",
 	},
 	alternates: {
 		canonical: getCanonicalUrl("/building"),

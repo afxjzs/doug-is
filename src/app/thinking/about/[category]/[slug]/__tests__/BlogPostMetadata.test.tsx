@@ -91,7 +91,7 @@ describe("Blog Post Metadata", () => {
 		expect(metadata.twitter?.description).toBe(
 			"This is a test blog post excerpt"
 		)
-		expect(metadata.twitter?.creator).toBe("@glowingrec")
+		expect(metadata.twitter?.creator).toBe("@doug__is")
 
 		const twitterImages = Array.isArray(metadata.twitter?.images)
 			? metadata.twitter?.images

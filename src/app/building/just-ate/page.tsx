@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 		description:
 			"A timer app that reminds you to exercise at the optimal time after eating to boost metabolism",
 		images: [getSocialImageUrl("/images/projects/just-ate.jpg")],
-		creator: "@glowingrec",
+		creator: "@doug__is",
 	},
 	alternates: {
 		canonical: getCanonicalUrl("/building/just-ate"),

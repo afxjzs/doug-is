@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 		title: HOME_TITLE,
 		description: HOME_DESCRIPTION,
 		images: [getSocialImageUrl("/images/projects/doug-is.png")],
-		creator: "@glowingrec",
+		creator: "@doug__is",
 	},
 	alternates: {
 		canonical: getCanonicalUrl("/"),
