@@ -1,4 +1,4 @@
-import { getStuffSlugs, readThing, injectNav } from "@/lib/stuff"
+import { getStuffSlugs, readThing, decorateThing } from "@/lib/stuff"
 
 // Prerendered at build time from the fixed list of files; no runtime filesystem
 // access and no arbitrary paths can be requested.
@@ -21,7 +21,7 @@ export async function GET(
 		return new Response("Not found", { status: 404 })
 	}
 
-	return new Response(injectNav(html), {
+	return new Response(decorateThing(html, name), {
 		headers: { "content-type": "text/html; charset=utf-8" },
 	})
 }
