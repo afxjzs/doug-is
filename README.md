@@ -24,7 +24,7 @@ A modern personal website built with Next.js, React, TypeScript, and Tailwind CS
 
 ### Prerequisites
 
-- Node.js 20.11.1 or later
+- Node.js 22.x (tested on 22.14.0; pinned in `.nvmrc` and `engines`)
 - pnpm (recommended) or npm/yarn
 - Supabase account (for database functionality)
 

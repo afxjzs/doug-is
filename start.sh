@@ -7,7 +7,7 @@ echo "🚀 Starting development environment setup..."
 # Check Node.js version
 echo "📦 Setting up Node.js environment..."
 if command -v nvm &> /dev/null; then
-  nvm use 18 || nvm use
+  nvm use || nvm use 22
 else
   echo "⚠️ nvm not found, using system Node"
 fi
