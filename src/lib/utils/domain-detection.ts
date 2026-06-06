@@ -20,8 +20,11 @@ export function getSiteUrl(): string {
 		return envUrl.replace(/\/$/, "")
 	}
 
-	// In Vercel preview deployments, use the auto-provided URL
-	if (process.env.VERCEL_URL) {
+	// Only Vercel PREVIEW deployments should self-reference their ephemeral
+	// per-deployment URL. VERCEL_URL is set in production too, but production must
+	// emit the canonical domain (below) — otherwise canonical/OG URLs point at an
+	// unstable deployment host, breaking SEO and cached social cards.
+	if (process.env.VERCEL_ENV === "preview" && process.env.VERCEL_URL) {
 		return `https://${process.env.VERCEL_URL}`
 	}
 

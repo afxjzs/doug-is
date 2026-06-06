@@ -45,6 +45,23 @@ describe("Domain Detection", () => {
 			process.env.NEXT_PUBLIC_SITE_URL = "https://www.example.com"
 			expect(getSiteUrl()).toBe("https://www.example.com")
 		})
+
+		it("should self-reference the ephemeral URL in Vercel PREVIEW deployments", () => {
+			delete process.env.NEXT_PUBLIC_SITE_URL
+			process.env.VERCEL_ENV = "preview"
+			process.env.VERCEL_URL = "doug-abc123-afxjzs-projects.vercel.app"
+			expect(getSiteUrl()).toBe(
+				"https://doug-abc123-afxjzs-projects.vercel.app"
+			)
+		})
+
+		it("should emit the canonical domain in PRODUCTION even though VERCEL_URL is set", () => {
+			delete process.env.NEXT_PUBLIC_SITE_URL
+			process.env.VERCEL_ENV = "production"
+			// Vercel sets VERCEL_URL in production too — it must NOT be used here.
+			process.env.VERCEL_URL = "doug-xyz789-afxjzs-projects.vercel.app"
+			expect(getSiteUrl()).toBe("https://doug.is")
+		})
 	})
 
 	describe("getCanonicalUrl", () => {
