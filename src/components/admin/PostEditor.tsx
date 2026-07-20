@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Post } from "@/lib/supabase/clientData"
 import { normalizeCategory } from "@/lib/supabase/clientData"
 import ImageUploader from "@/components/admin/ImageUploader"
-import TiptapEditor from "@/components/admin/TiptapEditor"
+import MarkdownEditor from "@/components/admin/MarkdownEditor"
 import { nanoid } from "nanoid"
 import { getClientUser } from "@/lib/supabase/client"
 
@@ -386,7 +386,7 @@ export default function PostEditor({ post, mode }: PostEditorProps) {
 				<label htmlFor="content" className="block text-sm font-medium">
 					Content <span className="text-[rgba(var(--color-red),0.9)]">*</span>
 				</label>
-				<TiptapEditor
+				<MarkdownEditor
 					content={content}
 					onChange={setContent}
 					placeholder="Write your post content here..."

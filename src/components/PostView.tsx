@@ -4,8 +4,7 @@ import { FC, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Post } from "@/lib/supabase/data"
-import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
+import { MarkdownContent } from "@/components/MarkdownContent"
 import { useClientEventTracking } from "@/lib/analytics"
 
 interface PostViewProps {
@@ -118,18 +117,11 @@ export const PostView: FC<PostViewProps> = ({ post, isDraft = false }) => {
 				)}
 			</header>
 
-			<article className="prose lg:prose-lg max-w-none mb-12 prose-headings:text-[rgb(var(--color-foreground))] prose-headings:font-bold prose-p:text-[rgba(var(--color-foreground),0.8)] prose-a:text-[rgb(var(--color-accent))] prose-a:font-medium prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-code:text-[rgb(var(--color-accent-secondary))] prose-pre:bg-[rgba(var(--color-foreground),0.05)] prose-pre:text-[rgba(var(--color-foreground),0.9)] prose-blockquote:text-[rgba(var(--color-foreground),0.7)] prose-blockquote:border-l-4 prose-blockquote:border-[rgba(var(--color-accent),0.3)] prose-blockquote:pl-4 prose-blockquote:italic prose-p:my-6">
-				<div className="[&>p]:mb-8">
-					<ReactMarkdown
-						remarkPlugins={[remarkGfm]}
-						components={{
-							a: LinkRenderer,
-						}}
-					>
-						{post.content || ""}
-					</ReactMarkdown>
-				</div>
-			</article>
+			<MarkdownContent
+				content={post.content || ""}
+				components={{ a: LinkRenderer }}
+				className="mb-12"
+			/>
 
 			<footer className="pt-6 border-t border-[rgba(var(--color-border),0.08)]">
 				<Link
