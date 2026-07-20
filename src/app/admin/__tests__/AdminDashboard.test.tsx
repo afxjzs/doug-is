@@ -6,6 +6,7 @@
  */
 
 import { render, screen, waitFor } from "@testing-library/react"
+import type { User } from "@supabase/supabase-js"
 import AdminPage from "@/app/admin/page"
 
 // Mock the auth functions
@@ -79,7 +80,7 @@ describe("Admin Dashboard Data Fetching", () => {
 		jest.clearAllMocks()
 
 		// Setup default successful auth
-		mockGetCurrentUser.mockResolvedValue(mockUser)
+		mockGetCurrentUser.mockResolvedValue(mockUser as User)
 		mockIsCurrentUserAdmin.mockResolvedValue(true)
 	})
 

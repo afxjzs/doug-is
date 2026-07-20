@@ -24,11 +24,20 @@ jest.mock("next/script", () => {
 	}
 })
 
+// process.env.NODE_ENV is typed read-only, so assign it via defineProperty.
+const setNodeEnv = (value: string | undefined) => {
+	Object.defineProperty(process.env, "NODE_ENV", {
+		value,
+		configurable: true,
+		writable: true,
+	})
+}
+
 describe("GoogleAnalytics", () => {
 	it("renders Google Analytics scripts in production environment", () => {
 		// Mock NODE_ENV to production
 		const originalEnv = process.env.NODE_ENV
-		process.env.NODE_ENV = "production"
+		setNodeEnv("production")
 
 		render(<GoogleAnalytics />)
 
@@ -52,37 +61,37 @@ describe("GoogleAnalytics", () => {
 		expect(configScript).toHaveAttribute("data-strategy", "afterInteractive")
 
 		// Restore original NODE_ENV
-		process.env.NODE_ENV = originalEnv
+		setNodeEnv(originalEnv)
 	})
 
 	it("renders nothing in development environment", () => {
 		// Mock NODE_ENV to development
 		const originalEnv = process.env.NODE_ENV
-		process.env.NODE_ENV = "development"
+		setNodeEnv("development")
 
 		const { container } = render(<GoogleAnalytics />)
 		expect(container.firstChild).toBeNull()
 
 		// Restore original NODE_ENV
-		process.env.NODE_ENV = originalEnv
+		setNodeEnv(originalEnv)
 	})
 
 	it("renders nothing in test environment", () => {
 		// Mock NODE_ENV to test
 		const originalEnv = process.env.NODE_ENV
-		process.env.NODE_ENV = "test"
+		setNodeEnv("test")
 
 		const { container } = render(<GoogleAnalytics />)
 		expect(container.firstChild).toBeNull()
 
 		// Restore original NODE_ENV
-		process.env.NODE_ENV = originalEnv
+		setNodeEnv(originalEnv)
 	})
 
 	it("uses afterInteractive strategy for optimal loading", () => {
 		// Mock NODE_ENV to production
 		const originalEnv = process.env.NODE_ENV
-		process.env.NODE_ENV = "production"
+		setNodeEnv("production")
 
 		render(<GoogleAnalytics />)
 
@@ -93,6 +102,6 @@ describe("GoogleAnalytics", () => {
 		expect(configScript).toHaveAttribute("data-strategy", "afterInteractive")
 
 		// Restore original NODE_ENV
-		process.env.NODE_ENV = originalEnv
+		setNodeEnv(originalEnv)
 	})
 })

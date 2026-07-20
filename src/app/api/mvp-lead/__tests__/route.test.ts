@@ -214,7 +214,7 @@ describe("MVP Lead API Route", () => {
         json: async () => {
           throw new Error("Invalid JSON")
         },
-      } as Request
+      } as unknown as Request
 
       await POST(badRequest)
 
