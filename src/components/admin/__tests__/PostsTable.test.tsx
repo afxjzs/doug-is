@@ -4,7 +4,13 @@
  * Tests for the admin posts management table including draft view functionality.
  */
 
-import { render, screen, fireEvent, within } from "@testing-library/react"
+import {
+	render,
+	screen,
+	fireEvent,
+	within,
+	waitFor,
+} from "@testing-library/react"
 import PostsTable from "../PostsTable"
 import { Post } from "@/lib/supabase/clientData"
 
@@ -459,6 +465,72 @@ describe("PostsTable", () => {
 
 			expect(publishButtons[0]).toHaveTextContent("Publish Draft 1")
 			expect(publishButtons[1]).toHaveTextContent("Publish Draft 2")
+		})
+	})
+
+	describe("Delete Functionality", () => {
+		beforeEach(() => {
+			global.fetch = jest.fn()
+		})
+
+		afterEach(() => {
+			jest.restoreAllMocks()
+		})
+
+		it("confirms before deleting, calls the DELETE API, and removes the row", async () => {
+			;(global.fetch as jest.Mock).mockResolvedValue({
+				ok: true,
+				json: async () => ({ message: "Post deleted successfully" }),
+			})
+
+			render(<PostsTable posts={[mockPublishedPost]} />)
+			expect(screen.getByText("Published Post")).toBeInTheDocument()
+
+			// Opening the trash icon shows a confirmation, not an immediate delete.
+			fireEvent.click(screen.getByTitle("Delete post"))
+			expect(screen.getByText("Delete post?")).toBeInTheDocument()
+			expect(global.fetch).not.toHaveBeenCalled()
+
+			// Confirm.
+			fireEvent.click(screen.getByRole("button", { name: "Delete post" }))
+
+			await waitFor(() =>
+				expect(global.fetch).toHaveBeenCalledWith(
+					"/api/posts/published-post-id",
+					expect.objectContaining({ method: "DELETE" })
+				)
+			)
+			await waitFor(() =>
+				expect(screen.queryByText("Published Post")).not.toBeInTheDocument()
+			)
+		})
+
+		it("cancels without calling the API", () => {
+			render(<PostsTable posts={[mockPublishedPost]} />)
+
+			fireEvent.click(screen.getByTitle("Delete post"))
+			fireEvent.click(screen.getByRole("button", { name: "Cancel" }))
+
+			expect(screen.queryByText("Delete post?")).not.toBeInTheDocument()
+			expect(global.fetch).not.toHaveBeenCalled()
+			expect(screen.getByText("Published Post")).toBeInTheDocument()
+		})
+
+		it("surfaces an API error and keeps the row", async () => {
+			;(global.fetch as jest.Mock).mockResolvedValue({
+				ok: false,
+				json: async () => ({ error: "Failed to delete post" }),
+			})
+
+			render(<PostsTable posts={[mockPublishedPost]} />)
+			fireEvent.click(screen.getByTitle("Delete post"))
+			fireEvent.click(screen.getByRole("button", { name: "Delete post" }))
+
+			await waitFor(() =>
+				expect(screen.getByText("Failed to delete post")).toBeInTheDocument()
+			)
+			// Row is still there.
+			expect(screen.getByText("Published Post")).toBeInTheDocument()
 		})
 	})
 })

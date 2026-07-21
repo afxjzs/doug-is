@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react"
-import userEvent from "@testing-library/user-event"
 import ContactsList from "../ContactsList"
 import { ContactMessage } from "@/lib/supabase/clientData"
 
@@ -40,8 +39,6 @@ const mockContacts: ContactMessage[] = [
 ]
 
 describe("ContactsList - Admin Contact Management Testing", () => {
-	const user = userEvent.setup()
-
 	// Helper function to get contact row by name
 	const getContactRow = (name: string) => {
 		const contactElement = screen.getByText(name)
@@ -84,19 +81,10 @@ describe("ContactsList - Admin Contact Management Testing", () => {
 			expect(screen.getAllByText(/Jan 12/)).toHaveLength(2)
 		})
 
-		it("should show filter tabs with correct counts", () => {
+		it("should show the message count", () => {
 			render(<ContactsList initialContacts={mockContacts} />)
 
-			expect(screen.getByText("All (4)")).toBeInTheDocument()
-			expect(screen.getByText("Unread (4)")).toBeInTheDocument()
-			expect(screen.getByText("Read (0)")).toBeInTheDocument()
-		})
-
-		it("should have 'All' filter active by default", () => {
-			render(<ContactsList initialContacts={mockContacts} />)
-
-			const allTab = screen.getByRole("button", { name: "All (4)" })
-			expect(allTab).toHaveClass("active")
+			expect(screen.getByText("4 messages")).toBeInTheDocument()
 		})
 	})
 
@@ -113,44 +101,6 @@ describe("ContactsList - Admin Contact Management Testing", () => {
 					"We'd like to discuss a potential partnership with your company."
 				)
 			).toBeInTheDocument()
-		})
-	})
-
-	describe("Filter Functionality", () => {
-		it("should show all messages when 'All' filter is selected", () => {
-			render(<ContactsList initialContacts={mockContacts} />)
-
-			// All messages should be visible
-			expect(screen.getByText("John Doe")).toBeInTheDocument()
-			expect(screen.getByText("Jane Smith")).toBeInTheDocument()
-			expect(screen.getByText("Bob Wilson")).toBeInTheDocument()
-			expect(screen.getByText("Alice Johnson")).toBeInTheDocument()
-		})
-
-		it("should show all messages when 'Unread' filter is selected", async () => {
-			render(<ContactsList initialContacts={mockContacts} />)
-
-			// Click unread filter
-			await user.click(screen.getByText("Unread (4)"))
-
-			// All messages should still be visible (since we removed read/unread functionality)
-			expect(screen.getByText("John Doe")).toBeInTheDocument()
-			expect(screen.getByText("Jane Smith")).toBeInTheDocument()
-			expect(screen.getByText("Bob Wilson")).toBeInTheDocument()
-			expect(screen.getByText("Alice Johnson")).toBeInTheDocument()
-		})
-
-		it("should show all messages when 'Read' filter is selected", async () => {
-			render(<ContactsList initialContacts={mockContacts} />)
-
-			// Click read filter
-			await user.click(screen.getByText("Read (0)"))
-
-			// All messages should still be visible (since we removed read/unread functionality)
-			expect(screen.getByText("John Doe")).toBeInTheDocument()
-			expect(screen.getByText("Jane Smith")).toBeInTheDocument()
-			expect(screen.getByText("Bob Wilson")).toBeInTheDocument()
-			expect(screen.getByText("Alice Johnson")).toBeInTheDocument()
 		})
 	})
 
@@ -177,19 +127,15 @@ describe("ContactsList - Admin Contact Management Testing", () => {
 				screen.getByText("No contact submissions found.")
 			).toBeInTheDocument()
 
-			// Filter tabs should show zero counts
-			expect(screen.getByText("All (0)")).toBeInTheDocument()
-			expect(screen.getByText("Unread (0)")).toBeInTheDocument()
-			expect(screen.getByText("Read (0)")).toBeInTheDocument()
+			// Count should read zero
+			expect(screen.getByText("0 messages")).toBeInTheDocument()
 		})
 
 		it("should handle single contact message", () => {
 			const singleContact = [mockContacts[0]]
 			render(<ContactsList initialContacts={singleContact} />)
 
-			expect(screen.getByText("All (1)")).toBeInTheDocument()
-			expect(screen.getByText("Unread (1)")).toBeInTheDocument()
-			expect(screen.getByText("Read (0)")).toBeInTheDocument()
+			expect(screen.getByText("1 message")).toBeInTheDocument()
 			expect(screen.getByText("John Doe")).toBeInTheDocument()
 		})
 
@@ -228,6 +174,23 @@ describe("ContactsList - Admin Contact Management Testing", () => {
 			// Check for separator dots
 			const separators = screen.getAllByText("•")
 			expect(separators.length).toBeGreaterThan(0)
+		})
+	})
+
+	describe("Cross-linking", () => {
+		it("renders each email as a mailto link", () => {
+			render(<ContactsList initialContacts={mockContacts} />)
+
+			const email = screen.getByRole("link", { name: "john@example.com" })
+			expect(email).toHaveAttribute("href", "mailto:john@example.com")
+		})
+
+		it("gives each message an anchor id so the dashboard can deep-link to it", () => {
+			const { container } = render(
+				<ContactsList initialContacts={[mockContacts[0]]} />
+			)
+
+			expect(container.querySelector("#contact-1")).toBeInTheDocument()
 		})
 	})
 })

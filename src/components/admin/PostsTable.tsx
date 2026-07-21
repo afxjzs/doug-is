@@ -7,6 +7,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { format } from "date-fns"
 import { Post } from "@/lib/supabase/clientData"
 import PublishButton from "./PublishButton"
@@ -30,13 +31,46 @@ const STATUS_COLORS: Record<string, string> = {
 }
 
 export default function PostsTable({ posts }: PostsTableProps) {
+	const router = useRouter()
 	const [searchTerm, setSearchTerm] = useState("")
 	const [categoryFilter, setCategoryFilter] = useState("all")
 	const [statusFilter, setStatusFilter] = useState("all")
 
+	// Local copy so a deleted row disappears immediately (server data is
+	// re-fetched via router.refresh() to stay consistent).
+	const [postList, setPostList] = useState<Post[]>(posts)
+	const [confirmDelete, setConfirmDelete] = useState<Post | null>(null)
+	const [isDeleting, setIsDeleting] = useState(false)
+	const [deleteError, setDeleteError] = useState<string | null>(null)
+
+	async function handleDelete(post: Post) {
+		setIsDeleting(true)
+		setDeleteError(null)
+		try {
+			const response = await fetch(`/api/posts/${post.id}`, {
+				method: "DELETE",
+				credentials: "include",
+				cache: "no-store",
+			})
+			const data = await response.json().catch(() => ({}))
+			if (!response.ok) {
+				throw new Error(data.error || `Server error: ${response.status}`)
+			}
+			setPostList((prev) => prev.filter((p) => p.id !== post.id))
+			setConfirmDelete(null)
+			router.refresh()
+		} catch (err) {
+			setDeleteError(
+				err instanceof Error ? err.message : "Failed to delete post"
+			)
+		} finally {
+			setIsDeleting(false)
+		}
+	}
+
 	// Get unique categories from posts
 	const uniqueCategories = Array.from(
-		new Set(posts.map((post) => post.category))
+		new Set(postList.map((post) => post.category))
 	)
 	const categories = ["all", ...uniqueCategories]
 	const statuses = ["all", "idea", "draft", "review", "published"]
@@ -53,7 +87,7 @@ export default function PostsTable({ posts }: PostsTableProps) {
 	}
 
 	// Filter posts based on search term and category
-	const filteredPosts = posts.filter((post) => {
+	const filteredPosts = postList.filter((post) => {
 		const matchesSearch =
 			post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
 			post.excerpt?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -244,11 +278,13 @@ export default function PostsTable({ posts }: PostsTableProps) {
 												</Link>
 
 												<button
+													type="button"
 													className="p-2 rounded-md text-red-400 hover:bg-red-100 hover:bg-opacity-10"
 													onClick={() => {
-														// In a real app, this would show a confirmation dialog
-														alert(`Delete post: ${post.title}`)
+														setDeleteError(null)
+														setConfirmDelete(post)
 													}}
+													title="Delete post"
 												>
 													<svg
 														xmlns="http://www.w3.org/2000/svg"
@@ -274,6 +310,53 @@ export default function PostsTable({ posts }: PostsTableProps) {
 					</table>
 				</div>
 			</div>
+
+			{/* Delete confirmation modal */}
+			{confirmDelete && (
+				<div
+					className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+					role="dialog"
+					aria-modal="true"
+					onClick={() => !isDeleting && setConfirmDelete(null)}
+				>
+					<div
+						className="admin-card max-w-md w-full"
+						onClick={(e) => e.stopPropagation()}
+					>
+						<h3 className="text-lg font-semibold mb-2">Delete post?</h3>
+						<p className="text-sm text-gray-300 mb-4">
+							This permanently deletes{" "}
+							<span className="font-medium text-gray-100">
+								“{confirmDelete.title}”
+							</span>
+							. This can&apos;t be undone.
+						</p>
+						{deleteError && (
+							<p className="text-sm text-[rgba(var(--color-red),0.9)] mb-4">
+								{deleteError}
+							</p>
+						)}
+						<div className="flex justify-end gap-3">
+							<button
+								type="button"
+								className="px-4 py-2 rounded-md text-sm text-gray-300 hover:bg-white/5"
+								onClick={() => setConfirmDelete(null)}
+								disabled={isDeleting}
+							>
+								Cancel
+							</button>
+							<button
+								type="button"
+								className="px-4 py-2 rounded-md text-sm bg-red-600 hover:bg-red-500 text-white disabled:opacity-60"
+								onClick={() => handleDelete(confirmDelete)}
+								disabled={isDeleting}
+							>
+								{isDeleting ? "Deleting…" : "Delete post"}
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }

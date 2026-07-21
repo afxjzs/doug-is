@@ -14,22 +14,9 @@ interface ContactsListProps {
 
 export default function ContactsList({ initialContacts }: ContactsListProps) {
 	const [contacts, setContacts] = useState<ContactMessage[]>(initialContacts)
-	const [activeFilter, setActiveFilter] = useState<"all" | "unread" | "read">(
-		"all"
-	)
 	const [expandedIds, setExpandedIds] = useState<Set<string>>(
 		new Set(initialContacts.map((contact) => contact.id))
 	)
-
-	// Filter contacts based on current filter selection
-	const filteredContacts = contacts.filter((contact) => {
-		// Since we removed read/unread functionality, all contacts are shown
-		return true // "all" filter
-	})
-
-	// Count of each type (keeping for UI consistency but not functional)
-	const unreadCount = contacts.length
-	const readCount = 0
 
 	// Toggle message expanded state
 	const toggleExpand = (id: string) => {
@@ -58,36 +45,19 @@ export default function ContactsList({ initialContacts }: ContactsListProps) {
 
 	return (
 		<div className="space-y-4">
-			{/* Filter tabs */}
-			<div className="filter-tabs">
-				<button
-					onClick={() => setActiveFilter("all")}
-					className={activeFilter === "all" ? "active" : ""}
-				>
-					All ({contacts.length})
-				</button>
-				<button
-					onClick={() => setActiveFilter("unread")}
-					className={activeFilter === "unread" ? "active" : ""}
-				>
-					Unread ({unreadCount})
-				</button>
-				<button
-					onClick={() => setActiveFilter("read")}
-					className={activeFilter === "read" ? "active" : ""}
-				>
-					Read ({readCount})
-				</button>
+			{/* Message count */}
+			<div className="text-sm text-gray-400">
+				{contacts.length} message{contacts.length !== 1 ? "s" : ""}
 			</div>
 
 			{/* Contact messages list */}
-			{filteredContacts.length === 0 ? (
+			{contacts.length === 0 ? (
 				<div className="text-center py-8 text-gray-400">
 					No contact submissions found.
 				</div>
 			) : (
 				<div className="contacts-list">
-					{filteredContacts.map((contact) => (
+					{contacts.map((contact) => (
 						<div
 							key={contact.id}
 							id={`contact-${contact.id}`}
