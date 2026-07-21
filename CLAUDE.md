@@ -14,6 +14,19 @@ These override convenience, momentum, and any urge to "just keep going."
 2. **When unsure, halt and surface — don't guess.** If you're confused, missing context, even slightly unsure, or you hit a contradiction (between the request and the code, between two files, between docs and reality), stop and raise it instead of picking a plausible-looking path and proceeding. Surfacing a question early is always cheaper than undoing a wrong assumption.
 3. **Keep documentation current — spending tokens on it is welcome.** Stale docs are worse than no docs. When code changes invalidate something in this file, the README, or `.cursor/rules/*.mdc`, update the docs in the same breath. Don't economize on the read-and-verify work needed to keep them accurate; the owner explicitly prefers the token cost over drift.
 
+## Writing (prose) rules
+
+These govern prose (blog posts, docs, PR text, messages). Never touch code or technical terms; swap in everyday words only where precision survives. From Orwell, "Politics and the English Language" (1946):
+
+1. Never use a metaphor, simile or other figure of speech which you are used to seeing in print.
+2. Never use a long word where a short one will do.
+3. If it is possible to cut a word out, always cut it out.
+4. Never use the passive where you can use the active.
+5. Never use a foreign phrase, a scientific word or a jargon word if you can think of an everyday English equivalent.
+6. Break any of these rules sooner than say anything outright barbarous.
+
+Review every prose output against these rules before delivering. For the specific tics that make writing sound AI-generated (inflated vocabulary, negative parallelism, rule-of-three padding, trailing `-ing` clauses, em-dash overuse), also check it against `docs/writing-style.md` before delivering.
+
 ## Commands
 
 ```bash
