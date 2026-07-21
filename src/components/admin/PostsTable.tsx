@@ -30,6 +30,15 @@ const STATUS_COLORS: Record<string, string> = {
 	published: "text-green-400",
 }
 
+// published_at is the source of truth for whether a post is live (it's what the
+// public site reads). A set publish date always means "Published", regardless of
+// a possibly-stale `status`; only unpublished posts use the workflow status.
+function effectiveStatus(post: Post): string {
+	if (post.published_at) return "published"
+	if (post.status && post.status !== "published") return post.status
+	return "draft"
+}
+
 export default function PostsTable({ posts }: PostsTableProps) {
 	const router = useRouter()
 	const [searchTerm, setSearchTerm] = useState("")
@@ -97,7 +106,7 @@ export default function PostsTable({ posts }: PostsTableProps) {
 			categoryFilter === "all" || post.category === categoryFilter
 
 		const matchesStatus =
-			statusFilter === "all" || (post.status || (post.published_at ? "published" : "draft")) === statusFilter
+			statusFilter === "all" || effectiveStatus(post) === statusFilter
 
 		return matchesSearch && matchesCategory && matchesStatus
 	})
@@ -205,8 +214,8 @@ export default function PostsTable({ posts }: PostsTableProps) {
 											<span className="post-category">{post.category}</span>
 										</td>
 										<td>
-											<span className={STATUS_COLORS[post.status || (post.published_at ? "published" : "draft")]}>
-												{STATUS_LABELS[post.status || (post.published_at ? "published" : "draft")]}
+											<span className={STATUS_COLORS[effectiveStatus(post)]}>
+												{STATUS_LABELS[effectiveStatus(post)]}
 											</span>
 											{post.published_at && (
 												<span className="block text-xs text-[rgba(var(--color-foreground),0.5)]">

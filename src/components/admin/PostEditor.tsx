@@ -406,7 +406,16 @@ export default function PostEditor({ post, mode }: PostEditorProps) {
 						id="published"
 						type="checkbox"
 						checked={published}
-						onChange={() => setPublished(!published)}
+						onChange={() => {
+							const next = !published
+							setPublished(next)
+							// Keep status in sync so a post can't be published-but-"draft".
+							if (next && status !== "published") {
+								setStatus("published")
+							} else if (!next && status === "published") {
+								setStatus("draft")
+							}
+						}}
 						className="mr-2 h-4 w-4"
 					/>
 					<label htmlFor="published" className="text-sm">

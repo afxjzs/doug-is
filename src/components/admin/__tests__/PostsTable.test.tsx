@@ -468,6 +468,33 @@ describe("PostsTable", () => {
 		})
 	})
 
+	describe("Status Display", () => {
+		it("shows 'Published' when published_at is set even if status is stale 'draft'", () => {
+			const driftedPost = {
+				...mockPublishedPost,
+				status: "draft",
+			} as Post
+
+			render(<PostsTable posts={[driftedPost]} />)
+
+			const row = screen.getByText("Published Post").closest("tr")!
+			expect(within(row).getByText("Published")).toBeInTheDocument()
+			expect(within(row).queryByText("Draft")).not.toBeInTheDocument()
+		})
+
+		it("shows the workflow status for unpublished posts", () => {
+			const ideaPost = {
+				...mockDraftPost,
+				status: "idea",
+			} as Post
+
+			render(<PostsTable posts={[ideaPost]} />)
+
+			const row = screen.getByText("Draft Post").closest("tr")!
+			expect(within(row).getByText("Idea")).toBeInTheDocument()
+		})
+	})
+
 	describe("Delete Functionality", () => {
 		beforeEach(() => {
 			global.fetch = jest.fn()
