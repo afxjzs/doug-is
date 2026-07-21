@@ -189,3 +189,65 @@ describe("Admin Dashboard Data Fetching", () => {
 	// NOTE: Authentication flow is now handled in AdminLayout component
 	// These auth tests are covered in AdminLayout.integration.test.tsx
 })
+
+describe("Admin Dashboard Cross-Linking", () => {
+	const linkPosts = [
+		{
+			id: "p1",
+			title: "Hello World",
+			slug: "hello-world",
+			category: "Development",
+			published_at: "2024-01-01T00:00:00Z",
+			excerpt: "An excerpt",
+			content: "Body",
+		},
+	]
+	const linkMessages = [
+		{
+			id: "m1",
+			name: "Jane Doe",
+			email: "jane@example.com",
+			subject: "Hello",
+			message: "A short message",
+			created_at: "2024-01-01T00:00:00Z",
+		},
+	]
+
+	beforeEach(() => {
+		jest.clearAllMocks()
+		const client = {
+			from: jest.fn().mockImplementation((table: string) => ({
+				select: jest.fn().mockReturnThis(),
+				order: jest.fn().mockResolvedValue({
+					data: table === "posts" ? linkPosts : linkMessages,
+					error: null,
+				}),
+			})),
+		}
+		mockCreateServiceRoleClient.mockReturnValue(client as any)
+	})
+
+	it("gives each recent post a 'View Post' link to the live page plus an Edit link", async () => {
+		render(await AdminPage())
+
+		const viewPost = screen.getByRole("link", { name: /View Post/i })
+		expect(viewPost).toHaveAttribute(
+			"href",
+			"/thinking/about/development/hello-world"
+		)
+		expect(viewPost).toHaveAttribute("target", "_blank")
+
+		const edit = screen.getByRole("link", { name: "Edit" })
+		expect(edit).toHaveAttribute("href", "/admin/posts/p1")
+	})
+
+	it("makes recent contact messages reachable: a deep link and a mailto", async () => {
+		render(await AdminPage())
+
+		const viewMsg = screen.getByRole("link", { name: /View full message/i })
+		expect(viewMsg).toHaveAttribute("href", "/admin/contacts#contact-m1")
+
+		const email = screen.getByRole("link", { name: "jane@example.com" })
+		expect(email).toHaveAttribute("href", "mailto:jane@example.com")
+	})
+})

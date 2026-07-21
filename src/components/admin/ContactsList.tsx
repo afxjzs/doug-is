@@ -88,7 +88,11 @@ export default function ContactsList({ initialContacts }: ContactsListProps) {
 			) : (
 				<div className="contacts-list">
 					{filteredContacts.map((contact) => (
-						<div key={contact.id} className="contact-card">
+						<div
+							key={contact.id}
+							id={`contact-${contact.id}`}
+							className="contact-card scroll-mt-24"
+						>
 							<div
 								className="contact-header"
 								onClick={() => toggleExpand(contact.id)}
@@ -102,7 +106,13 @@ export default function ContactsList({ initialContacts }: ContactsListProps) {
 									<div className="contact-meta">
 										<span>{contact.name}</span>
 										<span className="mx-2">•</span>
-										<span>{contact.email}</span>
+										<a
+											href={`mailto:${contact.email}`}
+											className="hover:text-[rgb(var(--color-violet))] underline"
+											onClick={(e) => e.stopPropagation()}
+										>
+											{contact.email}
+										</a>
 										<span className="mx-2">•</span>
 										<span>{formatDate(contact.created_at)}</span>
 									</div>

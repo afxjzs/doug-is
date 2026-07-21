@@ -179,12 +179,23 @@ export default async function AdminPage() {
 										{post.published_at ? "Published" : "Draft"}
 									</p>
 								</div>
-								<Link
-									href={`/admin/posts/${post.id}`}
-									className="text-purple-400 hover:text-purple-300 text-sm"
-								>
-									Edit
-								</Link>
+								<div className="flex items-center gap-4 ml-4 whitespace-nowrap">
+									<Link
+										href={`/thinking/about/${post.category.toLowerCase()}/${
+											post.slug
+										}`}
+										target="_blank"
+										className="text-cyan-400 hover:text-cyan-300 text-sm"
+									>
+										View Post ↗
+									</Link>
+									<Link
+										href={`/admin/posts/${post.id}`}
+										className="text-purple-400 hover:text-purple-300 text-sm"
+									>
+										Edit
+									</Link>
+								</div>
 							</div>
 						))}
 						{publishedPosts.length === 0 && (
@@ -195,6 +206,16 @@ export default async function AdminPage() {
 									className="text-purple-400 hover:text-purple-300"
 								>
 									Create your first post
+								</Link>
+							</div>
+						)}
+						{publishedPosts.length > 0 && (
+							<div className="pt-4 border-t border-gray-600">
+								<Link
+									href="/admin/posts"
+									className="text-purple-400 hover:text-purple-300 text-sm"
+								>
+									Manage all posts →
 								</Link>
 							</div>
 						)}
@@ -215,7 +236,12 @@ export default async function AdminPage() {
 								<div className="flex justify-between items-start mb-2">
 									<div>
 										<h3 className="font-medium">{msg.name}</h3>
-										<p className="text-sm text-gray-400 mt-1">{msg.email}</p>
+										<a
+											href={`mailto:${msg.email}`}
+											className="text-sm text-purple-400 hover:text-purple-300 mt-1 inline-block"
+										>
+											{msg.email}
+										</a>
 										{msg.subject && (
 											<p className="text-sm text-gray-300 mt-1">
 												Subject: {msg.subject}
@@ -231,11 +257,27 @@ export default async function AdminPage() {
 										? `${msg.message.substring(0, 100)}...`
 										: msg.message}
 								</p>
+								<Link
+									href={`/admin/contacts#contact-${msg.id}`}
+									className="text-cyan-400 hover:text-cyan-300 text-sm mt-2 inline-block"
+								>
+									View full message →
+								</Link>
 							</div>
 						))}
 						{contactSubmissions.length === 0 && (
 							<div className="text-center text-gray-400 py-8">
 								No contact messages yet.
+							</div>
+						)}
+						{contactSubmissions.length > 0 && (
+							<div className="pt-4 border-t border-gray-600">
+								<Link
+									href="/admin/contacts"
+									className="text-purple-400 hover:text-purple-300 text-sm"
+								>
+									View all messages →
+								</Link>
 							</div>
 						)}
 					</div>
