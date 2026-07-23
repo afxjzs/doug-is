@@ -78,10 +78,57 @@ export default function HeroSection() {
 			</div>
 
 			<div className="max-w-[1200px] mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center">
-				{/* Left — terminal */}
+				{/* Identity — first in DOM so mobile (and screen readers) get
+				   who-this-is before the terminal; md:order-2 keeps it on the
+				   right on desktop. Each child staggers in 60ms apart. */}
+				<div className="md:order-2">
+					{/* Circular B&W photo */}
+					<div
+						className="w-[120px] h-[120px] rounded-full overflow-hidden border-2 border-[rgb(var(--color-accent))] mb-7 hero-stagger"
+						style={{ animationDelay: "0ms" }}
+					>
+						{/* eslint-disable-next-line @next/next/no-img-element */}
+						<img
+							src="/images/doug-2024-cropped-compr.png"
+							alt="Doug Rogers"
+							className="w-full h-full object-cover grayscale brightness-110 contrast-105"
+						/>
+					</div>
+					<h1
+						className="font-[family-name:var(--font-display)] text-[clamp(40px,5vw,64px)] font-bold leading-[1.1] mb-6 hero-stagger"
+						style={{ animationDelay: "60ms" }}
+					>
+						Ideas to products.{" "}
+						<span className="text-[rgb(var(--color-accent))]">
+							Zero to one.
+						</span>
+					</h1>
+					<p
+						className="text-base leading-[1.7] text-[rgba(var(--color-foreground),0.65)] max-w-[440px] mb-10 hero-stagger"
+						style={{ animationDelay: "120ms" }}
+					>
+						I&apos;m not a theoretical advisor. I&apos;ve raised capital,
+						invested capital, pivoted, shipped, sold. I excel at taking a raw
+						idea and turning it into something customers actually pay for,
+						validating all the way.
+					</p>
+					<div
+						className="flex flex-wrap gap-4 hero-stagger"
+						style={{ animationDelay: "180ms" }}
+					>
+						<Link href="/connecting" className="btn-primary">
+							Get in Touch
+						</Link>
+						<Link href="/thinking" className="btn-secondary">
+							Read My Writing
+						</Link>
+					</div>
+				</div>
+
+				{/* Terminal — md:order-1 puts it on the left on desktop */}
 				<div
-					className="bg-[rgb(var(--color-background-alt))] rounded-xl border border-[rgba(var(--color-border),0.12)] overflow-hidden hero-stagger"
-					style={{ animationDelay: "0ms" }}
+					className="bg-[rgb(var(--color-background-alt))] rounded-xl border border-[rgba(var(--color-border),0.12)] overflow-hidden hero-stagger md:order-1"
+					style={{ animationDelay: "240ms" }}
 				>
 					{/* Terminal title bar */}
 					<div className="px-4 py-3 border-b border-[rgba(var(--color-border),0.08)] flex items-center gap-2">
@@ -95,51 +142,6 @@ export default function HeroSection() {
 					{/* Terminal content */}
 					<div className="p-6 min-h-[420px]">
 						<TerminalText />
-					</div>
-				</div>
-
-				{/* Right — headline. Each child staggers in 60ms apart. */}
-				<div>
-					{/* Circular B&W photo */}
-					<div
-						className="w-[120px] h-[120px] rounded-full overflow-hidden border-2 border-[rgb(var(--color-accent))] mb-7 hero-stagger"
-						style={{ animationDelay: "60ms" }}
-					>
-						{/* eslint-disable-next-line @next/next/no-img-element */}
-						<img
-							src="/images/doug-2024-cropped-compr.png"
-							alt="Doug Rogers"
-							className="w-full h-full object-cover grayscale brightness-110 contrast-105"
-						/>
-					</div>
-					<h1
-						className="font-[family-name:var(--font-display)] text-[clamp(40px,5vw,64px)] font-bold leading-[1.1] mb-6 hero-stagger"
-						style={{ animationDelay: "120ms" }}
-					>
-						Ideas to products.{" "}
-						<span className="text-[rgb(var(--color-accent))]">
-							Zero to one.
-						</span>
-					</h1>
-					<p
-						className="text-base leading-[1.7] text-[rgba(var(--color-foreground),0.65)] max-w-[440px] mb-10 hero-stagger"
-						style={{ animationDelay: "180ms" }}
-					>
-						I&apos;m not a theoretical advisor. I&apos;ve raised capital,
-						invested capital, pivoted, shipped, sold. I excel at taking a raw
-						idea and turning it into something customers actually pay for,
-						validating all the way.
-					</p>
-					<div
-						className="flex flex-wrap gap-4 hero-stagger"
-						style={{ animationDelay: "240ms" }}
-					>
-						<Link href="/connecting" className="btn-primary">
-							Get in Touch
-						</Link>
-						<Link href="/thinking" className="btn-secondary">
-							Read My Writing
-						</Link>
 					</div>
 				</div>
 			</div>

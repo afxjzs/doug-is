@@ -1,22 +1,7 @@
 import { StrictMode, type ReactElement } from "react"
 import { act, render } from "@testing-library/react"
+import { mockMatchMedia } from "@/lib/test-utils"
 import TerminalText from "../TerminalText"
-
-function mockMatchMedia(matches: boolean) {
-	Object.defineProperty(window, "matchMedia", {
-		writable: true,
-		value: jest.fn().mockImplementation((query: string) => ({
-			matches,
-			media: query,
-			onchange: null,
-			addListener: jest.fn(),
-			removeListener: jest.fn(),
-			addEventListener: jest.fn(),
-			removeEventListener: jest.fn(),
-			dispatchEvent: jest.fn(),
-		})),
-	})
-}
 
 describe("TerminalText", () => {
 	it("renders in the monospace font, not the body font", () => {

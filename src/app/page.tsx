@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Metadata } from "next"
 import HeroSection from "@/components/HeroSection"
 import { getPublishedPosts } from "@/lib/supabase/data"
@@ -49,7 +50,7 @@ function HexSeparator() {
 			width="8"
 			height="10"
 			viewBox="0 0 86.6 100"
-			className="fill-[rgb(var(--color-accent))] shrink-0"
+			className="hidden md:block fill-[rgb(var(--color-accent))] shrink-0"
 		>
 			<polygon points="43.3,0 86.6,25 86.6,75 43.3,100 0,75 0,25" />
 		</svg>
@@ -66,7 +67,7 @@ export default async function Home() {
 
 			{/* Credential bar */}
 			<section className="border-t border-b border-[rgba(var(--color-border),0.08)] py-5 px-5 md:px-10">
-				<div className="max-w-[1200px] mx-auto flex flex-wrap justify-center items-center gap-3 font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-foreground),0.65)]">
+				<div className="max-w-[1200px] mx-auto flex flex-col items-center gap-2 md:flex-row md:flex-wrap md:justify-center md:gap-3 font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-foreground),0.65)]">
 					{[
 						"Y Combinator (W15)",
 						"Techstars (JPM/24)",
@@ -168,11 +169,12 @@ export default async function Home() {
 
 			{/* Photo + quote band */}
 			<section className="relative h-[400px] overflow-hidden">
-				{/* eslint-disable-next-line @next/next/no-img-element */}
-				<img
+				<Image
 					src="/images/doug-nyc.jpg"
 					alt="Doug Rogers overlooking the New York City skyline at dusk"
-					className="absolute inset-0 w-full h-full object-cover sepia-[0.4] saturate-[0.6] brightness-[0.35] hue-rotate-[10deg]"
+					fill
+					sizes="100vw"
+					className="object-cover sepia-[0.4] saturate-[0.6] brightness-[0.35] hue-rotate-[10deg]"
 				/>
 				<div className="absolute inset-0 bg-gradient-to-r from-[rgba(10,14,26,0.7)] to-[rgba(10,14,26,0.3)]" />
 				<div className="relative z-10 h-full flex items-center px-5 md:px-12 max-w-[1200px] mx-auto">

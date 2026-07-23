@@ -48,6 +48,25 @@ export function setupSupabaseMock(
 	)
 }
 
+// Install a window.matchMedia mock (jsdom lacks one). Components gate
+// motion behind prefers-reduced-motion; pass matches=true to take the
+// reduced-motion path in tests.
+export function mockMatchMedia(matches: boolean) {
+	Object.defineProperty(window, "matchMedia", {
+		writable: true,
+		value: jest.fn().mockImplementation((query: string) => ({
+			matches,
+			media: query,
+			onchange: null,
+			addListener: jest.fn(),
+			removeListener: jest.fn(),
+			addEventListener: jest.fn(),
+			removeEventListener: jest.fn(),
+			dispatchEvent: jest.fn(),
+		})),
+	})
+}
+
 // Custom render function that includes providers
 export function render(ui: React.ReactElement, options = {}) {
 	return rtlRender(ui, {
