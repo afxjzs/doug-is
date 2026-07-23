@@ -108,7 +108,7 @@ export default function Home4() {
 									Get in Touch
 								</Link>
 								<Link
-									href="/thinking"
+									href="/writing"
 									className="px-6 py-3 rounded-xl border border-[rgba(var(--color-foreground),0.1)] text-[rgba(var(--color-foreground),0.7)] font-medium hover:bg-[rgba(var(--color-foreground),0.05)] transition-all duration-300"
 								>
 									Read My Writing

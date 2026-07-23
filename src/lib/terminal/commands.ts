@@ -19,7 +19,7 @@ export const SECTIONS = [
 	"advising",
 	"building",
 	"investing",
-	"thinking",
+	"writing",
 	"connecting",
 ] as const
 

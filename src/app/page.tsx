@@ -138,7 +138,7 @@ export default async function Home() {
 							Writing
 						</h2>
 						<Link
-							href="/thinking"
+							href="/writing"
 							className="font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-accent),0.75)] hover:text-[rgb(var(--color-accent))] transition-colors"
 						>
 							ALL POSTS &rarr;
@@ -149,7 +149,7 @@ export default async function Home() {
 						{posts.map((post) => (
 							<Link
 								key={post.id}
-								href={`/thinking/about/${post.category.toLowerCase()}/${post.slug}`}
+								href={`/writing/about/${post.category.toLowerCase()}/${post.slug}`}
 								className="p-8 bg-[rgb(var(--color-background-alt))] rounded-lg border border-[rgba(var(--color-border),0.06)] transition-all duration-300 hover:border-[rgba(var(--color-border),0.2)] hover:-translate-y-1"
 							>
 								<span className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.15em] text-[rgba(var(--color-accent),0.75)] uppercase">

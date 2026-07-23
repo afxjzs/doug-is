@@ -56,7 +56,7 @@ describe("Blog Post Metadata", () => {
 			"This is a test blog post excerpt"
 		)
 		expect(metadata.openGraph?.url).toBe(
-			"https://doug.is/thinking/about/technology/test-blog-post"
+			"https://doug.is/writing/about/technology/test-blog-post"
 		)
 		expect(metadata.openGraph?.siteName).toBe("doug.is")
 		expect(metadata.openGraph?.images).toHaveLength(1)
@@ -178,7 +178,7 @@ describe("Blog Post Metadata", () => {
 		})
 
 		expect(metadata.alternates?.canonical).toBe(
-			"https://doug.is/thinking/about/technology/test-blog-post"
+			"https://doug.is/writing/about/technology/test-blog-post"
 		)
 	})
 

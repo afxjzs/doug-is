@@ -66,7 +66,7 @@ describe("Structured Data Generation", () => {
 			expect(structuredData.datePublished).toBe("2024-01-15T10:00:00Z")
 			expect(structuredData.dateModified).toBe("2024-01-16T14:30:00Z")
 			expect(structuredData.mainEntityOfPage).toBe(
-				"https://doug.is/thinking/about/building/test-blog-post"
+				"https://doug.is/writing/about/building/test-blog-post"
 			)
 			expect(structuredData.image).toBe(
 				"https://doug.is/images/test-featured.jpg"

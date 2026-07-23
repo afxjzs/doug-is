@@ -56,7 +56,7 @@ export default async function Home7() {
 								{ label: "Advising", href: "/advising" },
 								{ label: "Building", href: "/building" },
 								{ label: "Investing", href: "/investing" },
-								{ label: "Writing", href: "/thinking" },
+								{ label: "Writing", href: "/writing" },
 							].map((item) => (
 								<Link
 									key={item.label}
@@ -182,7 +182,7 @@ export default async function Home7() {
 								<h3 className="text-sm font-mono tracking-[0.3em] uppercase text-[rgba(var(--color-foreground),0.3)]">
 									Writing
 								</h3>
-								<Link href="/thinking" className="font-mono text-xs text-[rgba(var(--color-foreground),0.3)] hover:text-[rgb(var(--color-accent))] transition-colors tracking-wider">
+								<Link href="/writing" className="font-mono text-xs text-[rgba(var(--color-foreground),0.3)] hover:text-[rgb(var(--color-accent))] transition-colors tracking-wider">
 									ALL ARTICLES
 								</Link>
 							</div>
@@ -191,7 +191,7 @@ export default async function Home7() {
 								{latestPosts.map((post) => (
 									<Link
 										key={post.id}
-										href={`/thinking/about/${post.category.toLowerCase()}/${post.slug}`}
+										href={`/writing/about/${post.category.toLowerCase()}/${post.slug}`}
 										className="group block"
 									>
 										{post.featured_image && (

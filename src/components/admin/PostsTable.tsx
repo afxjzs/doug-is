@@ -254,7 +254,7 @@ export default function PostsTable({ posts }: PostsTableProps) {
 												<Link
 													href={
 														post.published_at
-															? `/thinking/about/${post.category.toLowerCase()}/${
+															? `/writing/about/${post.category.toLowerCase()}/${
 																	post.slug
 															  }`
 															: `/admin/posts/${post.id}/preview`

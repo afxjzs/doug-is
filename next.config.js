@@ -1,5 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	// The blog moved from /thinking to /writing (July 2026). 301s keep
+	// every shared URL working; statusCode 301 (not permanent: true,
+	// which emits a 308) per the owner's call.
+	async redirects() {
+		return [
+			{
+				source: "/thinking",
+				destination: "/writing",
+				statusCode: 301,
+			},
+			{
+				source: "/thinking/:path*",
+				destination: "/writing/:path*",
+				statusCode: 301,
+			},
+		]
+	},
+
 	// Stable features (formerly experimental)
 	serverExternalPackages: ["sharp"], // Add packages that should be bundled separately
 

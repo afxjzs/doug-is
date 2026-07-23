@@ -119,7 +119,7 @@ export default function HeroSection() {
 						<Link href="/connecting" className="btn-primary">
 							Get in Touch
 						</Link>
-						<Link href="/thinking" className="btn-secondary">
+						<Link href="/writing" className="btn-secondary">
 							Read My Writing
 						</Link>
 					</div>

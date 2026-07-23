@@ -1,5 +1,5 @@
 /**
- * Individual Blog Post Page for /thinking/about/[category]/[slug]
+ * Individual Blog Post Page for /writing/about/[category]/[slug]
  *
  * Displays individual blog posts from the "about" section
  */
@@ -38,7 +38,7 @@ export async function generateMetadata({
 			}
 		}
 
-		const canonicalUrl = getCanonicalUrl(`/thinking/about/${category}/${slug}`)
+		const canonicalUrl = getCanonicalUrl(`/writing/about/${category}/${slug}`)
 		const socialImageUrl = post.featured_image
 			? getSocialImageUrl(post.featured_image)
 			: getSocialImageUrl(`/images/posts/default-post-image.jpg`)

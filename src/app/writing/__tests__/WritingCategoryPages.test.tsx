@@ -1,5 +1,5 @@
 /**
- * THINKING CATEGORY PAGES - All Pages Load Properly
+ * WRITING CATEGORY PAGES - All Pages Load Properly
  *
  * STRATEGY: Focus on route logic and layout decisions rather than content presence
  * since components load but don't render content in test environment.
@@ -7,7 +7,7 @@
 
 import { render, screen } from "@testing-library/react"
 import RootLayout from "@/app/layout"
-import CategoryPage from "@/app/thinking/about/[category]/page"
+import CategoryPage from "@/app/writing/about/[category]/page"
 
 // Mock usePathname to control layout decisions
 const mockPathname = jest.fn()
@@ -15,10 +15,10 @@ jest.mock("next/navigation", () => ({
 	usePathname: () => mockPathname(),
 }))
 
-describe("Thinking Category Pages - All Pages Load Properly", () => {
+describe("Writing Category Pages - All Pages Load Properly", () => {
 	describe("Building Category Page", () => {
 		it("should load the building category page properly", async () => {
-			mockPathname.mockReturnValue("/thinking/about/building")
+			mockPathname.mockReturnValue("/writing/about/building")
 
 			render(
 				<RootLayout>
@@ -28,14 +28,14 @@ describe("Thinking Category Pages - All Pages Load Properly", () => {
 
 			// STRATEGY: Test route logic rather than content presence
 			const currentPath = mockPathname()
-			expect(currentPath).toBe("/thinking/about/building")
+			expect(currentPath).toBe("/writing/about/building")
 
 			// Verify this is NOT treated as a special route (migraine-free/admin)
 			expect(currentPath).not.toMatch(/migraine-free/)
 			expect(currentPath).not.toMatch(/admin/)
 
 			// Verify it's properly categorized as a thinking route
-			expect(currentPath).toMatch(/thinking/)
+			expect(currentPath).toMatch(/writing/)
 
 			// Verify components loaded without errors
 			expect(document.body.innerHTML).not.toContain("Something went wrong")
@@ -44,7 +44,7 @@ describe("Thinking Category Pages - All Pages Load Properly", () => {
 
 	describe("Investing Category Page", () => {
 		it("should load the investing category page properly", async () => {
-			mockPathname.mockReturnValue("/thinking/about/investing")
+			mockPathname.mockReturnValue("/writing/about/investing")
 
 			render(
 				<RootLayout>
@@ -54,8 +54,8 @@ describe("Thinking Category Pages - All Pages Load Properly", () => {
 
 			// Test route logic
 			const currentPath = mockPathname()
-			expect(currentPath).toBe("/thinking/about/investing")
-			expect(currentPath).toMatch(/thinking/)
+			expect(currentPath).toBe("/writing/about/investing")
+			expect(currentPath).toMatch(/writing/)
 			expect(currentPath).not.toMatch(/migraine-free/)
 			expect(currentPath).not.toMatch(/admin/)
 
@@ -66,7 +66,7 @@ describe("Thinking Category Pages - All Pages Load Properly", () => {
 
 	describe("Advising Category Page", () => {
 		it("should load the advising category page properly", async () => {
-			mockPathname.mockReturnValue("/thinking/about/advising")
+			mockPathname.mockReturnValue("/writing/about/advising")
 
 			render(
 				<RootLayout>
@@ -76,8 +76,8 @@ describe("Thinking Category Pages - All Pages Load Properly", () => {
 
 			// Test route logic
 			const currentPath = mockPathname()
-			expect(currentPath).toBe("/thinking/about/advising")
-			expect(currentPath).toMatch(/thinking/)
+			expect(currentPath).toBe("/writing/about/advising")
+			expect(currentPath).toMatch(/writing/)
 			expect(currentPath).not.toMatch(/migraine-free/)
 			expect(currentPath).not.toMatch(/admin/)
 
@@ -88,7 +88,7 @@ describe("Thinking Category Pages - All Pages Load Properly", () => {
 
 	describe("Hustling Category Page", () => {
 		it("should load the hustling category page properly", async () => {
-			mockPathname.mockReturnValue("/thinking/about/hustling")
+			mockPathname.mockReturnValue("/writing/about/hustling")
 
 			render(
 				<RootLayout>
@@ -98,8 +98,8 @@ describe("Thinking Category Pages - All Pages Load Properly", () => {
 
 			// Test route logic
 			const currentPath = mockPathname()
-			expect(currentPath).toBe("/thinking/about/hustling")
-			expect(currentPath).toMatch(/thinking/)
+			expect(currentPath).toBe("/writing/about/hustling")
+			expect(currentPath).toMatch(/writing/)
 			expect(currentPath).not.toMatch(/migraine-free/)
 			expect(currentPath).not.toMatch(/admin/)
 
@@ -110,7 +110,7 @@ describe("Thinking Category Pages - All Pages Load Properly", () => {
 
 	describe("Thinking Category Page", () => {
 		it("should load the thinking category page properly", async () => {
-			mockPathname.mockReturnValue("/thinking/about/thinking")
+			mockPathname.mockReturnValue("/writing/about/writing")
 
 			render(
 				<RootLayout>
@@ -120,8 +120,8 @@ describe("Thinking Category Pages - All Pages Load Properly", () => {
 
 			// Test route logic
 			const currentPath = mockPathname()
-			expect(currentPath).toBe("/thinking/about/thinking")
-			expect(currentPath).toMatch(/thinking/)
+			expect(currentPath).toBe("/writing/about/writing")
+			expect(currentPath).toMatch(/writing/)
 			expect(currentPath).not.toMatch(/migraine-free/)
 			expect(currentPath).not.toMatch(/admin/)
 

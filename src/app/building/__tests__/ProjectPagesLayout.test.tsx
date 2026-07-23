@@ -126,14 +126,14 @@ describe("Project Pages with Main Site Layout Integration", () => {
 			expect(investingLinks.length).toBeGreaterThan(0)
 			expect(investingLinks[0]).toHaveAttribute("href", "/investing")
 
-			// The "Thinking" section is labeled "/writing" in the nav but routes
-			// to /thinking, so query by destination href rather than visible text.
+			// The "Writing" section — nav label and route are both /writing
+			// to /writing, so query by destination href rather than visible text.
 			const allLinks = screen.getAllByRole("link")
 			const thinkingLinks = allLinks.filter(
-				(link) => link.getAttribute("href") === "/thinking"
+				(link) => link.getAttribute("href") === "/writing"
 			)
 			expect(thinkingLinks.length).toBeGreaterThan(0)
-			expect(thinkingLinks[0]).toHaveAttribute("href", "/thinking")
+			expect(thinkingLinks[0]).toHaveAttribute("href", "/writing")
 		})
 
 		it("should include footer social links", () => {

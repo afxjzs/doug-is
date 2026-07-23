@@ -6,14 +6,14 @@ import StatusMessage from "@/components/StatusMessage"
 
 export { metadata } from "./metadata"
 
-export default async function ThinkingPage() {
+export default async function WritingPage() {
 	const posts = await getPublishedPosts()
 
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-12">
 				<h1 className="text-4xl font-bold gradient-heading mb-4">
-					doug.is/thinking
+					doug.is/writing
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
 					Writing about startups, code, investing, and whatever else is on my mind.
@@ -39,7 +39,7 @@ export default async function ThinkingPage() {
 							<div className="group">
 								{post.featured_image ? (
 									<Link
-										href={`/thinking/about/${post.category.toLowerCase()}/${
+										href={`/writing/about/${post.category.toLowerCase()}/${
 											post.slug
 										}`}
 										className="block relative w-full h-64 overflow-hidden"
@@ -61,7 +61,7 @@ export default async function ThinkingPage() {
 								<div className="p-6">
 									<div className="flex items-center mb-3">
 										<Link
-											href={`/thinking/about/${post.category.toLowerCase()}`}
+											href={`/writing/about/${post.category.toLowerCase()}`}
 											className="text-xs font-medium px-2.5 py-1 rounded-full bg-[rgba(var(--color-violet),0.1)] text-[rgba(var(--color-violet),0.8)] hover:bg-[rgba(var(--color-violet),0.2)]"
 											style={{ transition: "background-color var(--dur-base) var(--ease-out)" }}
 										>
@@ -75,7 +75,7 @@ export default async function ThinkingPage() {
 										</time>
 									</div>
 									<Link
-										href={`/thinking/about/${post.category.toLowerCase()}/${
+										href={`/writing/about/${post.category.toLowerCase()}/${
 											post.slug
 										}`}
 										className="block"

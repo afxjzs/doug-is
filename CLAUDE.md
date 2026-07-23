@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-**doug.is** — Doug Rogers' personal website: public marketing/content sections, a Supabase-backed blog under `/thinking`, a set of "building" project showcases (notably the MVP-as-a-Service landing at `/building/mvp`), and a gated admin CMS at `/admin`. Next.js 15 (App Router) + React 19 + TypeScript + Tailwind CSS v4 + Supabase, deployed on Vercel.
+**doug.is** — Doug Rogers' personal website: public marketing/content sections, a Supabase-backed blog under `/writing` (formerly `/thinking`; old URLs 301 via `next.config.js`), a set of "building" project showcases (notably the MVP-as-a-Service landing at `/building/mvp`), and a gated admin CMS at `/admin`. Next.js 15 (App Router) + React 19 + TypeScript + Tailwind CSS v4 + Supabase, deployed on Vercel.
 
 ## Operating rules (non-negotiable)
 
@@ -41,9 +41,9 @@ supabase start | stop | status
 
 ### Route groups (App Router)
 URLs are assembled from two sibling trees under `src/app/`:
-- **`(site)/<section>/page.tsx`** holds the actual page **content** for the main sections (`/advising`, `/building`, `/connecting`, `/hustling`, `/investing`, `/thinking`). The `(site)` group does not appear in the URL.
+- **`(site)/<section>/page.tsx`** holds the actual page **content** for the main sections (`/advising`, `/building`, `/connecting`, `/hustling`, `/investing`, `/writing`). The `(site)` group does not appear in the URL.
 - **`<section>/layout.tsx` + `metadata.ts`** (regular folders, outside the group) supply the **layout and metadata** for those same URLs.
-- **Children** of a section live *outside* the group as regular segments — e.g. `/building/mvp` is `building/mvp/page.tsx`, and blog posts resolve at `thinking/about/[category]/[slug]/page.tsx`.
+- **Children** of a section live *outside* the group as regular segments — e.g. `/building/mvp` is `building/mvp/page.tsx`, and blog posts resolve at `writing/about/[category]/[slug]/page.tsx`.
 - Other top-level groups: `(migraine-free)` (a standalone micro-app) and `admin/` (CMS, not in a group).
 
 When adding a section page, follow this split: content in `(site)/`, layout+metadata in the matching regular folder.
@@ -84,7 +84,7 @@ This is a **multi-client, security-tiered** setup. Pick the client by context:
 
 ## Known rough edges (don't replicate; consolidate when touched)
 - Three diverging `Post` interfaces exist (`data.ts`, `clientData.ts`, `serverClient.ts`) — they disagree on nullability. Prefer the generated `Database` types and unify rather than adding a fourth.
-- Two blog URL shapes coexist: `/thinking/about/[category]/[slug]` (canonical, used by the homepage) and `/thinking/[primary-category]/[slug]` (legacy).
+- Two blog URL shapes coexist: `/writing/about/[category]/[slug]` (canonical, used by the homepage) and `/writing/[primary-category]/[slug]` (legacy). All `/thinking/*` URLs 301 to their `/writing/*` twins.
 - `src/app` contains scratch/experiment routes (`home-1`…`home-11`, `redesign`, `supatest`, `debugging`, etc.) that are not part of the real site.
 
 > Deeper background lives in `.cursor/rules/*.mdc` (nextjs, supabase, testing, tailwind4, metadata). Treat them as reference, but verify against the actual code — some describe an earlier `publicClient.ts`/`serverClient.ts` two-file model that has since evolved into the layout documented above.

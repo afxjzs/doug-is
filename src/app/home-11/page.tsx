@@ -13,9 +13,9 @@ import Link from "next/link"
  */
 
 const ARTICLES = [
-	{ title: "AI Slop Will Eat Itself", category: "Technology", href: "/thinking/about/technology/ai-slop-will-eat-itself" },
-	{ title: "Planner/Executor: LLM-Guided Development", category: "Development", href: "/thinking/about/development/plannerexecutor-a-systematic-approach-to-llm-guided-development" },
-	{ title: "The Migraine Trigger Foods Database", category: "Lifestyle", href: "/thinking/about/lifestyle/introducing-the-migraine-trigger-foods-database-mtfdb" },
+	{ title: "AI Slop Will Eat Itself", category: "Technology", href: "/writing/about/technology/ai-slop-will-eat-itself" },
+	{ title: "Planner/Executor: LLM-Guided Development", category: "Development", href: "/writing/about/development/plannerexecutor-a-systematic-approach-to-llm-guided-development" },
+	{ title: "The Migraine Trigger Foods Database", category: "Lifestyle", href: "/writing/about/lifestyle/introducing-the-migraine-trigger-foods-database-mtfdb" },
 ]
 
 export default function Home11() {
@@ -90,7 +90,7 @@ export default function Home11() {
 							{ label: "advising", href: "/advising" },
 							{ label: "building", href: "/building" },
 							{ label: "investing", href: "/investing" },
-							{ label: "writing", href: "/thinking" },
+							{ label: "writing", href: "/writing" },
 						].map(item => (
 							<Link key={item.label} href={item.href} style={{
 								fontFamily: "var(--mono)", fontSize: "11px",
@@ -201,7 +201,7 @@ export default function Home11() {
 									onMouseEnter={e => { (e.target as HTMLElement).style.background = "var(--green-bright)"; (e.target as HTMLElement).style.transform = "translateY(-2px)"; }}
 									onMouseLeave={e => { (e.target as HTMLElement).style.background = "var(--green)"; (e.target as HTMLElement).style.transform = "translateY(0)"; }}
 									>GET IN TOUCH</Link>
-									<Link href="/thinking" style={{
+									<Link href="/writing" style={{
 										padding: "14px 32px",
 										border: "1px solid rgba(245,240,232,0.12)",
 										color: "rgba(245,240,232,0.6)",
@@ -349,7 +349,7 @@ export default function Home11() {
 							<h2 style={{ fontFamily: "var(--serif)", fontSize: "36px" }}>
 								Writing
 							</h2>
-							<Link href="/thinking" style={{
+							<Link href="/writing" style={{
 								fontFamily: "var(--mono)", fontSize: "12px",
 								letterSpacing: "0.1em", color: "var(--green)",
 							}}>ALL POSTS →</Link>

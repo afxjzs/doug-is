@@ -162,12 +162,12 @@ describe("Project Pages Layout Integration", () => {
 				}).length
 			).toBeGreaterThan(0)
 
-			// The "Thinking" section is labeled "/writing" in the nav but routes
-			// to /thinking, so assert the navigation link by its destination href.
+			// The "Writing" section — nav label and route are both /writing
+			// to /writing, so assert the navigation link by its destination href.
 			expect(
 				screen
 					.getAllByRole("link")
-					.filter((link) => link.getAttribute("href") === "/thinking").length
+					.filter((link) => link.getAttribute("href") === "/writing").length
 			).toBeGreaterThan(0)
 		})
 

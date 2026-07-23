@@ -38,10 +38,10 @@ src/app/
 ├── (site)/                    # Route group - actual page content
 │   ├── layout.tsx            # Main site metadata defaults
 │   ├── advising/page.tsx     # Section content
-│   └── thinking/page.tsx     # Section content
+│   └── writing/page.tsx      # Section content
 ├── advising/                  # Regular route - metadata configuration
 │   └── metadata.ts           # Section-specific metadata
-└── thinking/                  # Regular route - metadata configuration
+└── writing/                   # Regular route - metadata configuration
     └── metadata.ts           # Section-specific metadata
 ```
 
@@ -106,7 +106,7 @@ export const metadata: Metadata = {
 
 ### Dynamic Content Metadata
 
-**Blog Posts** (`src/app/thinking/[primary-category]/[slug]/page.tsx`):
+**Blog Posts** (`src/app/writing/[primary-category]/[slug]/page.tsx`):
 ```typescript
 export async function generateMetadata({
   params,
@@ -130,7 +130,7 @@ export async function generateMetadata({
   const description = post.excerpt || post.content.substring(0, 155) + '...'
   const publishedTime = post.published_at
   const featuredImage = post.featured_image || 'https://doug.is/images/thinking.jpg'
-  const canonicalUrl = `https://doug.is/thinking/${category}/${slug}`
+  const canonicalUrl = `https://doug.is/writing/${category}/${slug}`
 
   return {
     title,

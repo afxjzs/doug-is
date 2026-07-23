@@ -9,7 +9,7 @@ const navItems = [
 	{ name: "/advising", path: "/advising" },
 	{ name: "/building", path: "/building" },
 	{ name: "/investing", path: "/investing" },
-	{ name: "/writing", path: "/thinking" },
+	{ name: "/writing", path: "/writing" },
 ]
 
 function isActive(pathname: string, itemPath: string) {

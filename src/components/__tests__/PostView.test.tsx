@@ -95,14 +95,14 @@ describe("PostView Component", () => {
 			render(<PostView post={mockPost} />)
 
 			const categoryLink = screen.getByRole("link", { name: /testing/i })
-			expect(categoryLink).toHaveAttribute("href", "/thinking/about/testing")
+			expect(categoryLink).toHaveAttribute("href", "/writing/about/testing")
 		})
 
-		it("renders back to thinking link", () => {
+		it("renders back to writing link", () => {
 			render(<PostView post={mockPost} />)
 
-			const backLink = screen.getByRole("link", { name: /← Back to Thinking/i })
-			expect(backLink).toHaveAttribute("href", "/thinking")
+			const backLink = screen.getByRole("link", { name: /← Back to Writing/i })
+			expect(backLink).toHaveAttribute("href", "/writing")
 		})
 	})
 

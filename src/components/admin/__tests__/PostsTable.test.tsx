@@ -194,7 +194,7 @@ describe("PostsTable", () => {
 			// Check that view buttons have correct destinations
 			expect(viewButtons[0]).toHaveAttribute(
 				"href",
-				"/thinking/about/building/published-post"
+				"/writing/about/building/published-post"
 			)
 			expect(viewButtons[1]).toHaveAttribute(
 				"href",
@@ -326,8 +326,8 @@ describe("PostsTable", () => {
 			})
 			const href = viewLiveButton.getAttribute("href")
 
-			// URL should follow the pattern /thinking/about/[category]/[slug]
-			expect(href).toMatch(/^\/thinking\/about\/[^\/]+\/[^\/]+$/)
+			// URL should follow the pattern /writing/about/[category]/[slug]
+			expect(href).toMatch(/^\/writing\/about\/[^\/]+\/[^\/]+$/)
 		})
 
 		it("escapes special characters in post IDs for URLs", () => {
@@ -365,11 +365,11 @@ describe("PostsTable", () => {
 
 			expect(viewButtons[0]).toHaveAttribute(
 				"href",
-				"/thinking/about/technology/ai-slop-will-eat-itself"
+				"/writing/about/technology/ai-slop-will-eat-itself"
 			)
 			expect(viewButtons[1]).toHaveAttribute(
 				"href",
-				"/thinking/about/building/startup-lessons"
+				"/writing/about/building/startup-lessons"
 			)
 		})
 
@@ -385,7 +385,7 @@ describe("PostsTable", () => {
 			const viewButton = screen.getByRole("link", { name: /view live post/i })
 			expect(viewButton).toHaveAttribute(
 				"href",
-				"/thinking/about/technology/test-post"
+				"/writing/about/technology/test-post"
 			)
 		})
 
@@ -401,8 +401,8 @@ describe("PostsTable", () => {
 			const viewButton = screen.getByRole("link", { name: /view live post/i })
 			const href = viewButton.getAttribute("href")
 
-			// Should match the required format: /thinking/about/[category]/[slug]
-			expect(href).toBe("/thinking/about/technology/ai-slop-will-eat-itself")
+			// Should match the required format: /writing/about/[category]/[slug]
+			expect(href).toBe("/writing/about/technology/ai-slop-will-eat-itself")
 		})
 	})
 

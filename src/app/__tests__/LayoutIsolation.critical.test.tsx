@@ -17,7 +17,7 @@ import HomePage from "@/app/page"
 import AdvisingPage from "@/app/(site)/advising/page"
 import BuildingPage from "@/app/(site)/building/page"
 import InvestingPage from "@/app/(site)/investing/page"
-import ThinkingPage from "@/app/(site)/thinking/page"
+import ThinkingPage from "@/app/(site)/writing/page"
 import AdminPage from "@/app/admin/page"
 import AdminLoginPage from "@/app/admin/login/page"
 
@@ -127,8 +127,8 @@ describe("CRITICAL: Layout Isolation", () => {
 			expect(currentPath).not.toMatch(/migraine-free/)
 		})
 
-		it("should show site layout for /thinking routes", async () => {
-			mockPathname.mockReturnValue("/thinking")
+		it("should show site layout for /writing routes", async () => {
+			mockPathname.mockReturnValue("/writing")
 
 			render(
 				<RootLayout>
@@ -138,12 +138,12 @@ describe("CRITICAL: Layout Isolation", () => {
 
 			// Test layout logic
 			const currentPath = mockPathname()
-			expect(currentPath).toBe("/thinking")
+			expect(currentPath).toBe("/writing")
 			expect(currentPath).not.toMatch(/migraine-free/)
 		})
 
 		it("should show site layout for blog routes", async () => {
-			mockPathname.mockReturnValue("/thinking/about/technology/test-post")
+			mockPathname.mockReturnValue("/writing/about/technology/test-post")
 
 			render(
 				<RootLayout>
@@ -153,7 +153,7 @@ describe("CRITICAL: Layout Isolation", () => {
 
 			// Test layout logic for blog routes
 			const currentPath = mockPathname()
-			expect(currentPath).toMatch(/thinking/)
+			expect(currentPath).toMatch(/writing/)
 			expect(currentPath).not.toMatch(/migraine-free/)
 		})
 	})

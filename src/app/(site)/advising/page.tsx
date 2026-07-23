@@ -471,7 +471,7 @@ export default async function AdvisingPage() {
 								key={post.id}
 								className="border border-[rgba(var(--color-foreground),0.05)] rounded-lg overflow-hidden bg-[rgba(var(--color-foreground),0.02)] hover:bg-[rgba(var(--color-foreground),0.04)] transition-all duration-300"
 							>
-								<Link href={`/thinking/advisory/${post.slug}`}>
+								<Link href={`/writing/advisory/${post.slug}`}>
 									<div className="p-6">
 										<p className="text-sm text-[rgba(var(--color-foreground),0.6)] mb-2">
 											{post.published_at ? formatDate(post.published_at) : ""}

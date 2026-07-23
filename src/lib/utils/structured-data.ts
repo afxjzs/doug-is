@@ -48,7 +48,7 @@ interface ProjectPage {
  */
 export function generateBlogPostStructuredData(post: BlogPost) {
 	const canonicalUrl = getCanonicalUrl(
-		`/thinking/about/${post.category.toLowerCase()}/${post.slug}`
+		`/writing/about/${post.category.toLowerCase()}/${post.slug}`
 	)
 	const imageUrl = post.featured_image
 		? getSocialImageUrl(post.featured_image)

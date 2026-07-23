@@ -78,7 +78,7 @@ describe("Layout Integration", () => {
 
 	describe("LayoutWrapper", () => {
 		it("renders header and footer for regular pages", () => {
-			mockUsePathname.mockReturnValue("/thinking/building/test-post")
+			mockUsePathname.mockReturnValue("/writing/building/test-post")
 
 			render(
 				<LayoutWrapper>
@@ -134,7 +134,7 @@ describe("Layout Integration", () => {
 
 	describe("Blog Post Layout Integration", () => {
 		it("renders blog post layout with proper structure", () => {
-			mockUsePathname.mockReturnValue("/thinking/building/test-post")
+			mockUsePathname.mockReturnValue("/writing/building/test-post")
 
 			render(
 				<LayoutWrapper>
@@ -157,7 +157,7 @@ describe("Layout Integration", () => {
 		})
 
 		it("maintains proper container structure for blog posts", () => {
-			mockUsePathname.mockReturnValue("/thinking/building/test-post")
+			mockUsePathname.mockReturnValue("/writing/building/test-post")
 
 			render(
 				<LayoutWrapper>
@@ -175,7 +175,7 @@ describe("Layout Integration", () => {
 		})
 
 		it("renders with proper responsive layout classes", () => {
-			mockUsePathname.mockReturnValue("/thinking/building/test-post")
+			mockUsePathname.mockReturnValue("/writing/building/test-post")
 
 			render(
 				<LayoutWrapper>
