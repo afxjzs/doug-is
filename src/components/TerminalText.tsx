@@ -41,6 +41,16 @@ interface HistoryLine {
 	text: string
 }
 
+// Keep the newest line visible by scrolling the card's fixed-height box
+// directly (never scrollIntoView — that can also yank the page scroll).
+// The scroll container is HeroSection's [data-terminal-scroll] div.
+function scrollTerminalToBottom(container: HTMLElement | null) {
+	const scroller = container?.closest(
+		"[data-terminal-scroll]"
+	) as HTMLElement | null
+	if (scroller) scroller.scrollTop = scroller.scrollHeight
+}
+
 function makeLineEl(line: string): HTMLDivElement {
 	const div = document.createElement("div")
 	div.style.minHeight = "25px"
@@ -71,7 +81,6 @@ interface TerminalTextProps {
 export default function TerminalText({ onIntroDone }: TerminalTextProps = {}) {
 	const containerRef = useRef<HTMLDivElement>(null)
 	const inputRef = useRef<HTMLInputElement>(null)
-	const promptRowRef = useRef<HTMLDivElement>(null)
 	const router = useRouter()
 
 	// Keep the latest callback reachable from the one-shot intro effect
@@ -102,6 +111,7 @@ export default function TerminalText({ onIntroDone }: TerminalTextProps = {}) {
 			allLines.forEach((line) => {
 				container.appendChild(makeLineEl(line || " "))
 			})
+			scrollTerminalToBottom(container)
 			setIntroDone(true)
 			onIntroDoneRef.current?.()
 			return () => {
@@ -175,6 +185,7 @@ export default function TerminalText({ onIntroDone }: TerminalTextProps = {}) {
 				'[data-terminal-content="true"]'
 			) as HTMLElement | null
 			if (textSpan) textSpan.textContent = target
+			scrollTerminalToBottom(container)
 
 			const charsToType = visible.length
 
@@ -196,10 +207,9 @@ export default function TerminalText({ onIntroDone }: TerminalTextProps = {}) {
 		}
 	}, [])
 
-	// Keep the prompt in view as output accumulates (scrollIntoView is
-	// absent in jsdom, hence the optional call).
+	// Keep the prompt in view as command output accumulates.
 	useEffect(() => {
-		promptRowRef.current?.scrollIntoView?.({ block: "nearest" })
+		scrollTerminalToBottom(containerRef.current)
 	}, [lines])
 
 	const submit = () => {
@@ -317,11 +327,7 @@ export default function TerminalText({ onIntroDone }: TerminalTextProps = {}) {
 
 					{/* Live prompt — the visible row echoes the hidden input, so
 					   the block cursor and colors stay terminal-true. */}
-					<div
-						ref={promptRowRef}
-						className="relative"
-						style={{ minHeight: "25px" }}
-					>
+					<div className="relative" style={{ minHeight: "25px" }}>
 						<span style={{ color: "rgb(var(--color-accent))" }}>{PROMPT}</span>
 						<span style={{ color: "rgb(var(--color-foreground))" }}>
 							{value}

@@ -14,20 +14,13 @@ describe("HeroSection", () => {
 		).toBeTruthy()
 	})
 
-	it("headlines the domain sentence with every rotating verb present", () => {
+	it("keeps the terminal card a fixed height so typing never pushes content", () => {
 		mockMatchMedia(true)
-		render(<HeroSection />)
-		const h1 = screen.getByRole("heading", { level: 1 })
-		expect(h1.textContent).toContain("doug.is")
-		for (const word of ["building.", "advising.", "investing.", "writing."]) {
-			expect(h1.textContent).toContain(word)
-		}
-	})
-
-	it("gives the h1 a stable accessible name instead of the rotating text", () => {
-		mockMatchMedia(true)
-		render(<HeroSection />)
-		const h1 = screen.getByRole("heading", { level: 1 })
-		expect(h1.getAttribute("aria-label")).toContain("doug.is")
+		const { container } = render(<HeroSection />)
+		const scroller = container.querySelector("[data-terminal-scroll]")
+		expect(scroller).not.toBeNull()
+		expect(scroller?.className).toContain("h-[520px]")
+		expect(scroller?.className).toContain("overflow-y-auto")
+		expect(scroller?.className).not.toContain("min-h-")
 	})
 })
