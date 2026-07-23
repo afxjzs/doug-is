@@ -131,6 +131,31 @@
 		animation: barrel-roll 800ms var(--ease-in-out);
 	}
 
+	/* Keyboard affordances — a visible focus ring in the site's own
+	   accent, and a skip link that appears only when focused. */
+	:focus-visible {
+		outline: 2px solid rgba(var(--color-accent), 0.7);
+		outline-offset: 2px;
+	}
+
+	.skip-link {
+		position: absolute;
+		left: -9999px;
+		z-index: 100;
+	}
+
+	.skip-link:focus-visible {
+		position: fixed;
+		left: 1rem;
+		top: 1rem;
+		background: rgb(var(--color-accent));
+		color: rgb(var(--color-background));
+		padding: 0.5rem 1rem;
+		border-radius: 6px;
+		font-family: var(--font-mono, 'JetBrains Mono', monospace);
+		font-size: 13px;
+	}
+
 	/* Terminal cursor — `steps(2)` makes a clean on/off blink instead of a fade. */
 	@keyframes terminal-blink {
 		50% { opacity: 0; }

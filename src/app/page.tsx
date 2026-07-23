@@ -8,6 +8,7 @@ import {
 	getSocialImageUrl,
 	getSiteName,
 } from "@/lib/utils/domain-detection"
+import { generatePersonStructuredData } from "@/lib/utils/structured-data"
 
 const HOME_TITLE = "doug.is | Engineer, Advisor, Investor"
 const HOME_DESCRIPTION =
@@ -62,6 +63,13 @@ export default async function Home() {
 
 	return (
 		<div className="-mt-28 -mb-12">
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{
+					__html: JSON.stringify(generatePersonStructuredData()),
+				}}
+			/>
+
 			{/* Hero */}
 			<HeroSection />
 
@@ -145,6 +153,11 @@ export default async function Home() {
 						</Link>
 					</div>
 
+					{posts.length === 0 && (
+						<p className="text-sm text-[rgba(var(--color-foreground),0.65)]">
+							No posts right now — check back soon.
+						</p>
+					)}
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 						{posts.map((post) => (
 							<Link

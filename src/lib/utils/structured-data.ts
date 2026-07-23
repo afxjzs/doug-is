@@ -130,6 +130,32 @@ export function generateProjectPageStructuredData(project: ProjectPage) {
 }
 
 /**
+ * Generate Person structured data for Doug — used on the homepage.
+ * Profile URLs must match the real ones in SocialIcons.tsx.
+ *
+ * @returns JSON-LD structured data object
+ */
+export function generatePersonStructuredData() {
+	return {
+		"@context": "https://schema.org",
+		"@type": "Person",
+		name: "Douglas Rogers",
+		alternateName: "Doug Rogers",
+		url: getCanonicalUrl("/"),
+		image: getSocialImageUrl("/images/doug-2024-cropped-compr.png"),
+		jobTitle: "Engineer, Advisor, Investor",
+		description:
+			"Engineer, advisor, and investor. Building startups, advising founders, and investing in companies with real revenue.",
+		sameAs: [
+			"https://twitter.com/doug__is",
+			"https://bsky.app/profile/dougxyz.bsky.social",
+			"https://github.com/afxjzs",
+			"https://linkedin.com/in/douglasrogers",
+		],
+	}
+}
+
+/**
  * Generate Organization structured data for the site
  *
  * @returns JSON-LD structured data object

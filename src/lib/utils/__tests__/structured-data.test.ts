@@ -6,6 +6,7 @@
 
 import {
 	generateBlogPostStructuredData,
+	generatePersonStructuredData,
 	generateProjectPageStructuredData,
 } from "../structured-data"
 
@@ -128,6 +129,25 @@ describe("Structured Data Generation", () => {
 			expect(structuredData.dateModified).toBe("2024-01-10T09:00:00Z")
 			expect(structuredData).not.toHaveProperty("github_url")
 			expect(structuredData).not.toHaveProperty("live_url")
+		})
+	})
+
+	describe("generatePersonStructuredData", () => {
+		it("generates a Person schema for Doug with his real profiles", () => {
+			const person = generatePersonStructuredData()
+
+			expect(person["@context"]).toBe("https://schema.org")
+			expect(person["@type"]).toBe("Person")
+			expect(person.name).toBe("Douglas Rogers")
+			expect(person.url).toContain("doug.is")
+			expect(person.sameAs).toEqual(
+				expect.arrayContaining([
+					"https://twitter.com/doug__is",
+					"https://bsky.app/profile/dougxyz.bsky.social",
+					"https://github.com/afxjzs",
+					"https://linkedin.com/in/douglasrogers",
+				])
+			)
 		})
 	})
 })
