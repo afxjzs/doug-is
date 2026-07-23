@@ -45,6 +45,13 @@ describe("TerminalText", () => {
 		)
 		expect(container.textContent).toContain("still shipping.")
 	})
+
+	it("notifies onIntroDone when the intro completes", () => {
+		mockMatchMedia(true)
+		const onIntroDone = jest.fn()
+		render(<TerminalText onIntroDone={onIntroDone} />)
+		expect(onIntroDone).toHaveBeenCalled()
+	})
 })
 
 describe("TerminalText interactive prompt", () => {

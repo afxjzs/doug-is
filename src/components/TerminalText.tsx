@@ -63,11 +63,21 @@ function makeLineEl(line: string): HTMLDivElement {
 	return div
 }
 
-export default function TerminalText() {
+interface TerminalTextProps {
+	/** Fires once the intro finishes typing (immediately under reduced motion). */
+	onIntroDone?: () => void
+}
+
+export default function TerminalText({ onIntroDone }: TerminalTextProps = {}) {
 	const containerRef = useRef<HTMLDivElement>(null)
 	const inputRef = useRef<HTMLInputElement>(null)
 	const promptRowRef = useRef<HTMLDivElement>(null)
 	const router = useRouter()
+
+	// Keep the latest callback reachable from the one-shot intro effect
+	// without re-running it.
+	const onIntroDoneRef = useRef(onIntroDone)
+	onIntroDoneRef.current = onIntroDone
 
 	// The intro is imperative (see effect below); everything after it is
 	// ordinary React state.
@@ -93,6 +103,7 @@ export default function TerminalText() {
 				container.appendChild(makeLineEl(line || " "))
 			})
 			setIntroDone(true)
+			onIntroDoneRef.current?.()
 			return () => {
 				cancelled = true
 				container.replaceChildren()
@@ -112,6 +123,7 @@ export default function TerminalText() {
 			if (lineIndex >= allLines.length) {
 				cursor.remove()
 				setIntroDone(true)
+				onIntroDoneRef.current?.()
 				return
 			}
 

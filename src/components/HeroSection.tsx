@@ -1,8 +1,14 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import TerminalText from "@/components/TerminalText"
+
+// The domain-as-sentence device: "doug.is <verb>." — verbs are the
+// site's own sections. "investing." is the longest and reserves the
+// rotator's width.
+const ROTATING_WORDS = ["building.", "advising.", "investing.", "writing."]
+const ROTATE_INTERVAL_MS = 2600
 
 const HEXES = [
 	{ size: 120, x: "80%", y: "15%", delay: "0s", parallaxFactor: 0.05 },
@@ -13,6 +19,20 @@ const HEXES = [
 
 export default function HeroSection() {
 	const parallaxRefs = useRef<(HTMLDivElement | null)[]>([])
+	const [introDone, setIntroDone] = useState(false)
+	const [wordIndex, setWordIndex] = useState(0)
+
+	// Rotate the headline verb only after the terminal intro finishes —
+	// one moving thing at a time. Reduced motion keeps it static.
+	useEffect(() => {
+		if (!introDone) return
+		const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+		if (reduced) return
+		const id = window.setInterval(() => {
+			setWordIndex((i) => (i + 1) % ROTATING_WORDS.length)
+		}, ROTATE_INTERVAL_MS)
+		return () => window.clearInterval(id)
+	}, [introDone])
 
 	useEffect(() => {
 		// Direct DOM writes via rAF — no React state, no reconciliation.
@@ -97,10 +117,26 @@ export default function HeroSection() {
 					<h1
 						className="font-[family-name:var(--font-display)] text-[clamp(40px,5vw,64px)] font-bold leading-[1.1] mb-6 hero-stagger"
 						style={{ animationDelay: "60ms" }}
+						aria-label="doug.is — building, advising, investing, writing."
 					>
-						Ideas to products.{" "}
-						<span className="text-[rgb(var(--color-accent))]">
-							Zero to one.
+						<span aria-hidden="true">
+							doug.is{" "}
+							<span className="relative inline-block">
+								{/* Longest word reserves the width so rotation never reflows */}
+								<span className="invisible">investing.</span>
+								{ROTATING_WORDS.map((word, i) => (
+									<span
+										key={word}
+										className="absolute left-0 top-0 text-[rgb(var(--color-accent))]"
+										style={{
+											opacity: i === wordIndex ? 1 : 0,
+											transition: "opacity var(--dur-slow) var(--ease-out)",
+										}}
+									>
+										{word}
+									</span>
+								))}
+							</span>
 						</span>
 					</h1>
 					<p
@@ -142,7 +178,7 @@ export default function HeroSection() {
 					{/* Terminal content — capped so long interactive sessions
 					   scroll inside the card instead of growing the page */}
 					<div className="p-6 min-h-[420px] max-h-[560px] overflow-y-auto">
-						<TerminalText />
+						<TerminalText onIntroDone={() => setIntroDone(true)} />
 					</div>
 				</div>
 			</div>

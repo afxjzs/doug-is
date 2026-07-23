@@ -178,12 +178,17 @@ export default async function Home() {
 				/>
 				<div className="absolute inset-0 bg-gradient-to-r from-[rgba(10,14,26,0.7)] to-[rgba(10,14,26,0.3)]" />
 				<div className="relative z-10 h-full flex items-center px-5 md:px-12 max-w-[1200px] mx-auto">
-					<p className="font-[family-name:var(--font-display)] text-[clamp(28px,3.5vw,44px)] font-bold leading-[1.3] max-w-[600px]">
-						&ldquo;It&apos;s not how many mistakes you make.{" "}
-						<span className="text-[rgb(var(--color-accent))]">
-							It&apos;s how many you don&apos;t make twice.&rdquo;
-						</span>
-					</p>
+					<div>
+						<p className="font-[family-name:var(--font-display)] text-[clamp(28px,3.5vw,44px)] font-bold leading-[1.3] max-w-[600px]">
+							&ldquo;It&apos;s not how many mistakes you make.{" "}
+							<span className="text-[rgb(var(--color-accent))]">
+								It&apos;s how many you don&apos;t make twice.&rdquo;
+							</span>
+						</p>
+						<p className="mt-4 font-[family-name:var(--font-mono)] text-xs tracking-[0.15em] text-[rgba(var(--color-foreground),0.65)]">
+							— doug, repeatedly
+						</p>
+					</div>
 				</div>
 			</section>
 
