@@ -7,11 +7,15 @@ jest.mock("@supabase/auth-helpers-nextjs", () => ({
 	createClientComponentClient: jest.fn(),
 }))
 
-// Mock Next.js navigation
+// Mock Next.js navigation. `mockRouterPush` is stable so tests can
+// assert navigation happened (the `mock` prefix lets the hoisted
+// factory reference it).
+export const mockRouterPush = jest.fn()
+
 jest.mock("next/navigation", () => ({
 	useRouter() {
 		return {
-			push: jest.fn(),
+			push: mockRouterPush,
 			replace: jest.fn(),
 			refresh: jest.fn(),
 		}

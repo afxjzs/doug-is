@@ -139,8 +139,9 @@ export default function HeroSection() {
 							~/doug-rogers
 						</span>
 					</div>
-					{/* Terminal content */}
-					<div className="p-6 min-h-[420px]">
+					{/* Terminal content — capped so long interactive sessions
+					   scroll inside the card instead of growing the page */}
+					<div className="p-6 min-h-[420px] max-h-[560px] overflow-y-auto">
 						<TerminalText />
 					</div>
 				</div>

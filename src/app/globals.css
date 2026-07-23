@@ -119,6 +119,18 @@
 		50% { transform: translateY(-20px) rotate(3deg); }
 	}
 
+	/* Terminal easter egg — applied to <body> by the homepage terminal's
+	   `do a barrel roll` command; the reduced-motion collapse above turns
+	   it into a no-op. */
+	@keyframes barrel-roll {
+		from { transform: rotate(0deg); }
+		to { transform: rotate(360deg); }
+	}
+
+	.barrel-roll {
+		animation: barrel-roll 800ms var(--ease-in-out);
+	}
+
 	/* Terminal cursor — `steps(2)` makes a clean on/off blink instead of a fade. */
 	@keyframes terminal-blink {
 		50% { opacity: 0; }
