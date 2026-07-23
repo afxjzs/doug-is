@@ -247,6 +247,7 @@
 	   Carries a baseline shadow so hover *grows* it rather than
 	   summoning one from nothing. Press feedback via :active. */
 	.btn-primary {
+		display: inline-block;
 		padding: 0.75rem 1.5rem;
 		background-color: rgb(var(--color-accent));
 		border: 1px solid rgb(var(--color-accent));
@@ -281,6 +282,7 @@
 
 	/* Secondary button — outlined amber, monospace */
 	.btn-secondary {
+		display: inline-block;
 		padding: 0.75rem 1.5rem;
 		background-color: transparent;
 		border: 1px solid rgba(var(--color-accent), 0.3);

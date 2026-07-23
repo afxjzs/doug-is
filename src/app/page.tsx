@@ -66,7 +66,7 @@ export default async function Home() {
 
 			{/* Credential bar */}
 			<section className="border-t border-b border-[rgba(var(--color-border),0.08)] py-5 px-5 md:px-10">
-				<div className="max-w-[1200px] mx-auto flex flex-wrap justify-center items-center gap-3 font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-foreground),0.45)]">
+				<div className="max-w-[1200px] mx-auto flex flex-wrap justify-center items-center gap-3 font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-foreground),0.65)]">
 					{[
 						"Y Combinator (W15)",
 						"Techstars (JPM/24)",
@@ -114,13 +114,13 @@ export default async function Home() {
 										: ""
 								}`}
 							>
-								<span className="block mb-4 font-[family-name:var(--font-mono)] text-[11px] text-[rgba(var(--color-accent),0.3)]">
+								<span className="block mb-4 font-[family-name:var(--font-mono)] text-[11px] text-[rgba(var(--color-accent),0.75)]">
 									{item.num}
 								</span>
-								<h3 className="font-[family-name:var(--font-display)] text-[28px] font-bold mb-3">
+								<h2 className="font-[family-name:var(--font-display)] text-[28px] font-bold mb-3">
 									{item.title}
-								</h3>
-								<p className="text-[13px] leading-[1.7] text-[rgba(var(--color-foreground),0.45)]">
+								</h2>
+								<p className="text-[13px] leading-[1.7] text-[rgba(var(--color-foreground),0.65)]">
 									{item.desc}
 								</p>
 							</Link>
@@ -138,7 +138,7 @@ export default async function Home() {
 						</h2>
 						<Link
 							href="/thinking"
-							className="font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-accent),0.3)] hover:text-[rgb(var(--color-accent))] transition-colors"
+							className="font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-accent),0.75)] hover:text-[rgb(var(--color-accent))] transition-colors"
 						>
 							ALL POSTS &rarr;
 						</Link>
@@ -151,13 +151,13 @@ export default async function Home() {
 								href={`/thinking/about/${post.category.toLowerCase()}/${post.slug}`}
 								className="p-8 bg-[rgb(var(--color-background-alt))] rounded-lg border border-[rgba(var(--color-border),0.06)] transition-all duration-300 hover:border-[rgba(var(--color-border),0.2)] hover:-translate-y-1"
 							>
-								<span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.15em] text-[rgba(var(--color-accent),0.3)] uppercase">
+								<span className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.15em] text-[rgba(var(--color-accent),0.75)] uppercase">
 									{post.category}
 								</span>
 								<h3 className="font-[family-name:var(--font-display)] text-lg font-bold mt-3 leading-snug">
 									{post.title}
 								</h3>
-								<p className="text-xs leading-relaxed text-[rgba(var(--color-foreground),0.45)] mt-2.5">
+								<p className="text-xs leading-relaxed text-[rgba(var(--color-foreground),0.65)] mt-2.5">
 									{post.excerpt}
 								</p>
 							</Link>
@@ -167,11 +167,11 @@ export default async function Home() {
 			</section>
 
 			{/* Photo + quote band */}
-			<section className="relative h-[400px] md:h-[400px] overflow-hidden">
+			<section className="relative h-[400px] overflow-hidden">
 				{/* eslint-disable-next-line @next/next/no-img-element */}
 				<img
 					src="/images/doug-nyc.jpg"
-					alt="NYC Skyline"
+					alt="Doug Rogers overlooking the New York City skyline at dusk"
 					className="absolute inset-0 w-full h-full object-cover sepia-[0.4] saturate-[0.6] brightness-[0.35] hue-rotate-[10deg]"
 				/>
 				<div className="absolute inset-0 bg-gradient-to-r from-[rgba(10,14,26,0.7)] to-[rgba(10,14,26,0.3)]" />
@@ -193,7 +193,7 @@ export default async function Home() {
 						something great.
 					</span>
 				</p>
-				<p className="text-sm text-[rgba(var(--color-foreground),0.45)] mb-8">
+				<p className="text-sm text-[rgba(var(--color-foreground),0.65)] mb-8">
 					Got an idea? Already building? Let&apos;s talk.
 				</p>
 				<Link href="/connecting" className="btn-primary">

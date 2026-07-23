@@ -50,13 +50,15 @@ function makeLineEl(line: string): HTMLDivElement {
 
 export default function TerminalText() {
 	const containerRef = useRef<HTMLDivElement>(null)
-	const cancelledRef = useRef(false)
 
 	useEffect(() => {
 		const container = containerRef.current
 		if (!container) return
 
-		cancelledRef.current = false
+		// Cancellation must be per-effect-run (not a shared ref): StrictMode
+		// runs the effect twice, and a shared flag lets the first, cancelled
+		// typing loop resume once the second run resets it.
+		let cancelled = false
 
 		// Reduced-motion: dump everything immediately, no typing.
 		const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -65,7 +67,7 @@ export default function TerminalText() {
 				container.appendChild(makeLineEl(line || " "))
 			})
 			return () => {
-				cancelledRef.current = true
+				cancelled = true
 				container.replaceChildren()
 			}
 		}
@@ -79,7 +81,7 @@ export default function TerminalText() {
 		cursor.style.animation = "terminal-blink 1s steps(2) infinite"
 
 		const typeLine = (lineIndex: number, charIndex: number) => {
-			if (cancelledRef.current) return
+			if (cancelled) return
 			if (lineIndex >= allLines.length) {
 				cursor.remove()
 				return
@@ -149,7 +151,7 @@ export default function TerminalText() {
 		typeLine(0, 0)
 
 		return () => {
-			cancelledRef.current = true
+			cancelled = true
 			container.replaceChildren()
 		}
 	}, [])
@@ -158,7 +160,7 @@ export default function TerminalText() {
 		<div
 			ref={containerRef}
 			style={{
-				fontFamily: "var(--font-body, 'JetBrains Mono', monospace)",
+				fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
 				fontSize: "14px",
 				lineHeight: "1.8",
 			}}

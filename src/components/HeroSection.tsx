@@ -88,7 +88,7 @@ export default function HeroSection() {
 						<div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
 						<div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
 						<div className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
-						<span className="text-[11px] text-[rgba(var(--color-foreground),0.45)] ml-3 font-[family-name:var(--font-mono)]">
+						<span className="text-[11px] text-[rgba(var(--color-foreground),0.65)] ml-3 font-[family-name:var(--font-mono)]">
 							~/doug-rogers
 						</span>
 					</div>
@@ -122,7 +122,7 @@ export default function HeroSection() {
 						</span>
 					</h1>
 					<p
-						className="text-base leading-[1.7] text-[rgba(var(--color-foreground),0.45)] max-w-[440px] mb-10 hero-stagger"
+						className="text-base leading-[1.7] text-[rgba(var(--color-foreground),0.65)] max-w-[440px] mb-10 hero-stagger"
 						style={{ animationDelay: "180ms" }}
 					>
 						I&apos;m not a theoretical advisor. I&apos;ve raised capital,
