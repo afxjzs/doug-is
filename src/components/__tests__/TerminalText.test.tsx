@@ -149,6 +149,28 @@ describe("TerminalText interactive prompt", () => {
 		expect(document.activeElement).not.toBe(input)
 	})
 
+	it("prints a dim hint line once the intro completes", () => {
+		const { container } = setup()
+		expect(container.textContent).toContain("type 'help'")
+	})
+
+	it("fast-forwards the intro on click instead of making visitors wait", () => {
+		jest.useFakeTimers()
+		mockMatchMedia(false)
+		const { container } = render(<TerminalText />)
+		act(() => {
+			jest.advanceTimersByTime(500)
+		})
+		// Mid-intro: the full text is not there yet and no input exists.
+		expect(container.textContent).not.toContain("still shipping.")
+		act(() => {
+			fireEvent.click(container.firstElementChild as HTMLElement)
+		})
+		expect(container.textContent).toContain("still shipping.")
+		expect(screen.getByLabelText("Terminal input")).toBeInTheDocument()
+		jest.useRealTimers()
+	})
+
 	it("clear wipes the screen including the intro", () => {
 		const { input, container } = setup()
 		run(input, "help")

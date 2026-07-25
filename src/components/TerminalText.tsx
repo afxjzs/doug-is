@@ -88,6 +88,11 @@ export default function TerminalText({ onIntroDone }: TerminalTextProps = {}) {
 	const onIntroDoneRef = useRef(onIntroDone)
 	onIntroDoneRef.current = onIntroDone
 
+	// Set by the intro effect while typing; a click (or keypress) calls it
+	// to dump the rest of the intro instantly instead of making people wait.
+	const fastForwardRef = useRef<(() => void) | null>(null)
+	const focusAfterIntroRef = useRef(false)
+
 	// The intro is imperative (see effect below); everything after it is
 	// ordinary React state.
 	const [introDone, setIntroDone] = useState(false)
@@ -128,12 +133,39 @@ export default function TerminalText({ onIntroDone }: TerminalTextProps = {}) {
 		cursor.style.marginLeft = "1px"
 		cursor.style.animation = "terminal-blink 1s steps(2) infinite"
 
+		const finishIntro = () => {
+			fastForwardRef.current = null
+			window.removeEventListener("keydown", onAnyKey)
+			setIntroDone(true)
+			onIntroDoneRef.current?.()
+		}
+
+		const fastForward = () => {
+			if (cancelled) return
+			cancelled = true
+			cursor.remove()
+			container.replaceChildren()
+			allLines.forEach((line) => {
+				container.appendChild(makeLineEl(line || " "))
+			})
+			scrollTerminalToBottom(container)
+			finishIntro()
+		}
+
+		const onAnyKey = (e: KeyboardEvent) => {
+			// Only real typing intent skips — not modifiers or shortcuts.
+			if (e.metaKey || e.ctrlKey || e.altKey) return
+			if (e.key.length === 1 || e.key === "Enter") fastForward()
+		}
+
+		fastForwardRef.current = fastForward
+		window.addEventListener("keydown", onAnyKey)
+
 		const typeLine = (lineIndex: number, charIndex: number) => {
 			if (cancelled) return
 			if (lineIndex >= allLines.length) {
 				cursor.remove()
-				setIntroDone(true)
-				onIntroDoneRef.current?.()
+				finishIntro()
 				return
 			}
 
@@ -203,9 +235,20 @@ export default function TerminalText({ onIntroDone }: TerminalTextProps = {}) {
 
 		return () => {
 			cancelled = true
+			fastForwardRef.current = null
+			window.removeEventListener("keydown", onAnyKey)
 			container.replaceChildren()
 		}
 	}, [])
+
+	// A fast-forward click means the visitor wants in — focus the prompt
+	// once it exists. (Natural completion never steals focus.)
+	useEffect(() => {
+		if (introDone && focusAfterIntroRef.current) {
+			focusAfterIntroRef.current = false
+			inputRef.current?.focus()
+		}
+	}, [introDone])
 
 	// Keep the prompt in view as command output accumulates.
 	useEffect(() => {
@@ -307,12 +350,27 @@ export default function TerminalText({ onIntroDone }: TerminalTextProps = {}) {
 				fontSize: "14px",
 				lineHeight: "1.8",
 			}}
-			onClick={() => inputRef.current?.focus()}
+			onClick={() => {
+				if (fastForwardRef.current) {
+					focusAfterIntroRef.current = true
+					fastForwardRef.current()
+					return
+				}
+				inputRef.current?.focus()
+			}}
 		>
 			<div ref={containerRef} />
 
 			{introDone && (
 				<div>
+					<div
+						style={{
+							minHeight: "25px",
+							color: "rgba(var(--color-foreground), 0.55)",
+						}}
+					>
+						# type &apos;help&apos;
+					</div>
 					<div role="log" aria-live="polite">
 						{lines.map((line, i) => (
 							<div key={i} style={{ minHeight: "25px", whiteSpace: "pre-wrap" }}>
