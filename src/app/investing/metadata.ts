@@ -3,11 +3,11 @@ import { Metadata } from "next"
 export const metadata: Metadata = {
 	title: "doug.is / Investing",
 	description:
-		"Investment thesis, portfolio companies, and investment opportunities I'm exploring.",
+		"Small checks into founders with real revenue. Revenue over pitch decks, every time.",
 	openGraph: {
 		title: "doug.is / Investing",
 		description:
-			"Investment thesis, portfolio companies, and investment opportunities I'm exploring.",
+			"Small checks into founders with real revenue. Revenue over pitch decks, every time.",
 		url: "https://doug.is/investing",
 		siteName: "doug.is",
 		type: "website",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "doug.is / Investing",
 		description:
-			"Investment thesis, portfolio companies, and investment opportunities I'm exploring.",
+			"Small checks into founders with real revenue. Revenue over pitch decks, every time.",
 		images: ["https://doug.is/images/projects/doug-is.png"],
 		creator: "@doug__is",
 	},

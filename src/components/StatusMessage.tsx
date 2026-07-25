@@ -22,14 +22,14 @@ export default function StatusMessage({
 		container: {
 			base: "relative overflow-hidden rounded-lg border border-[rgba(var(--color-foreground),0.05)] p-4 mb-6",
 			loading:
-				"bg-[rgba(var(--color-accent),0.05)] border-l-4 border-l-[rgba(var(--color-accent),0.5)]",
+				"bg-[rgba(var(--color-accent),0.05)] border-[rgba(var(--color-accent),0.3)]",
 			error:
-				"bg-[rgba(var(--color-accent-secondary),0.05)] border-l-4 border-l-[rgba(var(--color-accent-secondary),0.5)]",
+				"bg-[rgba(var(--color-accent-secondary),0.05)] border-[rgba(var(--color-accent-secondary),0.3)]",
 			success:
-				"bg-[rgba(var(--color-accent),0.05)] border-l-4 border-l-[rgba(var(--color-accent),0.5)]",
+				"bg-[rgba(var(--color-accent),0.05)] border-[rgba(var(--color-accent),0.3)]",
 			warning:
-				"bg-[rgba(var(--color-accent-secondary),0.05)] border-l-4 border-l-[rgba(var(--color-accent-secondary),0.5)]",
-			info: "bg-[rgba(var(--color-accent),0.05)] border-l-4 border-l-[rgba(var(--color-accent),0.5)]",
+				"bg-[rgba(var(--color-accent-secondary),0.05)] border-[rgba(var(--color-accent-secondary),0.3)]",
+			info: "bg-[rgba(var(--color-accent),0.05)] border-[rgba(var(--color-accent),0.3)]",
 		},
 		text: {
 			loading: "text-[rgba(var(--color-accent),0.9)]",

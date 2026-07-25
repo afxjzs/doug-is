@@ -27,7 +27,7 @@ export default async function WritingPage() {
 				/>
 			) : (
 				<div className="space-y-8">
-					{posts.map((post) => (
+					{posts.map((post, i) => (
 						<article
 							key={post.id}
 							className="flex flex-col overflow-hidden rounded-xl shadow-lg hover:shadow-xl bg-[rgba(var(--color-background-alt),0.5)] border border-[rgba(var(--color-foreground),0.1)]"
@@ -48,7 +48,7 @@ export default async function WritingPage() {
 											src={post.featured_image}
 											alt={post.title}
 											fill
-											priority
+											priority={i === 0}
 											sizes="(max-width: 768px) 100vw, 800px"
 											className="object-cover group-hover:scale-[1.04]"
 											style={{ transition: "transform var(--dur-slow) var(--ease-out)" }}
@@ -56,21 +56,21 @@ export default async function WritingPage() {
 										/>
 									</Link>
 								) : (
-									<div className="relative h-64 w-full bg-gradient-to-br from-[rgba(var(--color-violet),0.2)] to-[rgba(var(--color-cyan),0.2)]"></div>
+									<div className="relative h-64 w-full bg-[rgba(var(--color-accent),0.08)]"></div>
 								)}
 								<div className="p-6">
 									<div className="flex items-center mb-3">
 										<Link
 											href={`/writing/about/${post.category.toLowerCase()}`}
-											className="text-xs font-medium px-2.5 py-1 rounded-full bg-[rgba(var(--color-violet),0.1)] text-[rgba(var(--color-violet),0.8)] hover:bg-[rgba(var(--color-violet),0.2)]"
-											style={{ transition: "background-color var(--dur-base) var(--ease-out)" }}
+											className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.15em] text-[rgba(var(--color-accent),0.75)] hover:text-[rgb(var(--color-accent))]"
+											style={{ transition: "color var(--dur-base) var(--ease-out)" }}
 										>
 											{post.category}
 										</Link>
 										<span className="mx-2 text-[rgba(var(--color-foreground),0.3)]">
 											&bull;
 										</span>
-										<time className="text-sm text-[rgba(var(--color-foreground),0.6)]">
+										<time className="text-sm text-[rgba(var(--color-foreground),0.65)]">
 											{post.published_at ? formatDate(post.published_at) : ""}
 										</time>
 									</div>
@@ -81,7 +81,7 @@ export default async function WritingPage() {
 										className="block"
 									>
 										<h2
-											className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-3 group-hover:text-[rgb(var(--color-violet))]"
+											className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-3 group-hover:text-[rgb(var(--color-accent))]"
 											style={{ transition: "color var(--dur-slow) var(--ease-out)" }}
 										>
 											{post.title}

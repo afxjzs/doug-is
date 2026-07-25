@@ -37,7 +37,7 @@ export const quotes = [
 	},
 	{
 		text: "The best time to plant a tree was 20 years ago. The second best time is now.",
-		author: "Charlie Munger",
+		author: "Chinese proverb",
 	},
 	{
 		text: "In investing, what is comfortable is rarely profitable.",

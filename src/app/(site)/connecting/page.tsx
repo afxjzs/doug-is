@@ -13,7 +13,7 @@ export default function ConnectingPage() {
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-12">
-				<p className="text-lg text-[rgba(var(--color-foreground),0.7)] mb-2">
+				<p className="font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-accent),0.75)] mb-2">
 					doug.is/connecting
 				</p>
 				<h1 className="text-4xl font-bold gradient-heading mb-4">
