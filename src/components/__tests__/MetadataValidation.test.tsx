@@ -160,7 +160,7 @@ describe("Metadata Validation Framework", () => {
 				openGraph: {
 					title: "Blog Post Title",
 					description: "Post excerpt or first paragraph as description",
-					url: "https://doug.is/thinking/category/post-slug",
+					url: "https://doug.is/writing/category/post-slug",
 					siteName: "doug.is",
 					type: "article",
 					images: [

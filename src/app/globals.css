@@ -6,6 +6,11 @@
 
 @import "tailwindcss";
 
+/* Tailwind v4 ignores tailwind.config.ts plugins without an explicit
+   directive — without this line every prose-* class in the post reading
+   experience is dead code. */
+@plugin "@tailwindcss/typography";
+
 /* ============================================
    Design Tokens — Terminal Palette
    ============================================ */
@@ -117,6 +122,43 @@
 	@keyframes hex-float {
 		0%, 100% { transform: translateY(0px) rotate(0deg); }
 		50% { transform: translateY(-20px) rotate(3deg); }
+	}
+
+	/* Terminal easter egg — applied to <body> by the homepage terminal's
+	   `do a barrel roll` command; the reduced-motion collapse above turns
+	   it into a no-op. */
+	@keyframes barrel-roll {
+		from { transform: rotate(0deg); }
+		to { transform: rotate(360deg); }
+	}
+
+	.barrel-roll {
+		animation: barrel-roll 800ms var(--ease-in-out);
+	}
+
+	/* Keyboard affordances — a visible focus ring in the site's own
+	   accent, and a skip link that appears only when focused. */
+	:focus-visible {
+		outline: 2px solid rgba(var(--color-accent), 0.7);
+		outline-offset: 2px;
+	}
+
+	.skip-link {
+		position: absolute;
+		left: -9999px;
+		z-index: 100;
+	}
+
+	.skip-link:focus-visible {
+		position: fixed;
+		left: 1rem;
+		top: 1rem;
+		background: rgb(var(--color-accent));
+		color: rgb(var(--color-background));
+		padding: 0.5rem 1rem;
+		border-radius: 6px;
+		font-family: var(--font-mono, 'JetBrains Mono', monospace);
+		font-size: 13px;
 	}
 
 	/* Terminal cursor — `steps(2)` makes a clean on/off blink instead of a fade. */
@@ -247,6 +289,7 @@
 	   Carries a baseline shadow so hover *grows* it rather than
 	   summoning one from nothing. Press feedback via :active. */
 	.btn-primary {
+		display: inline-block;
 		padding: 0.75rem 1.5rem;
 		background-color: rgb(var(--color-accent));
 		border: 1px solid rgb(var(--color-accent));
@@ -281,6 +324,7 @@
 
 	/* Secondary button — outlined amber, monospace */
 	.btn-secondary {
+		display: inline-block;
 		padding: 0.75rem 1.5rem;
 		background-color: transparent;
 		border: 1px solid rgba(var(--color-accent), 0.3);

@@ -233,7 +233,7 @@ describe("Admin Dashboard Cross-Linking", () => {
 		const viewPost = screen.getByRole("link", { name: /View Post/i })
 		expect(viewPost).toHaveAttribute(
 			"href",
-			"/thinking/about/development/hello-world"
+			"/writing/about/development/hello-world"
 		)
 		expect(viewPost).toHaveAttribute("target", "_blank")
 

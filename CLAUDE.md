@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-**doug.is** — Doug Rogers' personal website: public marketing/content sections, a Supabase-backed blog under `/thinking`, a set of "building" project showcases (notably the MVP-as-a-Service landing at `/building/mvp`), and a gated admin CMS at `/admin`. Next.js 15 (App Router) + React 19 + TypeScript + Tailwind CSS v4 + Supabase, deployed on Vercel.
+**doug.is** — Doug Rogers' personal website: public marketing/content sections, a Supabase-backed blog under `/writing` (formerly `/thinking`; old URLs 301 via `next.config.js`), a set of "building" project showcases (notably the MVP-as-a-Service landing at `/building/mvp`), and a gated admin CMS at `/admin`. Next.js 15 (App Router) + React 19 + TypeScript + Tailwind CSS v4 + Supabase, deployed on Vercel.
 
 ## Operating rules (non-negotiable)
 
@@ -54,9 +54,9 @@ supabase start | stop | status
 
 ### Route groups (App Router)
 URLs are assembled from two sibling trees under `src/app/`:
-- **`(site)/<section>/page.tsx`** holds the actual page **content** for the main sections (`/advising`, `/building`, `/connecting`, `/hustling`, `/investing`, `/thinking`). The `(site)` group does not appear in the URL.
+- **`(site)/<section>/page.tsx`** holds the actual page **content** for the main sections (`/advising`, `/building`, `/connecting`, `/hustling`, `/investing`, `/writing`). The `(site)` group does not appear in the URL.
 - **`<section>/layout.tsx` + `metadata.ts`** (regular folders, outside the group) supply the **layout and metadata** for those same URLs.
-- **Children** of a section live *outside* the group as regular segments — e.g. `/building/mvp` is `building/mvp/page.tsx`, and blog posts resolve at `thinking/about/[category]/[slug]/page.tsx`.
+- **Children** of a section live *outside* the group as regular segments — e.g. `/building/mvp` is `building/mvp/page.tsx`, and blog posts resolve at `writing/about/[category]/[slug]/page.tsx`.
 - Other top-level groups: `(migraine-free)` (a standalone micro-app) and `admin/` (CMS, not in a group).
 
 When adding a section page, follow this split: content in `(site)/`, layout+metadata in the matching regular folder.
@@ -82,6 +82,7 @@ This is a **multi-client, security-tiered** setup. Pick the client by context:
 
 ### Other notable pieces
 - **Standalone "stuff" hosting** (`/building/stuff`) — a drop-in host for self-contained one-off HTML pages (interactive charts, experiments). **The whole process is runtime code, not a skill/hook**: to publish one, drop a complete `.html` document into `src/content/stuff/<name>.html` and deploy — live at `/building/stuff/<name>` with zero per-file work. The static route handler `src/app/building/stuff/[name]/route.ts` serves each file **as-is** (its own `<html>`/`<head>`/`<style>` — no site layout/CSS, so no collisions) and runs it through `decorateThing()` in `src/lib/stuff.ts`, which derives everything from the document itself and injects: a self-scoped `.dougis-stuff-nav` bar (back-links + Copy/Twitter/Bluesky/LinkedIn share buttons, inheriting the page's colors) and auto-generated OpenGraph/Twitter social meta (skipped if the file declares its own `og:title`). `src/app/building/stuff/[name]/og/route.tsx` renders a branded 1200×630 OG card from the `<title>` via `next/og` `ImageResponse`. The index at `src/app/building/stuff/page.tsx` auto-lists every file (parsed `<title>`/meta description). Files live outside `public/` on purpose (no raw nav-less URL); the page, share/meta, and OG image are all build-time static (`generateStaticParams` + `dynamicParams = false`), so a new file appears only after a redeploy. To change the nav/share/card style for ALL pages, edit `stuff.ts` once.
+- **Interactive homepage terminal** — the hero terminal (`src/components/TerminalText.tsx`) auto-types its intro, then accepts real input (discovery — no visible hint beyond the blinking prompt). Command logic is a pure module, `src/lib/terminal/commands.ts`: `help`/`ls`/`open <section>`/`cat <file>`/`clear` are the listed commands (plus ↑ history and Tab completion); a set of easter eggs (`do a barrel roll`, `sudo hire doug`, `git log`, `vim`, `fortune`, …) is deliberately unlisted in `help` — keep it that way. Navigation goes through `next/navigation` `router.push`. The barrel roll animates a `barrel-roll` class on `<body>` (keyframes in `globals.css`, neutralized under `prefers-reduced-motion`).
 - **MVP A/B variants** (`src/lib/mvp-variants/`) drive `/building/mvp/[variant]` — variant content/config objects, not separate pages.
 - **Motion system**: `src/app/globals.css` defines `--ease-*` / `--dur-*` tokens, a `prefers-reduced-motion` baseline, and keyframes (`hero-stagger`, `terminal-blink`). Button/card transitions are wired to these tokens and gated behind `@media (hover: hover)`. Prefer these tokens over ad-hoc `transition: all`.
 - **Database schema** in `supabase/migrations/` (single base schema file + incremental migrations). Tables: `posts`, `contact_messages`, `user_roles`. Generated DB types in `src/lib/types/supabase.ts`.
@@ -96,7 +97,7 @@ This is a **multi-client, security-tiered** setup. Pick the client by context:
 
 ## Known rough edges (don't replicate; consolidate when touched)
 - Three diverging `Post` interfaces exist (`data.ts`, `clientData.ts`, `serverClient.ts`) — they disagree on nullability. Prefer the generated `Database` types and unify rather than adding a fourth.
-- Two blog URL shapes coexist: `/thinking/about/[category]/[slug]` (canonical, used by the homepage) and `/thinking/[primary-category]/[slug]` (legacy).
+- Two blog URL shapes coexist: `/writing/about/[category]/[slug]` (canonical, used by the homepage) and `/writing/[primary-category]/[slug]` (legacy). All `/thinking/*` URLs 301 to their `/writing/*` twins.
 - `src/app` contains scratch/experiment routes (`home-1`…`home-11`, `redesign`, `supatest`, `debugging`, etc.) that are not part of the real site.
 
 > Deeper background lives in `.cursor/rules/*.mdc` (nextjs, supabase, testing, tailwind4, metadata). Treat them as reference, but verify against the actual code — some describe an earlier `publicClient.ts`/`serverClient.ts` two-file model that has since evolved into the layout documented above.

@@ -128,21 +128,21 @@ describe("Page Title Consistency", () => {
 		// Note: Advising page test removed due to async server component testing issues
 		// The page functionality is verified to work correctly in the browser
 
-		it("Thinking page should have correct h1 title", async () => {
-			const { default: ThinkingPage } = await import(
-				"@/app/(site)/thinking/page"
+		it("Writing page should have correct h1 title", async () => {
+			const { default: WritingPage } = await import(
+				"@/app/(site)/writing/page"
 			)
 
-			// Thinking is an async Server Component: invoke and await it to get the
+			// Writing is an async Server Component: invoke and await it to get the
 			// resolved element, then render that (the Next 15 / React 19 pattern).
-			const ui = await ThinkingPage()
+			const ui = await WritingPage()
 
 			await act(async () => {
 				render(ui)
 			})
 
 			const heading = screen.getByRole("heading", { level: 1 })
-			expect(heading).toHaveTextContent("doug.is/thinking")
+			expect(heading).toHaveTextContent("doug.is/writing")
 
 			// The mocked data layer should have produced real article content.
 			expect(
@@ -177,7 +177,7 @@ describe("Page Title Consistency", () => {
 			const buildingMetadata = await import("@/app/building/metadata")
 			const investingMetadata = await import("@/app/investing/metadata")
 			const advisingMetadata = await import("@/app/advising/metadata")
-			const thinkingMetadata = await import("@/app/(site)/thinking/metadata")
+			const writingMetadata = await import("@/app/(site)/writing/metadata")
 			const connectingMetadata = await import(
 				"@/app/(site)/connecting/metadata"
 			)
@@ -187,7 +187,7 @@ describe("Page Title Consistency", () => {
 			expect(buildingMetadata.metadata.title).toBe("doug.is / Building")
 			expect(investingMetadata.metadata.title).toBe("doug.is / Investing")
 			expect(advisingMetadata.metadata.title).toBe("doug.is / Advising")
-			expect(thinkingMetadata.metadata.title).toBe("doug.is / Thinking")
+			expect(writingMetadata.metadata.title).toBe("doug.is / Writing")
 			expect(connectingMetadata.metadata.title).toBe("doug.is / Connecting")
 			expect(hustlingMetadata.metadata.title).toBe("doug.is / Hustling")
 		})

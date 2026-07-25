@@ -100,7 +100,7 @@ export default function Home6() {
 							Get in Touch
 						</Link>
 						<Link
-							href="/thinking"
+							href="/writing"
 							className="px-8 py-4 text-lg font-medium text-white border-2 border-white/30 rounded-none hover:border-white/60 transition-colors"
 						>
 							Read My Writing

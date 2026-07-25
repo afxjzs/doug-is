@@ -42,7 +42,7 @@ export async function generateMetadata({
 
 		// Create canonical URL with dynamic domain
 		const canonicalUrl = getCanonicalUrl(
-			`/thinking/about/${post.category.toLowerCase()}/${post.slug}`
+			`/writing/about/${post.category.toLowerCase()}/${post.slug}`
 		)
 
 		// Create social sharing image URL with dynamic domain

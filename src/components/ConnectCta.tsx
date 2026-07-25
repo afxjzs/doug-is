@@ -23,7 +23,7 @@ export default function ConnectCta({
 						<h2 className="text-2xl font-semibold mb-2 md:text-left font-[family-name:var(--font-display)] text-[rgb(var(--color-foreground))]">
 							{title}
 						</h2>
-						<p className="md:text-left text-[rgba(var(--color-foreground),0.45)]">
+						<p className="md:text-left text-[rgba(var(--color-foreground),0.65)]">
 							{description}
 						</p>
 					</div>

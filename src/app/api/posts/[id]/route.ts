@@ -217,14 +217,14 @@ export async function PATCH(
 			revalidatePath("/")
 
 			// Always revalidate the main blog pages
-			revalidatePath("/thinking")
+			revalidatePath("/writing")
 
 			// Revalidate paths for the updated post
-			revalidatePath(`/thinking/${data.category.toLowerCase()}`)
-			revalidatePath(`/thinking/${data.category.toLowerCase()}/${data.slug}`)
-			revalidatePath(`/thinking/about/${data.category.toLowerCase()}`)
+			revalidatePath(`/writing/${data.category.toLowerCase()}`)
+			revalidatePath(`/writing/${data.category.toLowerCase()}/${data.slug}`)
+			revalidatePath(`/writing/about/${data.category.toLowerCase()}`)
 			revalidatePath(
-				`/thinking/about/${data.category.toLowerCase()}/${data.slug}`
+				`/writing/about/${data.category.toLowerCase()}/${data.slug}`
 			)
 
 			// If category or slug changed, also revalidate old paths
@@ -232,10 +232,10 @@ export async function PATCH(
 				const oldCategory = existingPost.category?.toLowerCase()
 				const oldSlug = existingPost.slug
 				if (oldCategory && oldSlug) {
-					revalidatePath(`/thinking/${oldCategory}`)
-					revalidatePath(`/thinking/${oldCategory}/${oldSlug}`)
-					revalidatePath(`/thinking/about/${oldCategory}`)
-					revalidatePath(`/thinking/about/${oldCategory}/${oldSlug}`)
+					revalidatePath(`/writing/${oldCategory}`)
+					revalidatePath(`/writing/${oldCategory}/${oldSlug}`)
+					revalidatePath(`/writing/about/${oldCategory}`)
+					revalidatePath(`/writing/about/${oldCategory}/${oldSlug}`)
 				}
 			}
 
@@ -311,15 +311,15 @@ export async function DELETE(
 			revalidatePath("/")
 
 			// Always revalidate the main blog pages
-			revalidatePath("/thinking")
+			revalidatePath("/writing")
 
 			// Revalidate paths for the deleted post
 			const category = existingPost.category.toLowerCase()
 			const slug = existingPost.slug
-			revalidatePath(`/thinking/${category}`)
-			revalidatePath(`/thinking/${category}/${slug}`)
-			revalidatePath(`/thinking/about/${category}`)
-			revalidatePath(`/thinking/about/${category}/${slug}`)
+			revalidatePath(`/writing/${category}`)
+			revalidatePath(`/writing/${category}/${slug}`)
+			revalidatePath(`/writing/about/${category}`)
+			revalidatePath(`/writing/about/${category}/${slug}`)
 
 			console.log(
 				"Cache revalidated for deleted post (including homepage):",

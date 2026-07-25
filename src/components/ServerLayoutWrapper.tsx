@@ -18,8 +18,14 @@ export default function ServerLayoutWrapper({
 	// Standard site layout with header and footer
 	return (
 		<>
+			<a href="#main-content" className="skip-link">
+				Skip to content
+			</a>
 			<Header />
-			<main className="flex-grow container mx-auto px-4 pt-28 pb-12 relative z-10">
+			<main
+				id="main-content"
+				className="flex-grow container mx-auto px-4 pt-28 pb-12 relative z-10"
+			>
 				{children}
 			</main>
 			<Footer />

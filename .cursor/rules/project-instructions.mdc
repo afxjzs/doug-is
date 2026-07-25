@@ -132,7 +132,7 @@ src/app/
 - **Content comes from route groups**, **configuration from regular folders**
 
 ### Content Management Patterns
--   **Blog Content Structure**: All blog content is centralized under `/thinking` route with URL structure: `/thinking/about/[category]/[slug]`
+-   **Blog Content Structure**: All blog content is centralized under `/writing` route with URL structure: `/writing/about/[category]/[slug]` (old `/thinking` URLs 301-redirect)
 -   **Database Integration**: Posts stored in Supabase with proper RLS policies for public/admin access
 -   **Content Categories**: Use consistent categorization (building, investing, hustling, advising, thinking)
 

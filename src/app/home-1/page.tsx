@@ -217,7 +217,7 @@ export default async function Home1() {
 								Latest writing
 							</h2>
 							<Link
-								href="/thinking"
+								href="/writing"
 								className="text-sm text-[rgba(var(--color-foreground),0.4)] hover:text-[rgb(var(--color-accent))] transition-colors"
 							>
 								View all
@@ -250,7 +250,7 @@ export default async function Home1() {
 										</p>
 									)}
 									<Link
-										href={`/thinking/about/${latestPost.category.toLowerCase()}/${latestPost.slug}`}
+										href={`/writing/about/${latestPost.category.toLowerCase()}/${latestPost.slug}`}
 										className="inline-flex items-center text-sm text-[rgb(var(--color-accent))] hover:underline"
 									>
 										Read post

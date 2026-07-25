@@ -89,7 +89,7 @@ describe("Metadata Validation", () => {
 					title: "Test Blog Post",
 					description: "Test blog post description",
 					type: "article",
-					url: "https://doug.is/thinking/about/building/test-post",
+					url: "https://doug.is/writing/about/building/test-post",
 					siteName: "doug.is",
 					images: [
 						{
@@ -116,7 +116,7 @@ describe("Metadata Validation", () => {
 					"article:tag": "building",
 				},
 				alternates: {
-					canonical: "https://doug.is/thinking/about/building/test-post",
+					canonical: "https://doug.is/writing/about/building/test-post",
 				},
 			}
 

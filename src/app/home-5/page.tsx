@@ -167,7 +167,7 @@ export default async function Home5() {
 								Get in Touch
 							</Link>
 							<Link
-								href="/thinking"
+								href="/writing"
 								className="px-6 py-3 rounded-xl font-medium transition-all duration-300"
 								style={{
 									background: "rgba(255,255,255,0.05)",
@@ -242,7 +242,7 @@ export default async function Home5() {
 					<div className="max-w-6xl mx-auto">
 						<div className="flex items-baseline justify-between mb-10">
 							<h2 className="text-2xl font-bold" style={{ fontFamily: "var(--font-display)" }}>Writing</h2>
-							<Link href="/thinking" className="font-mono text-xs text-[rgba(var(--color-foreground),0.3)] hover:text-[rgb(var(--color-accent))] transition-colors tracking-wider">
+							<Link href="/writing" className="font-mono text-xs text-[rgba(var(--color-foreground),0.3)] hover:text-[rgb(var(--color-accent))] transition-colors tracking-wider">
 								ALL ARTICLES
 							</Link>
 						</div>
@@ -261,7 +261,7 @@ export default async function Home5() {
 										<p className="text-sm text-[rgba(var(--color-foreground),0.5)] mb-6 line-clamp-3">{latestPost.excerpt}</p>
 									)}
 									<Link
-										href={`/thinking/about/${latestPost.category.toLowerCase()}/${latestPost.slug}`}
+										href={`/writing/about/${latestPost.category.toLowerCase()}/${latestPost.slug}`}
 										className="inline-flex items-center text-sm text-[rgb(var(--color-accent))] hover:underline"
 									>
 										Read article

@@ -92,13 +92,13 @@ export const PostView: FC<PostViewProps> = ({ post, isDraft = false }) => {
 
 			<header className="mb-8">
 				<h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-				<div className="flex items-center text-[rgba(var(--color-foreground),0.45)] mb-4">
+				<div className="flex items-center text-[rgba(var(--color-foreground),0.65)] mb-4">
 					<time dateTime={post.published_at || post.created_at || ""}>
 						{formattedDate}
 					</time>
 					<span className="mx-2">•</span>
 					<Link
-						href={`/thinking/about/${post.category.toLowerCase()}`}
+						href={`/writing/about/${post.category.toLowerCase()}`}
 						className="capitalize text-[rgb(var(--color-accent))] hover:text-[rgba(var(--color-accent),0.7)] transition-colors"
 					>
 						{post.category}
@@ -125,10 +125,10 @@ export const PostView: FC<PostViewProps> = ({ post, isDraft = false }) => {
 
 			<footer className="pt-6 border-t border-[rgba(var(--color-border),0.08)]">
 				<Link
-					href="/thinking"
+					href="/writing"
 					className="text-[rgb(var(--color-accent))] hover:text-[rgba(var(--color-accent),0.7)] transition-colors"
 				>
-					← Back to Thinking
+					← Back to Writing
 				</Link>
 			</footer>
 		</div>

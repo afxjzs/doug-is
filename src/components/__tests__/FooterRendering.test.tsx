@@ -84,7 +84,7 @@ describe("Footer Rendering Tests", () => {
 	describe("Real Page Structure Tests", () => {
 		it("should not have nested layouts that cause double footer", () => {
 			// This test simulates the actual issue we found
-			// where /thinking had its own layout with footer
+			// where /writing had its own layout with footer
 			// while root layout also had footer
 
 			// Mock the thinking layout structure (before fix)

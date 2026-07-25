@@ -124,7 +124,7 @@ export default function Home8() {
 							CONTACT
 						</Link>
 						<Link
-							href="/thinking"
+							href="/writing"
 							className="px-8 py-4 font-mono text-sm font-bold border-2 border-[rgba(var(--color-foreground),0.2)] text-[rgba(var(--color-foreground),0.6)] hover:border-[rgb(var(--color-accent))] hover:text-[rgb(var(--color-accent))] transition-colors"
 						>
 							WRITING

@@ -8,39 +8,35 @@ import { notFound } from "next/navigation"
 export async function generateMetadata({
 	params,
 }: {
-	params: Promise<{ category: string }>
+	params: Promise<{ primary_category: string }>
 }): Promise<Metadata> {
 	const resolvedParams = await params
 	// Capitalize the first letter of each word in the category
-	const formattedCategory = resolvedParams.category
+	const formattedCategory = resolvedParams.primary_category
 		.split("-")
 		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
 		.join(" ")
 
 	return {
-		title: `${formattedCategory} | doug.is Thinking`,
+		title: `${formattedCategory} | doug.is Writing`,
 		description: `Thoughts, ideas, and insights on ${formattedCategory.toLowerCase()}.`,
 	}
 }
 
-export default async function ThinkingCategoryPage({
+export default async function WritingCategoryPage({
 	params,
 }: {
-	params: Promise<{ category: string }>
+	params: Promise<{ primary_category: string }>
 }) {
 	const resolvedParams = await params
-	// Make sure category is always in proper format
-	const category = resolvedParams.category.toLowerCase()
-	console.log(`Rendering category page for: '${category}'`)
-
+	const category = resolvedParams.primary_category
 	const posts = await getPostsByCategory(category)
 
 	if (!posts || posts.length === 0) {
-		console.log(`No posts found for category: ${category}`)
 		notFound()
 	}
 
-	// Capitalize the first letter of each word in the category for display
+	// Capitalize the first letter of each word in the category
 	const formattedCategory = category
 		.split("-")
 		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -50,7 +46,7 @@ export default async function ThinkingCategoryPage({
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-12">
 				<Link
-					href="/thinking"
+					href="/writing"
 					className="inline-flex items-center text-[rgba(var(--color-foreground),0.6)] hover:text-[rgba(var(--color-foreground),1)] mb-6 transition-colors"
 				>
 					<svg
@@ -67,7 +63,7 @@ export default async function ThinkingCategoryPage({
 							d="M15 19l-7-7 7-7"
 						/>
 					</svg>
-					Back to All Thinking
+					Back to All Writing
 				</Link>
 
 				<h1 className="text-4xl font-bold gradient-heading mb-4">
@@ -87,7 +83,7 @@ export default async function ThinkingCategoryPage({
 						<div className="group">
 							{post.featured_image ? (
 								<Link
-									href={`/thinking/about/${post.category.toLowerCase()}/${
+									href={`/writing/about/${post.category.toLowerCase()}/${
 										post.slug
 									}`}
 									className="block relative w-full h-64 overflow-hidden"
@@ -108,7 +104,7 @@ export default async function ThinkingCategoryPage({
 							<div className="p-6">
 								<div className="flex items-center mb-3">
 									<Link
-										href={`/thinking/about/${post.category.toLowerCase()}`}
+										href={`/writing/about/${post.category.toLowerCase()}`}
 										className="text-xs font-medium px-2.5 py-1 rounded-full bg-[rgba(var(--color-violet),0.1)] text-[rgba(var(--color-violet),0.8)] hover:bg-[rgba(var(--color-violet),0.2)] transition-colors"
 									>
 										{post.category}
@@ -121,7 +117,7 @@ export default async function ThinkingCategoryPage({
 									</time>
 								</div>
 								<Link
-									href={`/thinking/about/${post.category.toLowerCase()}/${
+									href={`/writing/about/${post.category.toLowerCase()}/${
 										post.slug
 									}`}
 									className="block"

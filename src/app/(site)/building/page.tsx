@@ -11,7 +11,7 @@ const companies = [
 		id: "gaius",
 		title: "GAIuS",
 		description:
-			"Explainable AI for high-stakes decisions. GAIuS is a cognitive architecture for explainable decision systems that operates in environments requiring traceable, auditable AI. Features structured reasoning, model-driven inference, explicit constraints, and governed adaptation for defense, fintech, and construction industries.",
+			"Explainable AI for high-stakes decisions. GAIuS shows its work: every decision traces back to rules you can read and audit. Built for industries where \"the model said so\" doesn't cut it — defense, fintech, construction.",
 		role: "Co-Founder (via DubPrime)",
 		image: "/images/gaius-logo-wide-dark-bg.png",
 		website: "https://gaius.fyi",
@@ -330,19 +330,19 @@ export default function BuildingPage() {
 												handleProjectClick(project.id, project.title, "details")
 											}
 										>
-											<h2
+											<h3
 												className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2 group-hover:text-[rgb(var(--color-accent))]"
 												style={{ transition: "color var(--dur-base) var(--ease-out)" }}
 											>
 												{project.title}
-											</h2>
+											</h3>
 										</Link>
 									) : (
-										<h2
+										<h3
 											className="text-2xl font-bold text-[rgba(var(--color-foreground),0.9)] mb-2"
 										>
 											{project.title}
-										</h2>
+										</h3>
 									)}
 									<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
 										{project.description}
@@ -358,36 +358,21 @@ export default function BuildingPage() {
 										))}
 									</div>
 									<div className="flex flex-wrap gap-4">
-										{(project.id === "hopping-list" ||
-											project.id === "migraine-free" ||
-											project.id === "oil-price-ticker" ||
-											project.id === "inn" ||
-											project.id === "goose-chase") &&
-											project.link && (
-												<div className="w-full mb-3">
-													<Link
-														href={project.link}
-														className={`btn-primary text-center block`}
-														onClick={() =>
-															handleProjectClick(
-																project.id,
-																project.title,
-																"details"
-															)
-														}
-													>
-														{project.id === "hopping-list"
-															? "View Project Details"
-															: project.id === "oil-price-ticker"
-															? "View Project Details"
-															: project.id === "inn"
-															? "View Project Details"
-															: project.id === "goose-chase"
-															? "View Project Details"
-															: "View Database"}
-													</Link>
-												</div>
-											)}
+										{project.link && (
+											<Link
+												href={project.link}
+												className="btn-primary"
+												onClick={() =>
+													handleProjectClick(
+														project.id,
+														project.title,
+														"details"
+													)
+												}
+											>
+												View Project Details
+											</Link>
+										)}
 
 										{project.github && (
 											<Link

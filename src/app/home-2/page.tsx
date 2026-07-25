@@ -67,7 +67,7 @@ export default async function Home2() {
 							<Link href="/connecting" className="btn-primary">
 								Get in Touch
 							</Link>
-							<Link href="/thinking" className="btn-secondary">
+							<Link href="/writing" className="btn-secondary">
 								Read My Writing
 							</Link>
 						</div>
@@ -227,7 +227,7 @@ export default async function Home2() {
 								Writing
 							</h2>
 							<Link
-								href="/thinking"
+								href="/writing"
 								className="font-mono text-xs text-[rgba(var(--color-foreground),0.3)] hover:text-[rgb(var(--color-accent))] transition-colors tracking-wider"
 							>
 								ALL POSTS
@@ -238,7 +238,7 @@ export default async function Home2() {
 							{latestPosts.map((post) => (
 								<Link
 									key={post.id}
-									href={`/thinking/about/${post.category.toLowerCase()}/${post.slug}`}
+									href={`/writing/about/${post.category.toLowerCase()}/${post.slug}`}
 									className="group rounded-lg border border-[rgba(var(--color-foreground),0.06)] overflow-hidden hover:border-[rgba(var(--color-foreground),0.12)] transition-all duration-300"
 								>
 									{post.featured_image && (

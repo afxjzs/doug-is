@@ -71,19 +71,19 @@ describe("Domain Detection", () => {
 
 		it("should generate canonical URL with dynamic domain", () => {
 			const canonicalUrl = getCanonicalUrl(
-				"/thinking/about/technology/ai-slop-will-eat-itself"
+				"/writing/about/technology/ai-slop-will-eat-itself"
 			)
 			expect(canonicalUrl).toBe(
-				"https://example.com/thinking/about/technology/ai-slop-will-eat-itself"
+				"https://example.com/writing/about/technology/ai-slop-will-eat-itself"
 			)
 		})
 
 		it("should handle paths without leading slash", () => {
 			const canonicalUrl = getCanonicalUrl(
-				"thinking/about/technology/ai-slop-will-eat-itself"
+				"writing/about/technology/ai-slop-will-eat-itself"
 			)
 			expect(canonicalUrl).toBe(
-				"https://example.com/thinking/about/technology/ai-slop-will-eat-itself"
+				"https://example.com/writing/about/technology/ai-slop-will-eat-itself"
 			)
 		})
 

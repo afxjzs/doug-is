@@ -13,9 +13,9 @@ import Link from "next/link"
  */
 
 const ARTICLES = [
-	{ title: "AI Slop Will Eat Itself", category: "Technology", href: "/thinking/about/technology/ai-slop-will-eat-itself" },
-	{ title: "Planner/Executor: LLM-Guided Development", category: "Development", href: "/thinking/about/development/plannerexecutor-a-systematic-approach-to-llm-guided-development" },
-	{ title: "The Migraine Trigger Foods Database", category: "Lifestyle", href: "/thinking/about/lifestyle/introducing-the-migraine-trigger-foods-database-mtfdb" },
+	{ title: "AI Slop Will Eat Itself", category: "Technology", href: "/writing/about/technology/ai-slop-will-eat-itself" },
+	{ title: "Planner/Executor: LLM-Guided Development", category: "Development", href: "/writing/about/development/plannerexecutor-a-systematic-approach-to-llm-guided-development" },
+	{ title: "The Migraine Trigger Foods Database", category: "Lifestyle", href: "/writing/about/lifestyle/introducing-the-migraine-trigger-foods-database-mtfdb" },
 ]
 
 export default function Home10() {
@@ -88,7 +88,7 @@ export default function Home10() {
 							{ label: "advising", href: "/advising" },
 							{ label: "building", href: "/building" },
 							{ label: "investing", href: "/investing" },
-							{ label: "writing", href: "/thinking" },
+							{ label: "writing", href: "/writing" },
 							{ label: "contact", href: "/connecting" },
 						].map(item => (
 							<Link key={item.label} href={item.href} style={{
@@ -156,7 +156,7 @@ export default function Home10() {
 							onMouseEnter={e => { (e.target as HTMLElement).style.background = "#d4632f"; (e.target as HTMLElement).style.transform = "translateY(-2px)"; }}
 							onMouseLeave={e => { (e.target as HTMLElement).style.background = "#c4572a"; (e.target as HTMLElement).style.transform = "translateY(0)"; }}
 							>Get in Touch</Link>
-							<Link href="/thinking" style={{
+							<Link href="/writing" style={{
 								padding: "16px 36px",
 								border: "1.5px solid var(--fg-faint)",
 								color: "var(--fg)",
@@ -290,7 +290,7 @@ export default function Home10() {
 						<h2 style={{
 							fontFamily: "var(--serif)", fontSize: "36px", fontWeight: 700,
 						}}>Writing</h2>
-						<Link href="/thinking" style={{
+						<Link href="/writing" style={{
 							fontSize: "13px", fontWeight: 500, color: "var(--accent)",
 							letterSpacing: "0.05em",
 						}}>All Articles →</Link>

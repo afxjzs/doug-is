@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 		type: "website",
 		images: [
 			{
-				url: "https://doug.is/images/advisory-services.jpg",
+				url: "https://doug.is/images/projects/doug-is.png",
 				width: 1200,
 				height: 630,
 				alt: "Advising Services - doug.is",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 		title: "doug.is / Advising",
 		description:
 			"Advisory roles and consulting services for startups and established companies.",
-		images: ["https://doug.is/images/advisory-services.jpg"],
+		images: ["https://doug.is/images/projects/doug-is.png"],
 		creator: "@doug__is",
 	},
 	alternates: {

@@ -151,12 +151,12 @@ export async function POST(request: Request) {
 			revalidatePath("/")
 
 			// BLOG PAGES: All blog listing and individual post pages
-			revalidatePath("/thinking")
-			revalidatePath(`/thinking/${data.category.toLowerCase()}`)
-			revalidatePath(`/thinking/${data.category.toLowerCase()}/${data.slug}`)
-			revalidatePath(`/thinking/about/${data.category.toLowerCase()}`)
+			revalidatePath("/writing")
+			revalidatePath(`/writing/${data.category.toLowerCase()}`)
+			revalidatePath(`/writing/${data.category.toLowerCase()}/${data.slug}`)
+			revalidatePath(`/writing/about/${data.category.toLowerCase()}`)
 			revalidatePath(
-				`/thinking/about/${data.category.toLowerCase()}/${data.slug}`
+				`/writing/about/${data.category.toLowerCase()}/${data.slug}`
 			)
 			console.log(
 				"Cache revalidated for new post (including homepage):",

@@ -1,6 +1,8 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
+import { completeInput, runCommand } from "@/lib/terminal/commands"
 
 const allLines = [
 	"$ whoami",
@@ -26,6 +28,29 @@ const COMMAND_SPEED = 45
 const TEXT_SPEED = 18
 const PROMPT = "❯ " // ❯
 
+// Beat between printing a navigation command's output and leaving the
+// page, so the visitor sees the response land.
+const NAVIGATE_DELAY_MS = 600
+// Slightly longer than the 800ms CSS animation so the class outlives it.
+const BARREL_ROLL_MS = 900
+
+const MAX_HISTORY = 50
+
+interface HistoryLine {
+	kind: "command" | "output"
+	text: string
+}
+
+// Keep the newest line visible by scrolling the card's fixed-height box
+// directly (never scrollIntoView — that can also yank the page scroll).
+// The scroll container is HeroSection's [data-terminal-scroll] div.
+function scrollTerminalToBottom(container: HTMLElement | null) {
+	const scroller = container?.closest(
+		"[data-terminal-scroll]"
+	) as HTMLElement | null
+	if (scroller) scroller.scrollTop = scroller.scrollHeight
+}
+
 function makeLineEl(line: string): HTMLDivElement {
 	const div = document.createElement("div")
 	div.style.minHeight = "25px"
@@ -48,15 +73,42 @@ function makeLineEl(line: string): HTMLDivElement {
 	return div
 }
 
-export default function TerminalText() {
+interface TerminalTextProps {
+	/** Fires once the intro finishes typing (immediately under reduced motion). */
+	onIntroDone?: () => void
+}
+
+export default function TerminalText({ onIntroDone }: TerminalTextProps = {}) {
 	const containerRef = useRef<HTMLDivElement>(null)
-	const cancelledRef = useRef(false)
+	const inputRef = useRef<HTMLInputElement>(null)
+	const router = useRouter()
+
+	// Keep the latest callback reachable from the one-shot intro effect
+	// without re-running it.
+	const onIntroDoneRef = useRef(onIntroDone)
+	onIntroDoneRef.current = onIntroDone
+
+	// Set by the intro effect while typing; a click (or keypress) calls it
+	// to dump the rest of the intro instantly instead of making people wait.
+	const fastForwardRef = useRef<(() => void) | null>(null)
+	const focusAfterIntroRef = useRef(false)
+
+	// The intro is imperative (see effect below); everything after it is
+	// ordinary React state.
+	const [introDone, setIntroDone] = useState(false)
+	const [lines, setLines] = useState<HistoryLine[]>([])
+	const [value, setValue] = useState("")
+	const [history, setHistory] = useState<string[]>([])
+	const [historyIndex, setHistoryIndex] = useState<number | null>(null)
 
 	useEffect(() => {
 		const container = containerRef.current
 		if (!container) return
 
-		cancelledRef.current = false
+		// Cancellation must be per-effect-run (not a shared ref): StrictMode
+		// runs the effect twice, and a shared flag lets the first, cancelled
+		// typing loop resume once the second run resets it.
+		let cancelled = false
 
 		// Reduced-motion: dump everything immediately, no typing.
 		const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -64,8 +116,11 @@ export default function TerminalText() {
 			allLines.forEach((line) => {
 				container.appendChild(makeLineEl(line || " "))
 			})
+			scrollTerminalToBottom(container)
+			setIntroDone(true)
+			onIntroDoneRef.current?.()
 			return () => {
-				cancelledRef.current = true
+				cancelled = true
 				container.replaceChildren()
 			}
 		}
@@ -78,10 +133,39 @@ export default function TerminalText() {
 		cursor.style.marginLeft = "1px"
 		cursor.style.animation = "terminal-blink 1s steps(2) infinite"
 
+		const finishIntro = () => {
+			fastForwardRef.current = null
+			window.removeEventListener("keydown", onAnyKey)
+			setIntroDone(true)
+			onIntroDoneRef.current?.()
+		}
+
+		const fastForward = () => {
+			if (cancelled) return
+			cancelled = true
+			cursor.remove()
+			container.replaceChildren()
+			allLines.forEach((line) => {
+				container.appendChild(makeLineEl(line || " "))
+			})
+			scrollTerminalToBottom(container)
+			finishIntro()
+		}
+
+		const onAnyKey = (e: KeyboardEvent) => {
+			// Only real typing intent skips — not modifiers or shortcuts.
+			if (e.metaKey || e.ctrlKey || e.altKey) return
+			if (e.key.length === 1 || e.key === "Enter") fastForward()
+		}
+
+		fastForwardRef.current = fastForward
+		window.addEventListener("keydown", onAnyKey)
+
 		const typeLine = (lineIndex: number, charIndex: number) => {
-			if (cancelledRef.current) return
+			if (cancelled) return
 			if (lineIndex >= allLines.length) {
 				cursor.remove()
+				finishIntro()
 				return
 			}
 
@@ -133,6 +217,7 @@ export default function TerminalText() {
 				'[data-terminal-content="true"]'
 			) as HTMLElement | null
 			if (textSpan) textSpan.textContent = target
+			scrollTerminalToBottom(container)
 
 			const charsToType = visible.length
 
@@ -149,19 +234,198 @@ export default function TerminalText() {
 		typeLine(0, 0)
 
 		return () => {
-			cancelledRef.current = true
+			cancelled = true
+			fastForwardRef.current = null
+			window.removeEventListener("keydown", onAnyKey)
 			container.replaceChildren()
 		}
 	}, [])
 
+	// A fast-forward click means the visitor wants in — focus the prompt
+	// once it exists. (Natural completion never steals focus.)
+	useEffect(() => {
+		if (introDone && focusAfterIntroRef.current) {
+			focusAfterIntroRef.current = false
+			inputRef.current?.focus()
+		}
+	}, [introDone])
+
+	// Keep the prompt in view as command output accumulates.
+	useEffect(() => {
+		scrollTerminalToBottom(containerRef.current)
+	}, [lines])
+
+	const submit = () => {
+		const trimmed = value.trim()
+		setValue("")
+		setHistoryIndex(null)
+
+		if (!trimmed) {
+			setLines((prev) => [...prev, { kind: "command", text: "" }])
+			return
+		}
+
+		setHistory((prev) => [...prev, trimmed].slice(-MAX_HISTORY))
+		const { output, action } = runCommand(trimmed)
+
+		if (action?.type === "clear") {
+			containerRef.current?.replaceChildren()
+			setLines([])
+			return
+		}
+
+		setLines((prev) => [
+			...prev,
+			{ kind: "command", text: trimmed },
+			...output.map((text) => ({ kind: "output" as const, text })),
+		])
+
+		if (action?.type === "navigate") {
+			window.setTimeout(() => router.push(action.href), NAVIGATE_DELAY_MS)
+		}
+
+		if (action?.type === "barrel-roll") {
+			// The global prefers-reduced-motion collapse in globals.css turns
+			// the spin into a no-op for visitors who asked for less motion.
+			document.body.classList.add("barrel-roll")
+			window.setTimeout(() => {
+				document.body.classList.remove("barrel-roll")
+			}, BARREL_ROLL_MS)
+		}
+	}
+
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === "Enter") {
+			e.preventDefault()
+			submit()
+			return
+		}
+
+		// Tab must never trap keyboard users (WCAG 2.1.2): intercept only
+		// when it actually completes something, never on Shift+Tab, and let
+		// it move focus naturally otherwise.
+		if (e.key === "Tab") {
+			if (e.shiftKey) return
+			const completed = completeInput(value)
+			if (completed && completed !== value) {
+				e.preventDefault()
+				setValue(completed)
+			}
+			return
+		}
+
+		if (e.key === "Escape") {
+			inputRef.current?.blur()
+			return
+		}
+
+		if (e.key === "ArrowUp") {
+			e.preventDefault()
+			if (history.length === 0) return
+			const next =
+				historyIndex === null ? history.length - 1 : Math.max(0, historyIndex - 1)
+			setHistoryIndex(next)
+			setValue(history[next])
+			return
+		}
+
+		if (e.key === "ArrowDown") {
+			e.preventDefault()
+			if (historyIndex === null) return
+			const next = historyIndex + 1
+			if (next >= history.length) {
+				setHistoryIndex(null)
+				setValue("")
+			} else {
+				setHistoryIndex(next)
+				setValue(history[next])
+			}
+		}
+	}
+
 	return (
 		<div
-			ref={containerRef}
 			style={{
-				fontFamily: "var(--font-body, 'JetBrains Mono', monospace)",
+				fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
 				fontSize: "14px",
 				lineHeight: "1.8",
 			}}
-		/>
+			onClick={() => {
+				if (fastForwardRef.current) {
+					focusAfterIntroRef.current = true
+					fastForwardRef.current()
+					return
+				}
+				inputRef.current?.focus()
+			}}
+		>
+			<div ref={containerRef} />
+
+			{introDone && (
+				<div>
+					<div
+						style={{
+							minHeight: "25px",
+							color: "rgba(var(--color-foreground), 0.55)",
+						}}
+					>
+						# type &apos;help&apos;
+					</div>
+					<div role="log" aria-live="polite">
+						{lines.map((line, i) => (
+							<div key={i} style={{ minHeight: "25px", whiteSpace: "pre-wrap" }}>
+								{line.kind === "command" ? (
+									<>
+										<span style={{ color: "rgb(var(--color-accent))" }}>
+											{PROMPT}
+										</span>
+										<span style={{ color: "rgb(var(--color-foreground))" }}>
+											{line.text}
+										</span>
+									</>
+								) : (
+									<span
+										style={{ color: "rgba(var(--color-foreground), 0.55)" }}
+									>
+										{line.text}
+									</span>
+								)}
+							</div>
+						))}
+					</div>
+
+					{/* Live prompt — the visible row echoes the hidden input, so
+					   the block cursor and colors stay terminal-true. */}
+					<div className="relative" style={{ minHeight: "25px" }}>
+						<span style={{ color: "rgb(var(--color-accent))" }}>{PROMPT}</span>
+						<span style={{ color: "rgb(var(--color-foreground))" }}>
+							{value}
+						</span>
+						<span
+							aria-hidden="true"
+							style={{
+								color: "rgb(var(--color-accent))",
+								marginLeft: "1px",
+								animation: "terminal-blink 1s steps(2) infinite",
+							}}
+						>
+							█
+						</span>
+						<input
+							ref={inputRef}
+							aria-label="Terminal input"
+							value={value}
+							onChange={(e) => setValue(e.target.value)}
+							onKeyDown={handleKeyDown}
+							className="absolute inset-0 w-full opacity-0 cursor-text"
+							autoCapitalize="none"
+							autoComplete="off"
+							autoCorrect="off"
+							spellCheck={false}
+						/>
+					</div>
+				</div>
+			)}
+		</div>
 	)
 }

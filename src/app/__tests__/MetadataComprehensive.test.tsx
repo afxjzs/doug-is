@@ -18,7 +18,7 @@ const { metadata: homeMetadata } = require("../page")
 const { metadata: buildingMetadata } = require("../building/metadata")
 const { metadata: advisingMetadata } = require("../advising/metadata")
 const { metadata: investingMetadata } = require("../investing/metadata")
-const { metadata: thinkingMetadata } = require("../thinking/metadata")
+const { metadata: writingMetadata } = require("../writing/metadata")
 const {
 	metadata: connectingMetadata,
 } = require("../(site)/connecting/metadata")
@@ -63,7 +63,7 @@ describe("Comprehensive Metadata Testing", () => {
 			{ name: "Building", metadata: buildingMetadata },
 			{ name: "Advising", metadata: advisingMetadata },
 			{ name: "Investing", metadata: investingMetadata },
-			{ name: "Thinking", metadata: thinkingMetadata },
+			{ name: "Writing", metadata: writingMetadata },
 		]
 
 		sectionPages.forEach(({ name, metadata }) => {

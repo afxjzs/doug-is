@@ -471,7 +471,7 @@ export default async function AdvisingPage() {
 								key={post.id}
 								className="border border-[rgba(var(--color-foreground),0.05)] rounded-lg overflow-hidden bg-[rgba(var(--color-foreground),0.02)] hover:bg-[rgba(var(--color-foreground),0.04)] transition-all duration-300"
 							>
-								<Link href={`/thinking/advisory/${post.slug}`}>
+								<Link href={`/writing/advisory/${post.slug}`}>
 									<div className="p-6">
 										<p className="text-sm text-[rgba(var(--color-foreground),0.6)] mb-2">
 											{post.published_at ? formatDate(post.published_at) : ""}
@@ -496,7 +496,8 @@ export default async function AdvisingPage() {
 				<ConnectCta
 					title="Want to talk it through?"
 					description="If any of this sounds relevant to what you're working on, grab a time and let's chat. No pitch deck required."
-					buttonText="Get in Touch"
+					buttonText="Grab a Time"
+					buttonHref="https://cal.com/afxjzs/startups"
 				/>
 			</div>
 		</div>

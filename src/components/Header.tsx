@@ -9,7 +9,7 @@ const navItems = [
 	{ name: "/advising", path: "/advising" },
 	{ name: "/building", path: "/building" },
 	{ name: "/investing", path: "/investing" },
-	{ name: "/writing", path: "/thinking" },
+	{ name: "/writing", path: "/writing" },
 ]
 
 function isActive(pathname: string, itemPath: string) {
@@ -87,34 +87,44 @@ export default function Header() {
 					>
 						<polygon points="43.3,0 86.6,25 86.6,75 43.3,100 0,75 0,25" />
 					</svg>
-					<span className="text-sm tracking-[0.15em] text-[rgba(var(--color-foreground),0.45)] font-[family-name:var(--font-mono)]">
+					<span className="text-sm tracking-[0.15em] text-[rgba(var(--color-foreground),0.65)] font-[family-name:var(--font-mono)]">
 						doug.is
 					</span>
 				</Link>
 
-				{/* Desktop nav */}
-				<nav className="hidden md:flex items-center gap-1.5 text-xs tracking-[0.1em] font-[family-name:var(--font-mono)]">
-					<span className="mr-2 text-[rgba(var(--color-foreground),0.45)]">
-						doug.is...
-					</span>
-					{navItems.map((item) => (
-						<Link
-							key={item.path}
-							href={item.path}
-							onClick={() => handleNavClick(item.path)}
-							style={{
-								transition: "color var(--dur-base) var(--ease-out)",
-							}}
-							className={`px-1.5 py-1 ${
-								isActive(pathname, item.path)
-									? "text-[rgb(var(--color-accent))]"
-									: "text-[rgba(var(--color-foreground),0.45)] hover:text-[rgb(var(--color-accent))]"
-							}`}
-						>
-							{item.name}
-						</Link>
-					))}
-				</nav>
+				{/* Desktop nav + persistent contact CTA */}
+				<div className="hidden md:flex items-center gap-6">
+					<nav className="flex items-center gap-1.5 text-xs tracking-[0.1em] font-[family-name:var(--font-mono)]">
+						<span className="mr-2 text-[rgba(var(--color-foreground),0.65)]">
+							doug.is...
+						</span>
+						{navItems.map((item) => (
+							<Link
+								key={item.path}
+								href={item.path}
+								onClick={() => handleNavClick(item.path)}
+								style={{
+									transition: "color var(--dur-base) var(--ease-out)",
+								}}
+								className={`px-1.5 py-1 ${
+									isActive(pathname, item.path)
+										? "text-[rgb(var(--color-accent))]"
+										: "text-[rgba(var(--color-foreground),0.65)] hover:text-[rgb(var(--color-accent))]"
+								}`}
+							>
+								{item.name}
+							</Link>
+						))}
+					</nav>
+					<Link
+						href="/connecting"
+						className="btn-primary"
+						style={{ padding: "0.5rem 1rem" }}
+						onClick={() => handleNavClick("/connecting")}
+					>
+						Get in Touch
+					</Link>
+				</div>
 
 				{/* Mobile hamburger */}
 				<button

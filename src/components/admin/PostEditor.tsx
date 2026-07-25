@@ -306,7 +306,7 @@ export default function PostEditor({ post, mode }: PostEditorProps) {
 					disabled={autoSlug}
 				/>
 				<p className="text-xs text-[rgba(var(--color-foreground),0.6)]">
-					This will be used in the URL: /thinking/about/
+					This will be used in the URL: /writing/about/
 					{normalizeCategory(category).toLowerCase()}/{slug}
 				</p>
 			</div>

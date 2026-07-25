@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Metadata } from "next"
 import HeroSection from "@/components/HeroSection"
 import { getPublishedPosts } from "@/lib/supabase/data"
@@ -7,6 +8,7 @@ import {
 	getSocialImageUrl,
 	getSiteName,
 } from "@/lib/utils/domain-detection"
+import { generatePersonStructuredData } from "@/lib/utils/structured-data"
 
 const HOME_TITLE = "doug.is | Engineer, Advisor, Investor"
 const HOME_DESCRIPTION =
@@ -49,7 +51,7 @@ function HexSeparator() {
 			width="8"
 			height="10"
 			viewBox="0 0 86.6 100"
-			className="fill-[rgb(var(--color-accent))] shrink-0"
+			className="hidden md:block fill-[rgb(var(--color-accent))] shrink-0"
 		>
 			<polygon points="43.3,0 86.6,25 86.6,75 43.3,100 0,75 0,25" />
 		</svg>
@@ -61,12 +63,19 @@ export default async function Home() {
 
 	return (
 		<div className="-mt-28 -mb-12">
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{
+					__html: JSON.stringify(generatePersonStructuredData()),
+				}}
+			/>
+
 			{/* Hero */}
 			<HeroSection />
 
 			{/* Credential bar */}
 			<section className="border-t border-b border-[rgba(var(--color-border),0.08)] py-5 px-5 md:px-10">
-				<div className="max-w-[1200px] mx-auto flex flex-wrap justify-center items-center gap-3 font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-foreground),0.45)]">
+				<div className="max-w-[1200px] mx-auto flex flex-col items-center gap-2 md:flex-row md:flex-wrap md:justify-center md:gap-3 font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-foreground),0.65)]">
 					{[
 						"Y Combinator (W15)",
 						"Techstars (JPM/24)",
@@ -114,13 +123,13 @@ export default async function Home() {
 										: ""
 								}`}
 							>
-								<span className="block mb-4 font-[family-name:var(--font-mono)] text-[11px] text-[rgba(var(--color-accent),0.3)]">
+								<span className="block mb-4 font-[family-name:var(--font-mono)] text-[11px] text-[rgba(var(--color-accent),0.75)]">
 									{item.num}
 								</span>
-								<h3 className="font-[family-name:var(--font-display)] text-[28px] font-bold mb-3">
+								<h2 className="font-[family-name:var(--font-display)] text-[28px] font-bold mb-3">
 									{item.title}
-								</h3>
-								<p className="text-[13px] leading-[1.7] text-[rgba(var(--color-foreground),0.45)]">
+								</h2>
+								<p className="text-[13px] leading-[1.7] text-[rgba(var(--color-foreground),0.65)]">
 									{item.desc}
 								</p>
 							</Link>
@@ -137,27 +146,32 @@ export default async function Home() {
 							Writing
 						</h2>
 						<Link
-							href="/thinking"
-							className="font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-accent),0.3)] hover:text-[rgb(var(--color-accent))] transition-colors"
+							href="/writing"
+							className="font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-accent),0.75)] hover:text-[rgb(var(--color-accent))] transition-colors"
 						>
 							ALL POSTS &rarr;
 						</Link>
 					</div>
 
+					{posts.length === 0 && (
+						<p className="text-sm text-[rgba(var(--color-foreground),0.65)]">
+							No posts right now — check back soon.
+						</p>
+					)}
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 						{posts.map((post) => (
 							<Link
 								key={post.id}
-								href={`/thinking/about/${post.category.toLowerCase()}/${post.slug}`}
+								href={`/writing/about/${post.category.toLowerCase()}/${post.slug}`}
 								className="p-8 bg-[rgb(var(--color-background-alt))] rounded-lg border border-[rgba(var(--color-border),0.06)] transition-all duration-300 hover:border-[rgba(var(--color-border),0.2)] hover:-translate-y-1"
 							>
-								<span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.15em] text-[rgba(var(--color-accent),0.3)] uppercase">
+								<span className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.15em] text-[rgba(var(--color-accent),0.75)] uppercase">
 									{post.category}
 								</span>
 								<h3 className="font-[family-name:var(--font-display)] text-lg font-bold mt-3 leading-snug">
 									{post.title}
 								</h3>
-								<p className="text-xs leading-relaxed text-[rgba(var(--color-foreground),0.45)] mt-2.5">
+								<p className="text-xs leading-relaxed text-[rgba(var(--color-foreground),0.65)] mt-2.5">
 									{post.excerpt}
 								</p>
 							</Link>
@@ -167,21 +181,27 @@ export default async function Home() {
 			</section>
 
 			{/* Photo + quote band */}
-			<section className="relative h-[400px] md:h-[400px] overflow-hidden">
-				{/* eslint-disable-next-line @next/next/no-img-element */}
-				<img
+			<section className="relative h-[400px] overflow-hidden">
+				<Image
 					src="/images/doug-nyc.jpg"
-					alt="NYC Skyline"
-					className="absolute inset-0 w-full h-full object-cover sepia-[0.4] saturate-[0.6] brightness-[0.35] hue-rotate-[10deg]"
+					alt="Doug Rogers overlooking the New York City skyline at dusk"
+					fill
+					sizes="100vw"
+					className="object-cover sepia-[0.4] saturate-[0.6] brightness-[0.35] hue-rotate-[10deg]"
 				/>
 				<div className="absolute inset-0 bg-gradient-to-r from-[rgba(10,14,26,0.7)] to-[rgba(10,14,26,0.3)]" />
 				<div className="relative z-10 h-full flex items-center px-5 md:px-12 max-w-[1200px] mx-auto">
-					<p className="font-[family-name:var(--font-display)] text-[clamp(28px,3.5vw,44px)] font-bold leading-[1.3] max-w-[600px]">
-						&ldquo;It&apos;s not how many mistakes you make.{" "}
-						<span className="text-[rgb(var(--color-accent))]">
-							It&apos;s how many you don&apos;t make twice.&rdquo;
-						</span>
-					</p>
+					<div>
+						<p className="font-[family-name:var(--font-display)] text-[clamp(28px,3.5vw,44px)] font-bold leading-[1.3] max-w-[600px]">
+							&ldquo;It&apos;s not how many mistakes you make.{" "}
+							<span className="text-[rgb(var(--color-accent))]">
+								It&apos;s how many you don&apos;t make twice.&rdquo;
+							</span>
+						</p>
+						<p className="mt-4 font-[family-name:var(--font-mono)] text-xs tracking-[0.15em] text-[rgba(var(--color-foreground),0.65)]">
+							— doug, repeatedly
+						</p>
+					</div>
 				</div>
 			</section>
 
@@ -193,7 +213,7 @@ export default async function Home() {
 						something great.
 					</span>
 				</p>
-				<p className="text-sm text-[rgba(var(--color-foreground),0.45)] mb-8">
+				<p className="text-sm text-[rgba(var(--color-foreground),0.65)] mb-8">
 					Got an idea? Already building? Let&apos;s talk.
 				</p>
 				<Link href="/connecting" className="btn-primary">

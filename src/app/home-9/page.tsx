@@ -13,9 +13,9 @@ import Link from "next/link"
  */
 
 const ARTICLES = [
-	{ title: "AI Slop Will Eat Itself", category: "Technology", href: "/thinking/about/technology/ai-slop-will-eat-itself", summary: "What happens when AI-generated content becomes AI training data? A feedback loop that degrades everything." },
-	{ title: "Planner/Executor: A Systematic Approach to LLM-Guided Development", category: "Development", href: "/thinking/about/development/plannerexecutor-a-systematic-approach-to-llm-guided-development", summary: "LLMs need role clarity to excel. Explicit role separation prevents the chaos of planning and executing simultaneously." },
-	{ title: "Introducing the Migraine Trigger Foods Database", category: "Lifestyle", href: "/thinking/about/lifestyle/introducing-the-migraine-trigger-foods-database-mtfdb", summary: "A database of foods and ingredients that can trigger migraines. I get migraines, so I built this to figure out what to avoid." },
+	{ title: "AI Slop Will Eat Itself", category: "Technology", href: "/writing/about/technology/ai-slop-will-eat-itself", summary: "What happens when AI-generated content becomes AI training data? A feedback loop that degrades everything." },
+	{ title: "Planner/Executor: A Systematic Approach to LLM-Guided Development", category: "Development", href: "/writing/about/development/plannerexecutor-a-systematic-approach-to-llm-guided-development", summary: "LLMs need role clarity to excel. Explicit role separation prevents the chaos of planning and executing simultaneously." },
+	{ title: "Introducing the Migraine Trigger Foods Database", category: "Lifestyle", href: "/writing/about/lifestyle/introducing-the-migraine-trigger-foods-database-mtfdb", summary: "A database of foods and ingredients that can trigger migraines. I get migraines, so I built this to figure out what to avoid." },
 ]
 
 function TerminalText() {
@@ -194,7 +194,7 @@ export default function Home9() {
 					<div className="h9-nav-links" style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", letterSpacing: "0.1em" }}>
 						<span style={{ color: "var(--cream-dim)", marginRight: "8px" }}>doug.is...</span>
 						{["advising", "building", "investing", "writing"].map(item => (
-							<Link key={item} href={item === "writing" ? "/thinking" : `/${item}`} style={{
+							<Link key={item} href={item === "writing" ? "/writing" : `/${item}`} style={{
 								color: "var(--cream-dim)",
 								transition: "color 0.2s",
 								padding: "0 6px",
@@ -315,7 +315,7 @@ export default function Home9() {
 								onMouseEnter={e => { (e.target as HTMLElement).style.background = "#e0b55e"; (e.target as HTMLElement).style.transform = "translateY(-2px)"; }}
 								onMouseLeave={e => { (e.target as HTMLElement).style.background = "#d4a853"; (e.target as HTMLElement).style.transform = "translateY(0)"; }}
 								>Get in Touch</Link>
-								<Link href="/thinking" style={{
+								<Link href="/writing" style={{
 									padding: "14px 32px",
 									border: "1px solid var(--amber-dim)",
 									color: "var(--amber)",
@@ -413,7 +413,7 @@ export default function Home9() {
 								fontFamily: "'Playfair Display', Georgia, serif",
 								fontSize: "32px", fontWeight: 700,
 							}}>Writing</h2>
-							<Link href="/thinking" style={{ fontSize: "12px", letterSpacing: "0.1em", color: "var(--amber-dim)", transition: "color 0.2s" }}
+							<Link href="/writing" style={{ fontSize: "12px", letterSpacing: "0.1em", color: "var(--amber-dim)", transition: "color 0.2s" }}
 							onMouseEnter={e => (e.target as HTMLElement).style.color = "#d4a853"}
 							onMouseLeave={e => (e.target as HTMLElement).style.color = "rgba(212,168,83,0.3)"}
 							>ALL POSTS →</Link>

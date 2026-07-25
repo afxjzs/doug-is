@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 		type: "website",
 		images: [
 			{
-				url: "https://doug.is/images/investing.jpg",
+				url: "https://doug.is/images/projects/doug-is.png",
 				width: 1200,
 				height: 630,
 				alt: "Investing - doug.is",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 		title: "doug.is / Investing",
 		description:
 			"Investment thesis, portfolio companies, and investment opportunities I'm exploring.",
-		images: ["https://doug.is/images/investing.jpg"],
+		images: ["https://doug.is/images/projects/doug-is.png"],
 		creator: "@doug__is",
 	},
 	alternates: {
