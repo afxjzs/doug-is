@@ -124,6 +124,31 @@ describe("TerminalText interactive prompt", () => {
 		expect(input.value).toBe("help")
 	})
 
+	it("lets Tab leave the terminal when there is nothing to complete (no keyboard trap)", () => {
+		const { input } = setup()
+		// fireEvent returns false when preventDefault was called — a
+		// prevented Tab on uncompletable input would trap keyboard users.
+		expect(fireEvent.keyDown(input, { key: "Tab" })).toBe(true)
+		fireEvent.change(input, { target: { value: "zzz" } })
+		expect(fireEvent.keyDown(input, { key: "Tab" })).toBe(true)
+	})
+
+	it("never intercepts Shift+Tab", () => {
+		const { input } = setup()
+		fireEvent.change(input, { target: { value: "he" } })
+		expect(
+			fireEvent.keyDown(input, { key: "Tab", shiftKey: true })
+		).toBe(true)
+		expect(input.value).toBe("he")
+	})
+
+	it("Escape blurs the terminal input", () => {
+		const { input } = setup()
+		input.focus()
+		fireEvent.keyDown(input, { key: "Escape" })
+		expect(document.activeElement).not.toBe(input)
+	})
+
 	it("clear wipes the screen including the intro", () => {
 		const { input, container } = setup()
 		run(input, "help")

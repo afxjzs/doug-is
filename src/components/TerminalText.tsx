@@ -258,10 +258,21 @@ export default function TerminalText({ onIntroDone }: TerminalTextProps = {}) {
 			return
 		}
 
+		// Tab must never trap keyboard users (WCAG 2.1.2): intercept only
+		// when it actually completes something, never on Shift+Tab, and let
+		// it move focus naturally otherwise.
 		if (e.key === "Tab") {
-			e.preventDefault()
+			if (e.shiftKey) return
 			const completed = completeInput(value)
-			if (completed) setValue(completed)
+			if (completed && completed !== value) {
+				e.preventDefault()
+				setValue(completed)
+			}
+			return
+		}
+
+		if (e.key === "Escape") {
+			inputRef.current?.blur()
 			return
 		}
 
