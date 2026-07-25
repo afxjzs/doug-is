@@ -6,6 +6,11 @@
 
 @import "tailwindcss";
 
+/* Tailwind v4 ignores tailwind.config.ts plugins without an explicit
+   directive — without this line every prose-* class in the post reading
+   experience is dead code. */
+@plugin "@tailwindcss/typography";
+
 /* ============================================
    Design Tokens — Terminal Palette
    ============================================ */

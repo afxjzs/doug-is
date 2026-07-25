@@ -89,7 +89,8 @@ describe("BuildingPage - Oil Price Ticker", () => {
 	})
 
 	it("positions Oil Price Ticker after Hopping List project", () => {
-		const projectTitles = screen.getAllByRole("heading", { level: 2 })
+		// Project card titles are h3 (nested under the h2 "Projects" section)
+		const projectTitles = screen.getAllByRole("heading", { level: 3 })
 		const projectNames = projectTitles.map((title) => title.textContent)
 
 		const hoppingListIndex = projectNames.indexOf("Hopping List")

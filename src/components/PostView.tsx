@@ -92,7 +92,7 @@ export const PostView: FC<PostViewProps> = ({ post, isDraft = false }) => {
 
 			<header className="mb-8">
 				<h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-				<div className="flex items-center text-[rgba(var(--color-foreground),0.45)] mb-4">
+				<div className="flex items-center text-[rgba(var(--color-foreground),0.65)] mb-4">
 					<time dateTime={post.published_at || post.created_at || ""}>
 						{formattedDate}
 					</time>

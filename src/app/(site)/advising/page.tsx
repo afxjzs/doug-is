@@ -496,7 +496,8 @@ export default async function AdvisingPage() {
 				<ConnectCta
 					title="Want to talk it through?"
 					description="If any of this sounds relevant to what you're working on, grab a time and let's chat. No pitch deck required."
-					buttonText="Get in Touch"
+					buttonText="Grab a Time"
+					buttonHref="https://cal.com/afxjzs/startups"
 				/>
 			</div>
 		</div>
