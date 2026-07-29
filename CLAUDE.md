@@ -42,9 +42,18 @@ npm run test:coverage      # Coverage report -> coverage/lcov-report/index.html
 npm test -- src/components/__tests__/StatusMessage.test.tsx
 npm test -- --testNamePattern="Metadata"
 
-# Local Supabase (Docker): Studio :54323, API :54321, DB :54322
+# Local Supabase (Docker): API :54331, DB :54332, Studio :54333 (see supabase/config.toml).
+# NOT the Supabase defaults (5432x) — those belong to other local projects on this machine.
 supabase start | stop | status
-./scripts/reset-local-supabase.sh   # Full local rebuild: containers + migrations + CSV import
+
+node scripts/backup-data.js         # Pull production posts + migraine_triggers to backups/*.csv.
+                                    # Requires SUPABASE_SERVICE_ROLE_KEY (anon can't see drafts).
+                                    # Verifies row counts; exits non-zero rather than writing a
+                                    # partial backup. --allow-anon opts into published-only.
+./scripts/reset-local-supabase.sh   # Full local rebuild: containers + migrations + CSV import.
+                                    # DESTRUCTIVE: drops all doug-is containers and volumes, then
+                                    # TRUNCATEs posts/migraine_triggers before loading the newest
+                                    # CSV in backups/. Scoped to project-id doug-is only.
 ```
 
 - Dev runs on **port 3000**; the conventional dev URL is **`local.doug.is:3000`** (not `localhost`).

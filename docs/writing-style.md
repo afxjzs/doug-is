@@ -48,7 +48,9 @@ swapped for a common one without losing meaning, do it.
   parentheses. (This repo's owner: no em dashes.)
 - **Bold sprinkled everywhere.** Emphasis loses force when every other phrase is
   bold. Bold sparingly, if at all.
-- **Title Case Headings.** Use sentence case.
+- **Heading case.** Title Case, matching every existing post on the site.
+  Wikipedia's guide lists Title Case as an AI tell; here it's the house style and
+  predates the bots. Consistency across the catalog wins.
 - **Inline-header lists** ("• **Thing**: description") where flowing prose reads
   better. Use a list only for genuinely list-shaped content.
 
