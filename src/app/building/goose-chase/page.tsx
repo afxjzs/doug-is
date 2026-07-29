@@ -33,7 +33,7 @@ export default function GooseChasePage() {
 				>
 					← Back to Building
 				</Link>
-				<h1 className="text-4xl font-bold gradient-heading mb-4">
+				<h1 className="text-4xl font-bold display-heading mb-4">
 					Goose Chase
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)] mb-6">

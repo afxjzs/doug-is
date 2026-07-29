@@ -56,7 +56,7 @@ export default async function StuffIndexPage() {
 				>
 					← Back to Projects
 				</Link>
-				<h1 className="text-4xl font-bold gradient-heading mb-4">Stuff</h1>
+				<h1 className="text-4xl font-bold display-heading mb-4">Stuff</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
 					Small standalone things I&apos;ve made — interactive charts,
 					experiments, and one-off pages.

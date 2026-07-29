@@ -107,7 +107,7 @@ export default function OilPriceTickerPage() {
 				{/* Hero Section */}
 				<div className="mb-16">
 					<div className="mb-8">
-						<h1 className="text-5xl font-bold gradient-heading mb-6">
+						<h1 className="text-5xl font-bold display-heading mb-6">
 							Oil Price Ticker
 						</h1>
 						<p className="text-xl text-[rgba(var(--color-foreground),0.8)] max-w-2xl leading-relaxed">
@@ -179,7 +179,7 @@ export default function OilPriceTickerPage() {
 
 				{/* Key Features Section */}
 				<div className="mb-16">
-					<h2 className="text-3xl font-bold gradient-heading mb-8 text-center">
+					<h2 className="text-3xl font-bold display-heading mb-8 text-center">
 						Key Features
 					</h2>
 					<div className="grid md:grid-cols-3 gap-8">
@@ -259,7 +259,7 @@ export default function OilPriceTickerPage() {
 
 				{/* Screenshots Section */}
 				<div className="mb-16">
-					<h2 className="text-3xl font-bold gradient-heading mb-8 text-center">
+					<h2 className="text-3xl font-bold display-heading mb-8 text-center">
 						Screenshots
 					</h2>
 					<div className="grid md:grid-cols-2 gap-8">
@@ -297,7 +297,7 @@ export default function OilPriceTickerPage() {
 
 				{/* Technical Details Section */}
 				<div className="mb-16">
-					<h2 className="text-3xl font-bold gradient-heading mb-8 text-center">
+					<h2 className="text-3xl font-bold display-heading mb-8 text-center">
 						Technical Requirements
 					</h2>
 					<div className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] rounded-xl p-8">
@@ -413,7 +413,7 @@ export default function OilPriceTickerPage() {
 
 				{/* Call to Action */}
 				<div className="text-center">
-					<h2 className="text-3xl font-bold gradient-heading mb-6">
+					<h2 className="text-3xl font-bold display-heading mb-6">
 						Ready to track oil prices?
 					</h2>
 					<p className="text-lg text-[rgba(var(--color-foreground),0.7)] mb-8 max-w-2xl mx-auto">

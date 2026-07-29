@@ -49,7 +49,7 @@ export default function AttributingPage() {
 
 	return (
 		<div className="max-w-4xl mx-auto py-12 px-4">
-			<h1 className="gradient-heading text-4xl md:text-5xl mb-8 text-center">
+			<h1 className="display-heading text-4xl md:text-5xl mb-8 text-center">
 				Attributions
 			</h1>
 

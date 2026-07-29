@@ -280,7 +280,7 @@
    ============================================ */
 @layer components {
 	/* Headings */
-	.gradient-heading {
+	.display-heading {
 		color: rgb(var(--color-foreground));
 		font-family: var(--font-display, 'Playfair Display', Georgia, serif);
 	}

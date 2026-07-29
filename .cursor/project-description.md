@@ -316,7 +316,7 @@ Defined in globals.css with RGB values for easy opacity adjustments:
 - **Backdrop Effects**: Multiple layered background effects (grid, noise, scanlines)
 
 ### Key CSS Classes
-- `gradient-heading`: For gradient text headings
+- `display-heading`: Display-font (serif) headings, solid foreground color (formerly `gradient-heading`)
 - `gradient-text-[color]`: For colored gradient text
 - `neon-[color]`: For text with neon glow effects
 - `dark-card`: For card components with hover effects

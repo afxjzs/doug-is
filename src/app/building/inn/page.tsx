@@ -47,7 +47,7 @@ export default function InnPage() {
 				<Link href="/building" className="text-[rgb(var(--color-accent))] hover:text-[rgb(var(--color-accent-secondary))] transition-colors mb-4 inline-block">
 					← Back to Projects
 				</Link>
-				<h1 className="text-4xl font-bold gradient-heading mb-4">
+				<h1 className="text-4xl font-bold display-heading mb-4">
 					Inn Ruby Gem
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
@@ -145,7 +145,7 @@ export default function InnPage() {
 			</div>
 
 			<div className="mb-12">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">
+				<h2 className="text-2xl font-semibold display-heading mb-6">
 					Project Overview
 				</h2>
 				<div className="dark-card">
@@ -164,7 +164,7 @@ export default function InnPage() {
 			</div>
 
 			<div className="mb-12">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">
+				<h2 className="text-2xl font-semibold display-heading mb-6">
 					Usage Example
 				</h2>
 				<div className="dark-card">
@@ -197,7 +197,7 @@ beatles.include? musician2  # => false`}
 			</div>
 
 			<div className="mb-12">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">
+				<h2 className="text-2xl font-semibold display-heading mb-6">
 					Development Journey
 				</h2>
 				<div className="dark-card">

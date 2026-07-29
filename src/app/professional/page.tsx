@@ -11,7 +11,7 @@ export default function ProfessionalPage() {
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-12">
-				<h1 className="text-4xl font-bold gradient-heading mb-4">
+				<h1 className="text-4xl font-bold display-heading mb-4">
 					doug.is/professional
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
@@ -31,7 +31,7 @@ export default function ProfessionalPage() {
 			</div>
 
 			<div className="mb-12">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">
+				<h2 className="text-2xl font-semibold display-heading mb-6">
 					Professional Summary
 				</h2>
 				<div className="dark-card">
@@ -50,7 +50,7 @@ export default function ProfessionalPage() {
 			</div>
 
 			<div className="mb-12">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">
+				<h2 className="text-2xl font-semibold display-heading mb-6">
 					Work Experience
 				</h2>
 
@@ -159,7 +159,7 @@ export default function ProfessionalPage() {
 			</div>
 
 			<div className="mb-12">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">
+				<h2 className="text-2xl font-semibold display-heading mb-6">
 					Education
 				</h2>
 				<div className="dark-card mb-6">
@@ -196,7 +196,7 @@ export default function ProfessionalPage() {
 			</div>
 
 			<div className="mb-12">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">Skills</h2>
+				<h2 className="text-2xl font-semibold display-heading mb-6">Skills</h2>
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 					<div className="dark-card">
 						<h3 className="text-xl font-semibold mb-4">

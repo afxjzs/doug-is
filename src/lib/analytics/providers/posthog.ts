@@ -27,6 +27,14 @@ export class PostHogProvider implements AnalyticsProvider {
 			return
 		}
 
+		// posthog-js is a module-level singleton: if another provider instance
+		// (StrictMode double-mount, HMR) already loaded it, re-calling init only
+		// logs "You have already initialized PostHog!" — adopt it instead.
+		if (posthog.__loaded) {
+			this.initialized = true
+			return
+		}
+
 		if (!this.apiKey) {
 			console.error(
 				"🚨 PostHog CRITICAL: API key not found in environment variables"
