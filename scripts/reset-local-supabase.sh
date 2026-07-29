@@ -7,6 +7,7 @@ BACKUP_DIR="backups"
 SKIP_IMPORT="false"
 POSTS_FILE=""
 TRIGGERS_FILE=""
+ALLOW_MISMATCH="false"
 
 print_usage() {
 	echo "Usage: ./scripts/reset-local-supabase.sh [options]"
@@ -19,6 +20,9 @@ print_usage() {
 	echo "  --posts-file <file>      Explicit posts CSV file path"
 	echo "  --triggers-file <file>   Explicit migraine_triggers CSV file path"
 	echo "  --skip-import            Skip CSV data import step"
+	echo "  --allow-mismatched-backups"
+	echo "                           Permit posts and migraine_triggers CSVs from"
+	echo "                           different backup runs (normally an error)"
 	echo "  --help                   Show this help text"
 }
 
@@ -44,6 +48,10 @@ while [[ $# -gt 0 ]]; do
 			SKIP_IMPORT="true"
 			shift
 			;;
+		--allow-mismatched-backups)
+			ALLOW_MISMATCH="true"
+			shift
+			;;
 		--help)
 			print_usage
 			exit 0
@@ -67,6 +75,104 @@ require_command() {
 require_command docker
 require_command supabase
 require_command psql
+
+# Resolve and validate the backup CSVs BEFORE anything destructive runs.
+# Everything below this block tears down containers, deletes volumes, and
+# TRUNCATEs tables. Discovering a missing, mismatched, or wrong-shaped backup
+# after that point would leave a wiped local database and nothing to load into
+# it, so every check that can fail cheaply happens here first.
+if [[ "$SKIP_IMPORT" != "true" ]]; then
+	if [[ -z "$POSTS_FILE" ]]; then
+		shopt -s nullglob
+		posts_matches=( "$BACKUP_DIR"/posts_*.csv )
+		shopt -u nullglob
+		if (( ${#posts_matches[@]} == 0 )); then
+			echo "No posts backup file found in ${BACKUP_DIR}"
+			exit 1
+		fi
+		POSTS_FILE="$(ls -t "${posts_matches[@]}" | sed -n '1p')"
+	fi
+
+	if [[ -z "$TRIGGERS_FILE" ]]; then
+		shopt -s nullglob
+		triggers_matches=( "$BACKUP_DIR"/migraine_triggers_*.csv )
+		shopt -u nullglob
+		if (( ${#triggers_matches[@]} == 0 )); then
+			echo "No migraine_triggers backup file found in ${BACKUP_DIR}"
+			exit 1
+		fi
+		TRIGGERS_FILE="$(ls -t "${triggers_matches[@]}" | sed -n '1p')"
+	fi
+
+	if [[ ! -f "$POSTS_FILE" ]]; then
+		echo "Posts CSV file not found: $POSTS_FILE"
+		exit 1
+	fi
+
+	if [[ ! -f "$TRIGGERS_FILE" ]]; then
+		echo "Migraine triggers CSV file not found: $TRIGGERS_FILE"
+		exit 1
+	fi
+
+	# The two CSVs are selected independently by mtime, so a backup run that
+	# failed part-way (or a --skip=<table> run) leaves a fresh file for one
+	# table beside a months-old file for the other. Loading that pair produces
+	# a local database matching no actual state of production. backup-data.js
+	# stamps every file in a run with the same timestamp, so requiring a match
+	# catches it.
+	posts_stamp="$(basename "$POSTS_FILE" .csv)"
+	posts_stamp="${posts_stamp#posts_}"
+	triggers_stamp="$(basename "$TRIGGERS_FILE" .csv)"
+	triggers_stamp="${triggers_stamp#migraine_triggers_}"
+
+	if [[ "$posts_stamp" != "$triggers_stamp" ]]; then
+		echo ""
+		echo "ERROR: the two backup CSVs come from different backup runs."
+		echo "  posts:             ${POSTS_FILE}  (${posts_stamp})"
+		echo "  migraine_triggers: ${TRIGGERS_FILE}  (${triggers_stamp})"
+		echo ""
+		echo "Importing these together gives you a local database matching no real"
+		echo "state of production. Re-run 'node scripts/backup-data.js' to refresh"
+		echo "both, pass explicit --posts-file/--triggers-file, or if the mismatch"
+		echo "is intentional, re-run with --allow-mismatched-backups."
+
+		if [[ "$ALLOW_MISMATCH" != "true" ]]; then
+			exit 1
+		fi
+
+		echo ""
+		echo "==> --allow-mismatched-backups given; continuing with mismatched vintages."
+	fi
+
+	# Take the posts column list from the CSV header rather than hardcoding it.
+	# \copy matches by position, not by name, so a hardcoded list silently rots
+	# every time the production schema gains a column (this is how the list fell
+	# behind the `status` column). Reading the header keeps the two in step; if
+	# production has a column the local migrations lack, \copy fails loudly.
+	POSTS_COLUMNS="$(head -1 "$POSTS_FILE" | tr -d '\r')"
+
+	if [[ -z "$POSTS_COLUMNS" ]]; then
+		echo "ERROR: could not read a column header from ${POSTS_FILE}"
+		exit 1
+	fi
+
+	# migraine_triggers cannot use the same trick: its rows go through a
+	# transform INSERT below that maps specific columns by name into Postgres
+	# arrays. Assert the header still matches what that INSERT expects, so a
+	# schema change stops the import instead of quietly loading wrong columns.
+	TRIGGERS_COLUMNS="$(head -1 "$TRIGGERS_FILE" | tr -d '\r')"
+	EXPECTED_TRIGGERS_COLUMNS="food,trigger,reason,categories,chemical_triggers,source,notes,id,created_at,updated_at"
+
+	if [[ "$TRIGGERS_COLUMNS" != "$EXPECTED_TRIGGERS_COLUMNS" ]]; then
+		echo "ERROR: migraine_triggers CSV header does not match the import transform."
+		echo "  expected: ${EXPECTED_TRIGGERS_COLUMNS}"
+		echo "  found:    ${TRIGGERS_COLUMNS}"
+		echo "Update the transform INSERT in this script before importing."
+		exit 1
+	fi
+
+	echo "==> Backup CSVs validated. Proceeding with reset."
+fi
 
 echo "==> Checking Docker availability..."
 docker ps >/dev/null
@@ -110,44 +216,13 @@ if [[ "$SKIP_IMPORT" == "true" ]]; then
 	exit 0
 fi
 
-if [[ -z "$POSTS_FILE" ]]; then
-	shopt -s nullglob
-	posts_matches=( "$BACKUP_DIR"/posts_*.csv )
-	shopt -u nullglob
-	if (( ${#posts_matches[@]} == 0 )); then
-		echo "No posts backup file found in ${BACKUP_DIR}"
-		exit 1
-	fi
-	POSTS_FILE="$(ls -t "${posts_matches[@]}" | sed -n '1p')"
-fi
-
-if [[ -z "$TRIGGERS_FILE" ]]; then
-	shopt -s nullglob
-	triggers_matches=( "$BACKUP_DIR"/migraine_triggers_*.csv )
-	shopt -u nullglob
-	if (( ${#triggers_matches[@]} == 0 )); then
-		echo "No migraine_triggers backup file found in ${BACKUP_DIR}"
-		exit 1
-	fi
-	TRIGGERS_FILE="$(ls -t "${triggers_matches[@]}" | sed -n '1p')"
-fi
-
-if [[ ! -f "$POSTS_FILE" ]]; then
-	echo "Posts CSV file not found: $POSTS_FILE"
-	exit 1
-fi
-
-if [[ ! -f "$TRIGGERS_FILE" ]]; then
-	echo "Migraine triggers CSV file not found: $TRIGGERS_FILE"
-	exit 1
-fi
-
 echo "==> Importing posts from: ${POSTS_FILE}"
 echo "==> Importing migraine_triggers from: ${TRIGGERS_FILE}"
+echo "==> Posts columns from CSV header: ${POSTS_COLUMNS}"
 
 psql "postgresql://postgres:postgres@127.0.0.1:54332/postgres" -v ON_ERROR_STOP=1 \
 	-c "TRUNCATE TABLE public.posts RESTART IDENTITY CASCADE;" \
-	-c "\\copy public.posts (id,title,slug,content,published_at,created_at,updated_at,category,excerpt,featured_image) FROM '${POSTS_FILE}' WITH (FORMAT csv, HEADER true)" \
+	-c "\\copy public.posts (${POSTS_COLUMNS}) FROM '${POSTS_FILE}' WITH (FORMAT csv, HEADER true)" \
 	-c "CREATE TEMP TABLE tmp_migraine_import (food text, trigger text, reason text, categories text, chemical_triggers text, source text, notes text, id text, created_at text, updated_at text);" \
 	-c "\\copy tmp_migraine_import (food,trigger,reason,categories,chemical_triggers,source,notes,id,created_at,updated_at) FROM '${TRIGGERS_FILE}' WITH (FORMAT csv, HEADER true)" \
 	-c "TRUNCATE TABLE public.migraine_triggers RESTART IDENTITY;" \

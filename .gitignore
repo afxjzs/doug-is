@@ -42,3 +42,7 @@ next-env.d.ts
 
 # gstack (local skill state)
 .gstack/
+
+# database backups (this repo is public — these CSVs contain the full body text
+# of unpublished idea/draft posts). Regenerate with: node scripts/backup-data.js
+backups/
