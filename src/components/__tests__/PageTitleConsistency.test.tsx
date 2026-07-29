@@ -142,7 +142,7 @@ describe("Page Title Consistency", () => {
 			})
 
 			const heading = screen.getByRole("heading", { level: 1 })
-			expect(heading).toHaveTextContent("doug.is/writing")
+			expect(heading).toHaveTextContent("Writing")
 
 			// The mocked data layer should have produced real article content.
 			expect(
