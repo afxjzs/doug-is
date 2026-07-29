@@ -53,12 +53,22 @@ describe("PublishButton", () => {
 		})
 	})
 
-	it("renders publish button with correct styling", () => {
+	it("looks like a button: visible label, border, and a defined color", () => {
 		render(<PublishButton {...defaultProps} />)
 
 		const button = screen.getByRole("button", { name: /publish now/i })
 		expect(button).toBeInTheDocument()
-		expect(button).toHaveClass("text-[rgba(var(--color-green),1)]")
+
+		// The label must be visible text, not sr-only — the icon-only ghost
+		// circle read as decoration, not an action.
+		const label = screen.getByText("Publish Now")
+		expect(label).not.toHaveClass("sr-only")
+		expect(button.className).toContain("border")
+
+		// --color-green is defined in no stylesheet (the old class computed an
+		// invalid color); emerald is the admin palette's defined green.
+		expect(button.className).not.toContain("--color-green")
+		expect(button.className).toContain("--color-emerald")
 	})
 
 	it("shows loading spinner when publishing", async () => {

@@ -48,12 +48,12 @@ export default function PublishButton({
 			<button
 				onClick={handlePublish}
 				disabled={isPublishing}
-				className="p-2 rounded-md text-[rgba(var(--color-green),1)] hover:bg-[rgba(var(--color-green),0.1)] disabled:opacity-50 disabled:cursor-not-allowed"
+				className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-[rgba(var(--color-emerald),0.4)] text-[rgb(var(--color-emerald))] text-sm font-medium hover:bg-[rgba(var(--color-emerald),0.12)] disabled:opacity-50 disabled:cursor-not-allowed"
 				title="Publish Now"
 			>
 				{isPublishing ? (
 					<svg
-						className="animate-spin h-5 w-5"
+						className="animate-spin h-4 w-4"
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
 						viewBox="0 0 24 24"
@@ -75,7 +75,7 @@ export default function PublishButton({
 				) : (
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						className="h-5 w-5"
+						className="h-4 w-4"
 						viewBox="0 0 20 20"
 						fill="currentColor"
 						aria-hidden="true"
@@ -87,11 +87,9 @@ export default function PublishButton({
 						/>
 					</svg>
 				)}
-				<span className="sr-only">Publish Now</span>
+				<span>Publish Now</span>
 			</button>
-			{error && (
-				<span className="text-sm text-[rgba(var(--color-red),1)]">{error}</span>
-			)}
+			{error && <span className="text-sm text-red-400">{error}</span>}
 		</div>
 	)
 }

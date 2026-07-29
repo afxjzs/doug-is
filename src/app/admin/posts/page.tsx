@@ -55,10 +55,7 @@ export default async function AdminPostsPage() {
 		<div>
 			<div className="flex justify-between items-center mb-6">
 				<h1 className="text-3xl font-bold">Posts Management</h1>
-				<Link
-					href="/admin/posts/new"
-					className="bg-gradient-to-r from-purple-600 to-cyan-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-cyan-700 transition-all duration-200"
-				>
+				<Link href="/admin/posts/new" className="btn-primary">
 					New Post
 				</Link>
 			</div>
