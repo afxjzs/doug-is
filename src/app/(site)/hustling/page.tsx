@@ -13,7 +13,7 @@ export default function HustlingPage() {
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-12">
-				<h1 className="text-4xl font-bold gradient-heading mb-4">Hey...</h1>
+				<h1 className="text-4xl font-bold display-heading mb-4">Hey...</h1>
 				{/* <p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
 					About me, my work, and how to get in touch.
 				</p> */}
@@ -35,7 +35,7 @@ export default function HustlingPage() {
 					</p>
 				</div>
 				<div>
-					<h2 className="text-2xl font-semibold gradient-heading mb-4">
+					<h2 className="text-2xl font-semibold display-heading mb-4">
 						About Me
 					</h2>
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
@@ -54,7 +54,7 @@ export default function HustlingPage() {
 			</div>
 
 			<div className="bg-[rgba(var(--color-foreground),0.02)] border border-[rgba(var(--color-foreground),0.05)] p-8 rounded-lg mb-16">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">
+				<h2 className="text-2xl font-semibold display-heading mb-6">
 					What I Do
 				</h2>
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">

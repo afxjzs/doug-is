@@ -21,7 +21,7 @@ export default function RedesignIndex() {
 				<p className="text-lg text-[rgba(var(--color-foreground),0.7)] mb-2">
 					doug.is/redesign
 				</p>
-				<h1 className="text-4xl font-bold gradient-heading mb-4">
+				<h1 className="text-4xl font-bold display-heading mb-4">
 					Homepage Redesign
 				</h1>
 				<p className="text-[rgba(var(--color-foreground),0.6)]">

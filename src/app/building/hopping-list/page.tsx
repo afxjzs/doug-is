@@ -49,7 +49,7 @@ export default function HoppingListPage() {
 				<Link href="/building" className="text-[rgb(var(--color-accent))] hover:text-[rgba(var(--color-accent),0.8)] transition-colors mb-4 inline-block">
 					← Back to Projects
 				</Link>
-				<h1 className="text-4xl font-bold gradient-heading mb-4">
+				<h1 className="text-4xl font-bold display-heading mb-4">
 					Hopping List
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
@@ -88,7 +88,7 @@ export default function HoppingListPage() {
 
 			{/* How to become a beta tester */}
 			<div className="mb-12">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">
+				<h2 className="text-2xl font-semibold display-heading mb-6">
 					How to Become a Beta Tester
 				</h2>
 				<div className="dark-card">
@@ -154,7 +154,7 @@ export default function HoppingListPage() {
 
 			{/* Features */}
 			<div className="mb-12">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">
+				<h2 className="text-2xl font-semibold display-heading mb-6">
 					Key Features
 				</h2>
 				<div className="dark-card">
@@ -197,7 +197,7 @@ export default function HoppingListPage() {
 			</div>
 
 			<div className="mb-12">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">
+				<h2 className="text-2xl font-semibold display-heading mb-6">
 					The Problem & Solution
 				</h2>
 				<div className="dark-card">
@@ -221,7 +221,7 @@ export default function HoppingListPage() {
 			</div>
 
 			<div className="mb-12">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">
+				<h2 className="text-2xl font-semibold display-heading mb-6">
 					Pain Points Solved
 				</h2>
 				<div className="dark-card">
@@ -249,7 +249,7 @@ export default function HoppingListPage() {
 			</div>
 
 			<div className="mb-12">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">
+				<h2 className="text-2xl font-semibold display-heading mb-6">
 					App Screenshots
 				</h2>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -334,7 +334,7 @@ export default function HoppingListPage() {
 
 			{/* Technical Details Section */}
 			<div className="mb-12">
-				<h2 className="text-2xl font-semibold gradient-heading mb-6">
+				<h2 className="text-2xl font-semibold display-heading mb-6">
 					Behind the App
 				</h2>
 				<div className="dark-card">

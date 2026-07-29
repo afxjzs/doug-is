@@ -32,7 +32,7 @@ export default function InvestingPage() {
 				<p className="font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-accent),0.75)] mb-2">
 					doug.is/investing
 				</p>
-				<h1 className="text-4xl font-bold gradient-heading mb-4">
+				<h1 className="text-4xl font-bold display-heading mb-4">
 					Founder-Focused Investments
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
@@ -42,7 +42,7 @@ export default function InvestingPage() {
 
 			<div className="mb-16">
 				<div className="p-8 border border-[rgba(var(--color-border),0.08)] rounded-lg bg-[rgba(var(--color-foreground),0.03)]">
-					<h2 className="text-2xl font-semibold gradient-heading mb-6">
+					<h2 className="text-2xl font-semibold display-heading mb-6">
 						Investment Philosophy
 					</h2>
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
@@ -75,7 +75,7 @@ export default function InvestingPage() {
 							</div>
 						</div>
 						<div className="md:w-2/3 p-6">
-							<h2 className="text-2xl font-semibold gradient-heading mb-4">
+							<h2 className="text-2xl font-semibold display-heading mb-4">
 								Current Investment Focus
 							</h2>
 							<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
@@ -103,7 +103,7 @@ export default function InvestingPage() {
 
 			<div className="mb-16">
 				<div className="p-8 border border-[rgba(var(--color-border),0.08)] rounded-lg bg-[rgba(var(--color-foreground),0.03)] text-center">
-					<h2 className="text-2xl font-semibold gradient-heading mb-4">
+					<h2 className="text-2xl font-semibold display-heading mb-4">
 						Discuss Your Startup
 					</h2>
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-8 max-w-lg mx-auto">

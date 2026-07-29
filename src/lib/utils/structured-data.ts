@@ -154,24 +154,3 @@ export function generatePersonStructuredData() {
 		],
 	}
 }
-
-/**
- * Generate Organization structured data for the site
- *
- * @returns JSON-LD structured data object
- */
-export function generateSiteStructuredData() {
-	return {
-		"@context": "https://schema.org",
-		"@type": "Organization",
-		name: "doug.is",
-		url: "https://doug.is",
-		description: "Engineer, Advisor, Investor",
-		sameAs: [
-			"https://twitter.com/douglasrogers",
-			"https://github.com/douglasrogers",
-			"https://linkedin.com/in/douglasrogers",
-		],
-		logo: "https://doug.is/images/doug-2024-cropped.png",
-	}
-}

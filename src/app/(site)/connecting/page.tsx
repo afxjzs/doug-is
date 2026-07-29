@@ -16,7 +16,7 @@ export default function ConnectingPage() {
 				<p className="font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-accent),0.75)] mb-2">
 					doug.is/connecting
 				</p>
-				<h1 className="text-4xl font-bold gradient-heading mb-4">
+				<h1 className="text-4xl font-bold display-heading mb-4">
 					Let's Connect
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">

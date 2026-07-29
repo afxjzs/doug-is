@@ -27,15 +27,23 @@ interface AnalyticsProviderProps {
  */
 export function AnalyticsProviderComponent({
 	children,
-	provider = new PostHogProvider(), // Default to PostHog, but allow injection
+	provider,
 }: AnalyticsProviderProps) {
+	// The default provider must be built lazily, once per mount: a default
+	// parameter value re-evaluates on every render, which rebuilt the provider
+	// each time — re-running posthog.init (console spam) and re-sending the
+	// analytics_initialized event (duplicate analytics).
+	const [analyticsProvider] = useState<AnalyticsProvider>(
+		() => provider ?? new PostHogProvider()
+	)
+
 	useEffect(() => {
 		// Initialize the analytics provider
-		provider.initialize()
+		analyticsProvider.initialize()
 
 		// Send a test event to verify PostHog is working
-		if (provider.isInitialized()) {
-			provider.trackEvent({
+		if (analyticsProvider.isInitialized()) {
+			analyticsProvider.trackEvent({
 				event: "analytics_initialized",
 				properties: {
 					provider: "posthog",
@@ -44,10 +52,10 @@ export function AnalyticsProviderComponent({
 				},
 			})
 		}
-	}, [provider])
+	}, [analyticsProvider])
 
 	return (
-		<AnalyticsContext.Provider value={provider}>
+		<AnalyticsContext.Provider value={analyticsProvider}>
 			{children}
 		</AnalyticsContext.Provider>
 	)

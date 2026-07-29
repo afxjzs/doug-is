@@ -12,7 +12,7 @@ export default async function WritingPage() {
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-12">
-				<h1 className="text-4xl font-bold gradient-heading mb-4">
+				<h1 className="text-4xl font-bold display-heading mb-4">
 					doug.is/writing
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">

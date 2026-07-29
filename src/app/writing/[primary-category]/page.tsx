@@ -66,7 +66,7 @@ export default async function WritingCategoryPage({
 					Back to All Writing
 				</Link>
 
-				<h1 className="text-4xl font-bold gradient-heading mb-4">
+				<h1 className="text-4xl font-bold display-heading mb-4">
 					{formattedCategory}
 				</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">

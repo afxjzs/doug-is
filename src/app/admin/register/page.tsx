@@ -26,7 +26,7 @@ export default async function AdminRegisterPage({ searchParams }: PageProps) {
 			<div className="relative z-10 max-w-md w-full space-y-8">
 				{/* Header section */}
 				<div className="text-center">
-					<h1 className="text-4xl md:text-5xl font-bold gradient-heading mb-2">
+					<h1 className="text-4xl md:text-5xl font-bold display-heading mb-2">
 						Create Admin Account
 					</h1>
 					<p className="text-lg text-gray-300">

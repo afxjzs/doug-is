@@ -1,26 +1,14 @@
 import Link from "next/link"
 import Image from "next/image"
-// import { getPostsByCategory } from "@/lib/supabase/client"
-// import { formatDate } from "@/lib/utils"
 import ConnectCta from "@/components/ConnectCta"
 
 export default async function AdvisingPage() {
-	// Get posts from Supabase with category "advisory"
-	// const posts = await getPostsByCategory("advisory")
-
-	// // Sort posts by date
-	// const sortedPosts = [...posts].sort(
-	// 	(a, b) =>
-	// 		new Date(b.published_at || "").getTime() -
-	// 		new Date(a.published_at || "").getTime()
-	// )
-
 	return (
 		<div className="max-w-5xl mx-auto">
 			{/* Hero Section */}
 			<div className="mb-16 relative">
 				<div className="relative z-10 py-16 px-8 border border-[rgba(var(--color-border),0.08)] rounded-lg bg-[rgba(var(--color-foreground),0.03)]">
-					<h1 className="text-4xl md:text-5xl font-bold gradient-heading mb-6 text-center">
+					<h1 className="text-4xl md:text-5xl font-bold display-heading mb-6 text-center">
 						Startup Advisory
 					</h1>
 					<p className="text-xl text-[rgba(var(--color-foreground),0.8)] mb-8 text-center max-w-2xl mx-auto">
@@ -38,7 +26,7 @@ export default async function AdvisingPage() {
 
 			{/* Experience Section */}
 			<div className="mb-16">
-				<h2 className="text-3xl font-bold gradient-heading mb-8">
+				<h2 className="text-3xl font-bold display-heading mb-8">
 					Accelerator Experience
 				</h2>
 
@@ -57,7 +45,7 @@ export default async function AdvisingPage() {
 									/>
 								</div>
 							</div>
-							<h3 className="text-xl font-semibold gradient-heading mb-4 text-center">
+							<h3 className="text-xl font-semibold display-heading mb-4 text-center">
 								Y Combinator Alum
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
@@ -92,7 +80,7 @@ export default async function AdvisingPage() {
 									/>
 								</div>
 							</div>
-							<h3 className="text-xl font-semibold gradient-heading mb-4 text-center">
+							<h3 className="text-xl font-semibold display-heading mb-4 text-center">
 								Techstars Alum
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
@@ -126,7 +114,7 @@ export default async function AdvisingPage() {
 									/>
 								</div>
 							</div>
-							<h3 className="text-xl font-semibold gradient-heading mb-4 text-center">
+							<h3 className="text-xl font-semibold display-heading mb-4 text-center">
 								VentureBuilder
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
@@ -160,7 +148,7 @@ export default async function AdvisingPage() {
 
 			{/* Services Section */}
 			<div className="mb-16">
-				<h2 className="text-3xl font-bold gradient-heading mb-8">
+				<h2 className="text-3xl font-bold display-heading mb-8">
 					How I Can Help
 				</h2>
 
@@ -269,7 +257,7 @@ export default async function AdvisingPage() {
 
 			{/* B2B Services Section — commented out for now
 			<div className="mb-16">
-				<h2 className="text-3xl font-bold gradient-heading mb-8">
+				<h2 className="text-3xl font-bold display-heading mb-8">
 					B2B Startup Services
 				</h2>
 
@@ -379,7 +367,7 @@ export default async function AdvisingPage() {
 
 			{/* Engagement Models */}
 			<div className="mb-16">
-				<h2 className="text-3xl font-bold gradient-heading mb-8">
+				<h2 className="text-3xl font-bold display-heading mb-8">
 					Engagement Models
 				</h2>
 
@@ -453,7 +441,7 @@ export default async function AdvisingPage() {
 			{/* Insights Section */}
 			{/* {sortedPosts.length > 0 && (
 				<div className="mb-16">
-					<h2 className="text-3xl font-bold gradient-heading mb-8">
+					<h2 className="text-3xl font-bold display-heading mb-8">
 						Advisory Insights
 					</h2>
 

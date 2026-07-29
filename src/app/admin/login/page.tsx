@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
 				{/* Header section */}
 				<div className="text-center mb-8">
 					<div className="mb-6">
-						<h1 className="text-4xl md:text-5xl font-bold gradient-heading mb-2">
+						<h1 className="text-4xl md:text-5xl font-bold display-heading mb-2">
 							Admin Access
 						</h1>
 						<p className="text-lg text-[rgba(var(--color-foreground),0.7)]">

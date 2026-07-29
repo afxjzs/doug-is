@@ -123,7 +123,7 @@ export default function BuildingPage() {
 				<p className="font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-accent),0.75)] mb-2">
 					doug.is/building
 				</p>
-				<h1 className="text-4xl font-bold gradient-heading mb-4">Building</h1>
+				<h1 className="text-4xl font-bold display-heading mb-4">Building</h1>
 				<p className="text-xl text-[rgba(var(--color-foreground),0.8)]">
 					Companies and projects I'm building or have built.
 				</p>
@@ -131,7 +131,7 @@ export default function BuildingPage() {
 
 			{/* Companies Section */}
 			<div className="mb-16">
-				<h2 className="text-3xl font-semibold gradient-heading mb-8">
+				<h2 className="text-3xl font-semibold display-heading mb-8">
 					Companies
 				</h2>
 				<div className="grid grid-cols-1 gap-8">
@@ -215,7 +215,7 @@ export default function BuildingPage() {
 
 			{/* Projects Section */}
 			<div className="mb-16">
-				<h2 className="text-3xl font-semibold gradient-heading mb-8">
+				<h2 className="text-3xl font-semibold display-heading mb-8">
 					Projects
 				</h2>
 				<div className="grid grid-cols-1 gap-8">
