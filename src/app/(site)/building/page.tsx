@@ -141,7 +141,7 @@ export default function BuildingPage() {
 							className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:border-[rgba(var(--color-border),0.2)] hover:-translate-y-1 rounded-xl overflow-hidden group"
 							style={{
 								transition:
-									"border-color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out)",
+									"border-color var(--dur-base) var(--ease-out), translate var(--dur-base) var(--ease-out)",
 							}}
 						>
 							<div className="flex flex-col md:flex-row">
@@ -153,7 +153,7 @@ export default function BuildingPage() {
 												alt={company.title}
 												fill
 												className="object-contain group-hover:scale-[1.04] rounded-xl"
-												style={{ transition: "transform var(--dur-slow) var(--ease-out)" }}
+												style={{ transition: "scale var(--dur-slow) var(--ease-out)" }}
 												priority={i === 0}
 											/>
 										</div>
@@ -225,7 +225,7 @@ export default function BuildingPage() {
 							className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:border-[rgba(var(--color-border),0.2)] hover:-translate-y-1 rounded-xl overflow-hidden group"
 							style={{
 								transition:
-									"border-color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out)",
+									"border-color var(--dur-base) var(--ease-out), translate var(--dur-base) var(--ease-out)",
 							}}
 						>
 							<div className="flex flex-col md:flex-row">
@@ -248,7 +248,7 @@ export default function BuildingPage() {
 														alt={project.title}
 														fill
 														className="object-contain group-hover:scale-[1.04] rounded-xl"
-														style={{ transition: "transform var(--dur-slow) var(--ease-out)" }}
+														style={{ transition: "scale var(--dur-slow) var(--ease-out)" }}
 													/>
 												</Link>
 											) : (
@@ -257,7 +257,7 @@ export default function BuildingPage() {
 													alt={project.title}
 													fill
 													className="object-contain group-hover:scale-[1.04] rounded-xl"
-													style={{ transition: "transform var(--dur-slow) var(--ease-out)" }}
+													style={{ transition: "scale var(--dur-slow) var(--ease-out)" }}
 												/>
 											)}
 										</div>

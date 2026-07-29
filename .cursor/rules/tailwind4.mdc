@@ -226,6 +226,17 @@ export default config
 
 ## Breaking Changes
 
+- **Transform utilities set individual CSS properties (the hover-snap trap)**:
+  `translate-*`, `scale-*`, and `rotate-*` now write the native `translate` /
+  `scale` / `rotate` properties — NOT `transform`. A hand-written
+  `transition: transform ...` (inline style or CSS) therefore never fires for
+  them: `hover:-translate-y-1` or `group-hover:scale-[1.04]` snaps with no
+  animation. Transition the property that actually changes
+  (`transition: translate var(--dur-base) var(--ease-out)`,
+  `transition: scale ...`) or use the `transition-transform` utility, whose v4
+  property list includes `transform, translate, scale, rotate`. This exact bug
+  shipped hover-snapping cards on /building and /writing (fixed 2026-07-29).
+
 - **Removed deprecated utilities**:
   - `bg-opacity-*` → Use `bg-black/50` instead
   - `text-opacity-*` → Use `text-black/50` instead
