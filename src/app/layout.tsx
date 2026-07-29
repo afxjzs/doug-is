@@ -1,18 +1,19 @@
 import type { Metadata } from "next"
-import { JetBrains_Mono, Playfair_Display, Inter } from "next/font/google"
+import { JetBrains_Mono, Playfair_Display, DM_Sans } from "next/font/google"
 import "./globals.css"
 import { ClientAnalyticsWrapper } from "@/components/ClientAnalyticsWrapper"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import LayoutWrapper from "@/components/LayoutWrapper"
 import { GoogleAnalytics } from "@/components/GoogleAnalytics"
 
-// Body font — clean sans-serif for readable paragraphs
-const inter = Inter({
+// Body font — variable, with the optical-size axis; the body default weight
+// (375, slightly lighter than regular) is set in globals.css
+const dmSans = DM_Sans({
 	subsets: ["latin"],
 	display: "swap",
 	variable: "--font-body",
 	fallback: ["system-ui", "Arial", "sans-serif"],
-	weight: ["300", "400", "500", "600"],
+	axes: ["opsz"],
 })
 
 // Monospace font — for terminal, tags, buttons, code
@@ -93,7 +94,7 @@ export default async function RootLayout({
 	return (
 		<html lang="en" className="scroll-smooth" suppressHydrationWarning>
 			<head />
-			<body className={`${inter.variable} ${jetbrainsMono.variable} ${playfairDisplay.variable}`}>
+			<body className={`${dmSans.variable} ${jetbrainsMono.variable} ${playfairDisplay.variable}`}>
 				{/* Google Analytics - Load early for comprehensive tracking */}
 				<GoogleAnalytics />
 
