@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import SafeImage from "@/components/SafeImage"
 import { useClientEventTracking } from "@/lib/analytics"
 
 // Companies I'm currently building
@@ -42,45 +41,8 @@ const companies = [
 	},
 ]
 
-// Sample projects data - replace with actual data from a CMS or database
+// Side projects
 const projects = [
-	// {
-	// 	id: "just-ate",
-	// 	title: "JustAte",
-	// 	description:
-	// 		"A timer app that reminds you to exercise at the optimal time after eating to kickstart your metabolism.",
-	// 	image: "/images/projects/just-ate.jpg",
-	// 	tags: ["iOS", "Swift", "SwiftUI", "HealthKit"],
-	// 	link: "/building/just-ate",
-	// 	appStore: "https://apps.apple.com/us/app/justateapp",
-	// },
-	// {
-	// 	id: "doug-is",
-	// 	title: "This Website (doug.is)",
-	// 	description:
-	// 		"My own personal website, built with Next.js, Tailwind CSS, and TypeScript. Vibe-coding experiment.",
-	// 	image: "/images/projects/doug-is.png",
-	// 	tags: ["Next.js", "Tailwind CSS", "TypeScript", "Vercel"],
-	// 	link: "/building/doug-is",
-	// 	github: "https://github.com/afxjzs/doug-is",
-	// },
-	// {
-	// 	id: "goose-chase",
-	// 	title: "Goose Chase",
-	// 	description:
-	// 		"A curated guide to Chicago's finest venues based on Dante The Don's Barstool Sports article. Features interactive maps, venue filtering, and comprehensive recommendations for bachelor parties and visitors.",
-	// 	image: "/images/projects/goose-chase/goosechase-screenshot-modal.png",
-	// 	tags: [
-	// 		"Next.js",
-	// 		"Tailwind CSS",
-	// 		"Google Places API",
-	// 		"CSV Data",
-	// 		"Vercel",
-	// 	],
-	// 	link: "/building/goose-chase",
-	// 	github: "https://github.com/afxjzs/goose-chase-simple",
-	// 	website: "https://goosechase.doug.is/",
-	// },
 	{
 		id: "migraine-free",
 		title: "Migraine Trigger Database",
@@ -111,26 +73,6 @@ const projects = [
 		link: "/building/oil-price-ticker",
 		github: "https://github.com/afxjzs/oil-price-ticker",
 	},
-	// {
-	// 	id: "occupado",
-	// 	title: "Occupado",
-	// 	description:
-	// 		"A calendar combining app that helps you manage multiple calendars in one place.",
-	// 	image: "/images/projects/occupado.jpg",
-	// 	tags: ["React", "Google Calendar API", "Firebase"],
-	// 	link: "/building/occupado",
-	// 	github: "https://github.com/afxjzs/occupado",
-	// },
-	// {
-	// 	id: "bolt-form",
-	// 	title: "BoltForm",
-	// 	description:
-	// 		"A JavaScript form builder with validation, conditional logic, and API integration.",
-	// 	image: "/images/projects/bolt-form.jpg",
-	// 	tags: ["JavaScript", "TypeScript", "React"],
-	// 	link: "/building/bolt-form",
-	// 	github: "https://github.com/afxjzs/bolt-form",
-	// },
 	{
 		id: "inn",
 		title: "Inn Ruby Gem",
@@ -178,7 +120,7 @@ export default function BuildingPage() {
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-12">
-				<p className="text-lg text-[rgba(var(--color-foreground),0.7)] mb-2">
+				<p className="font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-accent),0.75)] mb-2">
 					doug.is/building
 				</p>
 				<h1 className="text-4xl font-bold gradient-heading mb-4">Building</h1>
@@ -193,13 +135,13 @@ export default function BuildingPage() {
 					Companies
 				</h2>
 				<div className="grid grid-cols-1 gap-8">
-					{companies.map((company) => (
+					{companies.map((company, i) => (
 						<div
 							key={company.id}
-							className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:shadow-md rounded-xl overflow-hidden group"
+							className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:border-[rgba(var(--color-border),0.2)] hover:-translate-y-1 rounded-xl overflow-hidden group"
 							style={{
 								transition:
-									"border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out)",
+									"border-color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out)",
 							}}
 						>
 							<div className="flex flex-col md:flex-row">
@@ -212,7 +154,7 @@ export default function BuildingPage() {
 												fill
 												className="object-contain group-hover:scale-[1.04] rounded-xl"
 												style={{ transition: "transform var(--dur-slow) var(--ease-out)" }}
-												priority
+												priority={i === 0}
 											/>
 										</div>
 									</div>
@@ -227,11 +169,11 @@ export default function BuildingPage() {
 									<p className="text-[rgba(var(--color-foreground),0.7)] mb-5 leading-relaxed">
 										{company.description}
 									</p>
-									<div className="flex flex-wrap gap-2 mb-5">
+									<div className="flex flex-wrap gap-x-4 gap-y-2 mb-5">
 										{company.tags.map((tag) => (
 											<span
 												key={tag}
-												className="text-xs px-2 py-1 rounded-full bg-[rgba(var(--color-accent),0.1)] text-[rgba(var(--color-accent),0.9)]"
+												className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.15em] text-[rgba(var(--color-accent),0.75)]"
 											>
 												{tag}
 											</span>
@@ -280,10 +222,10 @@ export default function BuildingPage() {
 					{projects.map((project) => (
 						<div
 							key={project.id}
-							className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:shadow-md rounded-xl overflow-hidden group"
+							className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-border),0.08)] hover:border-[rgba(var(--color-border),0.2)] hover:-translate-y-1 rounded-xl overflow-hidden group"
 							style={{
 								transition:
-									"border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out)",
+									"border-color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out)",
 							}}
 						>
 							<div className="flex flex-col md:flex-row">
@@ -347,11 +289,11 @@ export default function BuildingPage() {
 									<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
 										{project.description}
 									</p>
-									<div className="flex flex-wrap gap-2 mb-4">
+									<div className="flex flex-wrap gap-x-4 gap-y-2 mb-4">
 										{project.tags.map((tag) => (
 											<span
 												key={tag}
-												className="text-xs px-2 py-1 rounded-full bg-[rgba(var(--color-accent),0.1)] text-[rgba(var(--color-accent),0.9)]"
+												className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.15em] text-[rgba(var(--color-accent),0.75)]"
 											>
 												{tag}
 											</span>

@@ -3,11 +3,11 @@ import { Metadata } from "next"
 export const metadata: Metadata = {
 	title: "doug.is / Advising",
 	description:
-		"Advisory roles and consulting services for startups and established companies.",
+		"Fractional CTO and advisor for early-stage founders. No pitch deck required.",
 	openGraph: {
 		title: "doug.is / Advising",
 		description:
-			"Advisory roles and consulting services for startups and established companies.",
+			"Fractional CTO and advisor for early-stage founders. No pitch deck required.",
 		url: "https://doug.is/advising",
 		siteName: "doug.is",
 		type: "website",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "doug.is / Advising",
 		description:
-			"Advisory roles and consulting services for startups and established companies.",
+			"Fractional CTO and advisor for early-stage founders. No pitch deck required.",
 		images: ["https://doug.is/images/projects/doug-is.png"],
 		creator: "@doug__is",
 	},

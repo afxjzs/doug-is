@@ -29,7 +29,7 @@ export default function InvestingPage() {
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="mb-12">
-				<p className="text-lg text-[rgba(var(--color-foreground),0.7)] mb-2">
+				<p className="font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-accent),0.75)] mb-2">
 					doug.is/investing
 				</p>
 				<h1 className="text-4xl font-bold gradient-heading mb-4">
@@ -70,7 +70,7 @@ export default function InvestingPage() {
 									alt="VentureBuilder Logo"
 									width={300}
 									height={150}
-									className="object-contain invert-on-light"
+									className="object-contain"
 								/>
 							</div>
 						</div>
@@ -89,7 +89,7 @@ export default function InvestingPage() {
 									VentureBuilder.vc
 								</a>
 								, investing in startups that are running paid pilots with
-								NOV to prove out their products in the real world.
+								NOV (National Oilwell Varco) to prove out their products in the real world.
 							</p>
 							<p className="text-[rgba(var(--color-foreground),0.8)]">
 								The companies that last are the ones with actual customers
@@ -136,12 +136,12 @@ export default function InvestingPage() {
 							<p className="italic text-lg md:text-xl text-[rgba(var(--color-foreground),0.85)] leading-relaxed pl-4">
 								&ldquo;{randomQuote.text}&rdquo;
 							</p>
-							<p className="text-right text-[rgba(var(--color-foreground),0.6)] mt-3 text-base">
+							<p className="text-right text-[rgba(var(--color-foreground),0.65)] mt-3 text-base">
 								— {randomQuote.author}
 							</p>
 						</blockquote>
 					</div>
-					<p className="text-center text-[rgba(var(--color-foreground),0.5)] mt-4 text-sm">
+					<p className="text-center text-[rgba(var(--color-foreground),0.65)] mt-4 text-sm">
 						Not Entirely Dumb Quotes From Actual Investors
 					</p>
 				</div>

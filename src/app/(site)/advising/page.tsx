@@ -28,18 +28,10 @@ export default async function AdvisingPage() {
 						run pilot programs at VentureBuilder. I know what early-stage
 						B2B companies need because I&apos;ve been one.
 					</p>
-					<div className="flex flex-wrap justify-center gap-4 mb-6">
-						<div className="px-4 py-2 bg-[rgba(var(--color-foreground),0.05)] rounded-full border border-[rgba(var(--color-foreground),0.1)]">
-							<span className="text-sm font-medium">Y Combinator Alum</span>
-						</div>
-						<div className="px-4 py-2 bg-[rgba(var(--color-foreground),0.05)] rounded-full border border-[rgba(var(--color-foreground),0.1)]">
-							<span className="text-sm font-medium">Techstars Alum</span>
-						</div>
-						<div className="px-4 py-2 bg-[rgba(var(--color-foreground),0.05)] rounded-full border border-[rgba(var(--color-foreground),0.1)]">
-							<span className="text-sm font-medium">
-								Pilot Program Director
-							</span>
-						</div>
+					<div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-6 font-[family-name:var(--font-mono)] text-xs tracking-[0.1em] text-[rgba(var(--color-foreground),0.65)]">
+						<span>Y Combinator Alum</span>
+						<span>Techstars Alum</span>
+						<span>Pilot Program Director</span>
 					</div>
 				</div>
 			</div>
@@ -61,12 +53,12 @@ export default async function AdvisingPage() {
 										alt="Y Combinator Logo"
 										width={180}
 										height={36}
-										className="object-contain invert-on-light"
+										className="object-contain"
 									/>
 								</div>
 							</div>
 							<h3 className="text-xl font-semibold gradient-heading mb-4 text-center">
-								Y Combinator Alumni
+								Y Combinator Alum
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
 								I was part of the W15 batch with Pretty Instant (acquired by{" "}
@@ -96,12 +88,12 @@ export default async function AdvisingPage() {
 										alt="Techstars Logo"
 										width={180}
 										height={36}
-										className="object-contain invert-on-light"
+										className="object-contain"
 									/>
 								</div>
 							</div>
 							<h3 className="text-xl font-semibold gradient-heading mb-4 text-center">
-								Techstars Alumni
+								Techstars Alum
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)] mb-4">
 								I went through the JP Morgan/Oakland 2024 batch with{" "}
@@ -130,7 +122,7 @@ export default async function AdvisingPage() {
 										alt="VentureBuilder Logo"
 										width={180}
 										height={36}
-										className="object-contain invert-on-light"
+										className="object-contain"
 									/>
 								</div>
 							</div>
