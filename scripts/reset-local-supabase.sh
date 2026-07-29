@@ -210,6 +210,29 @@ supabase start
 echo "==> Applying migrations to local database..."
 supabase db push --local
 
+# Removing the Docker volumes above wipes the ENTIRE cluster, including the auth
+# schema — so auth.users and user_roles come back empty and /admin locks you out.
+# `supabase db push` does not run seeds (only `db reset` does), so apply them
+# here explicitly. This runs before the --skip-import early exit on purpose:
+# admin access should be restored whether or not CSV data is loaded.
+seed_files=()
+shopt -s nullglob
+seed_files=( supabase/seeds/*.sql )
+shopt -u nullglob
+
+if (( ${#seed_files[@]} == 0 )); then
+	echo "WARNING: no seed files found in supabase/seeds/."
+	echo "  The local auth schema was just wiped and nothing will restore it."
+	echo "  /admin will reject every login until a user and admin role exist."
+else
+	echo "==> Applying ${#seed_files[@]} seed file(s) from supabase/seeds/..."
+	for seed_file in "${seed_files[@]}"; do
+		echo "    - $(basename "$seed_file")"
+		psql "postgresql://postgres:postgres@127.0.0.1:54332/postgres" \
+			-v ON_ERROR_STOP=1 -q -f "$seed_file"
+	done
+fi
+
 if [[ "$SKIP_IMPORT" == "true" ]]; then
 	echo "==> Skipping CSV import as requested."
 	echo "Done."
@@ -230,4 +253,7 @@ psql "postgresql://postgres:postgres@127.0.0.1:54332/postgres" -v ON_ERROR_STOP=
 	-c "SELECT 'posts' AS table_name, COUNT(*) AS row_count FROM public.posts UNION ALL SELECT 'migraine_triggers' AS table_name, COUNT(*) AS row_count FROM public.migraine_triggers;"
 
 echo "==> Local Supabase reset and data import completed."
-echo "==> Note: This script only manages local Docker state and public schema data."
+echo "==> Note: this DESTROYS the entire local cluster, not just public schema"
+echo "    data. Removing the Docker volumes wipes auth.users, user_roles, and"
+echo "    everything else. supabase/seeds/*.sql restores the local admin login;"
+echo "    any other local-only data you had is gone. Production is never touched."
