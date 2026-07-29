@@ -16,7 +16,7 @@
    ============================================ */
 :root {
 	/* Font stack */
-	--font-subheading: var(--font-body, 'Inter', system-ui, sans-serif);
+	--font-subheading: var(--font-body, 'DM Sans', system-ui, sans-serif);
 
 	/* Navy + Amber palette (RGB triplets for rgba() flexibility) */
 	--color-background: 10, 14, 26;         /* #0a0e1a navy */
@@ -74,7 +74,10 @@
    ============================================ */
 @layer base {
 	body {
-		font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+		font-family: var(--font-body, 'DM Sans', system-ui, sans-serif);
+		/* 375: a shade lighter than regular — the variable axis makes the
+		   in-between weight real instead of faux-bolding to 300 or 400. */
+		font-weight: 375;
 		background-color: rgb(var(--color-background));
 		color: rgb(var(--color-foreground));
 		min-height: 100vh;

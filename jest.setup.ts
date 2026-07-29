@@ -143,7 +143,7 @@ jest.mock("next/image", () => ({
 
 // Mock next/font/google
 jest.mock("next/font/google", () => ({
-	Inter: () => ({ variable: "--font-body" }),
+	DM_Sans: () => ({ variable: "--font-body" }),
 	JetBrains_Mono: () => ({ variable: "--font-mono" }),
 	Playfair_Display: () => ({ variable: "--font-display" }),
 }))
