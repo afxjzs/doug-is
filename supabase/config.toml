@@ -52,10 +52,13 @@ schema_paths = ["./migrations/*.sql"]
 
 [db.seed]
 # If enabled, seeds the database after migrations during a db reset.
-enabled = false
+enabled = true
 # Specifies an ordered list of seed files to load during db reset.
 # Supports glob patterns relative to supabase directory: "./seeds/*.sql"
-sql_paths = []
+# NOTE: this only covers `supabase db reset`. scripts/reset-local-supabase.sh
+# uses `db push`, which does NOT run seeds, so that script applies these files
+# explicitly. Keep both paths in mind when adding a seed.
+sql_paths = ["./seeds/*.sql"]
 
 [realtime]
 enabled = true
