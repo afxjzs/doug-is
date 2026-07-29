@@ -44,7 +44,7 @@ export default async function WritingPage() {
 							className="group block overflow-hidden rounded-lg bg-[rgb(var(--color-background-alt))] border border-[rgba(var(--color-border),0.06)] hover:border-[rgba(var(--color-border),0.2)] hover:-translate-y-1"
 							style={{
 								transition:
-									"border-color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out)",
+									"border-color var(--dur-base) var(--ease-out), translate var(--dur-base) var(--ease-out)",
 							}}
 						>
 							{post.featured_image && (
@@ -57,7 +57,7 @@ export default async function WritingPage() {
 										sizes="(max-width: 768px) 100vw, 800px"
 										className="object-cover group-hover:scale-[1.04]"
 										style={{
-											transition: "transform var(--dur-slow) var(--ease-out)",
+											transition: "scale var(--dur-slow) var(--ease-out)",
 										}}
 										unoptimized={post.featured_image.includes("supabase")}
 									/>

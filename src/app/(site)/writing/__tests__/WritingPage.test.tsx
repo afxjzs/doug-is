@@ -17,8 +17,16 @@ jest.mock("@/lib/supabase/data", () => ({
 }))
 
 jest.mock("next/image", () => {
-	return function MockImage({ src, alt }: { src: string; alt: string }) {
-		return <img src={src} alt={alt} />
+	return function MockImage({
+		src,
+		alt,
+		style,
+	}: {
+		src: string
+		alt: string
+		style?: React.CSSProperties
+	}) {
+		return <img src={src} alt={alt} style={style} />
 	}
 })
 
@@ -61,9 +69,11 @@ const mockPosts = [
 
 async function renderPage() {
 	const ui = await WritingPage()
+	let view: ReturnType<typeof render>
 	await act(async () => {
-		render(ui)
+		view = render(ui)
 	})
+	return view!
 }
 
 describe("WritingPage", () => {
@@ -129,6 +139,23 @@ describe("WritingPage", () => {
 			await renderPage()
 
 			expect(screen.queryByText(/read more/i)).not.toBeInTheDocument()
+		})
+
+		it("transitions the properties the hover actually changes (v4 translate/scale)", async () => {
+			const { container } = await renderPage()
+
+			// Tailwind v4's -translate-y-1 and scale-[1.04] set the native CSS
+			// `translate`/`scale` properties — a `transform` transition never
+			// fires for them, so the hover snaps instead of animating.
+			const card = screen
+				.getAllByRole("link")
+				.find((a) => a.getAttribute("href")?.endsWith("/first-post"))!
+			expect(card.style.transition).toContain("translate")
+			expect(card.style.transition).not.toMatch(/\btransform\b/)
+
+			const image = container.querySelector("img")!
+			expect(image.style.transition).toContain("scale")
+			expect(image.style.transition).not.toMatch(/\btransform\b/)
 		})
 	})
 
