@@ -63,7 +63,13 @@
   .panel-h .hint{font-size:12.5px;color:var(--dim)}
 
   /* ---------- season strip ---------- */
-  .strip{display:flex;align-items:flex-end;gap:3px;height:104px}
+  /* pan-y keeps vertical page scrolling on touch while letting a horizontal
+     drag across the bars paint a season range. */
+  .strip{display:flex;align-items:flex-end;gap:3px;height:104px;touch-action:pan-y}
+  .strip.dragging{cursor:ew-resize}
+  .strip.dragging .sbar{cursor:ew-resize}
+  .sbar.pending .fill{box-shadow:0 0 0 2px var(--accent)}
+  .sbar.pending .snum{color:var(--accent);font-weight:800}
   .sbar{
     flex:1 1 0;min-width:0;display:flex;flex-direction:column;
     align-items:center;justify-content:flex-end;height:100%;
@@ -326,7 +332,7 @@
 <section class="panel">
   <div class="panel-h">
     <h2>Average rating by season</h2>
-    <span class="hint">Click a season to filter &middot; click again to clear</span>
+    <span class="hint">Click a season &middot; shift-click or drag for a range &middot; click again to clear</span>
   </div>
   <div class="strip" id="strip" role="group" aria-label="Filter by season"></div>
 </section>
@@ -495,7 +501,7 @@ var SEASONS=[];
 var HAY=DATA.map(function(d){ return (d[T]+" "+d[SY]).toLowerCase(); });
 
 var state={src:"imdb",q:"",minVotes:0,rMin:0,rMax:10,
-           seasons:{},sortKey:"abs",sortDir:1,open:null};
+           seasons:{},anchor:null,sortKey:"abs",sortDir:1,open:null};
 function seasonKeys(){ return Object.keys(state.seasons); }
 
 var COLS=[
@@ -668,9 +674,9 @@ function render(){
   document.getElementById("n-avg").textContent=
     avg==null?"—":avg.toFixed(2)+" "+SRC[state.src].label;
 
-  var sel=seasonKeys(), bits=[];
-  if(sel.length===1) bits.push("Season "+sel[0]);
-  else if(sel.length>1) bits.push(sel.length+" seasons");
+  var bits=[];
+  var seasonBit=seasonSummary();
+  if(seasonBit) bits.push(seasonBit);
   if(state.rMin>0||state.rMax<10) bits.push(ratingLabel()+" "+SRC[state.src].label);
   if(state.minVotes>0) bits.push(fmtInt(state.minVotes)+"+ votes");
   var note=document.getElementById("n-note");
@@ -692,11 +698,119 @@ document.getElementById("head").addEventListener("click",function(e){
   render();
 });
 
-document.getElementById("strip").addEventListener("click",function(e){
+/* ---------- season selection: click, shift-click range, drag range ----------
+   Plain click toggles one season, so arbitrary picks still work. Shift-click and
+   drag both ADD the swept range, so they compose with what is already selected.
+   The table is 800+ rows, so a drag only ever repaints the strip; the table is
+   rebuilt once, on release. */
+var strip=document.getElementById("strip");
+var drag={active:false,from:null,to:null,moved:false,captured:false,suppressClick:false};
+
+function seasonOrder(){ return SEASONS.map(function(s){ return s.n; }); }
+
+/* Bars are equal-width flex children, so position maps to a season directly —
+   more reliable than hit-testing during a pointer capture. */
+function seasonAtX(x){
+  var order=seasonOrder(), rect=strip.getBoundingClientRect();
+  if(!rect.width) return order[0];
+  var i=Math.floor((x-rect.left)/(rect.width/order.length));
+  return order[Math.max(0,Math.min(order.length-1,i))];
+}
+
+function rangeBetween(a,b){
+  var order=seasonOrder();
+  var i=order.indexOf(a), j=order.indexOf(b);
+  if(i<0||j<0) return [];
+  if(i>j){ var t=i; i=j; j=t; }
+  return order.slice(i,j+1);
+}
+
+function addRange(a,b){
+  rangeBetween(a,b).forEach(function(n){ state.seasons[n]=true; });
+}
+
+/* Preview without re-rendering: the table is far too big to rebuild per frame. */
+function paintPending(){
+  var pend={};
+  if(drag.active&&drag.moved) rangeBetween(drag.from,drag.to).forEach(function(n){ pend[n]=true; });
+  var bars=strip.querySelectorAll("button[data-s]");
+  for(var i=0;i<bars.length;i++){
+    bars[i].classList.toggle("pending",!!pend[bars[i].getAttribute("data-s")]);
+  }
+}
+
+strip.addEventListener("pointerdown",function(e){
+  /* Clear here, not on consumption: a multi-bar drag ends in a click targeted at
+     the strip rather than a bar, so the flag is never read and would otherwise
+     linger and swallow the next real click. Every genuine click starts with a
+     pointerdown, so clearing here can never hide the flag from its own drag. */
+  drag.suppressClick=false;
+  var b=e.target.closest("button[data-s]");
+  if(!b||e.button!==0||e.shiftKey) return;   /* shift is handled on click */
+  drag.active=true; drag.moved=false; drag.captured=false;
+  drag.from=parseInt(b.getAttribute("data-s"),10);
+  drag.to=drag.from;
+});
+
+strip.addEventListener("pointermove",function(e){
+  if(!drag.active) return;
+  var n=seasonAtX(e.clientX);
+  if(n!==drag.from&&!drag.moved){
+    /* Capture only once this is genuinely a drag. Capturing on pointerdown
+       retargets the following click event to the strip, so closest("button")
+       finds nothing and a plain click silently does nothing at all. */
+    drag.moved=true;
+    strip.classList.add("dragging");
+    try{ strip.setPointerCapture(e.pointerId); drag.captured=true; }catch(_){}
+  }
+  if(n!==drag.to){ drag.to=n; paintPending(); }
+});
+
+function endDrag(e){
+  if(!drag.active) return;
+  if(drag.captured){ try{ strip.releasePointerCapture(e.pointerId); }catch(_){} }
+  strip.classList.remove("dragging");
+  var wasDrag=drag.moved;
+  if(wasDrag) addRange(drag.from,drag.to);
+  drag.active=false; drag.moved=false;
+  paintPending();
+  if(wasDrag){
+    /* A drag ends in a click event on the bar under the pointer; ignore it. */
+    drag.suppressClick=true;
+    state.anchor=drag.to;
+    state.open=null;
+    render();
+  }
+}
+strip.addEventListener("pointerup",endDrag);
+strip.addEventListener("pointercancel",endDrag);
+
+strip.addEventListener("click",function(e){
   var b=e.target.closest("button[data-s]");
   if(!b) return;
-  var n=b.getAttribute("data-s");
-  if(state.seasons[n]) delete state.seasons[n]; else state.seasons[n]=true;
+  if(drag.suppressClick){ drag.suppressClick=false; return; }
+  var n=parseInt(b.getAttribute("data-s"),10);
+  if(e.shiftKey&&state.anchor!==null){
+    addRange(state.anchor,n);
+  }else{
+    if(state.seasons[n]) delete state.seasons[n]; else state.seasons[n]=true;
+  }
+  state.anchor=n;
+  state.open=null;
+  render();
+});
+
+/* Keyboard equivalent, so the range is reachable without a pointer. */
+strip.addEventListener("keydown",function(e){
+  if(e.key!=="Enter"&&e.key!==" ") return;
+  var b=e.target.closest("button[data-s]");
+  if(!b) return;
+  e.preventDefault();
+  var n=parseInt(b.getAttribute("data-s"),10);
+  if(e.shiftKey&&state.anchor!==null) addRange(state.anchor,n);
+  else if(state.seasons[n]) delete state.seasons[n];
+  else state.seasons[n]=true;
+  state.anchor=n;
   state.open=null;
   render();
 });
@@ -1023,11 +1137,25 @@ function createPlaylist(conn,title,keys){
 }
 
 /* ---------- ui ---------- */
+/* "Seasons 12-37" reads better than "26 seasons", and tells you which ones. */
+function seasonSummary(){
+  var ns=seasonKeys().map(Number).sort(function(a,b){return a-b;});
+  if(!ns.length) return "";
+  var parts=[],i=0;
+  while(i<ns.length){
+    var j=i;
+    while(j+1<ns.length&&ns[j+1]===ns[j]+1) j++;
+    parts.push(i===j?String(ns[i]):ns[i]+"\u2013"+ns[j]);
+    i=j+1;
+  }
+  var one=(parts.length===1&&parts[0].indexOf("\u2013")===-1);
+  return (one?"Season ":"Seasons ")+parts.join(", ");
+}
+
 function defaultName(){
   var bits=[SRC[state.src].label==="IMDb"?"IMDb":(state.src==="avg"?"average":"fan score")];
-  var sel=seasonKeys();
-  if(sel.length===1) bits.push("season "+sel[0]);
-  else if(sel.length>1) bits.push(sel.length+" seasons");
+  var seasonBit=seasonSummary();
+  if(seasonBit) bits.push(seasonBit.toLowerCase());
   if(state.rMin>0||state.rMax<10) bits.push(ratingLabel());
   if(state.q) bits.push("“"+state.q+"”");
   return PLEX_SHOW+" — "+bits.join(", ");
