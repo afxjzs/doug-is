@@ -902,30 +902,55 @@ function loadServers(){
     });
 }
 
+/* A page on a public origin may not reach a private address: Chrome's Private
+   Network Access rules block it outright. Most of what Plex advertises is LAN
+   addresses, so from https://doug.is those attempts can only fail noisily. Skip
+   them unless this page is itself served from a local address. */
+var PAGE_IS_LOCAL=(function(){
+  var h=location.hostname;
+  return h==="localhost"||h==="::1"||h==="[::1]"||/\.local$/i.test(h)||
+         /^127\./.test(h)||/^10\./.test(h)||/^192\.168\./.test(h)||
+         /^172\.(1[6-9]|2\d|3[01])\./.test(h);
+})();
+
 /* Race every connection; presence flags go stale, so trust only a real reply. */
 function connect(server){
   var token=server.accessToken;
-  var tries=(server.connections||[]).map(function(c){
-    return jsonFetch(c.uri+"/?X-Plex-Token="+encodeURIComponent(token),
-                     {headers:{"Accept":"application/json"},timeout:7000})
+  var all=server.connections||[];
+  var usable=PAGE_IS_LOCAL ? all : all.filter(function(c){ return !c.local; });
+  /* If filtering leaves nothing, try everything and let the error be honest
+     rather than refusing outright. */
+  if(!usable.length) usable=all;
+  var tries=usable.map(function(c){
+    return jsonFetch(c.uri+"/",
+                     {headers:{"Accept":"application/json","X-Plex-Token":token},timeout:7000})
       .then(function(r){ return {base:c.uri,token:token,machine:r.MediaContainer.machineIdentifier}; });
   });
   if(!tries.length) return Promise.reject(new Error("server lists no connections"));
   return Promise.any(tries).catch(function(){
-    throw new Error("could not reach "+server.name+" on any of its "+tries.length+" connections");
+    var hidden=all.length-usable.length;
+    throw new Error("could not reach "+server.name+" on any of its "+usable.length+
+      " reachable connections"+
+      (hidden?" ("+hidden+" local-network ones cannot be used from this site; "+
+              "enable Remote Access on that server)":""));
   });
 }
 
+/* The token rides in a header rather than the query string, so it stays out of
+   console logs, browser history and referrers. Plex answers the preflight with
+   Access-Control-Allow-Headers: X-Plex-Token, so this is allowed cross-origin. */
+function srvHeaders(conn){
+  return {"Accept":"application/json","X-Plex-Token":conn.token};
+}
 function srvGet(conn,path,params){
-  var q=new URLSearchParams(params||{});
-  q.set("X-Plex-Token",conn.token);
-  return jsonFetch(conn.base+path+"?"+q.toString(),{headers:{"Accept":"application/json"},timeout:30000});
+  var q=new URLSearchParams(params||{}).toString();
+  return jsonFetch(conn.base+path+(q?"?"+q:""),
+                   {headers:srvHeaders(conn),timeout:30000});
 }
 function srvSend(conn,method,path,params){
-  var q=new URLSearchParams(params||{});
-  q.set("X-Plex-Token",conn.token);
-  return jsonFetch(conn.base+path+"?"+q.toString(),
-                   {method:method,headers:{"Accept":"application/json"},timeout:30000});
+  var q=new URLSearchParams(params||{}).toString();
+  return jsonFetch(conn.base+path+(q?"?"+q:""),
+                   {method:method,headers:srvHeaders(conn),timeout:30000});
 }
 
 /* ---------- matching ---------- */
