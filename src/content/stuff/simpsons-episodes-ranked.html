@@ -243,11 +243,24 @@
   }
   .plex-go:hover{filter:brightness(1.07)}
   .plex-go:disabled{opacity:.5;cursor:default;filter:none}
+  .plex-go.done{background:none;border:1px solid rgba(125,220,143,.5);color:#7ddc8f;opacity:1}
+  .plex-again{
+    width:100%;margin-top:9px;background:none;border:1px solid var(--line-2);
+    color:var(--muted);border-radius:9px;padding:9px;font:inherit;font-size:13.5px;
+    font-weight:700;cursor:pointer;
+  }
+  .plex-again:hover{color:var(--ink);border-color:var(--ink)}
+  .plex-again[hidden]{display:none}
   .plex-count{
     margin:14px 0 0;padding:11px 13px;background:var(--bg);border:1px solid var(--line);
     border-radius:9px;font-size:13px;color:var(--ink-soft);line-height:1.5;
   }
   .plex-count b{color:var(--ink)}
+  .plex-count.warn{border-color:rgba(255,170,90,.4);background:rgba(255,170,90,.07)}
+  .plex-warn{display:block;margin-top:9px;padding-top:9px;
+    border-top:1px solid rgba(255,170,90,.28);color:#ffbe86}
+  .plex-warn b{color:#ffd0a4}
+  .plex-hint{margin:6px 0 0;font-size:11.5px;color:var(--dim);line-height:1.45}
   .plex-status{margin:14px 0 0;font-size:13px;line-height:1.5;min-height:1em}
   .plex-status.err{color:#ff8f7a}
   .plex-status.ok{color:#7ddc8f}
@@ -823,7 +836,7 @@ function jsonFetch(url,opts){
     });
 }
 
-var el={}, plexState={servers:null,server:null};
+var el={}, plexState={servers:null,conn:null,idx:null,rows:null,seq:0};
 function setStatus(msg,kind){
   el.status.textContent=msg||"";
   el.status.className="plex-status"+(kind?" "+kind:"");
@@ -1006,65 +1019,162 @@ function showSignedOut(){
 }
 
 function showSignedIn(){
-  var rows=filtered();
+  plexState.conn=null; plexState.idx=null;
+  plexState.rows=filtered();
+
   el.body.innerHTML=
-    '<label class="fl" for="plex-server">Server</label>'+
+    '<label class="fl" for="plex-server">Your Plex server</label>'+
     '<select id="plex-server"><option>Loading your servers…</option></select>'+
-    '<label class="fl" for="plex-name">Playlist name</label>'+
-    '<input type="text" id="plex-name" value="" />'+
-    '<p class="plex-count"><b>'+fmtInt(rows.length)+'</b> episodes, in the order shown. '+
-    'Change the filters or sorting behind this box and reopen to adjust.</p>'+
+    '<label class="fl" for="plex-name">Name this playlist</label>'+
+    '<input type="text" id="plex-name" value="" autocomplete="off" />'+
+    '<p class="plex-hint">Suggested from your current filters — edit it to whatever you like.</p>'+
+    '<div class="plex-count" id="plex-cover">'+
+      '<b>'+fmtInt(plexState.rows.length)+'</b> episodes are showing here, in the order listed. '+
+      'Checking which of them are in your library…'+
+    '</div>'+
     '<button type="button" class="plex-go" id="plex-create" disabled>Create playlist</button>';
   el.foot.innerHTML='Signed in to Plex. <button type="button" id="plex-signout">Sign out</button>';
   document.getElementById("plex-name").value=defaultName();
+  document.getElementById("plex-name").addEventListener("input",resetCreate);
   document.getElementById("plex-signout").addEventListener("click",signOut);
 
   var sel=document.getElementById("plex-server");
   var go=document.getElementById("plex-create");
+
   setStatus("Finding your servers…","busy");
   loadServers().then(function(servers){
     plexState.servers=servers;
     sel.innerHTML=servers.map(function(sv,i){
       return '<option value="'+i+'">'+esc(sv.name)+(sv.owned?"":" (shared)")+'</option>';
     }).join("");
-    go.disabled=false;
     setStatus("");
+    checkCoverage();
   }).catch(function(e){
     sel.innerHTML='<option>none found</option>';
     setStatus("Could not list your servers: "+e.message,"err");
   });
 
-  go.addEventListener("click",function(){
-    var server=plexState.servers[parseInt(sel.value,10)];
-    var title=document.getElementById("plex-name").value.trim();
-    if(!title){ setStatus("Give the playlist a name.","err"); return; }
-    var picked=filtered();
-    if(!picked.length){ setStatus("No episodes are showing. Adjust the filters first.","err"); return; }
-    go.disabled=true;
-    setStatus("Connecting to "+server.name+"…","busy");
-    var conn;
-    connect(server)
-      .then(function(c){ conn=c; setStatus("Looking up "+PLEX_SHOW+"…","busy"); return findShow(conn); })
-      .then(function(show){ setStatus("Reading the episode list…","busy"); return episodeIndex(conn,show.ratingKey); })
-      .then(function(idx){
-        var m=matchRows(picked,idx);
-        if(!m.keys.length) throw new Error("none of these episodes are on "+server.name);
-        setStatus("Creating “"+title+"” with "+m.keys.length+" episodes…","busy");
-        return createPlaylist(conn,title,m.keys).then(function(key){
-          /* Read it back rather than trusting the write. */
-          return srvGet(conn,"/playlists/"+key+"/items").then(function(r){
-            var n=(r.MediaContainer.Metadata||[]).length;
-            var msg="Created “"+title+"” with "+n+" episode"+(n===1?"":"s")+" on "+server.name+".";
-            if(m.missing.length) msg+=" "+m.missing.length+" of the "+picked.length+
-              " showing here aren’t in that library.";
-            if(n!==m.keys.length) msg+=" Warning: expected "+m.keys.length+".";
-            setStatus(msg,n===m.keys.length?"ok":"err");
-          });
-        });
-      })
-      .catch(function(e){ setStatus("Failed: "+e.message,"err"); })
-      .then(function(){ go.disabled=false; });
-  });
+  sel.addEventListener("change",checkCoverage);
+  go.addEventListener("click",doCreate);
+}
+
+/* Look the library up BEFORE creating anything, so the count in front of you is
+   what will actually land rather than a surprise afterwards. */
+function checkCoverage(){
+  var sel=document.getElementById("plex-server");
+  var go=document.getElementById("plex-create");
+  var box=document.getElementById("plex-cover");
+  var server=plexState.servers&&plexState.servers[parseInt(sel.value,10)];
+  if(!server) return;
+
+  go.disabled=true;
+  plexState.conn=null; plexState.idx=null;
+  /* Switching servers leaves the previous lookup in flight. Stamp each check and
+     ignore anything that comes back after a newer one started, or a slow reply
+     for the old server overwrites the new server's result. */
+  var seq=++plexState.seq;
+  var stale=function(){ return seq!==plexState.seq; };
+  resetCreate();
+
+  box.className="plex-count";
+  box.innerHTML='<b>'+fmtInt(plexState.rows.length)+'</b> episodes are showing here. '+
+    'Checking '+esc(server.name)+'…';
+
+  connect(server)
+    .then(function(c){ if(stale()) return Promise.reject("stale"); plexState.conn=c; return findShow(c); })
+    .then(function(show){ if(stale()) return Promise.reject("stale"); return episodeIndex(plexState.conn,show.ratingKey); })
+    .then(function(idx){
+      if(stale()) return;
+      plexState.idx=idx;
+      var m=matchRows(plexState.rows,idx);
+      var total=plexState.rows.length, have=m.keys.length, miss=m.missing.length;
+      var html='<b>'+fmtInt(have)+'</b> of the <b>'+fmtInt(total)+'</b> episodes showing here '+
+               'are on '+esc(server.name)+', and will be added in this order.';
+      if(miss){
+        var eg=m.missing.slice(0,3).map(function(d){ return "S"+d[S]+"E"+d[E]+" "+d[T]; });
+        html+='<span class="plex-warn"><b>'+fmtInt(miss)+
+              (miss===1?" episode isn’t":" episodes aren’t")+' in that library and will be skipped</b> — '+
+              esc(eg.join("; "))+(miss>3?", and "+fmtInt(miss-3)+" more":"")+'. '+
+              'The playlist will only ever contain episodes you actually have.</span>';
+      }
+      box.className="plex-count"+(miss?" warn":"");
+      box.innerHTML=html;
+      go.disabled=have===0;
+      if(!have) setStatus("None of these episodes are on "+server.name+".","err");
+      else setStatus("");
+    })
+    .catch(function(e){
+      if(e==="stale"||stale()) return;   /* superseded by a newer check */
+      box.className="plex-count warn";
+      box.innerHTML='<span class="plex-warn">Could not read that library: '+esc(e.message)+'</span>';
+      setStatus("Pick another server, or check it is reachable.","err");
+    });
+}
+
+function doCreate(){
+  var go=document.getElementById("plex-create");
+  var sel=document.getElementById("plex-server");
+  var server=plexState.servers[parseInt(sel.value,10)];
+  var title=document.getElementById("plex-name").value.trim();
+  if(!title){ setStatus("Give the playlist a name first.","err"); return; }
+  if(!plexState.idx){ setStatus("Still checking your library — one moment.","busy"); return; }
+
+  var m=matchRows(plexState.rows,plexState.idx);
+  if(!m.keys.length){ setStatus("Nothing to add: none of these episodes are on that server.","err"); return; }
+
+  go.disabled=true;
+  go.textContent="Creating…";
+  setStatus("Creating “"+title+"” with "+m.keys.length+" episodes…","busy");
+  createPlaylist(plexState.conn,title,m.keys)
+    .then(function(key){
+      /* Read it back rather than trusting the write. */
+      return srvGet(plexState.conn,"/playlists/"+key+"/items").then(function(r){
+        var n=(r.MediaContainer.Metadata||[]).length;
+        var msg="Created “"+title+"” with "+n+" episode"+(n===1?"":"s")+" on "+server.name+".";
+        if(m.missing.length) msg+=" "+m.missing.length+" skipped, not in that library.";
+        if(n!==m.keys.length) msg+=" Warning: expected "+m.keys.length+".";
+        setStatus(msg,n===m.keys.length?"ok":"err");
+        markCreated(n);
+      });
+    })
+    .catch(function(e){
+      setStatus("Failed: "+e.message,"err");
+      go.textContent="Create playlist";
+      go.disabled=false;
+    });
+}
+
+/* A finished create must not look like an idle one: leaving the button live and
+   still reading "Create playlist" hides that anything happened and invites a
+   duplicate. Park it in a done state until something actually changes. */
+function markCreated(n){
+  var go=document.getElementById("plex-create");
+  go.textContent="Created ✓  "+fmtInt(n)+" episode"+(n===1?"":"s")+" added";
+  go.disabled=true;
+  go.classList.add("done");
+  var again=document.getElementById("plex-again");
+  if(!again){
+    again=document.createElement("button");
+    again.type="button";
+    again.id="plex-again";
+    again.className="plex-again";
+    again.textContent="Make another playlist";
+    again.addEventListener("click",resetCreate);
+    go.parentNode.insertBefore(again,go.nextSibling);
+  }
+  again.hidden=false;
+}
+
+/* Any change to the name or server means a different playlist, so re-arm. */
+function resetCreate(){
+  var go=document.getElementById("plex-create");
+  if(!go||!go.classList.contains("done")) return;
+  go.textContent="Create playlist";
+  go.classList.remove("done");
+  go.disabled=!plexState.idx;
+  var again=document.getElementById("plex-again");
+  if(again) again.hidden=true;
+  setStatus("");
 }
 
 function openPlex(){
