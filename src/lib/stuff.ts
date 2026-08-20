@@ -2,7 +2,8 @@
  * "Stuff" — standalone, self-contained HTML one-offs hosted under
  * /building/stuff/<name>. Each file in src/content/stuff/<name>.html is served
  * as-is (its own <html>/<head>/<style>), with only a small self-scoped nav bar
- * injected so it stays layout-less but still links back to the site.
+ * and the PostHog loader injected so it stays layout-less but still links back to
+ * the site and reports analytics.
  *
  * Files live OUTSIDE public/ on purpose: they are served exclusively through the
  * static route handler (src/app/building/stuff/[name]/route.ts), so there is no
@@ -141,6 +142,54 @@ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,s
 .dougis-stuff-nav svg{width:16px;height:16px;display:block;fill:currentColor}
 </style>`
 
+// PostHog lives in the React tree (src/app/layout.tsx -> ClientAnalyticsWrapper),
+// which these standalone documents never enter: the route handler returns their
+// HTML directly, bypassing every layout. So the loader is injected here instead,
+// and every hosted page reports with zero per-file work — same contract as the
+// nav bar and the social cards.
+//
+// Settings mirror src/lib/analytics/providers/posthog.ts so a "stuff" page and the
+// rest of the site behave identically: no session recording, no autocapture, DNT
+// respected. capture_pageview is off there because the SPA fires it on navigation;
+// here the document loads once, so we fire it explicitly below.
+const POSTHOG_SNIPPET = `!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);`
+
+export function buildAnalytics(slug: string): string {
+	const key = process.env.NEXT_PUBLIC_POSTHOG_KEY
+	const host =
+		process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com"
+
+	// A missing key must be loud at build time. Silently shipping a page that
+	// never reports is exactly the failure that goes unnoticed for months.
+	if (!key) {
+		console.warn(
+			`[stuff] NEXT_PUBLIC_POSTHOG_KEY is not set - "${slug}" will be served without analytics.`
+		)
+		return `<!-- doug.is: analytics disabled, NEXT_PUBLIC_POSTHOG_KEY missing at build time -->`
+	}
+
+	const config = {
+		api_host: host,
+		defaults: "2025-05-24",
+		person_profiles: "always",
+		capture_pageview: false,
+		capture_pageleave: true,
+		disable_session_recording: true,
+		respect_dnt: true,
+		autocapture: false,
+		capture_performance: false,
+	}
+	// The slug rides along so these one-offs can be told apart in PostHog.
+	const props = { page_type: "stuff", stuff_slug: slug }
+	return (
+		`<script id="dougis-stuff-analytics">` +
+		POSTHOG_SNIPPET +
+		`posthog.init(${JSON.stringify(key)},${JSON.stringify(config)});` +
+		`posthog.capture("$pageview",${JSON.stringify(props)});` +
+		`</script>`
+	)
+}
+
 function buildSocialMeta(meta: ThingMeta, pageUrl: string, ogImage: string): string {
 	const t = escapeAttr(meta.title)
 	const d = escapeAttr(meta.description)
@@ -214,7 +263,9 @@ export function decorateThing(html: string, slug: string): string {
 	// Respect a file that manages its own social tags.
 	const hasOwnSocial = /property=["']og:title["']/i.test(html)
 	const head =
-		NAV_STYLE + (hasOwnSocial ? "" : buildSocialMeta(meta, pageUrl, ogImage))
+		NAV_STYLE +
+		(hasOwnSocial ? "" : buildSocialMeta(meta, pageUrl, ogImage)) +
+		buildAnalytics(slug)
 	const body = buildNav(pageUrl, meta.title)
 
 	let out = html
