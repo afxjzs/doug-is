@@ -109,7 +109,14 @@ describe("Page Title Consistency", () => {
 			const { default: BuildingPage } = await import(
 				"@/app/(site)/building/page"
 			)
-			render(<BuildingPage />)
+
+			// Building is an async Server Component (it reads the "stuff" file
+			// list): invoke and await it, then render the resolved element.
+			const ui = await BuildingPage()
+
+			await act(async () => {
+				render(ui)
+			})
 
 			const heading = screen.getByRole("heading", { level: 1 })
 			expect(heading).toHaveTextContent("Building")

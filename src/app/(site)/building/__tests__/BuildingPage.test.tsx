@@ -1,5 +1,7 @@
 import { render, screen } from "@testing-library/react"
-import BuildingPage from "../page"
+// The Companies/Projects markup these tests cover moved out of page.tsx when
+// /building became a server component that also renders the Stuff section.
+import BuildingPortfolio from "../BuildingPortfolio"
 
 // Mock Next.js Image component
 jest.mock("next/image", () => {
@@ -19,9 +21,9 @@ jest.mock("next/link", () => {
 	}
 })
 
-describe("BuildingPage - Oil Price Ticker", () => {
+describe("BuildingPortfolio - Oil Price Ticker", () => {
 	beforeEach(() => {
-		render(<BuildingPage />)
+		render(<BuildingPortfolio />)
 	})
 
 	it("displays Oil Price Ticker project in the projects section", () => {
