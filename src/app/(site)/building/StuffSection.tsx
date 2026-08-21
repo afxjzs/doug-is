@@ -39,6 +39,10 @@ export default function StuffSection({ things }: { things: Thing[] }) {
 					<Link
 						key={thing.slug}
 						href={`/building/stuff/${thing.slug}`}
+						// These resolve to a route handler serving raw HTML, not a page,
+						// so there is no RSC payload to prefetch — Next would just 404
+						// on every tile in the viewport.
+						prefetch={false}
 						className="group block bg-[rgba(var(--color-foreground),0.03)] rounded-xl border border-[rgba(var(--color-border),0.08)] overflow-hidden hover:border-[rgba(var(--color-border),0.2)] hover:-translate-y-1"
 						style={{
 							transition:
