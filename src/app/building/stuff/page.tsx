@@ -74,6 +74,10 @@ export default async function StuffIndexPage() {
 						<Link
 							key={thing.slug}
 							href={`/building/stuff/${thing.slug}`}
+							// These resolve to a route handler serving raw HTML, not a
+							// page, so there is no RSC payload to prefetch — Next would
+							// just 404 on every card in the viewport.
+							prefetch={false}
 							className="group block bg-[rgb(var(--color-background-alt))] rounded-lg border border-[rgba(var(--color-border),0.08)] overflow-hidden transition-all duration-300 hover:border-[rgba(var(--color-border),0.25)] hover:-translate-y-1"
 						>
 							<div className="relative aspect-[8/5] overflow-hidden bg-[rgb(var(--color-background))] border-b border-[rgba(var(--color-border),0.08)]">
