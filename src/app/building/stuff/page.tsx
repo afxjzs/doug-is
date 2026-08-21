@@ -1,6 +1,7 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { listThings } from "@/lib/stuff"
+import Image from "next/image"
+import { listThings, thingImageUrl } from "@/lib/stuff"
 import {
 	getCanonicalUrl,
 	getSocialImageUrl,
@@ -8,7 +9,7 @@ import {
 } from "@/lib/utils/domain-detection"
 
 // Built statically: the file list is read at build time, so adding a new
-// .html file to public/building/stuff/ and redeploying regenerates this index.
+// .html file to src/content/stuff/ and redeploying regenerates this index.
 export const dynamic = "force-static"
 
 export const metadata: Metadata = {
@@ -73,19 +74,33 @@ export default async function StuffIndexPage() {
 						<Link
 							key={thing.slug}
 							href={`/building/stuff/${thing.slug}`}
-							className="block p-6 bg-[rgb(var(--color-background-alt))] rounded-lg border border-[rgba(var(--color-border),0.08)] transition-all duration-300 hover:border-[rgba(var(--color-border),0.25)] hover:-translate-y-1"
+							className="group block bg-[rgb(var(--color-background-alt))] rounded-lg border border-[rgba(var(--color-border),0.08)] overflow-hidden transition-all duration-300 hover:border-[rgba(var(--color-border),0.25)] hover:-translate-y-1"
 						>
-							<h2 className="font-[family-name:var(--font-display)] text-lg font-bold leading-snug">
-								{thing.title}
-							</h2>
-							{thing.description && (
-								<p className="text-sm leading-relaxed text-[rgba(var(--color-foreground),0.55)] mt-2">
-									{thing.description}
-								</p>
-							)}
-							<span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.15em] text-[rgba(var(--color-accent),0.45)] uppercase mt-4 inline-block">
-								/building/stuff/{thing.slug}
-							</span>
+							<div className="relative aspect-[8/5] overflow-hidden bg-[rgb(var(--color-background))] border-b border-[rgba(var(--color-border),0.08)]">
+								<Image
+									src={thingImageUrl(thing)}
+									alt={`Screenshot of ${thing.title}`}
+									fill
+									sizes="(max-width: 640px) 100vw, 50vw"
+									className="object-cover object-top group-hover:scale-[1.03]"
+									style={{
+										transition: "scale var(--dur-slow) var(--ease-out)",
+									}}
+								/>
+							</div>
+							<div className="p-6">
+								<h2 className="font-[family-name:var(--font-display)] text-lg font-bold leading-snug">
+									{thing.title}
+								</h2>
+								{thing.description && (
+									<p className="text-sm leading-relaxed text-[rgba(var(--color-foreground),0.55)] mt-2">
+										{thing.description}
+									</p>
+								)}
+								<span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.15em] text-[rgba(var(--color-accent),0.45)] uppercase mt-4 inline-block">
+									/building/stuff/{thing.slug}
+								</span>
+							</div>
 						</Link>
 					))}
 				</div>

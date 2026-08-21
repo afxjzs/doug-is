@@ -6,7 +6,23 @@
  * — has to be injected here. A page that quietly stops reporting is the failure
  * these tests exist to catch.
  */
-import { buildAnalytics, decorateThing } from "@/lib/stuff"
+import { promises as fs } from "fs"
+import {
+	buildAnalytics,
+	decorateThing,
+	listThings,
+	thingImageUrl,
+} from "@/lib/stuff"
+
+jest.mock("fs", () => ({
+	promises: {
+		readdir: jest.fn(),
+		readFile: jest.fn(),
+		access: jest.fn(),
+	},
+}))
+
+const mockFs = fs as jest.Mocked<typeof fs>
 
 const PAGE = `<!doctype html>
 <html lang="en">
@@ -132,5 +148,74 @@ describe("decorateThing", () => {
 
 		expect(out).toContain("<h1>Hello</h1>")
 		expect(out).toContain("<title>Test Thing</title>")
+	})
+})
+
+/**
+ * Card thumbnails are captured by a script and committed, so they can go
+ * missing. The contract is that a missing one degrades visibly (OG card) and
+ * audibly (build warning) — never silently.
+ */
+describe("thingImageUrl", () => {
+	const base = { slug: "a-thing", title: "A Thing", description: null }
+
+	it("prefers the committed screenshot", () => {
+		expect(
+			thingImageUrl({ ...base, screenshot: "/images/stuff/a-thing.png" })
+		).toBe("/images/stuff/a-thing.png")
+	})
+
+	it("falls back to the generated OG card when there is no screenshot", () => {
+		expect(thingImageUrl({ ...base, screenshot: null })).toBe(
+			"/building/stuff/a-thing/og"
+		)
+	})
+})
+
+describe("listThings screenshots", () => {
+	const enoent = Object.assign(new Error("not found"), { code: "ENOENT" })
+
+	beforeEach(() => {
+		jest.clearAllMocks()
+		mockFs.readdir.mockResolvedValue(["a-thing.html"] as never)
+		mockFs.readFile.mockResolvedValue(
+			"<title>A Thing</title><meta name=\"description\" content=\"Desc.\" />" as never
+		)
+	})
+
+	afterEach(() => {
+		jest.restoreAllMocks()
+	})
+
+	it("attaches the screenshot path when the file exists", async () => {
+		mockFs.access.mockResolvedValue(undefined as never)
+
+		const [thing] = await listThings()
+
+		expect(thing.screenshot).toBe("/images/stuff/a-thing.png")
+		expect(thing.title).toBe("A Thing")
+	})
+
+	it("warns and returns null when the screenshot has not been captured", async () => {
+		mockFs.access.mockRejectedValue(enoent)
+		const warn = jest.spyOn(console, "warn").mockImplementation(() => {})
+
+		const [thing] = await listThings()
+
+		expect(thing.screenshot).toBeNull()
+		expect(warn).toHaveBeenCalledWith(
+			expect.stringContaining('no screenshot for "a-thing"')
+		)
+		expect(warn).toHaveBeenCalledWith(
+			expect.stringContaining("npm run stuff:shots")
+		)
+	})
+
+	it("rethrows anything that is not a missing file", async () => {
+		mockFs.access.mockRejectedValue(
+			Object.assign(new Error("denied"), { code: "EACCES" })
+		)
+
+		await expect(listThings()).rejects.toThrow("denied")
 	})
 })

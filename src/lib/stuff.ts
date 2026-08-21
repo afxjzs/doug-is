@@ -16,10 +16,50 @@ import { getSiteUrl } from "@/lib/utils/domain-detection"
 
 export const STUFF_DIR = path.join(process.cwd(), "src", "content", "stuff")
 
+// Card thumbnails, captured by scripts/capture-stuff-shots.mjs and committed.
+// They are not generated during `next build` — Vercel's build container has no
+// browser — so they can lag behind a page that changed. Missing ones are
+// reported at build time (see resolveScreenshot) rather than silently skipped.
+export const STUFF_SHOT_DIR = path.join(
+	process.cwd(),
+	"public",
+	"images",
+	"stuff"
+)
+
 export interface Thing {
 	slug: string
 	title: string
 	description: string | null
+	/** Public path of the committed screenshot, or null when none exists yet. */
+	screenshot: string | null
+}
+
+/**
+ * Card image for a thing: its screenshot when one has been captured, otherwise
+ * the generated OG card, so the grid never renders an empty tile.
+ */
+export function thingImageUrl(thing: Thing): string {
+	return thing.screenshot ?? `/building/stuff/${thing.slug}/og`
+}
+
+async function resolveScreenshot(slug: string): Promise<string | null> {
+	const file = `${slug}.png`
+	try {
+		await fs.access(path.join(STUFF_SHOT_DIR, file))
+		return `/images/stuff/${file}`
+	} catch (error: unknown) {
+		if ((error as NodeJS.ErrnoException)?.code === "ENOENT") {
+			// Loud, because the fallback still looks fine — nothing on the page
+			// would tell you a screenshot was never captured.
+			console.warn(
+				`[stuff] no screenshot for "${slug}" - the card falls back to its OG ` +
+					`card. Run \`npm run stuff:shots\` and commit public/images/stuff/${file}.`
+			)
+			return null
+		}
+		throw error
+	}
 }
 
 function extract(html: string, regex: RegExp): string | null {
@@ -65,6 +105,7 @@ export async function listThings(): Promise<Thing[]> {
 					html,
 					/<meta\s+name=["']description["']\s+content=["']([\s\S]*?)["']/i
 				),
+				screenshot: await resolveScreenshot(slug),
 			}
 		})
 	)

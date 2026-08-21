@@ -1,6 +1,9 @@
 import { render, screen } from "@testing-library/react"
 import { useRouter } from "next/navigation"
-import BuildingPage from "../../(site)/building/page"
+// The project list moved out of page.tsx when /building became a server
+// component. Rendering the async page here would render nothing, which would
+// make the negative assertions below pass without testing anything.
+import BuildingPortfolio from "../../(site)/building/BuildingPortfolio"
 
 // Mock next/navigation
 jest.mock("next/navigation", () => ({
@@ -31,7 +34,7 @@ describe("Building Routes Tests", () => {
 
 	describe("Project Links Validation", () => {
 		it("should list all projects that have corresponding pages", () => {
-			render(<BuildingPage />)
+			render(<BuildingPortfolio />)
 
 			// These projects should be listed and have corresponding pages
 			expect(screen.getByText("Hopping List")).toBeInTheDocument()
@@ -64,7 +67,7 @@ describe("Building Routes Tests", () => {
 		})
 
 		it("should not list projects that do not have corresponding pages", () => {
-			render(<BuildingPage />)
+			render(<BuildingPortfolio />)
 
 			// This project is no longer listed since it had no corresponding page
 			expect(
@@ -73,7 +76,7 @@ describe("Building Routes Tests", () => {
 		})
 
 		it("should not list projects that are commented out but have pages", () => {
-			render(<BuildingPage />)
+			render(<BuildingPortfolio />)
 
 			// These projects have pages but are commented out in the building page
 			// They should not appear in the rendered output
