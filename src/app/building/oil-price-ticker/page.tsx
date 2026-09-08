@@ -16,11 +16,11 @@ import { generateProjectPageStructuredData } from "@/lib/utils/structured-data"
 export const metadata: Metadata = {
 	title: `Oil Price Ticker | Building | ${getSiteName()}`,
 	description:
-		"A real-time oil price ticker that displays current oil prices with live updates. Built with modern web technologies for accurate, up-to-date market data.",
+		"A macOS menu bar app that shows the live WTI crude front-month price, with a configurable refresh interval and a native preferences window.",
 	openGraph: {
 		title: `Oil Price Ticker | Building | ${getSiteName()}`,
 		description:
-			"A real-time oil price ticker that displays current oil prices with live updates. Built with modern web technologies for accurate, up-to-date market data.",
+			"A macOS menu bar app that shows the live WTI crude front-month price, with a configurable refresh interval and a native preferences window.",
 		url: getCanonicalUrl("/building/oil-price-ticker"),
 		siteName: getSiteName(),
 		images: [
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: `Oil Price Ticker | Building | ${getSiteName()}`,
 		description:
-			"A real-time oil price ticker that displays current oil prices with live updates. Built with modern web technologies for accurate, up-to-date market data.",
+			"A macOS menu bar app that shows the live WTI crude front-month price, with a configurable refresh interval and a native preferences window.",
 		images: [
 			getSocialImageUrl("/images/projects/oil-price-ticker/oil-price-icon.png"),
 		],
@@ -55,14 +55,14 @@ export default function OilPriceTickerPage() {
 	const projectData = {
 		title: "Oil Price Ticker",
 		description:
-			"A real-time oil price ticker that displays current oil prices with live updates. Built with modern web technologies for accurate, up-to-date market data.",
+			"A macOS menu bar app that shows the live WTI crude front-month price, with a configurable refresh interval and a native preferences window.",
 		url: "/building/oil-price-ticker",
 		image: "/images/projects/oil-price-ticker/oil-price-icon.png",
-		technologies: ["React", "TypeScript", "Next.js"],
+		technologies: ["Swift", "SwiftUI", "AppKit"],
 		github_url: "https://github.com/afxjzs/oil-price-ticker",
 		live_url: "/files/OilPriceTicker.zip",
-		created_at: "2024-01-10T09:00:00Z",
-		updated_at: "2024-01-15T16:30:00Z",
+		created_at: "2025-06-23T21:15:00Z",
+		updated_at: "2026-09-08T23:30:00Z",
 	}
 
 	const structuredData = generateProjectPageStructuredData(projectData)
@@ -116,6 +116,16 @@ export default function OilPriceTickerPage() {
 							that means the price of oil is important to me and I just wanted
 							to see how fast I could put this together. <br />
 							Turns out it was about 45 minutes end to end.
+						</p>
+						<p className="mt-6 text-base text-[rgba(var(--color-foreground),0.7)] max-w-2xl leading-relaxed border-l-2 border-[rgba(var(--color-accent),0.4)] pl-4">
+							<span className="text-[rgba(var(--color-accent),0.9)] font-semibold">
+								Updated September 2026:
+							</span>{" "}
+							Barchart put their quote pages behind a bot wall, so the ticker
+							had been sitting there showing dashes. It now reads the WTI
+							front-month price from Yahoo Finance, and when a fetch does fail
+							it flags the price as stale and tells you why instead of going
+							blank.
 						</p>
 					</div>
 
@@ -251,7 +261,7 @@ export default function OilPriceTickerPage() {
 								Customizable Preferences
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)]">
-								Set your own update interval and display format
+								Choose how often it refreshes, from every minute to hourly
 							</p>
 						</div>
 					</div>
@@ -320,7 +330,7 @@ export default function OilPriceTickerPage() {
 										>
 											<path d="m9 12 2 2 4-4" />
 										</svg>
-										macOS 10.12 or later
+										macOS 14.6 or later
 									</li>
 									<li className="flex items-center gap-2">
 										<svg
@@ -373,7 +383,7 @@ export default function OilPriceTickerPage() {
 										>
 											<path d="m9 12 2 2 4-4" />
 										</svg>
-										Swift & Objective-C
+										Swift and SwiftUI
 									</li>
 									<li className="flex items-center gap-2">
 										<svg
@@ -388,7 +398,7 @@ export default function OilPriceTickerPage() {
 										>
 											<path d="m9 12 2 2 4-4" />
 										</svg>
-										Cocoa frameworks
+										AppKit and Combine
 									</li>
 									<li className="flex items-center gap-2">
 										<svg
@@ -403,7 +413,7 @@ export default function OilPriceTickerPage() {
 										>
 											<path d="m9 12 2 2 4-4" />
 										</svg>
-										REST API integration
+										Yahoo Finance quote API
 									</li>
 								</ul>
 							</div>
