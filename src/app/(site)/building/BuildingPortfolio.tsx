@@ -69,7 +69,7 @@ const projects = [
 		description:
 			"A macOS menu bar app that displays live oil price updates with customizable preferences.",
 		image: "/images/projects/oil-price-ticker/oil-price-icon.png",
-		tags: ["macOS", "Swift", "Menu Bar", "Live Data", "Objective-C"],
+		tags: ["macOS", "Swift", "Menu Bar", "Live Data", "SwiftUI"],
 		link: "/building/oil-price-ticker",
 		github: "https://github.com/afxjzs/oil-price-ticker",
 	},

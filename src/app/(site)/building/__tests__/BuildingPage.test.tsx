@@ -43,7 +43,7 @@ describe("BuildingPortfolio - Oil Price Ticker", () => {
 		expect(screen.getByText("Swift")).toBeInTheDocument()
 		expect(screen.getByText("Menu Bar")).toBeInTheDocument()
 		expect(screen.getByText("Live Data")).toBeInTheDocument()
-		expect(screen.getByText("Objective-C")).toBeInTheDocument()
+		expect(screen.getByText("SwiftUI")).toBeInTheDocument()
 	})
 
 	it("has a project details link for Oil Price Ticker", () => {
