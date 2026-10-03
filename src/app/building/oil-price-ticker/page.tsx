@@ -16,11 +16,11 @@ import { generateProjectPageStructuredData } from "@/lib/utils/structured-data"
 export const metadata: Metadata = {
 	title: `Oil Price Ticker | Building | ${getSiteName()}`,
 	description:
-		"A macOS menu bar app that shows the live WTI crude front-month price, with a configurable refresh interval and a native preferences window.",
+		"A macOS menu bar app that shows the WTI crude front-month price, about 10 minutes delayed, with a configurable refresh interval and a native preferences window.",
 	openGraph: {
 		title: `Oil Price Ticker | Building | ${getSiteName()}`,
 		description:
-			"A macOS menu bar app that shows the live WTI crude front-month price, with a configurable refresh interval and a native preferences window.",
+			"A macOS menu bar app that shows the WTI crude front-month price, about 10 minutes delayed, with a configurable refresh interval and a native preferences window.",
 		url: getCanonicalUrl("/building/oil-price-ticker"),
 		siteName: getSiteName(),
 		images: [
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: `Oil Price Ticker | Building | ${getSiteName()}`,
 		description:
-			"A macOS menu bar app that shows the live WTI crude front-month price, with a configurable refresh interval and a native preferences window.",
+			"A macOS menu bar app that shows the WTI crude front-month price, about 10 minutes delayed, with a configurable refresh interval and a native preferences window.",
 		images: [
 			getSocialImageUrl("/images/projects/oil-price-ticker/oil-price-icon.png"),
 		],
@@ -55,14 +55,14 @@ export default function OilPriceTickerPage() {
 	const projectData = {
 		title: "Oil Price Ticker",
 		description:
-			"A macOS menu bar app that shows the live WTI crude front-month price, with a configurable refresh interval and a native preferences window.",
+			"A macOS menu bar app that shows the WTI crude front-month price, about 10 minutes delayed, with a configurable refresh interval and a native preferences window.",
 		url: "/building/oil-price-ticker",
 		image: "/images/projects/oil-price-ticker/oil-price-icon.png",
-		technologies: ["Swift", "SwiftUI", "AppKit"],
+		technologies: ["Swift", "SwiftUI", "AppKit", "Cloudflare Workers"],
 		github_url: "https://github.com/afxjzs/oil-price-ticker",
 		live_url: "/files/OilPriceTicker.zip",
 		created_at: "2025-06-23T21:15:00Z",
-		updated_at: "2026-09-08T23:30:00Z",
+		updated_at: "2026-10-03T18:00:00Z",
 	}
 
 	const structuredData = generateProjectPageStructuredData(projectData)
@@ -119,13 +119,15 @@ export default function OilPriceTickerPage() {
 						</p>
 						<p className="mt-6 text-base text-[rgba(var(--color-foreground),0.7)] max-w-2xl leading-relaxed border-l-2 border-[rgba(var(--color-accent),0.4)] pl-4">
 							<span className="text-[rgba(var(--color-accent),0.9)] font-semibold">
-								Updated September 2026:
+								Updated October 2026:
 							</span>{" "}
-							Barchart put their quote pages behind a bot wall, so the ticker
-							had been sitting there showing dashes. It now reads the WTI
-							front-month price from Yahoo Finance, and when a fetch does fail
-							it flags the price as stale and tells you why instead of going
-							blank.
+							Barchart put their quote pages behind a bot wall, and then Yahoo
+							started rate limiting individual Macs. The price now comes from a
+							small relay on Cloudflare that checks several sources every five
+							minutes, so the quote sites see one poller instead of every copy
+							of the app. If the price stops moving during trading hours, the
+							ticker marks it with ⚠︎ and tells you why. Outside trading hours
+							it says the market is closed.
 						</p>
 					</div>
 
@@ -212,7 +214,8 @@ export default function OilPriceTickerPage() {
 								Live Updates
 							</h3>
 							<p className="text-[rgba(var(--color-foreground),0.7)]">
-								Real-time oil price data updated automatically in your menu bar
+								The WTI price, about 10 minutes behind the exchange, updated
+								automatically in your menu bar
 							</p>
 						</div>
 
@@ -413,7 +416,7 @@ export default function OilPriceTickerPage() {
 										>
 											<path d="m9 12 2 2 4-4" />
 										</svg>
-										Yahoo Finance quote API
+										Cloudflare Workers relay
 									</li>
 								</ul>
 							</div>
