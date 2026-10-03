@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import Image from "next/image"
 import { MVPVariantConfig } from "@/lib/mvp-variants/types"
 import { useAnalytics } from "@/lib/analytics/context"
+import { loadCalEmbed } from "@/lib/cal-embed"
 
 // Reveal-on-scroll: flips data-revealed once the element crosses the viewport.
 // Children stagger via CSS `transition-delay` set with the `data-stagger` index.
@@ -66,58 +67,6 @@ const iconMap: Record<string, React.ReactNode> = {
       <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
     </svg>
   ),
-}
-
-function loadCalEmbed(calLink: string, namespace: string) {
-  // Match Cal.com's official embed pattern: set up queue before script loads
-  const C = window as any
-  const A = "https://app.cal.com/embed/embed.js"
-  const L = "init"
-  const p = function (a: any, ar: any) { a.q.push(ar) }
-  const d = document
-
-  C.Cal = C.Cal || function (...args: any[]) {
-    const cal = C.Cal
-    const ar = args
-    if (!cal.loaded) {
-      cal.ns = {}
-      cal.q = cal.q || []
-      d.head.appendChild(d.createElement("script")).src = A
-      cal.loaded = true
-    }
-    if (ar[0] === L) {
-      const api: any = function (...apiArgs: any[]) { p(api, apiArgs) }
-      const ns = ar[1]
-      api.q = api.q || []
-      if (typeof ns === "string") {
-        cal.ns[ns] = cal.ns[ns] || api
-        p(cal.ns[ns], ar)
-        p(cal, ["initNamespace", ns])
-      } else {
-        p(cal, ar)
-      }
-      return
-    }
-    p(cal, ar)
-  }
-
-  C.Cal("init", namespace, { origin: "https://app.cal.com" })
-
-  C.Cal.ns[namespace]("inline", {
-    elementOrSelector: `#my-cal-inline-${namespace}`,
-    config: { layout: "month_view", useSlotsViewOnSmallScreen: "true", theme: "dark" },
-    calLink,
-  })
-
-  C.Cal.ns[namespace]("ui", {
-    theme: "dark",
-    cssVarsPerTheme: {
-      light: { "cal-brand": "#0d1121" },
-      dark: { "cal-brand": "#517bf4" },
-    },
-    hideEventTypeDetails: false,
-    layout: "month_view",
-  })
 }
 
 export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
@@ -211,7 +160,11 @@ export default function MVPLandingPage({ variant }: MVPLandingPageProps) {
     if (formStatus === "success" && !calLoadedRef.current) {
       calLoadedRef.current = true
       setTimeout(() => {
-        loadCalEmbed(variant.cal.link, variant.cal.namespace)
+        loadCalEmbed({
+          calLink: variant.cal.link,
+          namespace: variant.cal.namespace,
+          brand: { light: "#0d1121", dark: "#517bf4" },
+        })
       }, 100)
     }
   }, [formStatus, variant.cal.link, variant.cal.namespace])

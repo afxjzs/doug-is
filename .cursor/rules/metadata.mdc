@@ -36,14 +36,16 @@ This project implements comprehensive metadata and social media sharing function
 ```
 src/app/
 ├── (site)/                    # Route group - actual page content
-│   ├── layout.tsx            # Main site metadata defaults
-│   ├── advising/page.tsx     # Section content
-│   └── writing/page.tsx      # Section content
-├── advising/                  # Regular route - metadata configuration
-│   └── metadata.ts           # Section-specific metadata
-└── writing/                   # Regular route - metadata configuration
-    └── metadata.ts           # Section-specific metadata
+│   ├── layout.tsx            # Site chrome (VisualLayout)
+│   └── automating/
+│       ├── page.tsx          # Section content; `export { metadata } from "./metadata"`
+│       └── metadata.ts       # Section-specific metadata
+└── building/                  # Regular route - only wraps CHILD pages
+    ├── layout.tsx            # Applies to /building/mvps etc., NOT to (site)/building/page.tsx
+    └── mvps/page.tsx
 ```
+
+Layouts nest by folder, not by URL. Metadata for a `(site)` section page must be exported from a file inside `(site)/<section>/`. A regular-folder `<section>/layout.tsx` with metadata does not apply to it. That's why `/advising`, `/building`, and `/investing` currently render the root `"doug.is..."` title (verified on prod 2026-10-03).
 
 ### Metadata Standards
 
