@@ -15,12 +15,12 @@ export const metadata: Metadata = {
   openGraph: {
     title,
     description,
-    url: getCanonicalUrl("/building/mvp"),
+    url: getCanonicalUrl("/building/mvps"),
     siteName: getSiteName(),
     type: "website",
     images: [
       {
-        url: getSocialImageUrl("/building/mvp/opengraph-image"),
+        url: getSocialImageUrl("/building/mvps/opengraph-image"),
         width: 1200,
         height: 630,
         alt: "Your MVP — Built and Deployed in One Week",
@@ -31,11 +31,11 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: [getSocialImageUrl("/building/mvp/twitter-image")],
+    images: [getSocialImageUrl("/building/mvps/twitter-image")],
     creator: "@doug__is",
   },
   alternates: {
-    canonical: getCanonicalUrl("/building/mvp"),
+    canonical: getCanonicalUrl("/building/mvps"),
   },
 }
 

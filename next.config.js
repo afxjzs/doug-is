@@ -15,6 +15,19 @@ const nextConfig = {
 				destination: "/writing/:path*",
 				statusCode: 301,
 			},
+			// The MVP-as-a-Service landing moved from /building/mvp to
+			// /building/mvps (October 2026). Variants (/building/mvp/<id>)
+			// follow too.
+			{
+				source: "/building/mvp",
+				destination: "/building/mvps",
+				statusCode: 301,
+			},
+			{
+				source: "/building/mvp/:path*",
+				destination: "/building/mvps/:path*",
+				statusCode: 301,
+			},
 		]
 	},
 

@@ -171,7 +171,7 @@ export default async function Image() {
             fontSize: "18px",
           }}
         >
-          doug.is/building/mvp
+          doug.is/building/mvps
         </div>
       </div>
     ),
