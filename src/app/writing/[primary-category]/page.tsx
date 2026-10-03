@@ -4,32 +4,25 @@ import { getPostsByCategory } from "@/lib/supabase/data"
 import { formatDate } from "@/lib/utils"
 import Image from "next/image"
 import { notFound } from "next/navigation"
+import { categoryMetadata } from "@/lib/writing-metadata"
 
 export async function generateMetadata({
 	params,
 }: {
-	params: Promise<{ primary_category: string }>
+	params: Promise<{ "primary-category": string }>
 }): Promise<Metadata> {
 	const resolvedParams = await params
-	// Capitalize the first letter of each word in the category
-	const formattedCategory = resolvedParams.primary_category
-		.split("-")
-		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-		.join(" ")
-
-	return {
-		title: `${formattedCategory} | doug.is Writing`,
-		description: `Thoughts, ideas, and insights on ${formattedCategory.toLowerCase()}.`,
-	}
+	// Legacy URL: the canonical points at /writing/about/<category>.
+	return categoryMetadata(resolvedParams["primary-category"])
 }
 
 export default async function WritingCategoryPage({
 	params,
 }: {
-	params: Promise<{ primary_category: string }>
+	params: Promise<{ "primary-category": string }>
 }) {
 	const resolvedParams = await params
-	const category = resolvedParams.primary_category
+	const category = resolvedParams["primary-category"]
 	const posts = await getPostsByCategory(category)
 
 	if (!posts || posts.length === 0) {

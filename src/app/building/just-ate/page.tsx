@@ -1,4 +1,3 @@
-import { Metadata } from "next"
 import Link from "next/link"
 import SafeImage from "@/components/SafeImage"
 import {
@@ -6,39 +5,15 @@ import {
 	getSocialImageUrl,
 	getSiteName,
 } from "@/lib/utils/domain-detection"
+import { pageMetadata } from "@/lib/metadata"
 
-export const metadata: Metadata = {
-	title: `JustAte | Building | ${getSiteName()}`,
+export const metadata = pageMetadata({
+	trail: ["building", "JustAte"],
 	description:
 		"A timer app that reminds you to exercise at the optimal time after eating to kickstart your metabolism",
-	openGraph: {
-		title: "JustAte - Post-Meal Exercise Timer",
-		description:
-			"A timer app that reminds you to exercise at the optimal time after eating to boost metabolism",
-		url: getCanonicalUrl("/building/just-ate"),
-		siteName: getSiteName(),
-		type: "website",
-		images: [
-			{
-				url: getSocialImageUrl("/images/projects/just-ate.jpg"),
-				width: 1200,
-				height: 630,
-				alt: "JustAte Exercise Timer App",
-			},
-		],
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: "JustAte - Post-Meal Exercise Timer",
-		description:
-			"A timer app that reminds you to exercise at the optimal time after eating to boost metabolism",
-		images: [getSocialImageUrl("/images/projects/just-ate.jpg")],
-		creator: "@doug__is",
-	},
-	alternates: {
-		canonical: getCanonicalUrl("/building/just-ate"),
-	},
-}
+	path: "/building/just-ate",
+	image: { url: "/images/projects/just-ate.jpg", width: 1200, height: 630 },
+})
 
 export default function JustAtePage() {
 	return (

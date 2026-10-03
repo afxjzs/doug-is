@@ -40,20 +40,22 @@ src/app/
 │   └── automating/
 │       ├── page.tsx          # Section content; `export { metadata } from "./metadata"`
 │       └── metadata.ts       # Section-specific metadata
-└── building/                  # Regular route - only wraps CHILD pages
-    ├── layout.tsx            # Applies to /building/mvps etc., NOT to (site)/building/page.tsx
-    └── mvps/page.tsx
+└── building/                  # Regular route - child pages only
+    ├── oil-price-ticker/page.tsx   # exports pageMetadata({ trail: ["building", "Oil Price Ticker"], ... })
+    └── goose-chase/layout.tsx      # client page, so its metadata lives in a layout
 ```
 
-Layouts nest by folder, not by URL. Metadata for a `(site)` section page must be exported from a file inside `(site)/<section>/`. A regular-folder `<section>/layout.tsx` with metadata does not apply to it. That's why `/advising`, `/building`, and `/investing` currently render the root `"doug.is..."` title (verified on prod 2026-10-03).
+Layouts nest by folder, not by URL. Metadata for a `(site)` section page must be exported from a file inside `(site)/<section>/`. A regular-folder `<section>/layout.tsx` with metadata does not apply to it. (Until October 2026 that left `/advising`, `/building`, and `/investing` with the root fallback title on prod.)
+
+Build every page's metadata with `pageMetadata()` from `src/lib/metadata.ts`. Don't hand-write titles or OpenGraph blocks.
 
 ### Metadata Standards
 
-**Title Patterns:**
-- **Section Pages**: "doug.is / SectionName" (e.g., "doug.is / Building")
-- **Project Pages**: "ProjectName | Building | doug.is" (e.g., "Oil Price Ticker | Building | doug.is")
-- **Blog Posts**: "PostTitle | Thinking | doug.is"
-- **Homepage**: "doug.is - Building, Advising, and Investing"
+**Title Patterns** (the root layout's `"doug.is / %s"` template plus `pageMetadata({ trail })`):
+- **Section Pages**: "doug.is / Building" (`trail: ["Building"]`)
+- **Pages inside a section**: "doug.is / building / Oil Price Ticker" (`trail: ["building", "Oil Price Ticker"]`)
+- **Blog Posts**: "doug.is / writing / Post Title" (via `postMetadata()` in `src/lib/writing-metadata.ts`)
+- **Homepage**: "doug.is | Engineer, Advisor, Investor" (`HOME_TITLE`, absolute)
 
 **Description Standards:**
 - **Length**: 150-160 characters optimal for SEO and social sharing
@@ -71,100 +73,31 @@ Layouts nest by folder, not by URL. Metadata for a `(site)` section page must be
 
 ### Static Page Metadata
 
-**Section Pages** (`src/app/[section]/metadata.ts`):
+**Section Pages** (`src/app/(site)/<section>/metadata.ts`, exported from the page):
 ```typescript
-import { Metadata } from 'next'
+import { pageMetadata } from "@/lib/metadata"
 
-export const metadata: Metadata = {
-  title: 'doug.is / Building',
-  description: 'Explore my software development projects, from iOS apps to web applications. Discover the tools and technologies I use to build innovative solutions.',
-  openGraph: {
-    title: 'Building Projects | doug.is',
-    description: 'Explore my software development projects, from iOS apps to web applications. Discover the tools and technologies I use to build innovative solutions.',
-    url: 'https://doug.is/building',
-    siteName: 'doug.is',
-    images: [
-      {
-        url: 'https://doug.is/images/building.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'doug.is Building Projects',
-      }
-    ],
-    locale: 'en_US',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Building Projects | doug.is',
-    description: 'Explore my software development projects, from iOS apps to web applications.',
-    images: ['https://doug.is/images/building.jpg'],
-  },
-  alternates: {
-    canonical: 'https://doug.is/building',
-  },
-}
+export const metadata = pageMetadata({
+  trail: ["Building"],                       // -> "doug.is / Building"
+  description: "Projects and applications I've built",
+  path: "/building",                         // canonical + og:url (relative; metadataBase resolves it)
+  image: { url: "/images/projects/doug-is.png", width: 1200, height: 630 }, // optional
+})
 ```
 
 ### Dynamic Content Metadata
 
-**Blog Posts** (`src/app/writing/[primary-category]/[slug]/page.tsx`):
+**Blog Posts** (both the canonical and legacy routes):
 ```typescript
-export async function generateMetadata({
-  params,
-}: {
-  params: { 'primary-category': string; slug: string }
-}): Promise<Metadata> {
-  const slug = params.slug
-  const category = params['primary-category']
-  
-  // Fetch post data
-  const post = await getPostBySlug(slug)
-  
-  if (!post) {
-    return {
-      title: 'Post Not Found | doug.is',
-      description: 'The requested blog post could not be found.',
-    }
-  }
+import { postMetadata } from "@/lib/writing-metadata"
 
-  const title = `${post.title} | Thinking | doug.is`
-  const description = post.excerpt || post.content.substring(0, 155) + '...'
-  const publishedTime = post.published_at
-  const featuredImage = post.featured_image || 'https://doug.is/images/thinking.jpg'
-  const canonicalUrl = `https://doug.is/writing/${category}/${slug}`
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title: `${post.title} | doug.is`,
-      description,
-      url: canonicalUrl,
-      siteName: 'doug.is',
-      images: [
-        {
-          url: featuredImage,
-          width: 1200,
-          height: 630,
-          alt: post.title,
-        }
-      ],
-      locale: 'en_US',
-      type: 'article',
-      publishedTime,
-      authors: ['Doug'],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${post.title} | doug.is`,
-      description,
-      images: [featuredImage],
-    },
-    alternates: {
-      canonical: canonicalUrl,
-    },
-  }
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug, category } = await params
+  const post = await getPostBySlugAndCategory(slug, category)
+  if (!post) return { title: "Post Not Found", description: "The requested blog post could not be found." }
+  // "doug.is / writing / <title>", canonical /writing/about/<category>/<slug>,
+  // featured image or the site default, article timestamps.
+  return postMetadata(post)
 }
 ```
 

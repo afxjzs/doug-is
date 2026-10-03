@@ -1,4 +1,3 @@
-import { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
 import Script from "next/script"
@@ -12,44 +11,15 @@ import {
 	getSiteName,
 } from "@/lib/utils/domain-detection"
 import { generateProjectPageStructuredData } from "@/lib/utils/structured-data"
+import { pageMetadata } from "@/lib/metadata"
 
-export const metadata: Metadata = {
-	title: `Oil Price Ticker | Building | ${getSiteName()}`,
+export const metadata = pageMetadata({
+	trail: ["building", "Oil Price Ticker"],
 	description:
 		"A macOS menu bar app that shows the WTI crude front-month price, about 10 minutes delayed, with a configurable refresh interval and a native preferences window.",
-	openGraph: {
-		title: `Oil Price Ticker | Building | ${getSiteName()}`,
-		description:
-			"A macOS menu bar app that shows the WTI crude front-month price, about 10 minutes delayed, with a configurable refresh interval and a native preferences window.",
-		url: getCanonicalUrl("/building/oil-price-ticker"),
-		siteName: getSiteName(),
-		images: [
-			{
-				url: getSocialImageUrl(
-					"/images/projects/oil-price-ticker/oil-price-icon.png"
-				),
-				width: 1200,
-				height: 630,
-				alt: "Oil Price Ticker - Real-time oil price monitoring",
-			},
-		],
-		locale: "en_US",
-		type: "website",
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: `Oil Price Ticker | Building | ${getSiteName()}`,
-		description:
-			"A macOS menu bar app that shows the WTI crude front-month price, about 10 minutes delayed, with a configurable refresh interval and a native preferences window.",
-		images: [
-			getSocialImageUrl("/images/projects/oil-price-ticker/oil-price-icon.png"),
-		],
-		creator: "@doug__is",
-	},
-	alternates: {
-		canonical: getCanonicalUrl("/building/oil-price-ticker"),
-	},
-}
+	path: "/building/oil-price-ticker",
+	image: { url: "/images/projects/oil-price-ticker/oil-price-icon.png", width: 1200, height: 630 },
+})
 
 export default function OilPriceTickerPage() {
 	const projectData = {

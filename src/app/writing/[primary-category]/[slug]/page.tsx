@@ -10,11 +10,7 @@ import {
 	getPostsStatic,
 } from "@/lib/supabase/data"
 import { PostView } from "@/components/PostView"
-import {
-	getCanonicalUrl,
-	getSocialImageUrl,
-	getSiteName,
-} from "@/lib/utils/domain-detection"
+import { postMetadata } from "@/lib/writing-metadata"
 
 // Revalidate on-demand when posts are updated via admin
 // (API routes call revalidateTag("posts") and revalidatePath on save)
@@ -24,80 +20,18 @@ export async function generateMetadata({
 }: {
 	params: Promise<{ slug: string; "primary-category": string }>
 }): Promise<Metadata> {
-	try {
-		// Await params before accessing properties
-		const paramsData = await params
-		// Use both category and slug to ensure we get the correct post
-		const post = await getPostBySlugAndCategoryStatic(
-			paramsData.slug,
-			paramsData["primary-category"]
-		)
+	const paramsData = await params
+	const post = await getPostBySlugAndCategoryStatic(
+		paramsData.slug,
+		paramsData["primary-category"]
+	)
 
-		if (!post) {
-			return {
-				title: "Post Not Found | doug.is",
-				description: "The requested blog post could not be found.",
-			}
-		}
-
-		// Create canonical URL with dynamic domain
-		const canonicalUrl = getCanonicalUrl(
-			`/writing/about/${post.category.toLowerCase()}/${post.slug}`
-		)
-
-		// Create social sharing image URL with dynamic domain
-		const socialImageUrl = post.featured_image
-			? getSocialImageUrl(post.featured_image)
-			: getSocialImageUrl("/images/doug-2024-cropped.png")
-
-		// Format category for display
-		const categoryDisplay =
-			post.category.charAt(0).toUpperCase() + post.category.slice(1)
-
-		return {
-			title: `${post.title} | ${getSiteName()}`,
-			description: post.excerpt,
-			openGraph: {
-				title: post.title,
-				description: post.excerpt,
-				type: "article",
-				url: canonicalUrl,
-				images: [
-					{
-						url: socialImageUrl,
-						width: 1200,
-						height: 630,
-						alt: post.title,
-					},
-				],
-				siteName: getSiteName(),
-				locale: "en_US",
-			},
-			twitter: {
-				card: "summary_large_image",
-				title: post.title,
-				description: post.excerpt,
-				images: [socialImageUrl],
-				creator: "@doug__is",
-			},
-			other: {
-				"article:published_time": post.published_at,
-				"article:modified_time": post.updated_at || post.published_at,
-				"article:author": "Douglas Rogers",
-				"article:section": categoryDisplay,
-				"article:tag": post.category,
-			},
-			alternates: {
-				canonical: canonicalUrl,
-			},
-		}
-	} catch (error) {
-		console.error("Error generating metadata for post:", error)
-		return {
-			title: `Blog Post | ${getSiteName()}`,
-			description: "A blog post by Douglas Rogers",
-		}
+	if (!post) {
+		return { title: "Post Not Found", description: "The requested blog post could not be found." }
 	}
+
+	// Legacy URL: the canonical points at /writing/about/<category>/<slug>.
+	return postMetadata(post)
 }
 
 // Generate static paths for all posts
