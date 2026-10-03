@@ -11,7 +11,7 @@ const steps = [
 	},
 	{
 		title: "The Audit",
-		detail: "$500, credited toward the build",
+		detail: "$500, which counts toward the build",
 		body: "I learn how the work gets done today, step by step, with the people who do it. You get a written list of what to automate, what to leave alone, and what each fix should cost and save.",
 	},
 	{
@@ -48,7 +48,7 @@ const faqs = [
 	},
 	{
 		q: "What happens when the AI gets something wrong?",
-		a: "It will, sometimes, so I plan for it. Anything that must be exact runs as plain code. AI handles the judgment calls, and a person checks anything risky before it goes out. I test against your real past work before anything goes live.",
+		a: "It will, sometimes, so I build around that. Most steps in a workflow don't need AI at all. If a step can follow fixed rules, it runs as plain code: same input, same answer, every time, and nothing made up. AI only gets the steps that need judgment, like reading a messy email, and a person signs off on anything risky. Before it goes live, I run it against your real past work and check the results.",
 	},
 	{
 		q: "What about my data?",
@@ -60,7 +60,7 @@ const faqs = [
 	},
 	{
 		q: "Why is the call free but the audit isn't?",
-		a: "The call tells us both whether it's worth going further. The audit is real work. If you go ahead with a build, the $500 comes off the price.",
+		a: "The call is for both of us to see if there's something worth fixing. The audit is real work, so it's paid. If you hire me for the build, that $500 counts toward it, so the audit costs you nothing extra.",
 	},
 	{
 		q: "I'm one person, not a company. Is this for me?",
@@ -192,19 +192,10 @@ export default function AutomatingPage() {
 				<h2 className="text-3xl font-bold display-heading mb-8">Questions People Ask</h2>
 				<div className="space-y-4">
 					{faqs.map((faq) => (
-						<details key={faq.q} className="dark-card group">
-							<summary className="cursor-pointer text-lg font-semibold list-none flex justify-between gap-4">
-								{faq.q}
-								<span
-									className="text-[rgb(var(--color-accent))] group-open:rotate-45"
-									style={{ transition: "rotate var(--dur-base) var(--ease-out)" }}
-									aria-hidden
-								>
-									+
-								</span>
-							</summary>
-							<p className={`mt-4 ${muted}`}>{faq.a}</p>
-						</details>
+						<div key={faq.q} className="dark-card">
+							<h3 className="text-lg font-semibold mb-3">{faq.q}</h3>
+							<p className={muted}>{faq.a}</p>
+						</div>
 					))}
 				</div>
 			</section>
