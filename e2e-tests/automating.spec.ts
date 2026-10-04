@@ -31,15 +31,18 @@ test.describe("/automating", () => {
 
 		// 5 h x 2 people x 52 weeks = 520 h/yr; x $50 = $26,000/yr; 50% = $13,000.
 		const calc = page.getByRole("region", { name: "Cost calculator" })
-		await expect(calc).toContainText("520 hours a year")
-		await expect(calc).toContainText("$26,000 a year")
-		await expect(calc).toContainText("$13,000 a year")
+		const result = (name: string) => calc.getByRole("group", { name })
+		await expect(result("Hours a year")).toContainText("520")
+		await expect(result("What it costs you a year")).toContainText("$26,000")
+		await expect(result("What you get back a year")).toContainText("$13,000")
 
-		// Payback only appears once the visitor types a build cost.
-		await expect(calc).not.toContainText("pays for itself")
-		await page.getByLabel("A build that costs").fill("3000")
+		// The build cost starts at $999: $999 / ($13,000 / 52 weeks) = 4 weeks.
+		await expect(page.getByLabel("Build cost")).toHaveValue("999")
+		await expect(result("Pays for itself in")).toContainText("4 weeks")
+
 		// $3,000 / ($13,000 / 52 weeks) = 12 weeks.
-		await expect(calc).toContainText("pays for itself in about 12 weeks")
+		await page.getByLabel("Build cost").fill("3000")
+		await expect(result("Pays for itself in")).toContainText("12 weeks")
 	})
 
 	test("submitting the form sends the lead and opens the calendar", async ({ page }) => {
