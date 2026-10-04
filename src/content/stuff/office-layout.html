@@ -267,7 +267,24 @@ const KINDS = { ldesk:'L-desk', desk:'Desk', box:'Box', shelf:'Shelf', glasscab:
   cart:'Drawer cabinet', chest:'Drawer chest', bookcab:'Bookcase + cabinet', filehutch:'File cabinet + hutch',
   cambrie:'Cambrie cabinet', farmfile:'Farmhouse filing cabinet', shaker:'Shaker bookcase', etagere:'Arc etagere', arch:'Arched cabinet',
   bamboo:'Bamboo etagere', cubes:'Cube bookcase', cornerlamp:'Corner floor lamp', trunk:'Storage chest', cubby:'Cubby bookcase',
-  futon:'Futon', chair:'Chair', rug:'Rug' };
+  glassdoor:'Glass door bookcase', futon:'Futon', chair:'Chair', rug:'Rug' };
+
+// Fifth batch: the four sizes of one Amazon listing, read Oct 4, 2026. All 15″ deep, on the same
+// legs (~5¾″, scaled from the 60″ diagram). Hidden, parked on open floor.
+const GLASSDOOR_LEG_NOTE = 'Leg height (~5¾″) is scaled from the listing\'s diagram.';
+function fifthBatch(){
+  const base = { kind:'glassdoor', d:15, legH:5.75, x:100, y:40, rot:0, z:0, color:'#c49a6c', est:false, hidden:true };
+  return [
+    { ...base, id:'shelf-glassdoor-46', name:'Glass door bookcase 46″', w:31.5, h:46, doors:3,
+      note:`Size from the listing (46″ version): three flip-up glass doors on legs. ${GLASSDOOR_LEG_NOTE}` },
+    { ...base, id:'shelf-glassdoor', name:'Glass door bookcase 60″', w:31.5, h:60, doors:4,
+      note:`Size from the listing's diagram (60″ version): four flip-up glass doors on legs. ${GLASSDOOR_LEG_NOTE}` },
+    { ...base, id:'shelf-glassdoor-71n', name:'Glass door bookcase 71″ narrow', w:23.62, h:70.08, doors:5,
+      note:`Size from the listing's diagram (sold as 71″ × 23.6″): five flip-up glass doors on legs. ${GLASSDOOR_LEG_NOTE}` },
+    { ...base, id:'shelf-glassdoor-71', name:'Glass door bookcase 71″ wide', w:31.5, h:71, doors:5,
+      note:`Size from the listing's size option; its diagram mislabels the height as 46″. Five flip-up glass doors on legs. ${GLASSDOOR_LEG_NOTE}` },
+  ];
+}
 
 // Fourth batch, from product pages read Oct 1, 2026. Both are low enough to sit under a window sill.
 // Hidden, parked on open floor clear of the furniture you already have.
@@ -348,6 +365,18 @@ const PRODUCTS = {
   'shelf-cubby': {
     url:'https://www.wayfair.com/furniture/pdp/17-stories-spacious-wooden-bookcases-walnut-finish-rustic-home-storage-w119556093.html',
     price:129.99, priceNote:'17 Stories Spacious Wooden Bookcase, walnut finish. Wayfair price on Oct 1, 2026.' },
+  'shelf-glassdoor-46': {
+    url:'https://www.amazon.com/dp/B0FC2VDRRQ?th=1',
+    price:327.00, priceNote:'AnywaysWood 46″ Solid Wood Bookcase with glass doors, Natural Wood. Amazon price on Oct 4, 2026.' },
+  'shelf-glassdoor': {
+    url:'https://www.amazon.com/dp/B0G6WSWYQP?th=1',
+    price:397.97, priceNote:'AnywaysWood 60″ Solid Wood Bookcase with Tempered Glass Doors, Natural Wood. Amazon price on Oct 4, 2026.' },
+  'shelf-glassdoor-71n': {
+    url:'https://www.amazon.com/dp/B0GMHDDKRQ?th=1',
+    price:357.97, priceNote:'AnywaysWood 71″ × 23.6″ Solid Wood Bookcase with Tempered Glass Doors, Natural Wood. Amazon price on Oct 4, 2026.' },
+  'shelf-glassdoor-71': {
+    url:'https://www.amazon.com/dp/B0G6X3BX22?th=1',
+    price:427.77, priceNote:'AnywaysWood 71″ × 31.5″ Solid Wood Bookcase with Tempered Glass Doors, Natural Wood. Amazon price on Oct 4, 2026.' },
   'cab-cambrie': {
     url:'https://www.wayfair.com/furniture/pdp/millwood-pines-cambrie-31-w-3-drawer-mobile-lateral-filing-cabinet-w005165895.html?piid=1255169322',
     price:83.99, priceNote:'Millwood Pines Cambrie 31″ W 3-Drawer Mobile Lateral Filing Cabinet. Wayfair sale price on Sep 30, 2026 (was $128.99).' },
@@ -539,6 +568,12 @@ const MIGRATIONS = [
       if(!placed && !kept) return null;
       return `Placed the printer table and file cabinet where you said they are${kept ? `; left ${kept} you had moved elsewhere unchanged` : ''}`;
   } },
+  { id:'2026-10-04-glass-door-bookcase', run(store){
+      let added = 0;
+      for(const its of Object.values(store.layouts))
+        for(const c of fifthBatch()) if(!its.some(i => i.id === c.id)){ its.push(withCatalog(c)); added++; }
+      return added ? `Added the glass door bookcase in its 4 sizes (hidden, priced)` : null;
+  } },
 ];
 // Later batches of product pages. Fills pieces with no link yet, and replaces a price that only
 // came from a screenshot. A link or price entered by hand is left alone and reported.
@@ -563,6 +598,7 @@ function defaultItems(){
     ...tallShelving(),
     ...lateAdds(),
     ...fourthBatch(),
+    ...fifthBatch(),
     { id:'desk', kind:'ldesk', name:'L-desk', w:63, d:48, h:30, top:1, wingA:31, wingB:23.5, curve:14, mirror:false,
       x:180-0.75-31.5, y:94-0.75-24, rot:0, z:0, color:'#c8874a', est:false,
       note:'Measured. Placed ¾″ off the south and east walls (see assumptions).' },
@@ -595,6 +631,7 @@ const PRESETS = [
   { label:'Corner floor lamp', kind:'cornerlamp', name:'Corner floor lamp', w:11.8, d:11.8, h:64, color:'#4a3a30' },
   { label:'Storage chest', kind:'trunk', name:'Storage chest', w:47.8, d:15.75, h:17.8, color:'#5a3a26' },
   { label:'Cubby bookcase', kind:'cubby', name:'Cubby bookcase', w:35.43, d:11.81, h:23.62, cols:3, rows:2, color:'#6b4630' },
+  ...fifthBatch().map(({ name, kind, w, d, h, legH, doors, color }) => ({ label:name, kind, name, w, d, h, legH, doors, color })),
   { label:'Arched cabinet', kind:'arch', name:'Arched cabinet', w:31.5, d:15.7, h:69.3, color:'#7b5a3c' },
   { label:'File cabinet + hutch', kind:'filehutch', name:'File cabinet + hutch', w:19.7, d:15.7, h:65, baseH:30.7, hutchD:7.9, color:'#1f1f1f' },
   { label:'Glass curio', kind:'curio', name:'Glass curio', w:19.69, d:15.75, h:70.87, baseH:3.15, split:33.66, color:'#1c1c1c' },
@@ -703,6 +740,10 @@ function validateDims(it){
   if(it.kind==='cart' && it.drawers !== undefined && !(Number.isInteger(it.drawers) && it.drawers >= 1 && it.drawers <= 10)) return 'Drawers must be a whole number from 1 to 10';
   if(it.kind==='farmfile'){
     if(!Number.isFinite(it.legH) || it.legH < 0 || it.legH > it.h - 8) return 'Leg height must be 0 or more and leave at least 8″ of cabinet';
+  }
+  if(it.kind==='glassdoor'){
+    if(!Number.isFinite(it.legH) || it.legH < 0 || it.legH > it.h - 12) return 'Leg height must be 0 or more and leave at least 12″ of bookcase';
+    if(!(Number.isInteger(it.doors) && it.doors >= 1 && it.doors <= 8)) return 'Doors must be a whole number from 1 to 8';
   }
   if(it.kind==='chest' && it.h < 16) return 'Height must be at least 16″ for the drawers and cubby';
   if(it.kind==='bookcab'){
@@ -1180,7 +1221,8 @@ function renderForm(){
   if(it.kind === 'curio') f += field('split','Divider height',it.split,{step:0.25});
   if(it.kind === 'cart' || it.kind === 'cambrie') f += field('casterH','Caster height',it.casterH,{step:0.25});
   if(it.kind === 'cart') f += field('drawers','Drawers',it.drawers ?? 5,{step:1});
-  if(it.kind === 'farmfile') f += field('legH','Leg height',it.legH,{step:0.25});
+  if(it.kind === 'farmfile' || it.kind === 'glassdoor') f += field('legH','Leg height',it.legH,{step:0.25});
+  if(it.kind === 'glassdoor') f += field('doors','Doors',it.doors,{step:1});
   if(it.kind === 'bookcab'){
     f += field('upperD','Shelf depth',it.upperD);
     f += field('legH','Leg height',it.legH,{step:0.1});
@@ -1774,6 +1816,38 @@ function buildItem3D(it){
       }
       for(const sx of [-1,1]) for(const sy of [-1,1])                        // corner brackets on the top
         g.add(lbox(sx*w2 - (sx>0 ? 1.5 : 0), sx*w2 + (sx<0 ? 1.5 : 0), sy*d2 - (sy>0 ? 1.5 : 0), sy*d2 + (sy<0 ? 1.5 : 0), h-1.3, h+0.05, M.dark));
+      break;
+    }
+    case 'glassdoor': {
+      // Wood case on four legs, stacked compartments each behind a framed flip-up glass door with a pull.
+      // Compartment heights follow the listing diagrams: from the bottom 12.13″, then 10.9″, then
+      // 10.31″ for each one above (3, 4 and 5-door sizes all follow this).
+      const glass = new THREE.MeshStandardMaterial({ color:'#8a7a66', transparent:true, opacity:.3, roughness:.05 });
+      const gbox = (...a) => { const m = lbox(...a, glass); m.castShadow = false; return m; };
+      const L = it.legH, t = 0.9, topT = 1, fy = d2 - 0.6;
+      for(const sx of [-1,1]) for(const sy of [-1,1]){
+        const x = sx*(w2-1.6), y = sy*(d2-1.6);
+        g.add(lbox(x-0.8, x+0.8, y-0.8, y+0.8, 0, L, mat));                  // leg
+      }
+      g.add(lbox(-w2, -w2+t, -d2, d2, L, h-topT, mat));                       // sides
+      g.add(lbox(w2-t, w2, -d2, d2, L, h-topT, mat));
+      g.add(lbox(-w2, w2, -d2, d2, h-topT, h, mat));                          // top
+      g.add(lbox(-w2+t, w2-t, -d2, d2, L, L+t, mat));                         // bottom
+      g.add(lbox(-w2+t, w2-t, -d2, -d2+0.4, L+t, h-topT, mat));               // back
+      const shares = Array.from({ length:it.doors }, (_, i) => [12.13, 10.9][i] ?? 10.31);
+      const total = shares.reduce((a, b) => a + b, 0), span = h - topT - (L + t);
+      let z = L + t;
+      for(let i=0; i<it.doors; i++){                                          // bottom to top
+        const z0 = z, z1 = z + span*shares[i]/total; z = z1;
+        if(i > 0) g.add(lbox(-w2+t, w2-t, -d2+0.4, fy, z0-0.4, z0+0.4, mat)); // shelf / divider
+        const fx0 = -w2+t+0.2, fx1 = w2-t-0.2, fz0 = z0+0.3, fz1 = z1-0.3, fr = 1.4;
+        g.add(lbox(fx0, fx1, fy, d2, fz0, fz0+fr, mat));                      // door frame: bottom
+        g.add(lbox(fx0, fx1, fy, d2, fz1-fr, fz1, mat));                      //   top
+        g.add(lbox(fx0, fx0+fr, fy, d2, fz0+fr, fz1-fr, mat));                //   left
+        g.add(lbox(fx1-fr, fx1, fy, d2, fz0+fr, fz1-fr, mat));                //   right
+        g.add(gbox(fx0+fr, fx1-fr, fy+0.2, fy+0.4, fz0+fr, fz1-fr));          // glass
+        g.add(lbox(-2, 2, d2, d2+0.5, fz0+0.4, fz0+1, M.dark));               // pull
+      }
       break;
     }
     case 'chest': {
