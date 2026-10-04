@@ -5,7 +5,7 @@ export { metadata } from "./metadata"
 
 const steps = [
 	{
-		title: "A Free Call",
+		title: "Free Discovery Call",
 		detail: "30 minutes",
 		body: "You tell me what's driving you nuts, and I ask a lot of questions. If it isn't a fit, I'll say so on the call.",
 	},

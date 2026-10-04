@@ -95,7 +95,7 @@ export default function CostCalculator() {
 	const [hours, setHours] = useState("5")
 	const [people, setPeople] = useState("1")
 	const [rate, setRate] = useState("50")
-	const [share, setShare] = useState("50")
+	const [share, setShare] = useState("75")
 	const [buildCost, setBuildCost] = useState("999")
 	// Inputs stay disabled until React hydrates, so early typing isn't wiped.
 	const [hydrated, setHydrated] = useState(false)
