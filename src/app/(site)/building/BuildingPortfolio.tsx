@@ -44,6 +44,16 @@ const companies = [
 // Side projects
 const projects = [
 	{
+		id: "stream-sniffer",
+		title: "Stream Sniffer",
+		description:
+			"A Chrome extension that finds the video stream a page is playing, so you can watch it on its own: in a clean player tab, in VLC, or on a Chromecast.",
+		image: "/images/projects/stream-sniffer/card.png",
+		tags: ["Chrome Extension", "JavaScript", "hls.js", "Chromecast", "Open Source"],
+		link: "/building/stream-sniffer",
+		github: "https://github.com/afxjzs/stream-sniffer",
+	},
+	{
 		id: "migraine-free",
 		title: "Migraine Trigger Database",
 		description:

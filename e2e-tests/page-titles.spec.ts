@@ -69,6 +69,7 @@ const STATIC_PAGES: [path: string, title: string][] = [
 	["/building/just-ate", "doug.is / building / JustAte"],
 	["/building/occupado", "doug.is / building / Occupado"],
 	["/building/oil-price-ticker", "doug.is / building / Oil Price Ticker"],
+	["/building/stream-sniffer", "doug.is / building / Stream Sniffer"],
 	["/building/stuff", "doug.is / building / Stuff"],
 	["/migraine-free", "doug.is / Migraine Trigger Foods Database (MTFDB)"],
 	["/migraine-free/feedback", "doug.is / migraine-free / Feedback"],
