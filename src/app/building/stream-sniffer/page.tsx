@@ -130,13 +130,13 @@ export default function StreamSnifferPage() {
 				<div className="mb-16">
 					<div className="mb-8">
 						<h1 className="text-5xl font-bold display-heading mb-6">Stream Sniffer</h1>
-						<p className="text-xl text-[rgba(var(--color-foreground),0.8)] max-w-2xl leading-relaxed">
+						<p className="text-xl text-[rgba(var(--color-foreground),0.8)] leading-relaxed">
 							A lot of live video on the web plays inside a cluttered embedded player, with pop-ups
 							stacked on top. I wanted the video without the page around it, and I wanted it on my
 							TV. Stream Sniffer is a Chrome extension that finds the stream a page is playing, so
 							you can watch it in a clean player tab, in VLC, or on a Chromecast.
 						</p>
-						<p className="mt-6 text-base text-[rgba(var(--color-foreground),0.7)] max-w-2xl leading-relaxed border-l-2 border-[rgba(var(--color-accent),0.4)] pl-4">
+						<p className="mt-6 text-base text-[rgba(var(--color-foreground),0.7)] leading-relaxed border-l-2 border-[rgba(var(--color-accent),0.4)] pl-4">
 							<span className="text-[rgba(var(--color-accent),0.9)] font-semibold">Use it responsibly:</span>{" "}
 							it replays what your own browser already receives, so only use it with streams you
 							have the right to watch. It works well with free broadcasters like DW News and
