@@ -309,8 +309,8 @@ export default function StreamSnifferPage() {
 							<h3 className="text-xl font-semibold mb-4 text-[rgba(var(--color-accent),0.9)]">Player Tab</h3>
 							<div className="relative w-full h-64 rounded-lg overflow-hidden">
 								<ZoomableImage
-									src="/images/projects/stream-sniffer/player.png"
-									alt="Player tab playing a test stream, with cast buttons"
+									src="/images/projects/stream-sniffer/player.jpg"
+									alt="Player tab playing a football broadcast, with cast buttons"
 									fill
 									style={{ objectFit: "contain" }}
 									className="rounded-lg"
