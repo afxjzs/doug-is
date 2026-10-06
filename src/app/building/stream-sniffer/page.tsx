@@ -139,8 +139,8 @@ export default function StreamSnifferPage() {
 						<p className="mt-6 text-base text-[rgba(var(--color-foreground),0.7)] max-w-2xl leading-relaxed border-l-2 border-[rgba(var(--color-accent),0.4)] pl-4">
 							<span className="text-[rgba(var(--color-accent),0.9)] font-semibold">Use it responsibly:</span>{" "}
 							it replays what your own browser already receives, so only use it with streams you
-							have the right to watch. It works well with free broadcasters like DW News and Al
-							Jazeera English, and with Twitch.
+							have the right to watch. It works well with free broadcasters like DW News and
+							C-SPAN, and with Twitch.
 						</p>
 					</div>
 
