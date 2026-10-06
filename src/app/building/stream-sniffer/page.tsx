@@ -217,8 +217,8 @@ export default function StreamSnifferPage() {
 						<p>
 							A Chromecast fetches video itself, and it can&apos;t send the Referer or Origin headers
 							that stream servers check. Some servers go further and refuse anything that isn&apos;t
-							the browser. In testing, curl and VLC got HTTP 403 even when they sent the same headers
-							Chrome did.
+							the browser. In testing, curl got HTTP 403 even when it sent every header Chrome
+							did.
 						</p>
 						<p>
 							So the relay never fetches the stream. When the TV asks for a playlist or a video
