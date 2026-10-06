@@ -74,6 +74,7 @@ import InnPage from "../inn/page"
 import JustAtePage from "../just-ate/page"
 import OccupadoPage from "../occupado/page"
 import OilPriceTickerPage from "../oil-price-ticker/page"
+import StreamSnifferPage from "../stream-sniffer/page"
 
 // Test wrapper component that provides the layout structure
 function TestLayoutWrapper({ children }: { children: React.ReactNode }) {
@@ -186,6 +187,26 @@ describe("Building Project Pages - All Pages Load Properly", () => {
 
 			// Should show oil price ticker page content
 			expect(screen.getByText("Oil Price Ticker")).toBeInTheDocument()
+		})
+	})
+
+	describe("Stream Sniffer Page", () => {
+		it("should load the stream sniffer page and link to its source", () => {
+			render(
+				<TestLayoutWrapper>
+					<StreamSnifferPage />
+				</TestLayoutWrapper>
+			)
+
+			expect(screen.getByTestId("main-site-header")).toBeInTheDocument()
+			expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Stream Sniffer")
+			const sourceLinks = screen.getAllByRole("link", { name: /view source on github/i })
+			expect(sourceLinks.length).toBeGreaterThan(0)
+			for (const link of sourceLinks) {
+				expect(link).toHaveAttribute("href", "https://github.com/afxjzs/stream-sniffer")
+			}
+			expect(screen.getAllByRole("button", { name: /view full size/i })).toHaveLength(5)
+			expect(screen.getByRole("heading", { name: "Before and After" })).toBeInTheDocument()
 		})
 	})
 })

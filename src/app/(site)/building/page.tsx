@@ -2,6 +2,8 @@ import { listThings } from "@/lib/stuff"
 import BuildingPortfolio from "./BuildingPortfolio"
 import StuffSection from "./StuffSection"
 
+export { metadata } from "./metadata"
+
 // listThings() reads src/content/stuff/ from disk, so this page is a server
 // component. The interactive Companies/Projects half lives in BuildingPortfolio.
 export const dynamic = "force-static"

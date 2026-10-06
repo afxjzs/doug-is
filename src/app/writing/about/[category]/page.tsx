@@ -4,6 +4,7 @@ import { getPostsByCategory } from "@/lib/supabase/data"
 import { formatDate } from "@/lib/utils"
 import Image from "next/image"
 import { notFound } from "next/navigation"
+import { categoryMetadata } from "@/lib/writing-metadata"
 
 export async function generateMetadata({
 	params,
@@ -11,16 +12,7 @@ export async function generateMetadata({
 	params: Promise<{ category: string }>
 }): Promise<Metadata> {
 	const resolvedParams = await params
-	// Capitalize the first letter of each word in the category
-	const formattedCategory = resolvedParams.category
-		.split("-")
-		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-		.join(" ")
-
-	return {
-		title: `${formattedCategory} | doug.is Writing`,
-		description: `Thoughts, ideas, and insights on ${formattedCategory.toLowerCase()}.`,
-	}
+	return categoryMetadata(resolvedParams.category)
 }
 
 export default async function WritingCategoryPage({

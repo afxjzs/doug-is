@@ -1,35 +1,14 @@
-import { Metadata } from "next"
 import Link from "next/link"
 import ContactForm from "@/components/ContactForm"
+import { pageMetadata } from "@/lib/metadata"
 
-export const metadata: Metadata = {
-	title: "Hopping List Feedback | Building | doug.is",
+export const metadata = pageMetadata({
+	trail: ["building", "hopping-list", "Feedback"],
 	description:
 		"Share your feedback, report bugs, or request features for the Hopping List shopping app. Help us improve your multi-store shopping experience.",
-	openGraph: {
-		title: "Hopping List Feedback - Help Us Improve Your Shopping Experience",
-		description:
-			"Share your feedback about the Hopping List app - report bugs, request features, or tell us about your experience",
-		url: "https://www.doug.is/building/hopping-list/feedback",
-		siteName: "doug.is",
-		images: [
-			{
-				url: "https://www.doug.is/images/projects/hopping-list-logo.png",
-				width: 800,
-				height: 800,
-				alt: "Hopping List Feedback",
-			},
-		],
-		locale: "en_US",
-		type: "website",
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: "Hopping List Feedback",
-		description: "Share your feedback about the Hopping List shopping app",
-		images: ["https://www.doug.is/images/projects/hopping-list-logo.png"],
-	},
-}
+	path: "/building/hopping-list/feedback",
+	image: { url: "/images/projects/hopping-list-logo.png", width: 800, height: 800 },
+})
 
 const feedbackSubjects = [
 	"General feedback about the app",

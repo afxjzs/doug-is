@@ -5,6 +5,8 @@ import { ClientAnalyticsWrapper } from "@/components/ClientAnalyticsWrapper"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import LayoutWrapper from "@/components/LayoutWrapper"
 import { GoogleAnalytics } from "@/components/GoogleAnalytics"
+import { HOME_TITLE, SITE_NAME, TITLE_TEMPLATE, TWITTER_HANDLE } from "@/lib/metadata"
+import { getSiteUrl } from "@/lib/utils/domain-detection"
 
 // Body font — variable, with the optical-size axis; the body default weight
 // (375, slightly lighter than regular) is set in globals.css
@@ -36,10 +38,13 @@ const playfairDisplay = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-	title: "doug.is...",
+	// Every page's <title> runs through this template ("doug.is / Advising").
+	// Pages pass only their own part, via pageMetadata() in src/lib/metadata.ts.
+	title: { default: HOME_TITLE, template: TITLE_TEMPLATE },
 	description:
 		"Personal website of Doug Rogers - Engineer, Advisor, and Investor",
-	metadataBase: new URL("https://doug.is"),
+	// Relative canonical/og:url/image paths resolve against this.
+	metadataBase: new URL(getSiteUrl()),
 	icons: {
 		icon: [
 			{ url: "/favicon.ico", sizes: "any" },
@@ -62,9 +67,8 @@ export const metadata: Metadata = {
 	openGraph: {
 		type: "website",
 		locale: "en_US",
-		url: "https://doug.is",
-		siteName: "doug.is",
-		title: "doug.is - Engineer, Advisor, Investor",
+		siteName: SITE_NAME,
+		title: HOME_TITLE,
 		description:
 			"Personal website of Doug Rogers - Engineer, Advisor, and Investor",
 		images: [
@@ -78,11 +82,11 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "doug.is - Engineer, Advisor, Investor",
+		title: HOME_TITLE,
 		description:
 			"Personal website of Doug Rogers - Engineer, Advisor, and Investor",
 		images: ["/android-chrome-512x512.png"],
-		creator: "@doug__is",
+		creator: TWITTER_HANDLE,
 	},
 }
 

@@ -1,13 +1,9 @@
-import { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
 import SocialIcons from "@/components/SocialIcons"
 import ConnectCta from "@/components/ConnectCta"
 
-export const metadata: Metadata = {
-	title: "doug.is / Hustling",
-	description: "About me and how to get in touch",
-}
+export { metadata } from "./metadata"
 
 export default function HustlingPage() {
 	return (

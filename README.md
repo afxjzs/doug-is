@@ -116,10 +116,10 @@ This project implements comprehensive metadata and social media sharing function
 
 ### Implementation Details
 
-**Metadata Patterns:**
-- Section pages: "doug.is / SectionName"
-- Project pages: "ProjectName | Building | doug.is"
-- Blog posts: "PostTitle | Thinking | doug.is"
+**Metadata Patterns** (all built by `pageMetadata()` in `src/lib/metadata.ts`; the root layout owns the format):
+- Section pages: "doug.is / Building"
+- Pages inside a section: "doug.is / building / Oil Price Ticker"
+- Blog posts: "doug.is / writing / Post Title"
 
 **Social Sharing Images:**
 - Dimensions: 1200x630px for optimal platform compatibility
@@ -142,11 +142,9 @@ This project implements comprehensive metadata and social media sharing function
 ### Testing Metadata
 
 ```bash
-# Run metadata-specific tests
-npm test -- --testNamePattern="Metadata"
-
-# Validate metadata structure
-npm test src/components/__tests__/MetadataValidation.test.tsx
+# Rendered titles, og tags, canonicals, and og:image for every public page
+# (needs ./start.sh and supabase start)
+npx playwright test e2e-tests/page-titles.spec.ts --project=chromium
 ```
 
 ### Social Platform Debug Tools

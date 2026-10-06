@@ -1,9 +1,10 @@
-import { Metadata } from "next"
+import { pageMetadata } from "@/lib/metadata"
 
-export const metadata: Metadata = {
-	title: "Privacy Policy | doug.is",
+export const metadata = pageMetadata({
+	trail: ["Privacy Policy"],
 	description: "Privacy policy for doug.is website",
-}
+	path: "/respecting-privacy",
+})
 
 export default function PrivacyPolicyPage() {
 	return (

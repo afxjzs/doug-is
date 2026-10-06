@@ -9,13 +9,14 @@ import {
 	getSiteName,
 } from "@/lib/utils/domain-detection"
 import { generatePersonStructuredData } from "@/lib/utils/structured-data"
+import { HOME_TITLE } from "@/lib/metadata"
 
-const HOME_TITLE = "doug.is | Engineer, Advisor, Investor"
 const HOME_DESCRIPTION =
 	"Douglas E. Rogers - Engineer, Advisor, and Investor. Building startups, advising founders, and investing in companies with real revenue."
 
 export const metadata: Metadata = {
-	title: HOME_TITLE,
+	// absolute: the homepage skips the "doug.is / %s" template.
+	title: { absolute: HOME_TITLE },
 	description: HOME_DESCRIPTION,
 	openGraph: {
 		title: HOME_TITLE,

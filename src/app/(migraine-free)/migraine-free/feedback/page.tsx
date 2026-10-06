@@ -2,11 +2,14 @@
 
 import ContactForm from "@/components/ContactForm"
 import Link from "next/link"
+import { pageMetadata } from "@/lib/metadata"
 
-export const metadata = {
-	title: "Migraine-Free Feedback",
-	description: "Share your feedback about the Migraine-Free program.",
-}
+export const metadata = pageMetadata({
+	trail: ["migraine-free", "Feedback"],
+	description:
+		"Share your feedback about the Migraine-Free program.",
+	path: "/migraine-free/feedback",
+})
 
 const subjects = [
 	"General feedback",

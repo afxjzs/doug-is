@@ -2,6 +2,8 @@ import Link from "next/link"
 import Image from "next/image"
 import ConnectCta from "@/components/ConnectCta"
 
+export { metadata } from "./metadata"
+
 export default async function AdvisingPage() {
 	return (
 		<div className="max-w-5xl mx-auto">

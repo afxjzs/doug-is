@@ -7,6 +7,7 @@ import { useClientEventTracking } from "@/lib/analytics"
 
 const navItems = [
 	{ name: "/advising", path: "/advising" },
+	{ name: "/automating", path: "/automating" },
 	{ name: "/building", path: "/building" },
 	{ name: "/investing", path: "/investing" },
 	{ name: "/writing", path: "/writing" },

@@ -1,229 +1,132 @@
-import { createClient } from "@supabase/supabase-js"
+/**
+ * Product requirements for the /building/mvps lead endpoint. Only the
+ * database and Telegram are mocked, because they're the outside world.
+ *
+ * - A visitor who leaves out name, email, idea, or stage, or gives a bad
+ *   email, is told so and nothing is saved.
+ * - A visitor is never told "success" unless the lead was saved where the
+ *   admin inbox reads it.
+ * - A saved lead notifies Doug, and a notification failure never loses the
+ *   lead or hides the failure.
+ */
 
-// Get the mocked Supabase client created at module load
-const mockCreateClient = jest.mocked(createClient)
-
-// We need to set up NextResponse.json properly before importing the route
 jest.mock("next/server", () => ({
-  NextResponse: {
-    json: jest.fn((body: any, init?: { status?: number }) => ({
-      status: init?.status || 200,
-      body,
-      json: async () => body,
-    })),
-  },
+	NextResponse: {
+		json: jest.fn((body: unknown, init?: { status?: number }) => ({
+			status: init?.status || 200,
+			body,
+		})),
+	},
 }))
 
-// Mock fetch for Telegram notifications
+const mockInsert = jest.fn()
+const mockFrom = jest.fn(() => ({ insert: mockInsert }))
+const mockCreateServiceRoleClient = jest.fn(() => ({ from: mockFrom }))
+jest.mock("@/lib/supabase/server", () => ({
+	createServiceRoleClient: () => mockCreateServiceRoleClient(),
+}))
+
 const mockFetch = jest.fn()
 global.fetch = mockFetch
 
 import { POST } from "../route"
-import { NextResponse } from "next/server"
 
-function makeRequest(body: Record<string, any>): Request {
-  return {
-    json: async () => body,
-  } as Request
+type MockResponse = { status: number; body: { message: string } }
+
+const validLead = {
+	name: "Jane Smith",
+	email: "jane@example.com",
+	phone: "555-1234",
+	idea: "A marketplace for *handmade* goods",
+	stage: "some-research",
+	variant: "default",
 }
 
-describe("MVP Lead API Route", () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-    mockFetch.mockResolvedValue({ ok: true })
-  })
+async function post(body: unknown): Promise<MockResponse> {
+	return (await POST({ json: async () => body } as Request)) as unknown as MockResponse
+}
 
-  describe("validation", () => {
-    it("rejects missing required fields", async () => {
-      await POST(makeRequest({ name: "Test", email: "test@example.com" }))
+function savedRows() {
+	return mockInsert.mock.calls.flatMap(([rows]) => rows)
+}
 
-      expect(NextResponse.json).toHaveBeenCalledWith(
-        { message: "Name, email, idea, and stage are required" },
-        { status: 400 }
-      )
-    })
+describe("MVP lead API", () => {
+	let errorSpy: jest.SpyInstance
 
-    it("rejects missing name", async () => {
-      await POST(
-        makeRequest({
-          email: "test@example.com",
-          idea: "An app",
-          stage: "just-an-idea",
-        })
-      )
+	beforeEach(() => {
+		jest.clearAllMocks()
+		mockInsert.mockResolvedValue({ error: null })
+		mockFetch.mockResolvedValue({ ok: true, text: async () => "" })
+		process.env.TELEGRAM_BOT_TOKEN = "test-token"
+		process.env.TELEGRAM_CHAT_ID = "test-chat"
+		errorSpy = jest.spyOn(console, "error").mockImplementation(() => {})
+	})
 
-      expect(NextResponse.json).toHaveBeenCalledWith(
-        { message: "Name, email, idea, and stage are required" },
-        { status: 400 }
-      )
-    })
+	afterEach(() => {
+		errorSpy.mockRestore()
+		delete process.env.TELEGRAM_BOT_TOKEN
+		delete process.env.TELEGRAM_CHAT_ID
+	})
 
-    it("rejects missing email", async () => {
-      await POST(
-        makeRequest({
-          name: "Test",
-          idea: "An app",
-          stage: "just-an-idea",
-        })
-      )
+	it.each(["name", "email", "idea", "stage"])("tells the visitor %s is required and saves nothing", async (field) => {
+		const res = await post({ ...validLead, [field]: "" })
+		expect(res.status).toBe(400)
+		expect(res.body.message).toBeTruthy()
+		expect(savedRows()).toHaveLength(0)
+	})
 
-      expect(NextResponse.json).toHaveBeenCalledWith(
-        { message: "Name, email, idea, and stage are required" },
-        { status: 400 }
-      )
-    })
+	it("tells the visitor a malformed email is wrong and saves nothing", async () => {
+		const res = await post({ ...validLead, email: "not-an-email" })
+		expect(res.status).toBe(400)
+		expect(savedRows()).toHaveLength(0)
+	})
 
-    it("rejects invalid email format", async () => {
-      await POST(
-        makeRequest({
-          name: "Test",
-          email: "not-an-email",
-          idea: "An app",
-          stage: "just-an-idea",
-        })
-      )
+	it("saves the lead where the admin inbox reads it, then reports success", async () => {
+		const res = await post(validLead)
+		expect(res.status).toBe(200)
+		expect(mockFrom).toHaveBeenCalledWith("contact_messages")
+		const [row] = savedRows()
+		expect(row).toMatchObject({ name: validLead.name, email: validLead.email })
+		expect(row.message).toContain(validLead.idea)
+		expect(row.message).toContain(validLead.phone)
+	})
 
-      expect(NextResponse.json).toHaveBeenCalledWith(
-        { message: "Invalid email format" },
-        { status: 400 }
-      )
-    })
+	it("never reports success when the database can't be reached", async () => {
+		mockCreateServiceRoleClient.mockImplementationOnce(() => {
+			throw new Error("Service role key is missing")
+		})
+		const res = await post(validLead)
+		expect(res.status).toBe(500)
+		expect(errorSpy).toHaveBeenCalled()
+	})
 
-    it("accepts valid email formats", async () => {
-      await POST(
-        makeRequest({
-          name: "Test",
-          email: "user+tag@sub.domain.com",
-          idea: "An app",
-          stage: "just-an-idea",
-        })
-      )
+	it("never reports success when the save fails", async () => {
+		mockInsert.mockResolvedValueOnce({ error: { code: "XX000", message: "boom" } })
+		const res = await post(validLead)
+		expect(res.status).toBe(500)
+		expect(errorSpy).toHaveBeenCalled()
+	})
 
-      expect(NextResponse.json).toHaveBeenCalledWith(
-        { message: "Lead submitted successfully" },
-        { status: 200 }
-      )
-    })
-  })
+	it("notifies Doug on Telegram with what the visitor wrote", async () => {
+		await post(validLead)
+		const telegramCall = mockFetch.mock.calls.find(([url]) => String(url).includes("api.telegram.org"))
+		expect(telegramCall).toBeDefined()
+		expect(telegramCall![1].body).toContain("handmade")
+	})
 
-  describe("successful submission", () => {
-    it("returns 200 with valid data", async () => {
-      await POST(
-        makeRequest({
-          name: "Jane Smith",
-          email: "jane@example.com",
-          phone: "555-1234",
-          idea: "A marketplace for handmade goods",
-          stage: "some-research",
-          variant: "default",
-        })
-      )
+	it("keeps the lead and surfaces the error when Telegram rejects the notification", async () => {
+		mockFetch.mockResolvedValueOnce({ ok: false, status: 400, text: async () => "bad" })
+		const res = await post(validLead)
+		expect(res.status).toBe(200)
+		expect(savedRows()).toHaveLength(1)
+		expect(errorSpy).toHaveBeenCalled()
+	})
 
-      expect(NextResponse.json).toHaveBeenCalledWith(
-        { message: "Lead submitted successfully" },
-        { status: 200 }
-      )
-    })
-
-    it("works without optional phone field", async () => {
-      await POST(
-        makeRequest({
-          name: "Jane Smith",
-          email: "jane@example.com",
-          idea: "A marketplace",
-          stage: "just-an-idea",
-        })
-      )
-
-      expect(NextResponse.json).toHaveBeenCalledWith(
-        { message: "Lead submitted successfully" },
-        { status: 200 }
-      )
-    })
-
-    it("inserts into Supabase contact_messages table", async () => {
-      const mockClient = mockCreateClient.mock.results[0]?.value
-      if (!mockClient) return
-
-      await POST(
-        makeRequest({
-          name: "Jane",
-          email: "jane@test.com",
-          phone: "555-0000",
-          idea: "My app idea",
-          stage: "some-research",
-          variant: "default",
-        })
-      )
-
-      expect(mockClient.from).toHaveBeenCalledWith("contact_messages")
-    })
-  })
-
-  describe("Telegram notification", () => {
-    it("sends Telegram notification on success", async () => {
-      process.env.TELEGRAM_BOT_TOKEN = "test-token"
-      process.env.TELEGRAM_CHAT_ID = "test-chat-id"
-
-      await POST(
-        makeRequest({
-          name: "Jane",
-          email: "jane@test.com",
-          idea: "My app",
-          stage: "just-an-idea",
-          variant: "default",
-        })
-      )
-
-      expect(mockFetch).toHaveBeenCalledWith(
-        "https://api.telegram.org/bottest-token/sendMessage",
-        expect.objectContaining({
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        })
-      )
-
-      // Clean up
-      delete process.env.TELEGRAM_BOT_TOKEN
-      delete process.env.TELEGRAM_CHAT_ID
-    })
-
-    it("skips Telegram when credentials not configured", async () => {
-      delete process.env.TELEGRAM_BOT_TOKEN
-      delete process.env.TELEGRAM_CHAT_ID
-
-      await POST(
-        makeRequest({
-          name: "Jane",
-          email: "jane@test.com",
-          idea: "My app",
-          stage: "just-an-idea",
-        })
-      )
-
-      expect(mockFetch).not.toHaveBeenCalledWith(
-        expect.stringContaining("telegram"),
-        expect.anything()
-      )
-    })
-  })
-
-  describe("error handling", () => {
-    it("handles malformed JSON gracefully", async () => {
-      const badRequest = {
-        json: async () => {
-          throw new Error("Invalid JSON")
-        },
-      } as unknown as Request
-
-      await POST(badRequest)
-
-      expect(NextResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: expect.stringContaining("Internal server error"),
-        }),
-        { status: 500 }
-      )
-    })
-  })
+	it("keeps the lead and surfaces the error when Telegram isn't configured", async () => {
+		delete process.env.TELEGRAM_BOT_TOKEN
+		const res = await post(validLead)
+		expect(res.status).toBe(200)
+		expect(savedRows()).toHaveLength(1)
+		expect(errorSpy).toHaveBeenCalled()
+	})
 })

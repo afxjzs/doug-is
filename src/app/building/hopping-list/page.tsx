@@ -1,4 +1,3 @@
-import { Metadata } from "next"
 import Link from "next/link"
 import SafeImage from "@/components/SafeImage"
 import Image from "next/image"
@@ -7,40 +6,15 @@ import {
 	getSocialImageUrl,
 	getSiteName,
 } from "@/lib/utils/domain-detection"
+import { pageMetadata } from "@/lib/metadata"
 
-export const metadata: Metadata = {
-	title: `Hopping List | Building | ${getSiteName()}`,
+export const metadata = pageMetadata({
+	trail: ["building", "Hopping List"],
 	description:
 		"A dynamic shopping list app for families and couples that lets you manage items across multiple stores",
-	openGraph: {
-		title: `Hopping List - The Smart Multi-Store Shopping List App`,
-		description:
-			"A shopping list app that shows you what you need at each specific store",
-		url: getCanonicalUrl("/building/hopping-list"),
-		siteName: getSiteName(),
-		images: [
-			{
-				url: getSocialImageUrl("/images/projects/hopping-list-logo.png"),
-				width: 800,
-				height: 800,
-				alt: "Hopping List App Icon",
-			},
-		],
-		locale: "en_US",
-		type: "website",
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: "Hopping List - Smart Shopping List",
-		description:
-			"A shopping list app that shows you what you need at each specific store",
-		images: [getSocialImageUrl("/images/projects/hopping-list-logo.png")],
-		creator: "@doug__is",
-	},
-	alternates: {
-		canonical: getCanonicalUrl("/building/hopping-list"),
-	},
-}
+	path: "/building/hopping-list",
+	image: { url: "/images/projects/hopping-list-logo.png", width: 800, height: 800 },
+})
 
 export default function HoppingListPage() {
 	return (

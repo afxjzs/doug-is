@@ -1,13 +1,8 @@
-import { Metadata } from "next"
 import ContactForm from "@/components/ContactForm"
 import Link from "next/link"
 import SocialIcons from "@/components/SocialIcons"
 
-export const metadata: Metadata = {
-	title: "doug.is / Connecting",
-	description:
-		"Get in touch with Doug Rogers for consulting, advising, or collaboration opportunities.",
-}
+export { metadata } from "./metadata"
 
 export default function ConnectingPage() {
 	return (

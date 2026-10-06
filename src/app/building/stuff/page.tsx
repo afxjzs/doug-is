@@ -1,4 +1,3 @@
-import { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
 import { listThings, thingImageUrl } from "@/lib/stuff"
@@ -7,43 +6,18 @@ import {
 	getSocialImageUrl,
 	getSiteName,
 } from "@/lib/utils/domain-detection"
+import { pageMetadata } from "@/lib/metadata"
 
 // Built statically: the file list is read at build time, so adding a new
 // .html file to src/content/stuff/ and redeploying regenerates this index.
 export const dynamic = "force-static"
 
-export const metadata: Metadata = {
-	title: `Stuff | Building | ${getSiteName()}`,
+export const metadata = pageMetadata({
+	trail: ["building", "Stuff"],
 	description:
-		"Small standalone things I've made — interactive charts, experiments, and one-off pages.",
-	openGraph: {
-		title: `Stuff | Building | ${getSiteName()}`,
-		description:
-			"Small standalone things I've made — interactive charts, experiments, and one-off pages.",
-		url: getCanonicalUrl("/building/stuff"),
-		siteName: getSiteName(),
-		type: "website",
-		images: [
-			{
-				url: getSocialImageUrl("/images/projects/doug-is.png"),
-				width: 1200,
-				height: 630,
-				alt: "Stuff - doug.is",
-			},
-		],
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: `Stuff | Building | ${getSiteName()}`,
-		description:
-			"Small standalone things I've made — interactive charts, experiments, and one-off pages.",
-		images: [getSocialImageUrl("/images/projects/doug-is.png")],
-		creator: "@doug__is",
-	},
-	alternates: {
-		canonical: getCanonicalUrl("/building/stuff"),
-	},
-}
+		"Small standalone things I've made: interactive charts, experiments, and one-off pages.",
+	path: "/building/stuff",
+})
 
 export default async function StuffIndexPage() {
 	const things = await listThings()

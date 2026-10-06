@@ -178,25 +178,7 @@ describe("Page Title Consistency", () => {
 		})
 	})
 
-	describe("Metadata Title Consistency", () => {
-		it("should have consistent title patterns across metadata files", async () => {
-			// Import metadata from each section
-			const buildingMetadata = await import("@/app/building/metadata")
-			const investingMetadata = await import("@/app/investing/metadata")
-			const advisingMetadata = await import("@/app/advising/metadata")
-			const writingMetadata = await import("@/app/(site)/writing/metadata")
-			const connectingMetadata = await import(
-				"@/app/(site)/connecting/metadata"
-			)
-			const hustlingMetadata = await import("@/app/(site)/hustling/metadata")
-
-			// Check that all metadata follows the "doug.is / SectionName" pattern
-			expect(buildingMetadata.metadata.title).toBe("doug.is / Building")
-			expect(investingMetadata.metadata.title).toBe("doug.is / Investing")
-			expect(advisingMetadata.metadata.title).toBe("doug.is / Advising")
-			expect(writingMetadata.metadata.title).toBe("doug.is / Writing")
-			expect(connectingMetadata.metadata.title).toBe("doug.is / Connecting")
-			expect(hustlingMetadata.metadata.title).toBe("doug.is / Hustling")
-		})
-	})
+	// Rendered <title>/og tags are covered end to end by
+	// e2e-tests/page-titles.spec.ts. (Checking the metadata objects here passed
+	// while prod served the wrong titles.)
 })

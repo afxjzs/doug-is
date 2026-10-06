@@ -5,37 +5,24 @@
 ### Adding New Static Pages
 
 **Required Steps:**
-- [ ] Create `metadata.ts` file in route directory (not route group)
-- [ ] Follow title pattern: "doug.is / PageName"
+- [ ] Build the metadata with `pageMetadata()` from `src/lib/metadata.ts`. Never hand-write titles or OpenGraph blocks.
+- [ ] Put it in a file that actually wraps the page. For a `(site)/<section>/page.tsx`, that's `(site)/<section>/metadata.ts` exported from the page (or a `(site)/<section>/layout.tsx` if the page is a client component). A regular-folder `<section>/layout.tsx` does NOT wrap a `(site)` page.
+- [ ] Title trail: `["PageName"]` for a section ("doug.is / PageName"), `["section", "PageName"]` for a page inside one
 - [ ] Write description (150-160 characters)
-- [ ] Create social sharing image (1200x630px)
-- [ ] Add OpenGraph metadata with all required fields
-- [ ] Add Twitter Card metadata
-- [ ] Set canonical URL
-- [ ] Write metadata validation tests
+- [ ] Optional: a 1200x630 social image (otherwise the site default is used)
+- [ ] Add the page to `e2e-tests/page-titles.spec.ts` (checks rendered title, og:title, canonical, og:url, and that og:image loads)
 - [ ] Test social platform previews
 
 **Metadata Template:**
 ```typescript
-export const metadata: Metadata = {
-  title: 'doug.is / PageName',
-  description: 'Compelling description (150-160 chars)',
-  openGraph: {
-    title: 'PageName | doug.is',
-    description: 'Same compelling description',
-    url: 'https://doug.is/pagename',
-    siteName: 'doug.is',
-    images: [{ url: 'https://doug.is/images/pagename.jpg', width: 1200, height: 630 }],
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'PageName | doug.is',
-    description: 'Same compelling description',
-    images: ['https://doug.is/images/pagename.jpg'],
-  },
-  alternates: { canonical: 'https://doug.is/pagename' },
-}
+import { pageMetadata } from "@/lib/metadata"
+
+export const metadata = pageMetadata({
+  trail: ["PageName"],
+  description: "Compelling description (150-160 chars)",
+  path: "/pagename",
+  image: { url: "/images/pagename.jpg", width: 1200, height: 630 }, // optional
+})
 ```
 
 ### Adding New Dynamic Pages

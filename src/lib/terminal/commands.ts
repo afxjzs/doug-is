@@ -17,6 +17,7 @@ export interface CommandOutcome {
 
 export const SECTIONS = [
 	"advising",
+	"automating",
 	"building",
 	"investing",
 	"writing",
