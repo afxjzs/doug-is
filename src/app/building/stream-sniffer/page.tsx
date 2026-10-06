@@ -1,5 +1,5 @@
 import Link from "next/link"
-import Image from "next/image"
+import ZoomableImage from "@/components/ZoomableImage"
 import Script from "next/script"
 import {
 	ProjectPageAnalytics,
@@ -145,7 +145,7 @@ export default function StreamSnifferPage() {
 					</div>
 
 					<div className="relative w-full max-w-xl mx-auto mb-8 rounded-xl overflow-hidden bg-[rgba(var(--color-background),0.6)] p-6">
-						<Image
+						<ZoomableImage
 							src="/images/projects/stream-sniffer/popup.png"
 							alt="The Stream Sniffer popup listing two captured playlists"
 							width={1008}
@@ -263,7 +263,7 @@ export default function StreamSnifferPage() {
 						<div className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] rounded-xl p-6">
 							<h3 className="text-xl font-semibold mb-4 text-[rgba(var(--color-accent),0.9)]">Captured Streams</h3>
 							<div className="relative w-full h-64 rounded-lg overflow-hidden">
-								<Image
+								<ZoomableImage
 									src="/images/projects/stream-sniffer/popup.png"
 									alt="Popup with captured playlists and copy buttons"
 									fill
@@ -275,7 +275,7 @@ export default function StreamSnifferPage() {
 						<div className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] rounded-xl p-6">
 							<h3 className="text-xl font-semibold mb-4 text-[rgba(var(--color-accent),0.9)]">Player Tab</h3>
 							<div className="relative w-full h-64 rounded-lg overflow-hidden">
-								<Image
+								<ZoomableImage
 									src="/images/projects/stream-sniffer/player.png"
 									alt="Player tab playing a test stream, with cast buttons"
 									fill
