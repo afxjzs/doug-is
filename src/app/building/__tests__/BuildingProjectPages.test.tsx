@@ -205,7 +205,8 @@ describe("Building Project Pages - All Pages Load Properly", () => {
 			for (const link of sourceLinks) {
 				expect(link).toHaveAttribute("href", "https://github.com/afxjzs/stream-sniffer")
 			}
-			expect(screen.getAllByRole("button", { name: /view full size/i })).toHaveLength(3)
+			expect(screen.getAllByRole("button", { name: /view full size/i })).toHaveLength(5)
+			expect(screen.getByRole("heading", { name: "Before and After" })).toBeInTheDocument()
 		})
 	})
 })

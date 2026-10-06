@@ -180,6 +180,39 @@ export default function StreamSnifferPage() {
 					</div>
 				</div>
 
+				{/* Before and After */}
+				<div className="mb-16">
+					<h2 className="text-3xl font-bold display-heading mb-8 text-center">Before and After</h2>
+					<div className="space-y-8">
+						<figure className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] rounded-xl p-6">
+							<ZoomableImage
+								src="/images/projects/stream-sniffer/before-twitch.jpg"
+								alt="A Twitch stream on Twitch's own page, with chat, channel lists and a sign-up banner around it"
+								width={2000}
+								height={1342}
+								className="w-full h-auto rounded-lg"
+							/>
+							<figcaption className="mt-4 text-[rgba(var(--color-foreground),0.7)]">
+								<span className="text-[rgba(var(--color-accent),0.9)] font-semibold">Before:</span> the
+								stream on Twitch, with chat, channel lists and a sign-up banner around it.
+							</figcaption>
+						</figure>
+						<figure className="bg-[rgba(var(--color-foreground),0.03)] border border-[rgba(var(--color-foreground),0.08)] rounded-xl p-6">
+							<ZoomableImage
+								src="/images/projects/stream-sniffer/after-player.jpg"
+								alt="The same Twitch stream playing alone in the Stream Sniffer player tab"
+								width={2000}
+								height={1344}
+								className="w-full h-auto rounded-lg"
+							/>
+							<figcaption className="mt-4 text-[rgba(var(--color-foreground),0.7)]">
+								<span className="text-[rgba(var(--color-accent),0.9)] font-semibold">After:</span> the
+								same stream in Stream Sniffer&apos;s player tab, with nothing else on the page.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
 				{/* Key Features Section */}
 				<div className="mb-16">
 					<h2 className="text-3xl font-bold display-heading mb-8 text-center">Key Features</h2>
