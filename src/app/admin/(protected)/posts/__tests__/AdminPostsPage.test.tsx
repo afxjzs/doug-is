@@ -6,7 +6,7 @@
  */
 
 import { render, screen } from "@testing-library/react"
-import AdminPostsPage from "@/app/admin/posts/page"
+import AdminPostsPage from "@/app/admin/(protected)/posts/page"
 
 // Mock useRouter for navigation
 const mockRedirect = jest.fn()

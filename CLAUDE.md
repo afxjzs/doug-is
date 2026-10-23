@@ -91,7 +91,8 @@ This is a **multi-client, security-tiered** setup. Pick the client by context:
 **Caching/revalidation:** `getPublishedPosts` (and peers) wrap queries in `unstable_cache` tagged `"posts"`. After an admin saves a post, the mutation calls `revalidateTag("posts")` to refresh the public site. Keep this contract intact when touching post reads/writes.
 
 ### Auth & middleware
-- Root `src/middleware.ts` does **token refresh only** (official Supabase SSR pattern) and injects an `x-pathname` header for layouts. **Authorization is NOT in middleware** — admin gating happens in server components/layouts via `requireAdmin()` / `isAdmin()`.
+- Root `src/middleware.ts` does **token refresh only** (official Supabase SSR pattern). **Authorization is NOT in middleware.**
+- **Admin gating is structural.** Every gated admin page lives in the `src/app/admin/(protected)/` route group, whose `layout.tsx` checks `getUser()` + `isAdmin()` and redirects to `/admin/login`. The public auth pages (`login`, `register`, `setup`) sit outside the group, so the gate never needs to know the path. A new admin page goes inside `(protected)/`. Never gate on a request header such as `x-pathname`: clients can send any header, and the old gate only held because Next copies middleware response headers onto the request. `e2e-tests/admin-gate.spec.ts` asserts anonymous requests (with spoofed headers) can't reach admin pages; run it with `npx playwright test e2e-tests/admin-gate.spec.ts --project=chromium` against a running `./start.sh`.
 - `src/lib/auth/` is a separate auth module (`supabase-server.ts`, `simple-auth-server.ts`, `api-key.ts`). Roles live in the `user_roles` table (`admin`/`editor`/`viewer`); RLS lets the public read only published posts, authenticated users do everything.
 
 ### Other notable pieces

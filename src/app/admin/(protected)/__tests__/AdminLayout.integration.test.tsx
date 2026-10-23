@@ -6,7 +6,7 @@
  */
 
 import { render, screen } from "@testing-library/react"
-import AdminLayout from "@/app/admin/layout"
+import AdminLayout from "@/app/admin/(protected)/layout"
 
 // Mock usePathname to control layout decisions
 const mockPathname = jest.fn()

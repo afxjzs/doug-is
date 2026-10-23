@@ -31,6 +31,10 @@ yarn-error.log*
 .env.*
 !.env*.example
 
+# editor MCP configs carry access tokens on their command lines (a Supabase
+# personal access token was committed here once). .cursor/rules stays tracked.
+.cursor/mcp.json
+
 # vercel
 .vercel
 
