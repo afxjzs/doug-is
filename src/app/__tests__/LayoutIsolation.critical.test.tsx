@@ -18,7 +18,7 @@ import AdvisingPage from "@/app/(site)/advising/page"
 import BuildingPage from "@/app/(site)/building/page"
 import InvestingPage from "@/app/(site)/investing/page"
 import ThinkingPage from "@/app/(site)/writing/page"
-import AdminPage from "@/app/admin/page"
+import AdminPage from "@/app/admin/(protected)/page"
 import AdminLoginPage from "@/app/admin/login/page"
 
 // Mock usePathname to control layout decisions

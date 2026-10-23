@@ -12,17 +12,8 @@ import { type NextRequest } from "next/server"
 import { updateSession } from "@/lib/supabase/middleware"
 
 export async function middleware(request: NextRequest) {
-	// Add pathname to headers so layouts can access it
-	const requestHeaders = new Headers(request.headers)
-	requestHeaders.set("x-pathname", request.nextUrl.pathname)
-
 	// Update session (token refresh only)
-	const response = await updateSession(request)
-
-	// Copy the pathname header to the response
-	response.headers.set("x-pathname", request.nextUrl.pathname)
-
-	return response
+	return updateSession(request)
 }
 
 export const config = {

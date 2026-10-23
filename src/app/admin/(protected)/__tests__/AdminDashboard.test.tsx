@@ -7,7 +7,7 @@
 
 import { render, screen, waitFor } from "@testing-library/react"
 import type { User } from "@supabase/supabase-js"
-import AdminPage from "@/app/admin/page"
+import AdminPage from "@/app/admin/(protected)/page"
 
 // Mock the auth functions
 jest.mock("@/lib/auth/simple-auth-server", () => ({
