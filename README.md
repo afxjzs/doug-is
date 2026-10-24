@@ -24,7 +24,7 @@ A modern personal website built with Next.js, React, TypeScript, and Tailwind CS
 
 ### Prerequisites
 
-- Node.js 22.x (tested on 22.14.0; pinned in `.nvmrc` and `engines`)
+- Node.js 24.x (pinned in `.nvmrc` and `engines`; Vercel and CI both run 24)
 - pnpm (recommended) or npm/yarn
 - Supabase account (for database functionality)
 
