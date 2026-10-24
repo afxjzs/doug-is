@@ -25,6 +25,12 @@ jest.mock("@/lib/supabase/server", () => ({
 	createServiceRoleClient: jest.fn(),
 }))
 
+// The admin check is covered end to end by e2e-tests/admin-gate*.spec.ts;
+// here it passes so these tests can exercise the dashboard's data handling.
+jest.mock("@/app/admin/(protected)/require-admin", () => ({
+	requireAdminPage: async () => ({ email: "doug@doug.is" }),
+}))
+
 import {
 	getCurrentUser,
 	isCurrentUserAdmin,

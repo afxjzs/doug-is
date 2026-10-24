@@ -2,12 +2,13 @@
  * Admin Contacts Page
  *
  * This page displays contact form submissions for admin review.
- * Auth is handled by AdminLayout - no need for duplicate auth checks.
+ * It checks admin itself: the layout's check can be skipped (see require-admin.ts).
  */
 
 import { Metadata } from "next"
 import { createServiceRoleClient } from "@/lib/supabase/server"
 import ContactsList from "@/components/admin/ContactsList"
+import { requireAdminPage } from "../require-admin"
 
 // Force dynamic rendering
 export const dynamic = "force-dynamic"
@@ -48,8 +49,7 @@ async function adminGetContactMessages() {
 }
 
 export default async function AdminContactsPage() {
-	// No auth check needed - AdminLayout handles this
-	// Fetch all contact messages using service role client
+	await requireAdminPage()
 	const contacts = await adminGetContactMessages()
 
 	return (

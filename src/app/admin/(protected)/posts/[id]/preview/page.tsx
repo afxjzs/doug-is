@@ -8,11 +8,8 @@
 import { Metadata } from "next"
 import { redirect, notFound } from "next/navigation"
 import Link from "next/link"
-import {
-	getCurrentUser,
-	isCurrentUserAdmin,
-	createAuthServerClient,
-} from "@/lib/auth/simple-auth-server"
+import { createAuthServerClient } from "@/lib/auth/simple-auth-server"
+import { requireAdminPage } from "../../../require-admin"
 import { PostView } from "@/components/PostView"
 import PublishButton from "@/components/admin/PublishButton"
 
@@ -53,17 +50,11 @@ export async function generateMetadata({
 export default async function DraftPreviewPage({
 	params,
 }: DraftPreviewPageProps) {
+	// Outside the try: redirect() throws. The layout's check can be skipped.
+	await requireAdminPage()
+
 	try {
 		const resolvedParams = await params
-
-		// Verify user is authenticated and has admin privileges using UNIFIED AUTH
-		const user = await getCurrentUser()
-		const isAdmin = await isCurrentUserAdmin()
-
-		if (!user || !isAdmin) {
-			console.log("Not authenticated as admin, redirecting to login")
-			redirect("/admin/login")
-		}
 
 		// Get admin client to fetch the post (including unpublished)
 		const supabase = await createAuthServerClient()

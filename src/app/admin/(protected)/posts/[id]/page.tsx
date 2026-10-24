@@ -6,12 +6,9 @@
  */
 
 import { redirect } from "next/navigation"
-import {
-	getCurrentUser,
-	isCurrentUserAdmin,
-} from "@/lib/auth/simple-auth-server"
 import { adminGetPostById } from "@/lib/supabase/serverClient"
 import PostEditor from "@/components/admin/PostEditor"
+import { requireAdminPage } from "../../require-admin"
 
 interface PageProps {
 	params: Promise<{ id: string }>
@@ -24,6 +21,8 @@ export const dynamic = "force-dynamic"
  * Generate metadata for the edit post page
  */
 export async function generateMetadata({ params }: PageProps) {
+	// The title is read with the service role, so this needs its own check.
+	await requireAdminPage()
 	const { id } = await params
 	try {
 		const post = await adminGetPostById(id)
@@ -43,18 +42,11 @@ export async function generateMetadata({ params }: PageProps) {
  * Edit Post Page Component
  */
 export default async function EditPostPage({ params }: PageProps) {
+	// Outside the try: redirect() throws, and the catch below would swallow it.
+	await requireAdminPage()
 	const { id } = await params
 
 	try {
-		// Verify user is authenticated and has admin privileges using UNIFIED AUTH
-		const user = await getCurrentUser()
-		const isAdmin = await isCurrentUserAdmin()
-
-		if (!user || !isAdmin) {
-			console.log("Not authenticated as admin, redirecting to login")
-			redirect("/admin/login?redirect=/admin/posts/" + id)
-		}
-
 		// Fetch the post data
 		const post = await adminGetPostById(id)
 
