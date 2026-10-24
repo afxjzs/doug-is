@@ -6,14 +6,22 @@ echo "🚀 Starting development environment setup..."
 
 # Check Node.js version
 echo "📦 Setting up Node.js environment..."
-if command -v nvm &> /dev/null; then
-  nvm use || nvm use 22
+# nvm is a shell function, so a script has to load it before it can call it.
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  . "$NVM_DIR/nvm.sh"
+  nvm use || { echo "❌ nvm couldn't switch to the version in .nvmrc ($(cat .nvmrc)). Run: nvm install"; exit 1; }
 else
   echo "⚠️ nvm not found, using system Node"
 fi
 
-# Display Node.js version
+# Production (Vercel) runs the major version in .nvmrc; refuse to run on another one.
 NODE_VERSION=$(node -v)
+WANTED_MAJOR=$(cut -d. -f1 .nvmrc)
+case "$NODE_VERSION" in
+  "v${WANTED_MAJOR}."*) ;;
+  *) echo "❌ Node ${NODE_VERSION} doesn't match .nvmrc (${WANTED_MAJOR}.x)"; exit 1 ;;
+esac
 echo "✅ Using Node.js ${NODE_VERSION}"
 
 # Clean build files and cache for fresh start
