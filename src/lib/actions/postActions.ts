@@ -3,6 +3,7 @@
 import { createServerComponentClient, Post } from "@/lib/supabase/serverClient"
 import { normalizeCategory } from "@/lib/supabase/data"
 import { createAdminClient } from "@/lib/supabase/serverClient"
+import { isAdmin } from "@/lib/supabase/server"
 
 /**
  * Server action to fetch all posts with optional filtering
@@ -133,10 +134,18 @@ export async function fetchPostsByCategory(category: string): Promise<Post[]> {
 /**
  * Server action to publish a draft post
  * This uses the admin client to bypass RLS and update the post
+ *
+ * Anyone with the action's ID can POST to it directly, and the admin layout's
+ * redirect runs only after the action, so the admin check must live here.
  */
 export async function publishPost(
 	postId: string
 ): Promise<{ success: boolean; error?: string }> {
+	if (!(await isAdmin())) {
+		console.error("publishPost refused: caller is not an admin")
+		return { success: false, error: "Admin access required" }
+	}
+
 	try {
 		const supabase = createAdminClient()
 

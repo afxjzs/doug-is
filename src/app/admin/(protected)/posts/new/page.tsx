@@ -6,12 +6,8 @@
  */
 
 import { Metadata } from "next"
-import { redirect } from "next/navigation"
-import {
-	getCurrentUser,
-	isCurrentUserAdmin,
-} from "@/lib/auth/simple-auth-server"
 import PostEditor from "@/components/admin/PostEditor"
+import { requireAdminPage } from "../../require-admin"
 
 // Mark as dynamic to ensure we always get fresh data
 export const dynamic = "force-dynamic"
@@ -26,16 +22,9 @@ export const metadata: Metadata = {
 }
 
 export default async function NewPostPage() {
+	await requireAdminPage()
+
 	try {
-		// Verify user is authenticated and has admin privileges using UNIFIED AUTH
-		const user = await getCurrentUser()
-		const isAdmin = await isCurrentUserAdmin()
-
-		if (!user || !isAdmin) {
-			console.log("Not authenticated as admin, redirecting to login")
-			redirect("/admin/login?redirect=/admin/posts/new")
-		}
-
 		return (
 			<div>
 				<h1 className="text-3xl font-bold mb-6">Create New Post</h1>

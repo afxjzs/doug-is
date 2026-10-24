@@ -8,6 +8,7 @@
 import { createServiceRoleClient } from "@/lib/supabase/server"
 import Link from "next/link"
 import DraftOverviewWidget from "@/components/admin/DraftOverviewWidget"
+import { requireAdminPage } from "./require-admin"
 
 // Force dynamic rendering to ensure fresh data
 export const dynamic = "force-dynamic"
@@ -61,6 +62,9 @@ async function adminGetContactSubmissions() {
 }
 
 export default async function AdminPage() {
+	// Outside the try: redirect() throws. The layout's check can be skipped.
+	await requireAdminPage()
+
 	try {
 		// Get data using Supabase SSR functions
 		const [posts, contactSubmissions] = await Promise.all([

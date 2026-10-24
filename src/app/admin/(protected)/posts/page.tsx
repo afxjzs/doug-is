@@ -2,13 +2,14 @@
  * Admin Posts Management Page
  *
  * This page displays all blog posts with management options.
- * Auth is handled by AdminLayout - no need for duplicate auth checks.
+ * It checks admin itself: the layout's check can be skipped (see require-admin.ts).
  */
 
 import { Metadata } from "next"
 import Link from "next/link"
 import { createServiceRoleClient } from "@/lib/supabase/server"
 import PostsTable from "@/components/admin/PostsTable"
+import { requireAdminPage } from "../require-admin"
 
 // Force dynamic rendering
 export const dynamic = "force-dynamic"
@@ -47,8 +48,7 @@ async function adminGetAllPosts() {
 }
 
 export default async function AdminPostsPage() {
-	// No auth check needed - AdminLayout handles this
-	// Fetch all posts using service role client
+	await requireAdminPage()
 	const posts = await adminGetAllPosts()
 
 	return (

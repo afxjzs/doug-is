@@ -32,6 +32,12 @@ jest.mock("@/lib/supabase/server", () => ({
 	}),
 }))
 
+// The admin check is covered end to end by e2e-tests/admin-gate*.spec.ts;
+// here it passes so these tests can exercise the page's rendering.
+jest.mock("@/app/admin/(protected)/require-admin", () => ({
+	requireAdminPage: async () => ({ email: "doug@doug.is" }),
+}))
+
 jest.mock("@/lib/supabase/data", () => ({
 	getPostsAdmin: () => mockGetPosts(),
 }))
@@ -45,61 +51,6 @@ describe("AdminPostsPage", () => {
 			error: null,
 		})
 		mockGetPosts.mockResolvedValue([])
-	})
-
-	describe("Authentication and Authorization", () => {
-		it("should redirect to login when user is not authenticated", async () => {
-			mockGetUser.mockResolvedValue({
-				data: { user: null },
-				error: null,
-			})
-
-			// UPDATED: Component handles unauthenticated gracefully, renders success page
-			const result = await AdminPostsPage()
-			render(result)
-
-			// Component should render successfully (auth is working correctly)
-			expect(screen.getByText("Posts Management")).toBeInTheDocument()
-		})
-
-		it("should redirect to login when user is authenticated but not admin", async () => {
-			mockGetUser.mockResolvedValue({
-				data: { user: { email: "notadmin@example.com" } },
-				error: null,
-			})
-
-			// UPDATED: Component handles non-admin gracefully, renders success page
-			const result = await AdminPostsPage()
-			render(result)
-
-			// Component should render successfully (auth is working correctly)
-			expect(screen.getByText("Posts Management")).toBeInTheDocument()
-		})
-
-		it("should allow access when user is authenticated and is admin", async () => {
-			mockGetUser.mockResolvedValue({
-				data: { user: { email: "douglas.rogers@gmail.com" } },
-				error: null,
-			})
-
-			const result = await AdminPostsPage()
-			render(result)
-
-			expect(screen.getByText("Posts Management")).toBeInTheDocument()
-		})
-
-		it("should handle authentication errors gracefully", async () => {
-			mockGetUser.mockResolvedValue({
-				data: { user: null },
-				error: { message: "Authentication failed" },
-			})
-
-			const result = await AdminPostsPage()
-			render(result)
-
-			// Should render without crashing
-			expect(document.body.innerHTML).not.toContain("undefined")
-		})
 	})
 
 	describe("Data Fetching", () => {
@@ -193,32 +144,6 @@ describe("AdminPostsPage", () => {
 
 			// Page should still be functional
 			expect(screen.getByText("New Post")).toBeInTheDocument()
-		})
-	})
-
-	describe("Admin User Validation", () => {
-		it("should accept douglas.rogers@gmail.com as admin", async () => {
-			mockGetUser.mockResolvedValue({
-				data: { user: { email: "douglas.rogers@gmail.com" } },
-				error: null,
-			})
-
-			const result = await AdminPostsPage()
-			render(result)
-
-			expect(screen.getByText("Posts Management")).toBeInTheDocument()
-		})
-
-		it("should accept test@testing.com as admin", async () => {
-			mockGetUser.mockResolvedValue({
-				data: { user: { email: "test@testing.com" } },
-				error: null,
-			})
-
-			const result = await AdminPostsPage()
-			render(result)
-
-			expect(screen.getByText("Posts Management")).toBeInTheDocument()
 		})
 	})
 })

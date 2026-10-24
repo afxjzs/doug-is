@@ -1,7 +1,7 @@
 /**
  * Admin Root Layout
  *
- * Shared by the public auth pages (login, register, setup) and the gated
+ * Shared by the public auth pages (login, setup) and the gated
  * (protected) route group. It does NO auth: the gate is
  * src/app/admin/(protected)/layout.tsx.
  */
