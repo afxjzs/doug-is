@@ -22,13 +22,33 @@ export const metadata = pageMetadata({
 const features = [
 	{
 		title: "Stream Capture",
-		body: "Lists every HLS playlist a tab loads, including ones inside embedded players from other sites, along with the headers the page sent.",
+		body: "Lists every HLS playlist a tab loads, including ones inside embedded players from other sites and ones fetched by a service worker. It spots a playlist by its server's content type even when the address has no .m3u8. It also records the Referer, Origin and User-Agent the page sent.",
 		icon: <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Zm10 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />,
 	},
 	{
+		title: "Pages That Hide Their Stream",
+		body: "Some players build their playlists themselves, as Shaka Player does with a custom address scheme. For those, a script in the page lists the playlists. As a last resort, Stream Sniffer plays a live copy of the video the page is showing.",
+		icon: <path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm10 17-5-5" />,
+	},
+	{
+		title: "Know What You're Getting",
+		body: "The popup sums up each stream, such as “3 qualities, best 1080p60 · 6.0 Mbps advertised · H.264 · live.” Check quality measures the real bitrate.",
+		icon: <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />,
+	},
+	{
 		title: "Clean Player",
-		body: "Plays a captured stream in its own tab, sending the original Referer and Origin so the stream server accepts it.",
+		body: "Plays a stream in its own tab with the headers the page sent. It retries on its own and shows you why. It warns when frames are lost and says where. It has a quality menu, pop out and full screen.",
 		icon: <path d="m6 3 14 9-14 9V3Z" />,
+	},
+	{
+		title: "Two Streams at Once",
+		body: "A big picture and a small picture-in-picture, which you can swap, move, resize or hide. The sound follows the big picture. Each stream keeps its own headers, so the two can come from different sites.",
+		icon: <path d="M3 5h18v14H3V5Zm10 7h6v5h-6v-5Z" />,
+	},
+	{
+		title: "Made for the TV",
+		body: "Fit to TV sizes the tab 16:9 for Chrome’s own Cast. An optional cushion keeps 5–60 seconds of video in reserve against freezes. A freeze log you can copy helps with bug reports.",
+		icon: <path d="M3 6h18v12H3V6Zm5 15h8" />,
 	},
 	{
 		title: "Copy Commands",
@@ -54,7 +74,7 @@ const technologies = [
 	"hls.js for playback",
 	"Node.js relay, no dependencies",
 	"Google Cast SDK",
-	"Puppeteer end-to-end tests",
+	"Puppeteer end-to-end tests in real Chrome, against a fake stream site that refuses requests without the right headers",
 ]
 
 function Check() {
@@ -91,7 +111,7 @@ export default function StreamSnifferPage() {
 		technologies: ["JavaScript", "Chrome Extensions", "hls.js", "Node.js", "Google Cast"],
 		github_url: GITHUB_URL,
 		created_at: "2026-10-04T12:25:00Z",
-		updated_at: "2026-10-06T12:00:00Z",
+		updated_at: "2026-11-11T12:00:00Z",
 	})
 
 	return (
@@ -139,8 +159,7 @@ export default function StreamSnifferPage() {
 						<p className="mt-6 text-base text-[rgba(var(--color-foreground),0.7)] leading-relaxed border-l-2 border-[rgba(var(--color-accent),0.4)] pl-4">
 							<span className="text-[rgba(var(--color-accent),0.9)] font-semibold">Use it responsibly:</span>{" "}
 							it replays what your own browser already receives, so only use it with streams you
-							have the right to watch. It works well with free broadcasters like DW News and
-							C-SPAN, and with Twitch.
+							have the right to watch. It works well with C-SPAN and with Twitch.
 						</p>
 					</div>
 
@@ -260,6 +279,12 @@ export default function StreamSnifferPage() {
 							so every link points back to itself, then serves it all to the TV on your local
 							network. Whatever plays in the player tab plays on the TV.
 						</p>
+						<p>
+							The relay keeps up to 12 seconds of live video in reserve, so a source that pauses
+							doesn&apos;t stall the TV. Swap on TV makes two streams into one channel, switched with
+							one button. A fixed address, <code>/now.m3u8</code>, plays the current cast in apps
+							like VLC or Jellyfin. It keeps playing across swaps and new casts.
+						</p>
 					</div>
 				</div>
 
@@ -277,9 +302,9 @@ export default function StreamSnifferPage() {
 							worker&apos;s site.
 						</p>
 						<p>
-							Another hid each video segment inside a PNG image on an image CDN. The image&apos;s
-							pixel bytes spell out a marker, a length, and then the gzipped video. The player and
-							the relay now decode those back into plain video before playing them.
+							Others hid each video segment inside an image on an image CDN. One site packed the
+							video into a PNG&apos;s pixels, another into a WebP&apos;s metadata. The player and
+							the relay decode both back into plain video before playing them.
 						</p>
 						<p>
 							And some players add a timestamp to the playlist address on every refresh, which made
@@ -351,14 +376,97 @@ export default function StreamSnifferPage() {
 					</div>
 				</div>
 
+				{/* Couch Director: a newer project built on Stream Sniffer */}
+				<section id="couch-director" className="mb-16 scroll-mt-24">
+					<p className="text-center font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.15em] text-[rgba(var(--color-accent),0.75)] mb-3">
+						Work in progress
+					</p>
+					<h2 className="text-3xl font-bold display-heading mb-8 text-center">
+						Built on It: Couch Director
+					</h2>
+					<div className="space-y-4 text-[rgba(var(--color-foreground),0.75)] leading-relaxed max-w-2xl mx-auto">
+						<p>
+							Couch Director is a newer project built on Stream Sniffer. The goal is two live games
+							on the TV at once, at the source&apos;s own quality. One is big, one is small in a
+							corner, and one tap swaps them. A home server with an NVIDIA GPU does all the work
+							over a wired connection. A phone or laptop is only the remote. Later, it should
+							switch games by itself when the big one goes to commercials.
+						</p>
+
+						<h3 className="text-xl font-semibold pt-4 text-[rgba(var(--color-accent),0.9)]">How It Works</h3>
+						<p>
+							The remote is a control page laid out for a phone, behind a password. You paste a game
+							page&apos;s address into Big or Small. There are buttons to swap and to hide or show
+							the small picture, and the page shows each game&apos;s status.
+						</p>
+						<p>
+							The server runs Google Chrome in a container, sandbox on, with Stream Sniffer and an ad
+							blocker. A small Node program, the director, drives Chrome. It opens each game page in
+							its own tab, captures the stream, and hands it to the compositor. When a stream link
+							dies, the director captures it again from the page. If the stream is gone for good
+							after 3 tries, it says so and clears that game from the channel.
+						</p>
+						<p>
+							The compositor uses GStreamer and encodes on the GPU, an NVIDIA RTX 4060 Ti, with NVENC.
+							It draws the small game over the big one into one continuous 1080p60 feed that never
+							restarts, so the TV app never sees a switch. Swap and picture-in-picture only change
+							what it draws. With no game on, it shows a &ldquo;Waiting for a stream&rdquo; slate.
+						</p>
+						<p>
+							On the TV, the feed is a channel in Jellyfin Live TV, with a program guide so it shows
+							up under On Now. I watch it on an Apple TV with Swiftfin, and in Jellyfin&apos;s web
+							app.
+						</p>
+
+						<h3 className="text-xl font-semibold pt-4 text-[rgba(var(--color-accent),0.9)]">Measured</h3>
+						<p>
+							In a prototype, the compositor added about 8 seconds of delay. It kept the picture at
+							PSNR 44.9 dB and SSIM 0.983 against the source; both scores measure how close the
+							picture stays to the original. In the end-to-end test, sound and picture stay within
+							0.01 seconds of each other through it. That test uses fake game sites and a
+							Jellyfin-style reader. It covers putting games on, swap, picture-in-picture, a dead
+							link being recaptured, and a game that&apos;s gone for good.
+						</p>
+
+						<h3 className="text-xl font-semibold pt-4 text-[rgba(var(--color-accent),0.9)]">
+							Where It Stands (November 11, 2026)
+						</h3>
+						<p>
+							One game from the control page to Jellyfin works, and so do two games through the GPU
+							compositor. Both run at home.
+						</p>
+						<p>
+							Two problems aren&apos;t solved yet. A swap takes several seconds to reach the TV,
+							because the TV app buffers the feed, and about 10 seconds through Jellyfin is likely
+							the floor. On the Apple TV, the sound has drifted out of sync, and I&apos;m still
+							tracking down why.
+						</p>
+						<p>
+							Next comes polish for the phone layout, then commercial detection with automatic
+							swaps, which isn&apos;t designed yet.
+						</p>
+						<p>
+							The code is private for now. I plan to open source it once the project is complete.
+							If you want to help work on it, please{" "}
+							<Link
+								href="/connecting"
+								className="text-[rgba(var(--color-accent),0.8)] hover:text-[rgba(var(--color-accent),1)] transition-colors"
+							>
+								reach out
+							</Link>
+							.
+						</p>
+					</div>
+				</section>
+
 				{/* Call to Action */}
 				<div className="text-center">
 					<h2 className="text-3xl font-bold display-heading mb-6">Try It</h2>
 					<p className="text-lg text-[rgba(var(--color-foreground),0.7)] mb-8 max-w-2xl mx-auto">
-						It&apos;s open source under the Apache 2.0 license. The README walks through installing
+						Stream Sniffer is open source under the Apache 2.0 license. The README walks through installing
 						the extension and starting the relay. If something breaks, open an issue on GitHub or{" "}
 						<Link
-							href="/contact"
+							href="/connecting"
 							className="text-[rgba(var(--color-accent),0.8)] hover:text-[rgba(var(--color-accent),1)] transition-colors"
 						>
 							reach out
