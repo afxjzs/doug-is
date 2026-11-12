@@ -9,7 +9,9 @@ import { test, expect, type APIRequestContext } from "@playwright/test"
  * Couch Director runs on Doug's home server and its repo is private, so the
  * page must never link the repo or show anything that locates that server.
  *
- * The link and leak checks read the server-rendered HTML (what visitors and
+ * Internal links are checked in internal-links.spec.ts.
+ *
+ * The leak check reads the server-rendered HTML (what visitors and
  * crawlers get) rather than a live browser page. Against ./start.sh, the
  * browser intermittently logs "[Fast Refresh] rebuilding" and the DOM is
  * replaced mid-read (seen on 2026-11-11; trigger not pinned down), which made
@@ -35,19 +37,6 @@ test.describe(PATH, () => {
 		const section = page.locator("#couch-director")
 		await expect(section.getByRole("heading", { level: 2, name: /Couch Director/ })).toBeVisible()
 		await expect(section).toContainText(/work in progress/i)
-	})
-
-	// Past bug: both "reach out" links pointed at /contact, which is a 404.
-	test("every internal link on the page resolves", async ({ request }) => {
-		const main = await mainHtml(request)
-		const paths = [
-			...new Set([...main.matchAll(/<a\b[^>]*\bhref="(\/[^"#]*)/g)].map((m) => m[1])),
-		]
-		expect(paths.length).toBeGreaterThan(0)
-		for (const p of paths) {
-			const res = await request.get(p)
-			expect(res.status(), `${p} should resolve`).toBe(200)
-		}
 	})
 
 	test("the page leaks no private repo or home-network details", async ({ request }) => {

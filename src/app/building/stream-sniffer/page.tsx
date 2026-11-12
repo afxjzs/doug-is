@@ -446,7 +446,7 @@ export default function StreamSnifferPage() {
 							swaps, which isn&apos;t designed yet.
 						</p>
 						<p>
-							The code is private for now. I plan to open source it once the project is complete.
+							Couch Director&apos;s code is private for now. I plan to open source it once the project is complete.
 							If you want to help work on it, please{" "}
 							<Link
 								href="/connecting"
