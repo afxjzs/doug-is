@@ -404,7 +404,7 @@ export default function OilPriceTickerPage() {
 						directly from your macOS menu bar. If it breaks or you have any
 						issues, feel free to{" "}
 						<Link
-							href="/contact"
+							href="/connecting"
 							className="text-[rgba(var(--color-accent),0.8)] hover:text-[rgba(var(--color-accent),1)] transition-colors"
 						>
 							reach out
