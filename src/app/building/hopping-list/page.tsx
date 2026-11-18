@@ -293,56 +293,56 @@ export default function HoppingListPage() {
 						<div className="mb-3">
 							<Image
 								src="/images/projects/hopping-list/homescreen.png"
-								alt="Hopping List Home Screen"
+								alt="Hopping List home screen: needed items per store and recent activity"
 								width={400}
-								height={800}
+								height={870}
 								className="rounded-lg mx-auto"
 							/>
 						</div>
 						<p className="text-center text-[rgba(var(--color-foreground),0.7)]">
-							Home screen showing your stores
+							Home: what you need at each store, and who did what
 						</p>
 					</div>
 					<div className="dark-card p-4">
 						<div className="mb-3">
 							<Image
-								src="/images/projects/hopping-list/edit-apples.png"
-								alt="Editing an item for multiple stores"
+								src="/images/projects/hopping-list/edit-item.png"
+								alt="Editing an item: Milk is checked for Safeway and Target"
 								width={400}
-								height={800}
+								height={870}
 								className="rounded-lg mx-auto"
 							/>
 						</div>
 						<p className="text-center text-[rgba(var(--color-foreground),0.7)]">
-							Adding an item to multiple store locations
+							One item, checked for every store that carries it
 						</p>
 					</div>
 					<div className="dark-card p-4">
 						<div className="mb-3">
 							<Image
 								src="/images/projects/hopping-list/safeway.png"
-								alt="Safeway Shopping List"
+								alt="The Safeway shopping list, sorted in aisle order"
 								width={400}
-								height={800}
+								height={870}
 								className="rounded-lg mx-auto"
 							/>
 						</div>
 						<p className="text-center text-[rgba(var(--color-foreground),0.7)]">
-							Store-specific shopping list for Safeway
+							The Safeway list, in aisle order
 						</p>
 					</div>
 					<div className="dark-card p-4">
 						<div className="mb-3">
 							<Image
 								src="/images/projects/hopping-list/tjs.png"
-								alt="Trader Joe's Shopping List"
+								alt="The Trader Joe's shopping list"
 								width={400}
-								height={800}
+								height={870}
 								className="rounded-lg mx-auto"
 							/>
 						</div>
 						<p className="text-center text-[rgba(var(--color-foreground),0.7)]">
-							Trader Joe's list with different items
+							The Trader Joe&apos;s list, with different items
 						</p>
 					</div>
 				</div>
