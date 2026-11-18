@@ -2,6 +2,8 @@ import { createServiceRoleClient } from "@/lib/supabase/server"
 
 /**
  * Lead capture shared by /api/mvp-lead and /api/automation-lead.
+ * notifyTelegram() also serves the contact/feedback Server Action
+ * (src/lib/actions/contactActions.ts).
  *
  * Saving is the part that must not fail quietly: saveLead() reports failure
  * and the route returns an error, never a fake success. A Telegram failure

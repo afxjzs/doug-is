@@ -24,6 +24,10 @@ describe("Contact Actions - Server-Side Testing", () => {
 		// Clear all mocks before each test
 		jest.clearAllMocks()
 
+		// A saved message calls Telegram, and next/jest loads the real bot token
+		// from .env. Stub fetch for every test so none can ever post to Doug's chat.
+		global.fetch = jest.fn().mockResolvedValue({ ok: true, text: async () => "" })
+
 		// Setup default mock chain
 		mockCreateAdminClient.mockReturnValue(mockSupabaseClient as any)
 		mockSupabaseClient.from.mockReturnValue({
@@ -429,6 +433,78 @@ describe("Contact Actions - Server-Side Testing", () => {
 				message: "An unexpected error occurred. Please try again later.",
 			})
 			expect(result.errors).toBeUndefined()
+		})
+	})
+
+	/**
+	 * Every form built on ContactForm (/connecting, /building/hopping-list/feedback,
+	 * /migraine-free/feedback) must reach Doug on Telegram once the message is
+	 * saved. A Telegram failure never loses the message or hides the failure, and
+	 * a failed save never sends an alert for a message that isn't in the inbox.
+	 */
+	describe("Telegram notification", () => {
+		const validFormData: ContactFormData = {
+			name: "Jane Smith",
+			email: "jane@example.com",
+			subject: "Hopping List Bug",
+			message: "The staples list forgot my milk again",
+		}
+		const mockFetch = jest.fn()
+		const originalFetch = global.fetch
+		let errorSpy: jest.SpyInstance
+
+		function telegramCalls() {
+			return mockFetch.mock.calls.filter(([url]) => String(url).includes("api.telegram.org"))
+		}
+
+		beforeEach(() => {
+			mockFetch.mockReset()
+			mockFetch.mockResolvedValue({ ok: true, text: async () => "" })
+			global.fetch = mockFetch
+			process.env.TELEGRAM_BOT_TOKEN = "test-token"
+			process.env.TELEGRAM_CHAT_ID = "test-chat"
+			errorSpy = jest.spyOn(console, "error").mockImplementation(() => {})
+		})
+
+		afterEach(() => {
+			global.fetch = originalFetch
+			errorSpy.mockRestore()
+			delete process.env.TELEGRAM_BOT_TOKEN
+			delete process.env.TELEGRAM_CHAT_ID
+		})
+
+		it("notifies Doug with who wrote, the subject, and the message", async () => {
+			const result = await submitContactForm(validFormData)
+			expect(result.success).toBe(true)
+			expect(telegramCalls()).toHaveLength(1)
+			const body = telegramCalls()[0][1].body
+			expect(body).toContain(validFormData.name)
+			expect(body).toContain(validFormData.email)
+			expect(body).toContain(validFormData.subject)
+			expect(body).toContain(validFormData.message)
+		})
+
+		it("sends no alert when the message wasn't saved", async () => {
+			mockSelect.mockResolvedValue({ data: null, error: { code: "23505", message: "boom" } })
+			const result = await submitContactForm(validFormData)
+			expect(result.success).toBe(false)
+			expect(telegramCalls()).toHaveLength(0)
+		})
+
+		it("keeps the message and surfaces the error when Telegram rejects it", async () => {
+			mockFetch.mockResolvedValueOnce({ ok: false, status: 400, text: async () => "bad" })
+			const result = await submitContactForm(validFormData)
+			expect(result.success).toBe(true)
+			expect(mockInsert).toHaveBeenCalledTimes(1)
+			expect(errorSpy).toHaveBeenCalled()
+		})
+
+		it("keeps the message and surfaces the error when Telegram isn't configured", async () => {
+			delete process.env.TELEGRAM_BOT_TOKEN
+			const result = await submitContactForm(validFormData)
+			expect(result.success).toBe(true)
+			expect(telegramCalls()).toHaveLength(0)
+			expect(errorSpy).toHaveBeenCalled()
 		})
 	})
 

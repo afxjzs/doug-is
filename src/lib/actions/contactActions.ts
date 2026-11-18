@@ -3,6 +3,27 @@
 import { z } from "zod"
 import { createAdminClient } from "@/lib/supabase/serverClient"
 import { revalidatePath } from "next/cache"
+import { notifyTelegram } from "@/lib/leads"
+
+/**
+ * Tells Doug on Telegram about a saved message. Call only after the save
+ * succeeds. notifyTelegram() logs its own failures and never throws, so a
+ * Telegram problem can't turn a saved message into an error for the visitor.
+ */
+async function notifyContactMessage(formData: ContactFormData) {
+	await notifyTelegram(
+		[
+			"✉️ New contact message",
+			"",
+			`Name: ${formData.name}`,
+			`Email: ${formData.email}`,
+			`Subject: ${formData.subject}`,
+			"",
+			formData.message,
+		],
+		"contact message"
+	)
+}
 
 /**
  * Schema for validating contact form submissions
@@ -80,6 +101,7 @@ export async function submitContactForm(
 				}
 
 				revalidatePath("/admin")
+				await notifyContactMessage(formData)
 				return {
 					success: true,
 					message: "Your message has been sent successfully!",
@@ -94,6 +116,7 @@ export async function submitContactForm(
 
 		// Revalidate the admin page path if a new message was added
 		revalidatePath("/admin")
+		await notifyContactMessage(formData)
 
 		return {
 			success: true,
