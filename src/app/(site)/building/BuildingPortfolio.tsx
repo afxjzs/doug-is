@@ -68,7 +68,7 @@ const projects = [
 		description:
 			"A dynamic shopping list app that lets you see what items you need at each specific store.",
 		image: "/images/projects/hopping-list-logo.png",
-		tags: ["Flutter", "FlutterFlow", "Supabase", "PostgreSQL"],
+		tags: ["Flutter", "Supabase", "PostgreSQL"],
 		link: "/building/hopping-list",
 		github: "https://github.com/afxjzs/hoppinglist",
 		testflight: "https://testflight.apple.com/join/CscPEAD4",

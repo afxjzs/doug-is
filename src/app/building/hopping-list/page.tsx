@@ -105,8 +105,8 @@ export default function HoppingListPage() {
 					</ol>
 					<div className="mt-6 p-4 bg-[rgba(var(--color-foreground),0.05)] rounded-lg border border-[rgba(var(--color-foreground),0.1)]">
 						<p className="text-[rgba(var(--color-foreground),0.8)] mb-3">
-							<strong>Note:</strong> TestFlight is only available for iOS
-							devices. Android version coming soon, probably.
+							<strong>Note:</strong> Hopping List needs an iPhone or iPad on
+							iOS 17 or later. Android version coming soon, probably.
 						</p>
 						<div className="flex flex-wrap gap-3">
 							<Link
@@ -138,7 +138,7 @@ export default function HoppingListPage() {
 							<div>
 								<strong>Add Items to Multiple Stores</strong>
 								<p>
-									Add a single item to appear on lists for multiple locations
+									Add an item once and pick every store that carries it
 								</p>
 							</div>
 						</li>
@@ -147,7 +147,7 @@ export default function HoppingListPage() {
 							<div>
 								<strong>Store-Specific Shopping Lists</strong>
 								<p>
-									Only see items available at the store you're currently
+									Only see items available at the store you&apos;re currently
 									shopping at
 								</p>
 							</div>
@@ -155,15 +155,76 @@ export default function HoppingListPage() {
 						<li className="flex items-start">
 							<span className="check-mark mr-2 mt-1">✓</span>
 							<div>
-								<strong>Real-time List Updates</strong>
-								<p>Changes instantly sync between family members</p>
+								<strong>One List for the Household</strong>
+								<p>
+									Join with a group code and a 4-digit PIN. No email, no
+									account.
+								</p>
 							</div>
 						</li>
 						<li className="flex items-start">
 							<span className="check-mark mr-2 mt-1">✓</span>
 							<div>
-								<strong>Simple, Intuitive UI</strong>
-								<p>No complex setup or learning curve required</p>
+								<strong>Staples</strong>
+								<p>
+									Mark what you always buy. Check it off and it comes back
+									to your list about 20 hours later.
+								</p>
+							</div>
+						</li>
+						<li className="flex items-start">
+							<span className="check-mark mr-2 mt-1">✓</span>
+							<div>
+								<strong>Scan a Barcode</strong>
+								<p>Point the camera at a barcode to add the item</p>
+							</div>
+						</li>
+						<li className="flex items-start">
+							<span className="check-mark mr-2 mt-1">✓</span>
+							<div>
+								<strong>Scan a Receipt (Beta)</strong>
+								<p>
+									Take a photo of a receipt, then pick which items to add.
+									The photo never leaves your phone. Names come out cleaner
+									on a phone with Apple Intelligence.
+								</p>
+							</div>
+						</li>
+						<li className="flex items-start">
+							<span className="check-mark mr-2 mt-1">✓</span>
+							<div>
+								<strong>Aisle Order</strong>
+								<p>
+									After a few trips, a store&apos;s list sorts in the order
+									you usually check things off
+								</p>
+							</div>
+						</li>
+						<li className="flex items-start">
+							<span className="check-mark mr-2 mt-1">✓</span>
+							<div>
+								<strong>Out of Stock</strong>
+								<p>
+									Swipe an item the store didn&apos;t have. It leaves that
+									store&apos;s list for a while and stays on the others.
+								</p>
+							</div>
+						</li>
+						<li className="flex items-start">
+							<span className="check-mark mr-2 mt-1">✓</span>
+							<div>
+								<strong>Recent Activity</strong>
+								<p>See who added or picked up what</p>
+							</div>
+						</li>
+						<li className="flex items-start">
+							<span className="check-mark mr-2 mt-1">✓</span>
+							<div>
+								<strong>Works on a Bad Connection</strong>
+								<p>
+									Your last loaded list shows right away, marked with its
+									age, while the app fetches the current one
+								</p>
 							</div>
 						</li>
 					</ul>
@@ -201,22 +262,23 @@ export default function HoppingListPage() {
 				<div className="dark-card">
 					<ul className="list-disc pl-6 space-y-3 text-[rgba(var(--color-foreground),0.8)]">
 						<li>
-							<strong>Real-time List Updates:</strong> No more uncertainty about
-							what needs to be purchased with live-updating shared lists
+							<strong>One Shared List:</strong> Everyone in the household sees
+							the same list, so nobody has to ask what&apos;s needed. A change
+							someone else makes shows up the next time you open a list.
 						</li>
 						<li>
-							<strong>Simplicity First:</strong> Other solutions were too
-							complicated with unnecessary features like aisle tracking -
-							everyone knows where bread is located...
+							<strong>Simplicity First:</strong> Other apps wanted me to file
+							every item under an aisle and a category. Hopping List asks for
+							a name and which stores carry it. It works out the aisle order
+							from what you check off first.
 						</li>
 						<li>
 							<strong>Store-Specific Lists:</strong> When shopping, you only see
 							what's needed AND available at your current location
 						</li>
 						<li>
-							<strong>No Subscription Required:</strong> Unlike many shopping
-							list apps, Hopping List doesn't charge a monthly fee or any fee
-							for that matter. It's not even in the app store yet.
+							<strong>Free During the Beta:</strong> No monthly fee, or any fee
+							for that matter. It&apos;s not even in the App Store yet.
 						</li>
 					</ul>
 				</div>
@@ -231,56 +293,56 @@ export default function HoppingListPage() {
 						<div className="mb-3">
 							<Image
 								src="/images/projects/hopping-list/homescreen.png"
-								alt="Hopping List Home Screen"
+								alt="Hopping List home screen: needed items per store and recent activity"
 								width={400}
-								height={800}
+								height={870}
 								className="rounded-lg mx-auto"
 							/>
 						</div>
 						<p className="text-center text-[rgba(var(--color-foreground),0.7)]">
-							Home screen showing your stores
+							Home: what you need at each store, and who did what
 						</p>
 					</div>
 					<div className="dark-card p-4">
 						<div className="mb-3">
 							<Image
-								src="/images/projects/hopping-list/edit-apples.png"
-								alt="Editing an item for multiple stores"
+								src="/images/projects/hopping-list/edit-item.png"
+								alt="Editing an item: Milk is checked for Safeway and Target"
 								width={400}
-								height={800}
+								height={870}
 								className="rounded-lg mx-auto"
 							/>
 						</div>
 						<p className="text-center text-[rgba(var(--color-foreground),0.7)]">
-							Adding an item to multiple store locations
+							One item, checked for every store that carries it
 						</p>
 					</div>
 					<div className="dark-card p-4">
 						<div className="mb-3">
 							<Image
 								src="/images/projects/hopping-list/safeway.png"
-								alt="Safeway Shopping List"
+								alt="The Safeway shopping list, sorted in aisle order"
 								width={400}
-								height={800}
+								height={870}
 								className="rounded-lg mx-auto"
 							/>
 						</div>
 						<p className="text-center text-[rgba(var(--color-foreground),0.7)]">
-							Store-specific shopping list for Safeway
+							The Safeway list, in aisle order
 						</p>
 					</div>
 					<div className="dark-card p-4">
 						<div className="mb-3">
 							<Image
 								src="/images/projects/hopping-list/tjs.png"
-								alt="Trader Joe's Shopping List"
+								alt="The Trader Joe's shopping list"
 								width={400}
-								height={800}
+								height={870}
 								className="rounded-lg mx-auto"
 							/>
 						</div>
 						<p className="text-center text-[rgba(var(--color-foreground),0.7)]">
-							Trader Joe's list with different items
+							The Trader Joe&apos;s list, with different items
 						</p>
 					</div>
 				</div>
@@ -306,6 +368,77 @@ export default function HoppingListPage() {
 
 			<hr className="border-[rgba(var(--color-foreground),0.1)] mb-12" />
 
+			{/* Privacy: what the app stores and sends. Every line must match what
+			    the app does; check the app's code before changing one. The id
+			    lets other pages link straight to this section. */}
+			<div className="mb-12" id="privacy">
+				<h2 className="text-2xl font-semibold display-heading mb-6">
+					What the App Stores and Sends
+				</h2>
+				<div className="dark-card">
+					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
+						No account, no ads, no tracking. The details:
+					</p>
+					<ul className="list-disc pl-6 space-y-3 text-[rgba(var(--color-foreground),0.8)]">
+						<li>
+							<strong>No account:</strong> You never give the app an email or
+							a phone number. You join a household with a group code and a
+							PIN, and pick a name for yourself.
+						</li>
+						<li>
+							<strong>Your lists:</strong> Items, stores, notes, and that name
+							are saved in the app&apos;s database so your household can share
+							them. Only members of your group can read them through the app.
+							I run the database, so I can see them too.
+						</li>
+						<li>
+							<strong>Receipts:</strong> A receipt photo never leaves your
+							phone. The app reads the text on the phone and drops the lines
+							that look like a payment card, a loyalty number, or the
+							cashier&apos;s name before it saves anything. The product lines
+							you review are saved to your group: what you added, with its
+							price, and what you skipped. All groups share one thing: a
+							vocabulary of product names (that &quot;MISSION CARB&quot; means
+							tortillas), with no prices, dates, or who bought what.
+						</li>
+						<li>
+							<strong>Barcodes:</strong> When you scan a barcode the app
+							hasn&apos;t seen, it looks the number up on{" "}
+							<Link
+								href="https://world.openfoodfacts.org"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="text-[rgb(var(--color-accent))] hover:text-[rgba(var(--color-accent),0.8)] underline"
+							>
+								Open Food Facts
+							</Link>
+							, a public product database. It sends the barcode number and
+							nothing from your lists.
+						</li>
+						<li>
+							<strong>Errors (new in version 2.0.6):</strong> The app sends me
+							its errors and slow requests so I can fix problems without
+							asking you for details. A report has the error, the app version,
+							your iOS version, and which group and member it came from (as
+							ids, not names). It has no item names, store names, or notes. To
+							stop it, turn off &quot;Send errors to Doug&quot; in Settings →
+							Diagnostics. Reports older than 30 days are deleted the next
+							time your phone sends one.
+						</li>
+					</ul>
+					<p className="text-[rgba(var(--color-foreground),0.8)] mt-4">
+						Questions?{" "}
+						<Link
+							href="/building/hopping-list/feedback"
+							className="text-[rgb(var(--color-accent))] hover:text-[rgba(var(--color-accent),0.8)] underline"
+						>
+							Send me a note
+						</Link>
+						.
+					</p>
+				</div>
+			</div>
+
 			{/* Technical Details Section */}
 			<div className="mb-12">
 				<h2 className="text-2xl font-semibold display-heading mb-6">
@@ -318,11 +451,14 @@ export default function HoppingListPage() {
 						too simplistic or overcomplicated with unnecessary features. At the
 						same time, I needed to familiarize myself with FlutterFlow for
 						building a much more complex app for DubPrime, so this project
-						served dual purposes.
+						served dual purposes. I&apos;ve since moved it off FlutterFlow to
+						plain Flutter.
 					</p>
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
-						I kept it simple on purpose. No aisle tracking, no meal planning,
-						no recipe integration. Just lists, stores, and items.
+						I kept it simple on purpose. No meal planning, no recipe
+						integration. Just lists, stores, and items. What I&apos;ve added
+						since is about getting items in faster: scan a barcode, or a
+						whole receipt.
 					</p>
 					<p className="text-[rgba(var(--color-foreground),0.8)]">
 						It&apos;s in TestFlight right now for iOS. Android... eventually.
@@ -337,18 +473,17 @@ export default function HoppingListPage() {
 						Technical Details
 					</h2>
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
-						Built with FlutterFlow (a visual dev tool for Flutter) because I
-						needed to learn it for DubPrime anyway. Supabase handles the
-						backend: database, auth, and real-time sync between users.
+						It started in FlutterFlow (a visual dev tool for Flutter) because
+						I needed to learn it for DubPrime anyway. It&apos;s plain Flutter
+						now. Supabase handles the backend: a Postgres database and
+						sign-in that needs no account. Receipt scanning runs on the
+						phone: Apple&apos;s Vision framework reads the text, and
+						Apple&apos;s on-device model cleans up the names.
 					</p>
 					<ul className="space-y-2 text-[rgba(var(--color-foreground),0.7)]">
 						<li className="flex items-center">
 							<span className="check-mark mr-2">✓</span>
 							Flutter
-						</li>
-						<li className="flex items-center">
-							<span className="check-mark mr-2">✓</span>
-							FlutterFlow
 						</li>
 						<li className="flex items-center">
 							<span className="check-mark mr-2">✓</span>
@@ -360,7 +495,11 @@ export default function HoppingListPage() {
 						</li>
 						<li className="flex items-center">
 							<span className="check-mark mr-2">✓</span>
-							Custom FlutterFlow Components
+							Apple Vision (on-device text recognition)
+						</li>
+						<li className="flex items-center">
+							<span className="check-mark mr-2">✓</span>
+							Open Food Facts (barcode lookups)
 						</li>
 					</ul>
 				</div>
@@ -371,7 +510,8 @@ export default function HoppingListPage() {
 					</h2>
 					<div className="space-y-4">
 					<p className="text-[rgba(var(--color-foreground),0.8)] mb-4">
-							If you want to poke around the code or contribute.
+							The current code is private. The original FlutterFlow version
+							is public if you want to poke around.
 						</p>
 						<div>
 							<Link
@@ -380,7 +520,7 @@ export default function HoppingListPage() {
 								rel="noopener noreferrer"
 								className="btn-primary w-full text-center inline-block"
 							>
-								GitHub Repository
+								Original Version on GitHub
 							</Link>
 						</div>
 					</div>
